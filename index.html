@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no">
+<meta name="theme-color" content="#0d0b09">
+<title>American Dictator</title>
+<link rel="stylesheet" href="css/styles.css?v=29">
+</head>
+<body>
+
+<div id="app">
+
+  <!-- ══════════════════ TITLE ══════════════════ -->
+  <section class="screen active" id="screen-title">
+    <div class="title-wrap">
+      <div class="seal" aria-hidden="true">
+        <!-- Heraldic bald eagle: rigid bilateral symmetry, spread wings, standard
+             bar, laurel and arrows. Authoritarian design grammar built entirely
+             from American symbols — which is the joke. -->
+        <svg viewBox="0 0 200 150">
+          <circle cx="100" cy="70" r="52" class="seal-roundel"/>
+          <circle cx="100" cy="70" r="52" class="seal-ring"/>
+          <circle cx="100" cy="70" r="45" class="seal-ring2"/>
+
+          <!-- WINGS: four feather ranks per side, swept up and out -->
+          <g class="seal-wing">
+            <path d="M94 56 L58 28 L52 37 L94 62 Z"/>
+            <path d="M94 62 L42 40 L38 50 L94 69 Z"/>
+            <path d="M94 69 L32 55 L32 66 L94 76 Z"/>
+            <path d="M94 76 L34 72 L40 84 L94 83 Z"/>
+            <path d="M106 56 L142 28 L148 37 L106 62 Z"/>
+            <path d="M106 62 L158 40 L162 50 L106 69 Z"/>
+            <path d="M106 69 L168 55 L168 66 L106 76 Z"/>
+            <path d="M106 76 L166 72 L160 84 L106 83 Z"/>
+          </g>
+
+          <!-- TAIL -->
+          <path class="seal-body" d="M92 90 L100 118 L108 90 Z"/>
+          <path class="seal-tailline" d="M100 92 L100 116"/>
+
+          <!-- BODY + NECK -->
+          <path class="seal-body" d="M92 54 L108 54 L107 88 L93 88 Z"/>
+
+          <!-- BREAST SHIELD -->
+          <path class="seal-shield" d="M89 60 L111 60 L111 76 Q100 88 89 76 Z"/>
+          <g class="seal-stripe">
+            <path d="M93 64 h2 v18 h-2z"/><path d="M98 64 h2 v21 h-2z"/>
+            <path d="M103 64 h2 v18 h-2z"/><path d="M108 64 h2 v13 h-2z"/>
+          </g>
+          <path class="seal-chief" d="M89 60 h22 v5 h-22z"/>
+
+          <!-- HEAD: profile, hooked beak -->
+          <path class="seal-head" d="M99 32 C107 32 113 37 113 44 C113 49 109 53 102 54 L96 54 C91 52 88 48 88 43 C88 36 92 32 99 32 Z"/>
+          <path class="seal-beak" d="M112 40 L127 44 L118 47 L112 47 Z"/>
+          <circle class="seal-eye" cx="105" cy="41" r="2"/>
+
+          <!-- TALONS: arrows left, laurel right -->
+          <g class="seal-claw">
+            <path d="M70 104 h22 v2.6 h-22z"/><path d="M70 109 h22 v2.6 h-22z"/>
+            <path d="M66 101 l7 6.5 -7 6.5 -2.5-6.5z"/>
+          </g>
+          <path class="seal-laurel" d="M108 103 q16 1 24 9 q-14 3-24-5z M108 110 q15 2 21 10 q-13 1-21-5z"/>
+
+          <!-- STANDARD BAR -->
+          <rect class="seal-bar" x="20" y="126" width="160" height="8"/>
+          <rect class="seal-bar2" x="20" y="137" width="160" height="2.5"/>
+        </svg>
+      </div>
+      <h1 class="game-title">American<span>Dictator</span></h1>
+      <p class="tagline">Four years. One country. How hard could it be?</p>
+      <div class="menu">
+        <button class="btn btn-primary" data-act="new">Take the Oath</button>
+        <button class="btn" data-act="continue" id="btn-continue" hidden>Resume Term</button>
+        <button class="btn btn-ghost" data-act="library">Presidential Library</button>
+        <button class="btn btn-ghost" data-act="settings">The Situation Room</button>
+        <button class="btn btn-ghost" data-act="howto">How to Seize Power</button>
+        <button class="btn btn-ghost" data-act="replay-tutorial">Replay the Walkthrough</button>
+      </div>
+      <p class="disclaimer">A work of satire. Every president, party, agency, court, country and crisis in this game
+        is fictional. Any resemblance to persons living, indicted, or posting is entirely the fault of the opposition.</p>
+    </div>
+  </section>
+
+  <!-- ══════════════════ SETUP ══════════════════ -->
+  <section class="screen" id="screen-setup">
+    <div class="panel">
+      <h2 class="panel-h">Assume the Office</h2>
+
+      <div class="inheritance" id="inheritance" hidden>
+        <div class="inh-kicker">YOU INHERIT</div>
+        <p class="inh-note" id="inh-note"></p>
+        <div class="inh-mods" id="inh-mods"></div>
+      </div>
+
+      <div class="setup-grid">
+        <div class="portrait-box">
+          <div id="portrait-slot"></div>
+          <div class="port-controls">
+            <button class="mini" data-port="hair">Hair</button>
+            <button class="mini" data-port="skin">Complexion</button>
+            <button class="mini" data-port="tie">Tie</button>
+            <button class="mini" data-port="suit">Suit</button>
+          </div>
+        </div>
+
+        <div class="setup-fields">
+          <label class="field">
+            <span>Name of the President</span>
+            <input id="in-name" type="text" maxlength="26" placeholder="Ronald J. Trumbull" autocomplete="off">
+          </label>
+
+          <label class="field">
+            <span>Party</span>
+            <input id="in-party" type="text" maxlength="24" placeholder="The Patriot Party" autocomplete="off">
+          </label>
+
+          <div class="field">
+            <span>Party Colour</span>
+            <div class="swatches" id="swatches"></div>
+          </div>
+
+          <label class="field">
+            <span>Seed <em>optional — share a run</em></span>
+            <input id="in-seed" type="text" maxlength="16" placeholder="leave blank for random" autocomplete="off">
+          </label>
+
+          <div class="field">
+            <span>Difficulty</span>
+            <div class="segmented" id="seg-diff">
+              <button data-diff="rookie">Rookie</button>
+              <button data-diff="standard" class="on">Standard</button>
+              <button data-diff="historic">Historic</button>
+            </div>
+            <p class="hint" id="diff-hint"></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="row-end">
+        <button class="btn btn-ghost" data-act="title">Back</button>
+        <button class="btn btn-primary" data-act="begin">So Help Me God</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════ GAME ══════════════════ -->
+  <section class="screen" id="screen-game">
+
+    <header class="hud">
+      <button class="icon-btn" data-act="pause" aria-label="Pause">☰</button>
+      <div class="hud-mid">
+        <div class="month-line"><span id="hud-date">January, Year One</span></div>
+        <div class="rank-line" id="hud-rank">Duly Elected President</div>
+      </div>
+      <button class="hud-cash" id="hud-cash" data-act="corruption"
+              title="Private Interests — spend your fortune">$<span>3.0</span>B</button>
+    </header>
+
+    <div class="authority-wrap">
+      <div class="authority-label">AUTHORITY <span id="auth-num">0</span>/100</div>
+      <div class="authority-bar"><div class="authority-fill" id="auth-fill"></div>
+        <i class="tick" style="left:25%"></i><i class="tick" style="left:50%"></i>
+        <i class="tick cap" id="auth-cap" title="Decisions alone stop here. Pillars go past it."></i>
+      </div>
+      <div class="pillar-row" id="pillar-row"></div>
+      <button class="const-chip" id="const-chip" data-act="constitution"
+              title="The Ledger of Broken Clauses">THE CONSTITUTION <b>0/16</b></button>
+    </div>
+
+    <div class="facade">
+      <div class="facade-roof" aria-hidden="true"></div>
+      <div class="factions" id="factions" role="group" aria-label="Power centres"></div>
+      <div class="warnings" id="warnings" role="status" aria-live="polite"></div>
+    </div>
+
+    <div class="stage" role="region" aria-live="polite" aria-atomic="false" aria-label="Current crisis">
+      <div class="card" id="card">
+        <div class="card-speaker">
+          <div class="sil" id="card-sil"></div>
+          <div class="who"><b id="card-name">—</b><em id="card-role">—</em></div>
+          <div class="timer" id="timer" hidden><svg viewBox="0 0 36 36"><circle class="t-bg" cx="18" cy="18" r="16"/><circle class="t-fg" id="t-fg" cx="18" cy="18" r="16"/></svg><span id="t-num">14</span></div>
+        </div>
+        <h3 class="card-title" id="card-title">—</h3>
+        <p class="card-text" id="card-text">—</p>
+        <div class="choices" id="choices"></div>
+      </div>
+
+      <div class="card resolution" id="resolution" hidden>
+        <div class="res-stamp" id="res-stamp">DECISION LOGGED</div>
+        <p class="res-text" id="res-text"></p>
+        <div class="res-deltas" id="res-deltas"></div>
+        <div class="briefing" id="briefing" hidden>
+          <div class="brief-head"><span class="sil" id="brief-sil">🗂</span>
+            <b id="brief-who">Deborah Krank</b><em id="brief-role">Chief of Staff</em></div>
+          <ul id="brief-lines"></ul>
+        </div>
+        <button class="btn btn-primary wide" data-act="next">Next Crisis</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════ OVERLAYS ══════════════════ -->
+  <div class="overlay" id="ov-tabloid" hidden>
+    <div class="tabloid">
+      <div class="tab-masthead">THE NATIONAL SCREAM</div>
+      <div class="tab-strap"><span id="tab-date">—</span><span>50¢ · FINAL EDITION</span></div>
+      <h2 class="tab-head" id="tab-head">HEADLINE</h2>
+      <h4 class="tab-sub" id="tab-sub">Subhead</h4>
+      <div class="tab-body" id="tab-body"></div>
+      <button class="btn btn-primary wide" data-act="tabloid-close">Close the Paper</button>
+    </div>
+  </div>
+
+  <div class="overlay" id="ov-doctrine" hidden>
+    <div class="doctrine-card">
+      <div class="doc-kicker">DOCTRINE UNLOCKED</div>
+      <div class="doc-glyph" id="doc-glyph">§</div>
+      <h2 id="doc-name">—</h2>
+      <p class="doc-quote" id="doc-quote">—</p>
+      <p class="doc-effect" id="doc-effect">—</p>
+      <button class="btn btn-primary wide" data-act="doctrine-close">Sign It</button>
+    </div>
+  </div>
+
+  <div class="overlay" id="ov-corruption" hidden>
+    <div class="panel narrow scroll">
+      <h2 class="panel-h">Private Interests</h2>
+      <div class="corr-head">
+        <div class="corr-cash">Available <b id="corr-cash">$3.0B</b></div>
+        <div class="corr-income">Monthly <b id="corr-income">$0.0B</b></div>
+      </div>
+      <p class="corr-note" id="corr-note">Holdings never grant Authority. They buy the machine that
+        takes it — shields, multipliers, monthly drip and the income to buy more of all three.</p>
+      <div class="corr-list" id="corr-list"></div>
+      <button class="btn wide" data-act="corruption-close">Back to Governing</button>
+    </div>
+  </div>
+
+  <div class="tut-overlay" id="ov-tutorial" hidden>
+    <div class="tut-spot" id="tut-spot" hidden></div>
+    <div class="tut-box" id="tut-box">
+      <div class="tut-step" id="tut-step">STEP 1 OF 10</div>
+      <h3 id="tut-title">—</h3>
+      <div class="tut-body" id="tut-body"></div>
+      <div class="tut-actions">
+        <button class="btn btn-ghost" data-act="tut-skip">Skip</button>
+        <button class="btn btn-primary" id="tut-next" data-act="tut-next">Next</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="overlay" id="ov-constitution" hidden>
+    <div class="panel narrow scroll">
+      <h2 class="panel-h">The Constitution</h2>
+      <div class="const-head">
+        <div><span>Clauses broken</span><b id="const-count">0 / 16</b></div>
+        <div><span>Score earned</span><b id="const-score">0</b></div>
+      </div>
+      <p class="const-note" id="const-note"></p>
+      <div class="const-list" id="const-list"></div>
+      <button class="btn wide" data-act="constitution-close">Back to Governing</button>
+    </div>
+  </div>
+
+  <div class="overlay" id="ov-pause" hidden>
+    <div class="panel narrow">
+      <h2 class="panel-h">The Situation Room</h2>
+      <div class="menu">
+        <button class="btn btn-primary" data-act="resume">Back to Governing</button>
+        <button class="btn btn-ghost" data-act="log">Crisis Log</button>
+        <button class="btn btn-ghost" data-act="settings">Settings</button>
+        <button class="btn btn-ghost danger" data-act="resign">Resign (Abandon Term)</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="overlay" id="ov-log" hidden>
+    <div class="panel narrow">
+      <h2 class="panel-h">Crisis Log</h2>
+      <div class="locked-note" id="log-locked" hidden>
+        The Crisis Log is a feature of the <b>Chief of Staff Pack</b>. Enable it in Settings.
+      </div>
+      <div class="log-list" id="log-list"></div>
+      <button class="btn wide" data-act="log-close">Close</button>
+    </div>
+  </div>
+
+  <div class="overlay" id="ov-settings" hidden>
+    <div class="panel narrow">
+      <h2 class="panel-h">Settings</h2>
+      <div class="opt"><label><input type="checkbox" id="opt-timer"> Decision timer</label><em>Pressure. Realism. Regret.</em></div>
+      <div class="opt"><label><input type="checkbox" id="opt-motion"> Reduce motion</label><em>Fewer things swooshing.</em></div>
+      <div class="opt"><label><input type="checkbox" id="opt-lang"> Clean language</label><em>Softens the salt.</em></div>
+      <hr class="rule">
+      <div class="iap">
+        <div class="iap-h">CHIEF OF STAFF PACK</div>
+        <p class="iap-p">Longer decision timers · impact previews before you choose · the full Crisis Log · post-crisis briefings from your Chief of Staff.
+          In the shipping build this is the single optional in-app purchase. Here it's a switch.</p>
+        <div class="opt"><label><input type="checkbox" id="opt-pack"> Hire a Chief of Staff</label><em>Simulated purchase.</em></div>
+      </div>
+      <button class="btn wide" data-act="settings-close">Done</button>
+    </div>
+  </div>
+
+  <div class="overlay" id="ov-howto" hidden>
+    <div class="panel narrow scroll">
+      <h2 class="panel-h">How to Seize Power</h2>
+      <div class="howto" id="howto-body"></div>
+      <button class="btn wide" data-act="howto-close">Understood</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════ LIBRARY ══════════════════ -->
+  <section class="screen" id="screen-library">
+    <div class="panel scroll">
+      <h2 class="panel-h">Presidential Library</h2>
+      <p class="lib-blurb" id="lib-blurb">Every administration leaves a stain. Here are yours.</p>
+      <div class="lib-list" id="lib-list"></div>
+
+      <h2 class="panel-h" style="margin-top:20px">Achievements <span id="ach-count"></span></h2>
+      <div class="ach-grid" id="ach-grid"></div>
+
+      <div class="row-end">
+        <button class="btn btn-ghost danger" data-act="wipe">Shred the Archives</button>
+        <button class="btn btn-primary" data-act="title">Back</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════ ENDING ══════════════════ -->
+  <section class="screen" id="screen-ending">
+    <div class="ending" id="ending-body"></div>
+  </section>
+
+</div>
+
+<!-- state.js creates the AD namespace, so it must load first. -->
+<script src="js/state.js?v=29"></script>
+<script src="js/seed.js?v=29"></script>
+<script src="js/audio.js?v=29"></script>
+<script src="js/doctrines.js?v=29"></script>
+<script src="js/corruption.js?v=29"></script>
+<script src="js/constitution.js?v=29"></script>
+<script src="js/tutorial.js?v=29"></script>
+<script src="js/achievements.js?v=29"></script>
+<script src="js/briefings.js?v=29"></script>
+<script src="js/cards.js?v=29"></script>
+<!-- Content packs. Each pushes onto AD.CARDS, so adding a deck is adding a
+     file — no engine changes. Order does not matter. -->
+<script src="js/packs/pack-a-honeymoon.js?v=29"></script>
+<script src="js/packs/pack-b-machinery.js?v=29"></script>
+<script src="js/packs/pack-c-consolidation.js?v=29"></script>
+<script src="js/packs/pack-d-evergreen.js?v=29"></script>
+<script src="js/packs/pack-e-secondterm.js?v=29"></script>
+<script src="js/packs/pack-f-record.js?v=29"></script>
+<script src="js/events.js?v=29"></script>
+<script src="js/endings.js?v=29"></script>
+<script src="js/engine.js?v=29"></script>
+<script src="js/ui.js?v=29"></script>
+<script src="js/main.js?v=29"></script>
+</body>
+</html>

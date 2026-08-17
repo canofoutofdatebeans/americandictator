@@ -1,0 +1,23 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+.vscode/
+.idea/
+
+# Node / tooling (the game itself has no build step)
+node_modules/
+package-lock.json
+
+# Local dev server config is useful to keep, but local overrides are not
+.claude/settings.local.json
+
+# Scratch
+*.bak
+/tmp/
+
+# Source research — kept local, not published
+Full Confidence Research.md
+Trump Research.md
+Trump stories.md
