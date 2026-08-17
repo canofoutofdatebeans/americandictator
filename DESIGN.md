@@ -261,9 +261,14 @@ win condition of its own. Tuning it took five passes and every failure was instr
 - Assets grant **no Authority at all**. Letting money buy Authority would collapse the soft-cap
   and Pillar design that the whole game rests on.
 
-Final: a dedicated money build reaches $10B in **62%** of runs; corruption roughly doubles the
-expert win rate (38% → 77%). That last number is the honest weak spot — mastering both tracks is
-meant to be rewarded, but it does flatten difficulty at the top end and could take another pass.
+**EXPOSURE — the fix for the flattening.** Holdings were pure upside once bought, so mastering
+both tracks won ~77% against a 38% baseline. Every holding is now surface area: one point of
+monthly damage to press *and* courts per `EXPOSURE_PER` (4) holdings owned. A wide portfolio is
+genuinely worse than a focused one, and you can no longer simply accumulate everything.
+
+Extremely sensitive: `EXPOSURE_PER` of 2 kills every build (0% win), 6 barely bites (67%), 4
+lands optimal play at **50.7%** — corruption stays clearly worth using without doubling your
+odds. A dedicated money build still reaches $10B in **59%** of runs.
 
 ### A process warning
 

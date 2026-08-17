@@ -21,3 +21,8 @@ package-lock.json
 Full Confidence Research.md
 Trump Research.md
 Trump stories.md
+
+# Capacitor build output
+www/
+ios/
+android/

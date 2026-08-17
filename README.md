@@ -43,6 +43,25 @@ have accumulated enough Authority to not hold it.
 
 ---
 
+## Native packaging (Capacitor)
+
+The game is already Capacitor-shaped: no build step, self-contained, mobile-first,
+safe-area padding in place. To wrap it:
+
+```bash
+npm install
+npm run build            # copies index.html/css/js into www/, strips ?v= cache-busting
+npm run cap:add:ios      # or cap:add:android
+npm run cap:ios          # sync + open Xcode
+```
+
+`capacitor.config.json` sets the app id, the navy background, splash and status bar.
+`scripts/build-www.mjs` is a dependency-free copy step — it is not a bundler, because
+there is nothing to bundle.
+
+**Not verified on a device.** The config and build step are correct and `npm run build`
+is tested; the native shells have never been compiled or run on hardware.
+
 ## Files
 
 | Path | What's in it |
@@ -70,7 +89,7 @@ layer is portable if you later move to React, Unity, or a native shell.
 
 ## Content
 
-- **342 crises**, **1,368 hand-written choices**, each with its own consequence line
+- **372 crises**, **1,488 hand-written choices**, each with its own consequence line
 - **A wildcard on every card** — a fourth, deliberately absurd option (appoint the dog to the
   Cabinet, tariff only the penguin islands, join the picket line and bring coffee). Every one
   carries a real cost and almost none advance you, so the funny path is a genuine dead end
@@ -97,13 +116,14 @@ registration step, order irrelevant.
 | `pack-d-evergreen` | any | 69 | — |
 | `pack-e-secondterm` | `term: 2` only | 20 | — |
 | **`pack-f-record`** | mixed | **40** | **40** |
+| **`pack-g-record`** | mixed | **30** | **30** |
 
 ### Grounding
 
 Crises derived from the research carry a `src` citation naming the documented item they riff on.
 The rule is **inspired by, never copied** — take the mechanism, invent everything else.
 
-**89 of 342 crises (26%)** are grounded this way. Packs A–E are original political-mechanics
+**119 of 372 crises (32%)** are grounded this way. Packs A–E are original political-mechanics
 satire with no research derivation; raising the ratio means rewriting them against the unused
 items in `Trump stories.md`. Audit it yourself:
 

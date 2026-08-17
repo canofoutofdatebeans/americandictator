@@ -201,7 +201,10 @@ body::before{
 .corr-head{display:flex;gap:8px;margin-bottom:10px}
 .corr-head>div{flex:1;background:#0c1a22;border:1px solid #1d3a4a;border-radius:10px;
   padding:8px 10px;font-size:10px;letter-spacing:1.4px;text-transform:uppercase;color:var(--muted)}
-.corr-head b{display:block;font-size:17px;color:#9ec9a5;letter-spacing:0;margin-top:2px}
+.corr-head b{display:block;font-size:15px;color:#9ec9a5;letter-spacing:0;margin-top:2px}
+.corr-head b em{font-style:normal;font-size:8.5px;letter-spacing:.8px;color:var(--muted);display:block}
+#corr-exposure{color:#c98d92}
+#corr-exposure.exposed{color:var(--red-hot)}
 .corr-note{font-size:12px;line-height:1.5;color:var(--muted);font-style:italic;margin:0 0 14px}
 .corr-note.bought{color:var(--gold-soft);font-style:normal;background:#1a1524;
   border:1px solid #453714;border-radius:10px;padding:10px;animation:slam .35s ease both}

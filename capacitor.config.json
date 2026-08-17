@@ -1,0 +1,31 @@
+{
+  "appId": "co.uk.americandictator.game",
+  "appName": "American Dictator",
+  "webDir": "www",
+  "bundledWebRuntime": false,
+  "backgroundColor": "#070b14",
+  "android": {
+    "backgroundColor": "#070b14",
+    "allowMixedContent": false
+  },
+  "ios": {
+    "backgroundColor": "#070b14",
+    "contentInset": "always",
+    "limitsNavigationsToAppBoundDomains": true
+  },
+  "server": {
+    "androidScheme": "https"
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchAutoHide": true,
+      "launchShowDuration": 900,
+      "backgroundColor": "#070b14",
+      "showSpinner": false
+    },
+    "StatusBar": {
+      "style": "DARK",
+      "backgroundColor": "#070b14"
+    }
+  }
+}

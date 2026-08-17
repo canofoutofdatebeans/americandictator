@@ -268,11 +268,35 @@ AD.buyAsset = function (run, id) {
   return { ok: true, asset: a, deltas };
 };
 
-/* Monthly tick: income, drips, settlements. Called from Engine.advance(). */
+/* EXPOSURE — the missing cost.
+   Holdings used to be pure upside once bought, so a player who mastered both
+   tracks won ~77% against a 38% baseline. Every thing you own is surface area:
+   a filing, a counterparty, a disclosure, a board seat somebody can subpoena.
+   Upkeep scales with the SIZE of the empire, so a wide portfolio is genuinely
+   worse than a focused one and you cannot simply accumulate everything. */
+/* One point of exposure per this many holdings, charged monthly to BOTH press
+   and courts. Extremely sensitive: 2 kills every build (0% win), 6 barely bites
+   (67%), 4 lands optimal play at ~49% against a 38% no-corruption baseline —
+   corruption stays clearly worth using without doubling your odds. */
+AD.EXPOSURE_PER = 4;
+
+AD.exposure = run => Math.floor((run.assets || []).length / AD.EXPOSURE_PER);
+
+/* Monthly tick: income, drips, settlements, exposure. From Engine.advance(). */
 AD.corruptionTick = function (run) {
   const p = AD.passives(run);
   const out = { cash: 0, deltas: {}, settled: false };
   if (!run.assets || !run.assets.length) return out;
+
+  const exp = AD.exposure(run);
+  if (exp) {
+    ['press', 'courts'].forEach(k => {
+      if (run.locked[k]) return;
+      const before = run.meters[k];
+      run.meters[k] = AD.clamp(before - exp, 0, 100);
+      if (run.meters[k] !== before) out.deltas[k] = (out.deltas[k] || 0) + (run.meters[k] - before);
+    });
+  }
 
   if (p.income) {
     run.cash = Math.round((run.cash + p.income) * 100) / 100;

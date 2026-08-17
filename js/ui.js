@@ -311,6 +311,10 @@ AD.UI = {
     const p = AD.passives(run);
     this.el('corr-cash').textContent = '$' + run.cash.toFixed(2) + 'B';
     this.el('corr-income').textContent = '$' + Math.round((p.income || 0) * 1000) + 'M';
+    const exp = AD.exposure(run);
+    this.el('corr-exposure').innerHTML = exp
+      ? `−${exp} <em>press &amp; courts / mo</em>` : 'none';
+    this.el('corr-exposure').className = exp >= 3 ? 'exposed' : '';
 
     const note = this.el('corr-note');
     if (justBought) {
