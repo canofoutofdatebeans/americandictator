@@ -513,10 +513,10 @@ AD.Game = {
     if (collapse.ending) { AD.Engine.finish(collapse.ending); this.pending = []; setTimeout(() => this.showEnding(AD.Engine.lastScore), 900); }
   },
 
-  declareWar (targetId, pretextId) {
+  warOp (targetId, opId) {
     const run = AD.Engine.run;
     if (!run || run.over) return;
-    const r = AD.declareWar(run, targetId, pretextId);
+    const r = AD.doWarOp(run, targetId, opId);
     if (!r.ok) return;
     AD.saveRun(run);
     AD.Audio.play('war');
@@ -730,8 +730,8 @@ AD.Game = {
       const callsay = e.target.closest('[data-callsay]');
       if (callsay && !callsay.disabled) { this.makeCall(callsay.dataset.callwho, callsay.dataset.callsay); return; }
 
-      const warbtn = e.target.closest('[data-warwhy]');
-      if (warbtn && !warbtn.disabled) { this.declareWar(warbtn.dataset.wartarget, warbtn.dataset.warwhy); return; }
+      const warbtn = e.target.closest('[data-warop]');
+      if (warbtn && !warbtn.disabled) { this.warOp(warbtn.dataset.wartarget, warbtn.dataset.warop); return; }
 
       const courtact = e.target.closest('[data-courtact]');
       if (courtact && !courtact.disabled) { this.courtAction(courtact.dataset.judge, courtact.dataset.courtact); return; }

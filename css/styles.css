@@ -712,6 +712,12 @@ body::before{
 /* The temperament "tell" on a judge/senator/outlet row: a quiet read on how
    they will take being handled, so the player has information without the maths. */
 .sen-tell{font-size:11px;color:var(--gold);opacity:.72;margin:-1px 0 7px;letter-spacing:.2px}
+/* War Room country badges: nuclear / ally / rich flags on each target row. */
+.war-badges{display:flex;flex-wrap:wrap;gap:5px;margin:2px 0 6px}
+.war-badge{font-size:10px;letter-spacing:.4px;padding:2px 7px;border-radius:999px;border:1px solid var(--edge);color:var(--paper2)}
+.war-badge.nuke{color:#ffd36b;border-color:#5a4718;background:rgba(201,162,39,.12)}
+.war-badge.ally{color:#7fd0ff;border-color:#1d4560;background:rgba(60,150,210,.12)}
+.war-badge.rich{color:#8be0a0;border-color:#1f5232;background:rgba(60,180,110,.1)}
 .sen-acts{display:flex;gap:5px;flex-wrap:wrap}
 .sen-act{flex:1 1 calc(50% - 3px);min-width:0;padding:7px 6px;font:inherit;font-size:11.5px;
   border-radius:7px;border:1px solid var(--edge);background:var(--ink3);color:var(--paper2);

@@ -1107,15 +1107,13 @@ AD.UI = {
     activeEl.className = st.active > 0 ? 'hot' : '';
 
     const note = this.el('war-note');
-    if (result && result.line) {
+    if (result && (result.res || result.line)) {
       note.className = 'corr-note bought';
-      note.innerHTML = `<b>War declared on ${result.target.name}.</b> ` +
-        `&ldquo;${AD.clean(result.line, this.settings.clean)}&rdquo;` +
-        (result.heat !== null && result.heat !== undefined ? ' <i>Saint Ambrose cools.</i>' : '');
+      note.innerHTML = `<b>${AD.clean(result.res || result.line, this.settings.clean)}</b>`;
     } else {
       note.className = 'corr-note';
-      note.textContent = 'Declare war on anyone you like, for any reason at all. The base rallies to the flag; ' +
-        'the institutions you did not ask do not. "Deflect from a scandal" really does bury the Saint Ambrose files.';
+      note.textContent = 'Every country answers differently. Rattle the sabre at the ones who will fold, strike the ' +
+        'weak, and never gamble a strike on a nuclear power unless you can afford the fallout. The row tells you who is who.';
     }
 
     const strengthLabel = t => t.strength === 0 ? 'undefended'
@@ -1125,26 +1123,32 @@ AD.UI = {
       const t = AD.warTargetById(w.target);
       return `<div class="sen-row war-ongoing">
         <div class="sen-top"><span class="sen-dot"></span>
-          <b>War: ${t.name}</b><i>month ${w.months + 1} · ${AD.warPretextById(w.pretext).label.toLowerCase()}</i>
+          <b>War: ${t.name}</b><i>month ${w.months + 1}</i>
           <span class="sen-mood">Ongoing</span></div></div>`;
     }).join('');
 
     const targets = AD.WAR_TARGETS.map(t => {
       const atWar = AD.atWarWith(run, t.id);
-      const buttons = AD.WAR_PRETEXTS.map(p => {
-        const dis = atWar || run.cash < 0.4 ? 'disabled' : '';
-        return `<button class="sen-act war-${p.id}" data-wartarget="${t.id}" data-warwhy="${p.id}" ${dis} title="${p.label}">${p.icon} ${p.label}</button>`;
+      const buttons = AD.WAR_OPS.map(op => {
+        const avail = AD.warOpAvailable(run, t, op);
+        const c = AD.warOpCostFor(run, t, op);
+        const cost = c ? ` <em>${AD.fmtCash(c)}</em>` : '';
+        return `<button class="sen-act war-${op.id}" data-wartarget="${t.id}" data-warop="${op.id}" ${avail.ok ? '' : 'disabled'} title="${avail.ok ? op.blurb : avail.reason}">${op.icon} ${op.label}${cost}${avail.ok ? '' : ' <span class="act-lock">' + AD.reasonBadge(avail.reason) + '</span>'}</button>`;
       }).join('');
+      const badges = (t.nukes ? '<span class="war-badge nuke">☢️ nuclear</span>' : '') +
+                     (t.ally ? '<span class="war-badge ally">🤝 ally</span>' : '') +
+                     (t.loot >= 1 ? '<span class="war-badge rich">💰 rich</span>' : '');
       return `<div class="sen-row war-target ${atWar ? 'mood-gone' : ''}">
         <div class="sen-top"><span class="sen-dot"></span>
-          <b>${t.name}</b><i>${t.leader} · ${strengthLabel(t)}${t.loot >= 1 ? ' · rich' : ''}</i>
+          <b>${t.name}</b><i>${t.leader} · ${strengthLabel(t)}</i>
           ${atWar ? '<span class="sen-mood">At war</span>' : ''}</div>
-        <div class="sen-gripe">${t.blurb}</div>
+        <div class="war-badges">${badges}</div>
+        ${t.tell ? `<div class="sen-tell">${t.tell}</div>` : ''}
         <div class="sen-acts war-acts">${buttons}</div>
       </div>`;
     }).join('');
 
-    this.el('war-list').innerHTML = (ongoing ? ongoing + '<div class="war-sep">Declare a new war</div>' : '') + targets;
+    this.el('war-list').innerHTML = (ongoing ? ongoing + '<div class="war-sep">Choose your target and your method</div>' : '') + targets;
   },
 
   /* ---------- the bench (courts) ---------- */

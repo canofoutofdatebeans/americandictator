@@ -78,6 +78,9 @@ async function main () {
 
   // 3. Core gameplay: the HUD, victory tracker, meters and a crisis card
   await act('begin');
+  await page.evaluate(() => {                       // dismiss the first-run walkthrough
+    const s = document.querySelector('[data-act="tut-skip"]'); if (s) s.click();
+  });
   await shot('03-gameplay');
 
   // 4. A section pop-up, so the bulletin banner is visible in the store set
@@ -97,7 +100,15 @@ async function main () {
   await shot('06-pardons');
   await act('pardon-close');
 
-  // 7. The win: PRESIDENT-FOR-LIFE front page (staged score)
+  // 7. The Bench: per-judge temperament, tells and payoff prices
+  await page.evaluate(() => {
+    const run = AD.Engine.run; AD.ensureCourts(run); AD.UI.renderCourts();
+    const ov = document.getElementById('ov-courts'); ov.hidden = false; ov.style.display = ''; window.scrollTo(0, 0);
+  });
+  await shot('07-the-bench');
+  await page.evaluate(() => { const ov = document.getElementById('ov-courts'); if (ov) ov.hidden = true; });
+
+  // 8. The win: PRESIDENT-FOR-LIFE front page (staged score)
   await page.evaluate(() => {
     document.querySelectorAll('.overlay').forEach(o => { o.style.display = 'none'; });
     AD.UI.renderEnding({
@@ -108,7 +119,7 @@ async function main () {
     });
     window.scrollTo(0, 0);
   });
-  await shot('07-president-for-life');
+  await shot('08-president-for-life');
 
   await browser.close();
   console.log('\nDone. ' + shots.length + ' screenshots in ' + path.relative(ROOT, OUT) + '/  (' +
