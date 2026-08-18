@@ -911,3 +911,22 @@ html[data-cb="on"] .fac.danger .fac-val{color:#93c5fd}
 .choice.wild .ch-num{color:#c9a9e0;background:rgba(122,63,176,.14);border-color:rgba(122,63,176,.4)}
 .ch-label{flex:1;min-width:0}
 .choice:disabled{opacity:.4}
+
+/* ═══════════════ HUD DECLUTTER ═══════════════ */
+/* Tighter vertical rhythm so the top reads as one calm block */
+.authority-wrap{margin:10px 0 6px}
+.pillar-row{margin-top:6px;gap:4px}
+.chip-row{margin-top:6px;gap:5px}
+.facade{margin-top:8px}
+
+/* Empty pillar slots become quiet dashes; a captured one lights GOLD (secured),
+   matching the captured-meter colour instead of shouting in red. */
+.pill{padding:3px 2px;font-size:8.5px;letter-spacing:.8px;
+  background:transparent;border:1px dashed #232f49;color:#3f4a63;opacity:.75}
+.pill.on{opacity:1;font-weight:700;border-style:solid;border-color:var(--gold-soft);
+  color:#241a06;background:linear-gradient(180deg,#f2dd8a,#c9a227);
+  box-shadow:0 0 14px rgba(201,162,39,.3)}
+
+/* A quiet caption so the empty slots explain themselves */
+.pillar-cap{font-size:8px;letter-spacing:2.4px;color:#4a5573;text-transform:uppercase;
+  margin:8px 0 -2px;text-align:center}
