@@ -174,7 +174,7 @@ AD.Game = {
 
     /* --- audio: the most significant thing that happened, once --- */
     const A = AD.Audio;
-    if (out.pillar)        A.play('pillar');
+    if (out.pillar)        { A.play('pillar'); AD.UI.captureFlash(out.pillar); }
     else if (out.breach)   A.play('clause');
     else if (out.doctrine) A.play('doctrine');
     else if (out.deltas.cash > 0) A.play('money');

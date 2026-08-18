@@ -797,3 +797,25 @@ body::before{
 .dos-actions{display:flex;gap:8px}
 .dos-actions .btn{flex:1}
 @media (max-width:420px){.dos-copy{columns:1}}
+
+/* ---------- animated meters + capture moment ---------- */
+.authority-fill{transition:width .55s cubic-bezier(.2,.8,.25,1)}
+html[data-motion="off"] .authority-fill{transition:none}
+.capture-fx{position:fixed;inset:0;z-index:60;pointer-events:none;display:flex;
+  align-items:center;justify-content:center;opacity:0}
+.capture-fx.go{animation:capFx 1.4s ease both}
+@keyframes capFx{
+  0%{opacity:0;background:radial-gradient(circle,rgba(201,162,39,.55),transparent 60%)}
+  18%{opacity:1}
+  70%{opacity:1}
+  100%{opacity:0;background:radial-gradient(circle,rgba(201,162,39,0),transparent 60%)}
+}
+.cap-stamp{border:4px solid var(--gold);color:var(--gold-soft);background:rgba(10,8,4,.72);
+  padding:16px 30px;border-radius:10px;font-size:clamp(20px,7vw,32px);font-weight:900;
+  letter-spacing:3px;text-transform:uppercase;text-align:center;transform:rotate(-4deg) scale(.6);
+  box-shadow:0 0 60px rgba(201,162,39,.4)}
+.capture-fx.go .cap-stamp{animation:capStamp 1.4s cubic-bezier(.2,1.4,.3,1) both}
+@keyframes capStamp{0%{transform:rotate(-4deg) scale(.4);opacity:0}
+  22%{transform:rotate(-4deg) scale(1.05);opacity:1}30%{transform:rotate(-4deg) scale(1)}
+  75%{opacity:1}100%{opacity:0}}
+.cap-stamp span{display:block;font-size:.4em;letter-spacing:6px;color:var(--gold);margin-top:6px}

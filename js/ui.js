@@ -128,6 +128,15 @@ AD.UI = {
     }).join('');
   },
 
+  /* ---------- the capture moment ---------- */
+  captureFlash (key) {
+    const el = this.el('capture-fx');
+    if (!el || this.settings && this.settings.motion) { return; }   // respect reduce-motion
+    const f = AD.faction(key);
+    el.innerHTML = '<div class="cap-stamp">' + (f ? f.pillar.toUpperCase() : 'CAPTURED') + '<span>SECURED</span></div>';
+    el.classList.remove('go'); void el.offsetWidth; el.classList.add('go');
+  },
+
   /* ---------- the crisis card ---------- */
   renderCard (card) {
     const run = AD.Engine.run;
