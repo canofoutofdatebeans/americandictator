@@ -10286,10 +10286,19 @@ AD.SECTION_POOL = [
  }
 ];
 
-/* Resolve the who-id strings to cast objects so the card renders like any
-   other. Runs at load (after cards.js has defined AD.CAST). */
+/* Resolve the who-id strings to cast objects, and stamp each pop-up with a
+   section BANNER so the player can see at a glance that a live system just
+   reached out (it reads as a pop-up, not just another card in the deck). */
+AD.POPUP_BANNER = {
+  economy: '📈 THE ECONOMY', money: '💰 PRIVATE INTERESTS',
+  phone: '📞 THE PHONE', press: '📰 THE PRESS',
+  war: '⚔️ THE WAR ROOM', street: '🪧 THE STREET',
+  congress: '🏛️ CONGRESS', base: '🔥 THE BASE',
+  pardon: '🖋️ THE PARDON POWER'
+};
 (function () {
   (AD.SECTION_POOL || []).forEach(function (c) {
     c.who = (AD.CAST && AD.CAST[c.who]) || (AD.CAST && AD.CAST.cos) || c.who;
+    if (!c.pillarBanner) c.pillarBanner = AD.POPUP_BANNER[c.section] || 'A DEVELOPING SITUATION';
   });
 })();

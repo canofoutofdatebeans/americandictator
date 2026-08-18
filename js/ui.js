@@ -153,7 +153,7 @@ AD.UI = {
     const pillars = AD.FACTIONS.filter(f => f.capturable);
     this.el('pillar-row').innerHTML = pillars.map(f =>
       `<div class="pill ${run.locked[f.key] ? 'on' : ''}" title="${f.pillar}">${
-        run.locked[f.key] ? f.pillar : ', '}</div>`).join('');
+        run.locked[f.key] ? f.pillar : '·'}</div>`).join('');
 
     this.renderFactions(run);
   },

@@ -69,9 +69,25 @@ AD.faction = k => AD.FACTIONS.find(f => f.key === k);
 -------------------------------------------------------------------------- */
 AD.SOFT_CAP = 55;
 
+/* Authority reflects your ACTUAL GRIP, not just paper power. Your earned raw
+   authority is capped at the soft cap, but when the country turns on you (the
+   five meters crater) your real authority is DRAGGED DOWN with it, and it climbs
+   back as the meters recover. So the number rises and falls with the state of
+   the game instead of sitting frozen at the cap while everything else collapses.
+   Captured pillars count as 100 (a branch you own is not turning on you). */
+AD.AUTH_HEALTH_BASE = 50;   // meter average at/above which there is no drag
+AD.AUTH_DRAG = 0.8;         // authority lost per point the average falls below the base
+
 AD.recomputeAuthority = function (run) {
   run.rawAuth = Math.max(0, run.rawAuth);
-  run.authority = AD.clamp(Math.min(AD.SOFT_CAP, run.rawAuth) + run.pillarAuth, 0, 100);
+  let a = Math.min(AD.SOFT_CAP, run.rawAuth) + run.pillarAuth;
+  if (run.meters) {
+    let sum = 0;
+    AD.FKEYS.forEach(k => { sum += run.locked[k] ? 100 : (run.meters[k] || 0); });
+    const avg = sum / AD.FKEYS.length;
+    if (avg < AD.AUTH_HEALTH_BASE) a -= Math.round((AD.AUTH_HEALTH_BASE - avg) * AD.AUTH_DRAG);
+  }
+  run.authority = AD.clamp(a, 0, 100);
   return run.authority;
 };
 

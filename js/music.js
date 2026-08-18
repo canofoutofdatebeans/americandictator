@@ -54,6 +54,12 @@ AD.Music = {
       const j = Math.floor(Math.random() * (i + 1));
       const t = this.order[i]; this.order[i] = this.order[j]; this.order[j] = t;
     }
+    // The Star Spangled Banner always opens the game; the rest stay random.
+    const anthem = this.tracks.findIndex(t => /star spangled banner/i.test(t));
+    if (anthem !== -1) {
+      this.order = this.order.filter(i => i !== anthem);
+      this.order.unshift(anthem);
+    }
     this.idx = 0;
   },
 
