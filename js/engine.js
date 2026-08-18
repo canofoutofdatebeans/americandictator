@@ -41,6 +41,7 @@ AD.Engine = {
     if (!run.relations) run.relations = {};
     if (!run.pardoned) run.pardoned = [];    // pre-pardon saves
     if (!run.doctrineOffered) run.doctrineOffered = [];
+    if (!run.wounded) run.wounded = {};
 
     this.run = run;
     this.card = null;
@@ -70,7 +71,15 @@ AD.Engine = {
     // depends on the term, so this must go through the term-aware scheduler.
     // Term one gets the Re-election (survivable); term two gets the finale.
     if (AD.termMonth(run) >= run.termLength - 1) {
-      this.card = AD.scriptedFor(run);
+      // Once the election card has been shown, an election FOLLOW-UP (the
+      // concede-or-contest decision) queued by its resolution takes precedence.
+      if (run.flags.electionShown && run.queue.length) {
+        this.card = run.queue.shift();
+        return this.card;
+      }
+      const c = AD.scriptedFor(run);
+      if (c) run.flags.electionShown = true;
+      this.card = c;
       return this.card;
     }
 
@@ -403,7 +412,26 @@ AD.Engine = {
         }
       };
     }
-    return { ending: AD.zeroEnding(dead.key) };
+    // A COLLAPSE IS NO LONGER FATAL. The term runs its full course to the
+    // election; a power centre that hits zero is floored and left wounded (which
+    // drags hard on your ballot standing), but it does not end the presidency.
+    // The voters, not a single zeroed meter, decide a first term.
+    run.wounded = run.wounded || {};
+    const firstTime = !run.wounded[dead.key];
+    run.wounded[dead.key] = (run.wounded[dead.key] || 0) + 1;
+    run.meters[dead.key] = AD.COLLAPSE_FLOOR;
+    if (!firstTime) return { saved: dead.key };
+    return {
+      saved: dead.key,
+      tabloid: {
+        head: dead.short + ' COLLAPSES',
+        sub: dead.name + ' hits bottom; the administration limps on toward the ballot',
+        body: 'In an older, more decisive republic this would have been the end of it. It is not the end of it. ' +
+              'The ' + dead.name.toLowerCase() + ' has turned on you completely and you are still, technically, ' +
+              'the President, which is the kind of technicality this whole enterprise runs on. It will cost you at ' +
+              'the election. Everything costs you at the election now. That is what the election is for.'
+      }
+    };
   },
 
   /* ---------- ADVANCE ----------------------------------------------------- */

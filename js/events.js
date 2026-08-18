@@ -107,40 +107,90 @@ AD.EVENTS = {
      and you get a second term, which is where the reference game's long game
      actually lives. ------------------------------------------------------ */
   reelection: {
-    id: 'evt-reelection', scripted: true, title: 'The Re-election', who: E.cos,
+    id: 'evt-reelection', scripted: true, title: 'Election Night', who: E.cos,
     tags: ['elections','power'], final: true,
-    text: 'It is the last November of the first term. The ballots are printed. Four more years is on the table, ' +
-          'and so is not needing them. Deborah has already worked out which door you are going to take.',
+    text: 'It is the last November of the first term, and the war chest is full, the donations flooded in the ' +
+          'moment the ballots were printed. Four more years is on the table, and so is not needing them. ' +
+          'Deborah has three ways to run the night, and the polls close at nine.',
     choices: [
-      { label: 'Run. Win it. The normal way.', mode: 'run' },
-      { label: 'Run, and contest every close county before the count.', mode: 'contest' },
-      { label: 'Postpone. The emergency is ongoing. Elections can wait.', mode: 'postpone', needsAuth: 62 }
+      { label: 'Run on the record. A clean, straight campaign.', mode: 'clean' },
+      { label: 'Run on grievance. Give the base a war to win.', mode: 'grievance' },
+      { label: 'Outspend everyone. Bury the swing states in ads.', mode: 'spend' }
     ],
     dynamic (run, i) {
       const m = run.meters, a = run.authority;
       const mode = this.choices[i].mode;
-      const grip = (m.congress + m.courts + m.press + m.street) / 4;
+      const woundPenalty = Object.keys(run.wounded || {}).length * 9;   // collapsed centres hurt
+      let score;
 
-      if (mode === 'run') {
-        // Authority is a PENALTY here: the more openly you have taken the
-        // country apart, the harder it is to win a clean election. That's the
-        // real tension at this card, the fair door closes as the other two open.
-        const score = m.base * 0.45 + m.street * 0.45 + m.press * 0.35 + m.congress * 0.15
-                      - a * 0.30 + (AD.rng() * 30 - 15);
-        return score > 56 ? { secondTerm: 'won' } : { ending: 'peaceful-transfer' };
+      if (mode === 'clean') {
+        // Authority is a PENALTY on a clean win: the more openly you have taken
+        // the country apart, the harder it is to win a fair one.
+        score = m.base * 0.4 + m.street * 0.4 + m.press * 0.4 + m.congress * 0.2
+                - a * 0.28 - woundPenalty + (AD.rng() * 26 - 13);
+      } else if (mode === 'grievance') {
+        // The base carries it, and it carries almost nothing else.
+        score = m.base * 0.7 + m.congress * 0.15 - woundPenalty + (AD.rng() * 26 - 13);
+      } else {                                        // outspend
+        const spent = Math.min(run.cash, 2);
+        run.cash = Math.round((run.cash - spent) * 100) / 100;
+        score = m.base * 0.35 + m.street * 0.3 + m.press * 0.25 + spent * 7
+                - woundPenalty * 0.7 + (AD.rng() * 24 - 12);
       }
 
-      if (mode === 'contest') {
-        const power = m.courts * 0.45 + m.congress * 0.3 + m.street * 0.25 +
-                      (run.flags.commission ? 14 : 0) + (AD.rng() * 24 - 12);
-        if (power > 58 && a >= 55) return { ending: 'certified' };
-        if (power > 40) return { secondTerm: 'contested' };
-        return { ending: 'the-count' };
-      }
+      if (score > 52) return { secondTerm: 'won' };
 
-      if (grip >= 60 && a >= 70) return { ending: 'indefinite' };
-      if (grip >= 46) return { ending: 'the-standoff' };
-      return { ending: 'the-refusal' };
+      // LOST. Do not end the run: queue the concede-or-contest decision and let
+      // the player choose what losing means.
+      run.queue.unshift(AD.EVENTS.contestDecision);
+      return {
+        res: 'The networks call it at 11:40pm, and not by a rounding error. You lost. There is still a decision ' +
+             'to make, though, about what a loss is going to be allowed to mean.',
+        tabloid: {
+          head: 'DEFEATED, FOR NOW',
+          sub: 'President loses re-election; concession, or a contest, awaited by morning',
+          body: 'The result was clear enough that the anchors said the word "projected" only once. In the residence ' +
+                'the lights stayed on. Two speeches sat printed on the desk, side by side. One of them began with the ' +
+                'word "congratulations." Nobody in the building expected that to be the one he reached for.'
+        }
+      };
+    }
+  },
+
+  /* ---------- 3a-ii. Concede or Contest (only if you lost) ----------------
+     The heart of the new endgame. Walk away with dignity, or call it rigged
+     and try to TAKE the second term through the Courts and Congress you spent
+     the term building. If you did not build them, the contest collapses. ---- */
+  contestDecision: {
+    id: 'evt-contest-decision', scripted: true, title: 'Concede or Contest', who: E.lawyer,
+    tags: ['elections','power'], final: true,
+    text: '"Two roads, sir, and no third one." Sy does not sit down. "You concede, you leave on the twentieth, you ' +
+          'get a library and the benefit of the doubt from history. Or you say the word, rigged, and we take it to ' +
+          'the courts and the Congress and the street, and we find out whether a second term can be seized even ' +
+          'though it was not, strictly speaking, won."',
+    choices: [
+      { label: 'Concede. Leave with what dignity remains.', mode: 'concede' },
+      { label: 'Declare it rigged. Fight it in the Courts and Congress.', mode: 'contest' },
+      { label: 'Declare yourself the winner. Livestream the "real" numbers.', mode: 'declare', wild: true }
+    ],
+    dynamic (run, i) {
+      const m = run.meters, a = run.authority;
+      const mode = this.choices[i].mode;
+      if (mode === 'concede') return { ending: 'peaceful-transfer' };
+
+      // The rigged path is a test of the machinery you actually built: the
+      // Courts to rule for you and the Congress to certify it. The street helps.
+      const power = m.courts * 0.5 + m.congress * 0.4 + m.street * 0.1
+                    + (run.flags.commission ? 12 : 0) + (AD.rng() * 20 - 10);
+
+      if (mode === 'declare') {
+        // Pure bluster with no legal scaffolding almost always collapses.
+        if (power > 64 && a >= 72) return { secondTerm: 'contested' };
+        return { ending: power > 44 ? 'the-standoff' : 'the-refusal' };
+      }
+      if (power > 52) return { secondTerm: 'contested' };   // the courts and Congress deliver it
+      if (power > 36) return { ending: 'the-standoff' };     // it drags for weeks, then collapses
+      return { ending: 'the-count' };                        // certified against you anyway
     }
   },
 
@@ -275,7 +325,16 @@ AD.scriptedFor = function (run) {
   const tm = AD.termMonth(run);
 
   // The last November of a term. Term one can be survived; term two cannot.
-  if (tm >= len - 1) return run.term >= 2 ? AD.EVENTS.election : AD.EVENTS.reelection;
+  if (tm >= len - 1) {
+    // Going into an election run, the donations flood in: a one-time campaign
+    // war chest, granted the first time the ballot appears each term.
+    if (run.flags.warChestTerm !== run.term) {
+      run.flags.warChestTerm = run.term;
+      run.cash = Math.round((run.cash + AD.CAMPAIGN_BOOST) * 100) / 100;
+      run.flags.warChestJustPaid = AD.CAMPAIGN_BOOST;
+    }
+    return run.term >= 2 ? AD.EVENTS.election : AD.EVENTS.reelection;
+  }
 
   const midterm = Math.round(len * 0.47);           // 23 of 48, 19 of 40
   if (tm === midterm && run.flags.midtermsInTerm !== run.term) {

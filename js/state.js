@@ -128,6 +128,13 @@ AD.BASE_DECAY = -3;      // a movement that isn't fed every month cools off
    decay it makes a maxed base a term-long project, not a two-card spike. */
 AD.BASE_RISE_CAP = 5;
 
+/* A term now always runs its full course to an ELECTION, instead of ending the
+   moment a meter hits zero. A power centre that collapses is floored here and
+   left WOUNDED (a lasting drag on the ballot), but the president survives to
+   face the voters. The election is the sole judge of a first term. */
+AD.COLLAPSE_FLOOR = 12;      // where a zeroed meter is held instead of ending the run
+AD.CAMPAIGN_BOOST = 2;       // $B war chest granted going into an election run
+
 /* ---------- The Base's appetite ------------------------------------------
    The movement is, by design and per the brief, largely far-right and
    poorly served by the education system it keeps voting to defund. It does
@@ -303,6 +310,7 @@ AD.newRun = function (opts) {
     vpAmbition: 0,              // how far the Vice President has outgrown you (0-100)
     doctrines: [],              // ids of unlocked doctrines
     doctrineOffered: [],        // doctrines already offered (signed or binned)
+    wounded: {},                // power centres that have collapsed to the floor
     shieldUsed: false,          // Immunity Shield consumed?
     seen: [],                   // card ids already played
     flags: {},                  // story flags set by choices
