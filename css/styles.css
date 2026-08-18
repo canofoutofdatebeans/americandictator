@@ -747,3 +747,25 @@ body::before{
 .sen-act.war-deflect{border-color:#453714;background:linear-gradient(#1a1524,#120f1a);color:#c9a9e0}
 .sen-act.war-resources{border-color:#5c4a15;background:linear-gradient(#33280f,#241c09);color:#e6cf7a}
 .sen-act.war-boredom{border-color:#3a4a5a;background:linear-gradient(#141c26,#0e141c);color:#a0c0d8}
+
+/* ---------- the bench (courts) ---------- */
+.court-mood-hostile{border-left-color:#c0392b}
+.court-mood-critical{border-left-color:#c98d3a}
+.court-mood-neutral{border-left-color:var(--edge2)}
+.court-mood-friendly{border-left-color:#4f9160}
+.court-mood-captured{border-left-color:var(--gold)}
+.court-loy{background:linear-gradient(90deg,#8d8271,#c9a227)}
+.court-mood-hostile .court-loy,.court-mood-critical .court-loy{background:#c0392b}
+.court-mood-captured .sen-mood{color:var(--gold-soft)}
+.sen-act.court-pressure{border-color:#5a2030;background:linear-gradient(#2a1016,#1c0b0f);color:#e0a0a6}
+.sen-act.court-buy{border-color:#5c4a15;background:linear-gradient(#33280f,#241c09);color:#e6cf7a}
+.sen-act.court-sack{border-color:#6a1a22;background:linear-gradient(#33101a,#220a10);color:#f0b0b6}
+
+/* ---------- the rally (base) ---------- */
+#rally-left.hot{color:var(--red-hot)}
+.sen-row.rally-row{border-left-color:var(--red-hot)}
+.rally-row .sen-top b{font-size:13px}
+.rally-row .sen-top i{color:#9ec9a5}
+.sen-act.rally-do{flex:1 1 100%;background:linear-gradient(var(--red),var(--red-hot));
+  border-color:#e05159;color:#fff;font-weight:600;letter-spacing:1px}
+.sen-act.rally-do:hover:not(:disabled){filter:brightness(1.12)}

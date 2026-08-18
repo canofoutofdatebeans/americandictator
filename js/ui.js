@@ -866,6 +866,76 @@ AD.UI = {
     this.el('war-list').innerHTML = (ongoing ? ongoing + '<div class="war-sep">Declare a new war</div>' : '') + targets;
   },
 
+  /* ---------- the bench (courts) ---------- */
+  renderCourts (result) {
+    const run = AD.Engine.run;
+    AD.ensureCourts(run);
+    const sum = AD.courtsSummary(run);
+    this.el('courts-friendly').textContent = sum.friendly;
+    this.el('courts-hostile').textContent = sum.hostile;
+    this.el('courts-appointees').textContent = sum.appointees;
+
+    const note = this.el('courts-note');
+    if (result && result.action) {
+      note.className = 'corr-note bought';
+      const verb = { pressure: 'attacked from the podium', buy: 'quietly bought', sack: 'impeached and replaced with a loyalist' }[result.action.id];
+      note.innerHTML = `<b>${result.judge.name} ${verb}.</b> ${result.action.blurb}`;
+    } else {
+      note.className = 'corr-note';
+      note.textContent = 'Pressure the judges, buy the affordable ones, or impeach a hostile one and pack the ' +
+        'seat with a loyalist. A favourable bench pushes the Courts meter up every month.';
+    }
+
+    const order = run.judges.slice().sort((a, b) => a.align - b.align);
+    this.el('courts-list').innerHTML = order.map(j => {
+      const st = AD.judgeStance(j);
+      const buttons = AD.COURT_ACTIONS.map(act => {
+        const avail = AD.courtActionAvailable(run, j, act);
+        const cost = act.cost ? ` <em>$${act.cost}B</em>` : '';
+        return `<button class="sen-act court-${act.id}" data-judge="${j.id}" data-courtact="${act.id}" ${avail.ok ? '' : 'disabled'} title="${act.blurb}">${act.icon} ${act.label}${cost}</button>`;
+      }).join('');
+      return `<div class="sen-row court-mood-${st.key}">
+        <div class="sen-top"><span class="sen-dot"></span>
+          <b>${j.name}</b><i>${j.court}${j.appointee ? ' · appointed' : ''}</i>
+          <span class="sen-mood">${st.label}</span></div>
+        <div class="sen-loywrap"><div class="sen-loy court-loy" style="width:${j.align}%"></div></div>
+        <div class="sen-acts">${buttons}</div>
+      </div>`;
+    }).join('');
+  },
+
+  /* ---------- the rally (base) ---------- */
+  renderBasepop (result) {
+    const run = AD.Engine.run;
+    const left = AD.ralliesLeft(run);
+    const leftEl = this.el('rally-left');
+    leftEl.textContent = left;
+    leftEl.className = left <= 0 ? 'hot' : '';
+
+    const note = this.el('rally-note');
+    if (result && result.stunt) {
+      note.className = 'corr-note bought';
+      note.innerHTML = `<b>${result.stunt.label}.</b> ${AD.clean(result.stunt.blurb, this.settings.clean)}`;
+    } else {
+      note.className = 'corr-note';
+      note.textContent = 'Give the base what it wants. Two spectacles a month. Every one thrills the movement ' +
+        'and appals the institutions — and feeding the base too hard is its own way to lose it.';
+    }
+
+    const disabled = left <= 0;
+    this.el('rally-list').innerHTML = AD.RALLY_STUNTS.map(sn => {
+      const cost = (sn.eff.cash && sn.eff.cash < 0) ? -sn.eff.cash : 0;
+      const poor = cost && run.cash < cost;
+      const dis = disabled || poor ? 'disabled' : '';
+      return `<div class="sen-row rally-row">
+        <div class="sen-top"><span class="sen-dot"></span>
+          <b>${sn.icon} ${sn.label}</b>${cost ? `<i>$${cost.toFixed(1)}B</i>` : ''}</div>
+        <div class="sen-gripe">${AD.clean(sn.blurb, this.settings.clean)}</div>
+        <div class="sen-acts"><button class="sen-act rally-do" data-stunt="${sn.id}" ${dis}>Do It</button></div>
+      </div>`;
+    }).join('');
+  },
+
   /* ---------- crisis log ---------- */
   renderLog () {
     const run = AD.Engine.run;

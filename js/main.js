@@ -297,6 +297,30 @@ AD.Game = {
   },
 
   /* ---------- the residence ---------- */
+  courtAction (judgeId, actionId) {
+    const run = AD.Engine.run;
+    if (!run || run.over) return;
+    const r = AD.doCourtAction(run, judgeId, actionId);
+    if (!r.ok) return;
+    AD.saveRun(run);
+    AD.Audio.play(actionId === 'sack' ? 'stamp' : actionId === 'buy' ? 'money' : 'bad');
+    AD.UI.renderCourts(r); AD.UI.renderHUD();
+    const collapse = AD.Engine.checkCollapse();
+    if (collapse.ending) { AD.Engine.finish(collapse.ending); this.pending = []; setTimeout(() => this.showEnding(AD.Engine.lastScore), 900); }
+  },
+
+  doRally (stuntId) {
+    const run = AD.Engine.run;
+    if (!run || run.over) return;
+    const r = AD.doRally(run, stuntId);
+    if (!r.ok) return;
+    AD.saveRun(run);
+    AD.Audio.play('good');
+    AD.UI.renderBasepop(r); AD.UI.renderHUD();
+    const collapse = AD.Engine.checkCollapse();
+    if (collapse.ending) { AD.Engine.finish(collapse.ending); this.pending = []; setTimeout(() => this.showEnding(AD.Engine.lastScore), 900); }
+  },
+
   declareWar (targetId, pretextId) {
     const run = AD.Engine.run;
     if (!run || run.over) return;
@@ -450,6 +474,12 @@ AD.Game = {
       const warbtn = e.target.closest('[data-warwhy]');
       if (warbtn && !warbtn.disabled) { this.declareWar(warbtn.dataset.wartarget, warbtn.dataset.warwhy); return; }
 
+      const courtact = e.target.closest('[data-courtact]');
+      if (courtact && !courtact.disabled) { this.courtAction(courtact.dataset.judge, courtact.dataset.courtact); return; }
+
+      const stunt = e.target.closest('[data-stunt]');
+      if (stunt && !stunt.disabled) { this.doRally(stunt.dataset.stunt); return; }
+
       const act = e.target.closest('[data-act]');
       if (act) this.act(act.dataset.act);
     });
@@ -558,6 +588,22 @@ AD.Game = {
         U.stopTimer(); U.renderWar(); U.overlay('war', true); break;
       case 'war-close':
         U.overlay('war', false);
+        if (AD.Engine.card && !U.el('card').hidden) U.startTimer(AD.Engine.card);
+        break;
+
+      case 'courts':
+        if (U.current !== 'game' || !AD.Engine.run || AD.Engine.run.over) break;
+        U.stopTimer(); U.renderCourts(); U.overlay('courts', true); break;
+      case 'courts-close':
+        U.overlay('courts', false);
+        if (AD.Engine.card && !U.el('card').hidden) U.startTimer(AD.Engine.card);
+        break;
+
+      case 'basepop':
+        if (U.current !== 'game' || !AD.Engine.run || AD.Engine.run.over) break;
+        U.stopTimer(); U.renderBasepop(); U.overlay('basepop', true); break;
+      case 'basepop-close':
+        U.overlay('basepop', false);
         if (AD.Engine.card && !U.el('card').hidden) U.startTimer(AD.Engine.card);
         break;
 

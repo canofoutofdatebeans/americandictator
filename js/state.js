@@ -51,7 +51,7 @@ AD.FACTIONS = [
 
 AD.FKEYS = AD.FACTIONS.map(f => f.key);
 /* Which power centres have a live management screen behind the meter tile. */
-AD.FAC_SCREEN = { congress: 'senate', press: 'press', street: 'street' };
+AD.FAC_SCREEN = { congress: 'senate', press: 'press', street: 'street', courts: 'courts', base: 'basepop' };
 AD.faction = k => AD.FACTIONS.find(f => f.key === k);
 
 /* ---------- Authority ------------------------------------------------------
@@ -237,6 +237,7 @@ AD.newRun = function (opts) {
     press: [],                  // the press room — see press.js
     streets: [],                // the cities and their unrest — see street.js
     wars: [],                   // ongoing wars — see war.js
+    judges: [],                 // the bench — see courts.js
     clauses: [],                // constitutional clauses broken — see constitution.js
     stats: { grabs: 0, restraints: 0, timeouts: 0, peakCash: d.startCash, briefings: 0, bought: 0, built: 0 },
     over: false,

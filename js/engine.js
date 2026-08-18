@@ -36,6 +36,7 @@ AD.Engine = {
     if (!run.press || !run.press.length) run.press = AD.makePress();       // pre-press saves
     if (!run.streets || !run.streets.length) run.streets = AD.makeStreet(); // pre-street saves
     if (!run.wars) run.wars = [];           // pre-war saves
+    if (!run.judges || !run.judges.length) run.judges = AD.makeCourts(); // pre-courts saves
 
     this.run = run;
     this.card = null;
@@ -435,11 +436,13 @@ AD.Engine = {
     this.lastSenate = AD.senateTick(run);
     this.lastPress = AD.pressTick(run);
     this.lastStreet = AD.streetTick(run);
+    this.lastCourts = AD.courtsTick(run);
     AD.FKEYS.forEach(k => {
       const loss = preMgmt[k] - run.meters[k];
       if (loss > AD.MGMT_LOSS_CAP) run.meters[k] = preMgmt[k] - AD.MGMT_LOSS_CAP;
     });
     AD.callTick(run);   // refill the monthly phone allowance
+    AD.rallyTick(run);  // refill the monthly rally allowance
     this.lastWar = AD.warTick(run);   // ongoing wars resolve into victory or quagmire
     // A story hot enough to leak does damage without needing a card.
     this.lastLeak = AD.cayTick(run);
