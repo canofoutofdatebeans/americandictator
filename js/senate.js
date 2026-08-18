@@ -282,6 +282,33 @@ AD.doSenateAction = function (run, senId, actionId) {
   return { ok: true, action, senator: s, deltas };
 };
 
+/* ---------- the midterms move the chamber ---------------------------------
+   A wave flips seats. Positive n converts the friendliest opposition seats to
+   your party (a good night); negative n loses your shakiest seats to the other
+   side (a wipeout). Loyalty across your surviving caucus moves too — winning
+   emboldens them, losing emboldens the rebels. Called from the Midterms event
+   so the election actually reshapes the Senate rather than just nudging a bar. */
+AD.senateShift = function (run, n, loyaltyDelta) {
+  const s = AD.ensureSenate(run);
+  if (n > 0) {
+    // flip the least-hostile opposition seats to your party
+    s.filter(x => !x.gone && x.party === 'opp')
+     .sort((a, b) => b.loyalty - a.loyalty)
+     .slice(0, n)
+     .forEach(x => { x.party = 'own'; x.loyalty = Math.max(x.loyalty, 60); x.gripe = null; x.flipped = true; });
+  } else if (n < 0) {
+    // lose your weakest seats to the wave
+    s.filter(x => !x.gone && x.party === 'own')
+     .sort((a, b) => a.loyalty - b.loyalty)
+     .slice(0, -n)
+     .forEach(x => { x.party = 'opp'; x.loyalty = Math.min(x.loyalty, 30); });
+  }
+  if (loyaltyDelta) {
+    s.forEach(x => { if (!x.gone && x.party === 'own') x.loyalty = AD.clamp(x.loyalty + loyaltyDelta, 0, 100); });
+  }
+  return AD.senateSummary(run);
+};
+
 /* ---------- the monthly whip ---------------------------------------------
    Called from Engine.advance(). Loyalty decays; a neglected caucus drags the
    Congress meter down. Capturing Congress ends all of it — a captured chamber

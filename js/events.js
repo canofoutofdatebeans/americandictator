@@ -41,7 +41,8 @@ AD.EVENTS = {
     choices: [
       { label: 'Make it about me. Rally in 40 states.', mode: 'base' },
       { label: 'Make it about groceries. Talk about nothing else.', mode: 'street' },
-      { label: 'Skip campaigning. Fund lawyers, recounts and county boards.', mode: 'legal' }
+      { label: 'Skip campaigning. Fund lawyers, recounts and county boards.', mode: 'legal' },
+      { label: 'Declare it rigged in advance and campaign only on that.', mode: 'chaos', wild: true }
     ],
     dynamic (run, i) {
       const m = run.meters;
@@ -54,28 +55,44 @@ AD.EVENTS = {
       } else if (mode === 'street') {
         score = m.street * 1.0 + m.press * 0.6 + m.base * 0.3 - 40;
         eff.street = +5; eff.base = -4;
-      } else {
+      } else if (mode === 'legal') {
         score = m.courts * 0.9 + m.congress * 0.7 + m.base * 0.4 - 40;
         eff.courts = -6; eff.press = -6; eff.street = -4; eff.auth = +6;
+      } else {                                   // chaos: all-in on the grievance
+        score = m.base * 1.1 - 34;
+        eff.base = +9; eff.press = -7; eff.courts = -4; eff.street = -4; eff.auth = +5;
+        score += (AD.rng() * 40) - 20;           // wildly variable, as promised
       }
+
+      // The systems now feed the result: a whipped caucus and a friendly press
+      // are worth real seats. The Midterms are where those two screens cash out.
+      const sen = AD.senateSummary(run);
+      const pr = AD.pressSummary ? AD.pressSummary(run) : { friendly: 0, hostile: 0 };
+      score += (sen.avgOwn - 55) * 0.3 + (pr.friendly - pr.hostile) * 1.4;
       score += (AD.rng() * 24) - 12;
 
-      let tabloid;
+      let tabloid, shift;
       if (score >= 34) {
         eff.congress = (eff.congress || 0) + 18; eff.auth = (eff.auth || 0) + 8;
-        res = 'You gain seats in a midterm. It has happened four times since the Civil War and one of them is now you.';
+        shift = AD.senateShift(run, 4, 10);      // flip 4 opposition seats, embolden the caucus
+        res = 'You gain seats in a midterm. Four opposition senators are now yours, and the caucus has ' +
+              'discovered a new enthusiasm for whatever you would like next.';
         tabloid = { head: 'THEY WENT AND DID IT AGAIN', sub: 'Ruling party gains seats in a midterm for the first time in a generation',
           body: 'Analysts described the result as "structurally impossible" for eleven months and then spent one night watching it happen. ' +
                 'The opposition leader conceded at 2:40am using the phrase "we will regroup," which is the sound a party makes while falling down stairs.' };
       } else if (score >= 8) {
         eff.congress = (eff.congress || 0) + 4;
-        res = 'You hold. Barely. A two-seat majority becomes a one-seat majority and one member is 89 years old.';
+        shift = AD.senateShift(run, 1, 2);
+        res = 'You hold. Barely. One seat flips your way and the caucus stays roughly where it was, ' +
+              'which under the circumstances is a triumph.';
         tabloid = { head: 'HELD. SORT OF.', sub: 'Majority survives on a margin thinner than the paper this is printed on',
           body: 'Control of the chamber now depends on the continued good health of a man who takes eleven medications ' +
                 'and the continued good mood of a woman who has stopped returning the Speaker\'s calls.' };
       } else {
         eff.congress = (eff.congress || 0) - 22; eff.press = (eff.press || 0) - 5;
-        res = 'A wave. You lose the House and, with it, the ability to pass anything or stop any subpoena.';
+        shift = AD.senateShift(run, -5, -12);    // lose five seats, the caucus turns
+        res = 'A wave. Five of your own senators lose their seats, the survivors are suddenly full of ' +
+              '"concerns," and the opposition has the gavel and the subpoena power.';
         tabloid = { head: 'WIPEOUT', sub: 'Historic losses hand the opposition the gavel and the subpoena power',
           body: 'Forty-one seats. The new majority has already announced eleven investigations, six of which are into things ' +
                 'the administration has publicly admitted doing. "We are not going to be a rubber stamp," said the incoming chair, ' +
