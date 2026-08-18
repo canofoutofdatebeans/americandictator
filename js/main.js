@@ -13,6 +13,7 @@ AD.Game = {
   init () {
     const U = AD.UI;
     U.settings = AD.loadSettings();
+    AD.Music.init(U.settings);
     this.applySettings();
     this.buildSetupScreen();
     this.buildHowTo();
@@ -27,7 +28,7 @@ AD.Game = {
     const s = AD.UI.settings;
     document.documentElement.setAttribute('data-motion', s.motion ? 'off' : 'on');
     document.documentElement.setAttribute('data-cb', s.cb ? 'on' : 'off');
-    ['timer', 'motion', 'clean', 'pack', 'cb', 'haptics'].forEach(k => {
+    ['timer', 'motion', 'clean', 'pack', 'cb', 'haptics', 'music'].forEach(k => {
       const el = AD.UI.el('opt-' + k);
       if (el) el.checked = !!s[k];
     });
@@ -553,6 +554,7 @@ AD.Game = {
 
     document.addEventListener('click', e => {
       AD.Audio.unlock();                   // browsers gate audio on first gesture
+      AD.Music.start();                    // background marches begin on first tap
 
       const choice = e.target.closest('.choice');
       if (choice && !choice.disabled) { this.decide(+choice.dataset.choice, false); return; }
@@ -649,12 +651,13 @@ AD.Game = {
       if (act) this.act(act.dataset.act);
     });
 
-    ['timer', 'motion', 'clean', 'pack', 'cb', 'haptics'].forEach(k => {
+    ['timer', 'motion', 'clean', 'pack', 'cb', 'haptics', 'music'].forEach(k => {
       const el = U.el('opt-' + k);
       if (!el) return;
       el.addEventListener('change', () => {
         U.settings[k] = el.checked;
         AD.saveSettings(U.settings);
+        if (k === 'music') AD.Music.setOn(el.checked);
         this.applySettings();
         if (k === 'pack' && U.current === 'game' && AD.Engine.card) U.renderCard(AD.Engine.card);
       });
