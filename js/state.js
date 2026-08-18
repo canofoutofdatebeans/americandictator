@@ -75,6 +75,12 @@ AD.recomputeAuthority = function (run) {
   return run.authority;
 };
 
+/* First-run training wheels: a brand-new player gets a few months where a
+   meter that hits zero is floored instead of fatal, so they can make a mistake
+   and watch the consequence without an instant loss. Set only in the real
+   begin() flow for a first-ever run — bots and normal runs never have it. */
+AD.inGrace = run => !!(run.graceUntil && run.month <= run.graceUntil);
+
 /* The Base is fatal at the top as well as the bottom, but not instantly:
    it takes BASE_FUSE consecutive months above BASE_DANGER for the movement
    to finish choosing somebody else. That runway is your warning. */
@@ -319,6 +325,7 @@ AD.recordChaos = function (endingId) {
 AD.SAVE_KEY = 'americandictator.save.v1';
 AD.LIB_KEY  = 'americandictator.library.v1';
 AD.SET_KEY  = 'americandictator.settings.v1';
+AD.PLAYED_KEY = 'americandictator.played.v1';   // has this browser ever played?
 
 AD.store = {
   read(key, fallback) {

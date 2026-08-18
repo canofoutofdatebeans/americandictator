@@ -129,6 +129,11 @@ AD.Game = {
     AD.Seed.set(run.seed);                 // same seed + same choices = same term
     AD.Engine.start(run);
     AD.Engine.applyInheritance(run);    // start the term in the country you were left
+    // First-ever run on this browser gets a short training grace (see AD.inGrace).
+    if (!AD.store.read(AD.PLAYED_KEY, false)) {
+      run.graceUntil = run.month + 4;
+      AD.store.write(AD.PLAYED_KEY, true);
+    }
     AD.saveRun(run);
     this.enterGame();
   },

@@ -336,6 +336,23 @@ AD.Engine = {
     const dead = AD.FACTIONS.find(f => !run.locked[f.key] && run.meters[f.key] <= 0);
     if (!dead) return {};
 
+    // First-run training wheels: floor the dying meter, don't end the term.
+    if (AD.inGrace(run)) {
+      run.meters[dead.key] = 20;
+      if (dead.key === 'base') run.baseHigh = 0;
+      return {
+        saved: dead.key,
+        tabloid: {
+          head: 'A CLOSE ONE',
+          sub: 'Training term — ' + dead.name.toLowerCase() + ' pulled back from the brink',
+          body: 'In a real administration that would have been the end of it. For your first few months the ' +
+                'guardrails are on: a power centre that hits zero is quietly restored so you can see what a ' +
+                'mistake costs without the mistake costing you the presidency. The guardrails come off shortly. ' +
+                'Watch which meter nearly went — that is the one the country will actually use against you.'
+        }
+      };
+    }
+
     if (AD.hasDoctrine(run, 'immunity') && !run.shieldUsed) {
       run.shieldUsed = true;
       run.meters[dead.key] = 22;
@@ -471,7 +488,7 @@ AD.Engine = {
 
     // The Understudy fuse: three consecutive months of a movement that has
     // outgrown you and the Vice President accepts the nomination.
-    if (run.meters.base >= AD.BASE_DANGER) run.baseHigh = (run.baseHigh || 0) + 1;
+    if (run.meters.base >= AD.BASE_DANGER && !AD.inGrace(run)) run.baseHigh = (run.baseHigh || 0) + 1;
     else run.baseHigh = 0;
     if (run.baseHigh >= AD.BASE_FUSE) { this.finish('max-base'); return 'max-base'; }
 
@@ -519,6 +536,12 @@ AD.Engine = {
   /* ---------- Warnings shown under the meters ----------------------------- */
   warnings () {
     const run = this.run, out = [];
+
+    if (AD.inGrace(run)) {
+      out.push({ level: 'good', text: 'Training term: the guardrails are on for ' +
+        (run.graceUntil - run.month + 1) + ' more month' + (run.graceUntil - run.month === 0 ? '' : 's') +
+        '. Nothing can end your presidency yet.' });
+    }
 
     if (run.baseHigh > 0) {
       const left = AD.BASE_FUSE - run.baseHigh;
