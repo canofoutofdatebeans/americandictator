@@ -1125,3 +1125,7 @@ html[data-cb="on"] .fac.danger .fac-val{color:#93c5fd}
 .mute-btn:hover{border-color:var(--gold-soft);transform:translateY(-1px)}
 .mute-btn:active{transform:scale(.94)}
 .mute-btn.muted{color:#7f8ca3;opacity:.85}
+
+/* ---------- build tag (title screen; makes a stale cache obvious) ---------- */
+.build-tag{text-align:center;font-size:9px;letter-spacing:2px;text-transform:uppercase;
+  color:var(--muted);opacity:.6;margin:4px 0 2px}

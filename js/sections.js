@@ -315,7 +315,7 @@ function poolCard (run) {
    pardon). Consulted from Engine.draw(). */
 AD.sectionEventFor = function (run) {
   const m = AD.termMonth(run);
-  if (m < 3) return null;                                   // let the honeymoon breathe
+  if (m < 2) return null;                                   // let the first month breathe
   run.flags = run.flags || {};
   if (m < (run.flags.sectionUntil || 0)) return null;       // global pacing gate
 
@@ -338,7 +338,7 @@ AD.sectionEventFor = function (run) {
   if (!card) card = poolCard(run);
   if (!card) return null;
 
-  run.flags.sectionUntil = m + 3;                           // no two pop-ups within 3 months
+  run.flags.sectionUntil = m + 2;                           // roughly one pop-up every couple of months
   return card;
 };
 })();

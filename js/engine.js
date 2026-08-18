@@ -98,9 +98,16 @@ AD.Engine = {
 
     // Section pop-ups: a live system (economy, pardons, phone, war room,
     // street, press, congress, base, money) reaches out, paced to punctuate.
+    // Checked BEFORE the scandal and the random deck so nothing starves them.
     if (AD.sectionEventFor) {
       const section = AD.sectionEventFor(run);
       if (section) { this.card = section; return this.card; }
+    }
+
+    // The Saint Ambrose scandal now yields to the pop-ups above.
+    if (AD.cayFor) {
+      const cay = AD.cayFor(run);
+      if (cay) { this.card = cay; return this.card; }
     }
 
     let card = AD.pickCard(run);

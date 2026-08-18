@@ -21,6 +21,7 @@ AD.Game = {
 
     const saved = AD.loadRun();
     U.el('btn-continue').hidden = !saved;
+    const bt = U.el('build-tag'); if (bt) bt.textContent = 'build ' + AD.BUILD;
     U.show('title');
   },
 

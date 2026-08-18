@@ -349,7 +349,8 @@ AD.scriptedFor = function (run) {
     return AD.EVENTS.address;
   }
 
-  // The Saint Ambrose arc. It yields to every other scripted beat above,
-  // because a scandal always waits for the State of the Union.
-  return AD.cayFor(run);
+  // The Saint Ambrose arc is now handled in Engine.draw() AFTER the section
+  // pop-ups, so a running scandal can never starve them. Only the true
+  // calendar beats (midterms, addresses, the election) live here.
+  return null;
 };
