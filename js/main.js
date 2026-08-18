@@ -1,5 +1,5 @@
 /* ============================================================
-   AMERICAN DICTATOR — main.js
+   AMERICAN DICTATOR, main.js
    Bootstrap, input wiring, and the turn loop that ties the
    engine to the UI.
    ============================================================ */
@@ -32,6 +32,23 @@ AD.Game = {
       const el = AD.UI.el('opt-' + k);
       if (el) el.checked = !!s[k];
     });
+    this.applyMute();
+  },
+
+  /* The master mute button silences BOTH the sound-effects synth and the
+     background music, and is honoured on every future cue. */
+  applyMute () {
+    const s = AD.UI.settings;
+    AD.Audio.muted = !!s.muted;
+    if (AD.Music) { if (s.muted) AD.Music.stop(); else AD.Music.setOn(!!s.music); }
+    const btn = AD.UI.el('mute-btn');
+    if (btn) { btn.textContent = s.muted ? '🔇' : '🔊'; btn.classList.toggle('muted', !!s.muted); }
+  },
+
+  toggleMute () {
+    AD.UI.settings.muted = !AD.UI.settings.muted;
+    AD.saveSettings(AD.UI.settings);
+    this.applyMute();
   },
 
   /* Fire a short vibration on capable devices, gated on the setting and the
@@ -72,17 +89,17 @@ AD.Game = {
       exit at the final election. Anything less and you were merely President, which is a loss.</p>
 
       <h4>The One Rule That Matters</h4>
-      <p>Authority earned from <em>decisions</em> is <b>hard capped at ${AD.SOFT_CAP}</b> — that's the
+      <p>Authority earned from <em>decisions</em> is <b>hard capped at ${AD.SOFT_CAP}</b>, that's the
       white line on the bar. Grinding out little power grabs forever gets you to ${AD.SOFT_CAP} and
       then stops dead. The last thirty points can only come from <b>Pillars</b>. You will have to
       actually take a branch of government.</p>
 
       <h4>The Five Power Centres</h4>
       <ul>
-        <li><b>🔥 The Base</b> — your fuel, and it cools by <b>${Math.abs(AD.BASE_DECAY)} every month</b>
+        <li><b>🔥 The Base</b>, your fuel, and it cools by <b>${Math.abs(AD.BASE_DECAY)} every month</b>
         unless you feed it. At <b>0</b> you are primaried out and your term is over, so keep it fed.
         A roaring base powers your transgressions and your Authority. The Base cannot be captured.</li>
-        <li><b>🏛️ Congress</b>, <b>⚖️ The Courts</b>, <b>📰 The Press</b>, <b>🪧 The Street</b> —
+        <li><b>🏛️ Congress</b>, <b>⚖️ The Courts</b>, <b>📰 The Press</b>, <b>🪧 The Street</b>, 
         at <b>0</b> each one ends your term in its own way. At <b>100</b> each becomes a
         <b>Pillar</b>: permanently captured, frozen, immune to everything, and worth
         <b>+25 Authority</b> that ignores the cap.</li>
@@ -90,7 +107,7 @@ AD.Game = {
 
       <h4>Pillars &amp; Backlash</h4>
       <p>Two pillars plus a maxed-out cap is a win. Four pillars is a win on its own. But every
-      capture triggers a <b>backlash</b> — the institutions you have <em>not</em> taken can see
+      capture triggers a <b>backlash</b>, the institutions you have <em>not</em> taken can see
       exactly what happened to the one you did, and they start defending themselves.</p>
 
       <h4>Doctrines</h4>
@@ -102,17 +119,17 @@ AD.Game = {
       <p>There are two ways to win. Take the country, or take the money. Tap the cash figure to
       open <b>Private Interests</b> and spend your fortune on platforms, lawsuits, senators,
       judges and income streams.</p>
-      <p>Holdings never grant Authority — money cannot buy the presidency outright. What it buys
+      <p>Holdings never grant Authority, money cannot buy the presidency outright. What it buys
       is <b>leverage</b>: shields that blunt incoming damage, multipliers on your gains, a monthly
       drip on the branch you are trying to capture, and the income to buy more of all three.</p>
-      <p>The target scales with difficulty — <b>$12B</b> on Rookie, <b>$15B</b> on Standard, <b>$20B</b> on Historic.
-      Reaching it doesn't end your term — it is banked and cashed in at
+      <p>The target scales with difficulty, <b>$12B</b> on Rookie, <b>$15B</b> on Standard, <b>$20B</b> on Historic.
+      Reaching it doesn't end your term, it is banked and cashed in at
       whatever ending you reach. It upgrades a win, and it <em>converts a loss into a win</em>.
       You can be removed from office and still come out ahead.</p>
 
       <h4>The Clock</h4>
       <p>Forty-eight months. The Midterms land around month 23 and are scored on whatever you chose
-      to make them about. The Election is the final card and there are three doors out of it —
+      to make them about. The Election is the final card and there are three doors out of it, 
       one of them only opens above Authority 62.</p>`;
   },
 
@@ -174,7 +191,7 @@ AD.Game = {
 
     if (out.ending) {
       // choose() already called Engine.finish(), so the scorecard exists now.
-      // Capture it immediately rather than reading engine state later — by the
+      // Capture it immediately rather than reading engine state later, by the
       // time the ending screen animates in, the player may have started a new run.
       this.pending = [];
       this.awaitingAdvance = false;
@@ -183,7 +200,7 @@ AD.Game = {
       return;
     }
 
-    // Queued overlays are NOT shown on a timer — a timed popup can land after
+    // Queued overlays are NOT shown on a timer, a timed popup can land after
     // the player has already tapped through to the next crisis. They gate the
     // turn instead: "Next Crisis" plays them out first, then advances.
     this.pending = [];
@@ -228,7 +245,7 @@ AD.Game = {
   },
 
   /* Called when an overlay closes mid-turn: play the rest of the queue, then
-     let the month tick over — but only if this turn hasn't ticked already.
+     let the month tick over, but only if this turn hasn't ticked already.
      The Immunity Shield front page is raised *after* advance(), so closing it
      must not advance a second time. */
   continueTurn () {
@@ -262,7 +279,7 @@ AD.Game = {
       AD.UI.showTabloid(AD.Engine.pendingShield);
       AD.Engine.pendingShield = null;
     } else if (AD.Engine.lastWar && AD.Engine.lastWar.resolved.length) {
-      // a war resolved this month — front-page it
+      // a war resolved this month, front-page it
       const w = AD.Engine.lastWar.resolved[0];
       AD.UI.showTabloid(w.won
         ? { head: 'VICTORY', sub: 'The war in ' + w.target.name + ' is declared won; a parade is announced', body: w.res }
@@ -344,7 +361,7 @@ AD.Game = {
     if (!run || run.over || !AD.canDivert(run)) return;
     this.confirm({
       title: 'Declare the emergency?',
-      msg: 'You will pull <b>+$' + AD.DIVERT_AMOUNT.toFixed(0) + 'B</b> into a reserve only you can touch — ' +
+      msg: 'You will pull <b>+$' + AD.DIVERT_AMOUNT.toFixed(0) + 'B</b> into a reserve only you can touch, ' +
            'and start four fires at once. The <b>courts</b> will move to freeze it, the <b>press</b> will hunt ' +
            'the paper trail, <b>Congress</b> will subpoena, and the <b>street</b> will fill. The base will not ' +
            'care. You can only do this <b>once</b>, and there is no putting it back.',
@@ -362,7 +379,7 @@ AD.Game = {
     AD.Audio.play('money');
     this.haptic([30, 40, 30]);
     AD.saveRun(run);
-    // Inline feedback only — a tabloid overlay stacked on the corruption
+    // Inline feedback only, a tabloid overlay stacked on the corruption
     // panel would let its close handler advance the turn (see buyAsset).
     AD.UI.renderCorruption();
     AD.UI.renderHUD();
@@ -405,7 +422,7 @@ AD.Game = {
       : action === 'raise'
         ? '<b>Doubling down on ' + r.nation.name + '.</b> A bigger spike now, a worse crash sooner.'
       : r.caved
-        ? '<b>Backed off ' + r.nation.name + '.</b> You dodged the crash — and the base watched you cave.'
+        ? '<b>Backed off ' + r.nation.name + '.</b> You dodged the crash, and the base watched you cave.'
         : '<b>Lifted the tariff on ' + r.nation.name + '.</b> Quiet de-escalation.';
     AD.UI.renderEconomy({ line });
     AD.UI.renderHUD();
@@ -582,7 +599,7 @@ AD.Game = {
         diff.classList.add('on');
         this.setup.difficulty = diff.dataset.diff;
         U.el('diff-hint').textContent = AD.DIFFS[diff.dataset.diff].hint;
-        // the inherited country is harsher on harder settings — refresh the banner
+        // the inherited country is harsher on harder settings, refresh the banner
         this.setup.legacy = AD.inheritance(diff.dataset.diff);
         U.renderInheritance(this.setup.legacy);
         return;
@@ -688,6 +705,7 @@ AD.Game = {
       // Play out any front pages / doctrine unlocks before the month ticks.
       case 'next':     this.continueTurn(); break;
 
+      case 'mute':     this.toggleMute(); break;
       case 'pause':    U.overlay('pause', true); U.pauseTimer(); break;
       case 'resume':
         U.overlay('pause', false);

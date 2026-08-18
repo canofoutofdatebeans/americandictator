@@ -1,6 +1,6 @@
 /* ============================================================
-   AMERICAN DICTATOR — senate.js
-   THE CAUCUS — 100 senators you have to keep in line.
+   AMERICAN DICTATOR, senate.js
+   THE CAUCUS, 100 senators you have to keep in line.
 
    Congress was one meter. This turns it into a hundred people.
 
@@ -8,7 +8,7 @@
    ------
    One hundred seats, split like a real narrow trifecta: 53 of your
    own party, 47 opposition. The opposition almost never approves and
-   cannot really be won — they are there to be fought, not flipped.
+   cannot really be won, they are there to be fought, not flipped.
    Your own party is the actual game: every own-party senator carries
    a LOYALTY (0-100), it drifts DOWN on its own every month, and once
    the caucus average sags the whole Congress meter starts to bleed.
@@ -20,7 +20,7 @@
      ACKNOWLEDGE  a gracious word and a favour. Loyalty up. Cheap,
                   quiet, keeps the caucus intact.
      HUMILIATE    attack them in public. Their loyalty craters, your
-                  caucus is chilled — but the base loves the cruelty.
+                  caucus is chilled, but the base loves the cruelty.
      SUE          lawfare. Costs money, cows the target, and the fear
                   ripples: every other wavering own-party senator
                   falls back into line.
@@ -35,7 +35,7 @@
 AD.SENATE_SIZE = 100;
 AD.SENATE_OWN  = 53;          // a 53-47 trifecta, per the research
 
-/* Fictional throughout — no real senators, no real states. */
+/* Fictional throughout, no real senators, no real states. */
 AD.SEN_FIRST = [
   'Wade','Cyrus','Dot','Merle','Lurleen','Hank','Bobby','Junior','Earl','Sue-Ann',
   'Delbert','Roy','Cletus','Peggy','Gil','Marlene','Buck','Dwayne','Coy','Verna',
@@ -59,7 +59,7 @@ AD.SEN_STATE = [
   'Rampart','Sorghum','Tumbleweed','Undertow','Vesper','Whetstone','Yonder'
 ];
 
-/* Why an own-party senator is wavering — flavour on the row, and a hint at
+/* Why an own-party senator is wavering, flavour on the row, and a hint at
    what an ACKNOWLEDGE is actually buying. */
 AD.SEN_GRIPES = [
   'wants a committee gavel', 'is up for re-election in a swing state',
@@ -72,7 +72,7 @@ AD.SEN_GRIPES = [
   'wants the base to stop calling their office'
 ];
 
-/* A tiny, self-contained deterministic rng seeded off the run — kept OUT of
+/* A tiny, self-contained deterministic rng seeded off the run, kept OUT of
    the shared AD.rng() stream on purpose. */
 function senRng (seed) {
   let s = (AD.Seed ? AD.Seed.hash(String(seed) + ':senate') : 0x9e3779b9) || 1;
@@ -167,7 +167,7 @@ AD.senateSummary = function (run) {
 /* ---------- the four actions ---------------------------------------------
    Each returns a base effect object; party and loyalty tune it. Effects are
    applied through AD.applySenateEffect, which clamps the meters, moves cash
-   and Authority, and reports deltas — exactly like buying a holding. */
+   and Authority, and reports deltas, exactly like buying a holding. */
 AD.SENATE_ACTIONS = [
   {
     id: 'acknowledge', label: 'Acknowledge', icon: '🤝',
@@ -195,7 +195,7 @@ AD.SENATE_ACTIONS = [
   },
   {
     id: 'sue', label: 'Sue', icon: '⚖️', cost: 0.3,
-    blurb: 'The process is the punishment — and every other waverer takes note.',
+    blurb: 'The process is the punishment, and every other waverer takes note.',
     can: (run, s) => !s.gone,
     run (run, s) {
       const opp = s.party === 'opp';
@@ -217,7 +217,7 @@ AD.SENATE_ACTIONS = [
       const opp = s.party === 'opp';
       s.gone = true;
       // A hand-picked loyalist takes the seat, so the chamber stays at 100 and
-      // — the point — your own party's number does not fall when you purge it.
+      //, the point, your own party's number does not fall when you purge it.
       const rng = senRng((run.seed || 'X') + s.id);
       const replacement = {
         id: s.id + '-r', first: AD.SEN_FIRST[Math.floor(rng() * AD.SEN_FIRST.length)],
@@ -252,7 +252,7 @@ AD.applySenateEffect = function (run, eff) {
     if (!v || run.locked[k]) return;
     // owned shields still blunt incoming institutional damage from a purge
     if (v < 0 && p[k + 'Shield']) v = Math.ceil(v * (1 - p[k + 'Shield']));
-    // the base creeps, never jumps — even a rally or a Liberation Day is capped
+    // the base creeps, never jumps, even a rally or a Liberation Day is capped
     if (k === 'base' && v > AD.BASE_RISE_CAP) v = AD.BASE_RISE_CAP;
     const before = run.meters[k];
     run.meters[k] = AD.clamp(before + v, 0, 100);
@@ -287,7 +287,7 @@ AD.doSenateAction = function (run, senId, actionId) {
 /* ---------- the midterms move the chamber ---------------------------------
    A wave flips seats. Positive n converts the friendliest opposition seats to
    your party (a good night); negative n loses your shakiest seats to the other
-   side (a wipeout). Loyalty across your surviving caucus moves too — winning
+   side (a wipeout). Loyalty across your surviving caucus moves too, winning
    emboldens them, losing emboldens the rebels. Called from the Midterms event
    so the election actually reshapes the Senate rather than just nudging a bar. */
 AD.senateShift = function (run, n, loyaltyDelta) {
@@ -313,7 +313,7 @@ AD.senateShift = function (run, n, loyaltyDelta) {
 
 /* ---------- the monthly whip ---------------------------------------------
    Called from Engine.advance(). Loyalty decays; a neglected caucus drags the
-   Congress meter down. Capturing Congress ends all of it — a captured chamber
+   Congress meter down. Capturing Congress ends all of it, a captured chamber
    is, by definition, in line. */
 AD.senateTick = function (run) {
   const out = { deltas: {}, restless: false };
@@ -325,7 +325,7 @@ AD.senateTick = function (run) {
     return out;
   }
 
-  // Entropy is SLOW — the caucus decays roughly every other month, not every
+  // Entropy is SLOW, the caucus decays roughly every other month, not every
   // month. A card-competent player who never opens this screen should reach the
   // election with a caucus that has drifted but not collapsed, and pay no
   // Congress penalty at all. The pressure to engage comes from the tools the

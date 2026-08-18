@@ -1,11 +1,11 @@
 /* ============================================================
-   PACK E — SECOND TERM ONLY  (term: 2)
+   PACK E, SECOND TERM ONLY  (term: 2)
    Everything here is gated on having already served four years.
    No next election, no learning curve, no honeymoon, and a staff
    that has stopped asking whether things are allowed.
 
    REWRITTEN against the research. Every crisis carries a `src`.
-   INSPIRED BY, NEVER COPIED — take the mechanism, invent the rest.
+   INSPIRED BY, NEVER COPIED, take the mechanism, invent the rest.
 
    This pack draws mostly on the parts of the research that only
    make sense once a president has already had a term: the immunity
@@ -14,7 +14,7 @@
    president" argument and its rebuttals, and the indices that were
    still calling the country free while marking it down.
 
-   `t2-term-reset` carries the `termlimit` breach and MUST keep it —
+   `t2-term-reset` carries the `termlimit` breach and MUST keep it, 
    it is one of only three routes to that clause in the whole deck,
    and the only one in a second term.
 
@@ -37,7 +37,7 @@ AD.CARDS.push(
     { label:'Then stop pretending. Everything, immediately.', eff:{base:+8,congress:-11,courts:-11,press:-9,street:-9,auth:+15},
       res:'Everything you slow-walked for four years is signed inside a fortnight. The system has never been asked to absorb this much this fast and it does not.' },
     { label:'Same programme. Faster. Without the meetings.', eff:{base:+5,courts:-5,press:-5,street:-4,congress:-4,auth:+10},
-      res:'No speech, no doctrine, no announcement — simply a government that has stopped asking permission and never mentioned that it stopped.' },
+      res:'No speech, no doctrine, no announcement, simply a government that has stopped asking permission and never mentioned that it stopped.' },
     { label:'Spend it on the things that need eight years.', eff:{congress:+9,courts:+7,press:+7,street:+6,base:-9,auth:+3},
       res:'Four programmes that could not have been finished in one term are finished in two. It is the only argument for a second term anybody has ever made honestly.' },
     { label:'Announce that you will govern as though the ballot still existed.', eff:{base:-5,congress:+8,courts:+7,press:+8,street:+6,auth:-2}, wild:true,
@@ -93,7 +93,7 @@ AD.CARDS.push(
 
 { id:'t2-referendum', title:'The Question On The Ballot', who:C.poll, term:2, min:16, max:42, tags:['elections','power'],
   src:'a foreign leader creating a super-empowered presidency by national referendum after a claimed emergency',
-  text:'Nadia has modelled it. "A single national question — should the presidency be strengthened. Not a candidate, ' +
+  text:'Nadia has modelled it. "A single national question, should the presidency be strengthened. Not a candidate, ' +
        'not a party, one question." She hesitates. "It polls at forty-eight and it moves nine points if there has ' +
        'been an incident in the preceding fortnight. Sir, I want to be clear that I have just told you something ' +
        'I wish I had not worked out."',
@@ -109,7 +109,7 @@ AD.CARDS.push(
 
 { id:'t2-perpetuo', title:'Without The Time Limit', who:C.hist, term:2, min:20, max:44, tags:['power','press'],
   src:'a Roman dictator taking a legitimate office and stripping it of its traditional time limit',
-  text:'"The office was real and it was legal and it had a limit — six months, and then you gave it back." ' +
+  text:'"The office was real and it was legal and it had a limit, six months, and then you gave it back." ' +
        'Dr Weir is describing a man dead two thousand years. "He kept the office and removed the limit. ' +
        'He did not seize anything. He simply deleted the expiry date." She pauses. ' +
        '"Mr President, he was killed by his own senate within a month, and every one of them had voted for him."',
@@ -226,7 +226,7 @@ AD.CARDS.push(
   src:'mass clemency for political allies read by scholars as a shield signalling protection for future loyalty',
   text:'"The clemency in the first term was not about the past." Sy is unusually direct. "Every person who ' +
        'considers doing something for you now knows what happens afterwards. It is the cheapest loyalty ' +
-       'programme ever devised, and sir — you did not have to say a word for it to work."',
+       'programme ever devised, and sir, you did not have to say a word for it to work."',
   choices:[
     { label:'Say it out loud. Make the promise explicit.', eff:{base:+7,courts:-13,congress:-11,press:-10,street:-8,auth:+14},
       res:'An explicit promise of clemency in advance is a different legal object from a pattern, and four prosecutors immediately begin treating it as one.' },
@@ -339,7 +339,7 @@ AD.CARDS.push(
   src:'the scholarly assessment that the fair characterisation was the most expansive peacetime assertion of unilateral executive power, still being checked',
   text:'Dr Weir has brought her own manuscript and has not been asked to. "Eight years. I have a conclusion ' +
        'and I am not going to soften it for you." She hands it over. "The most expansive assertion of unilateral ' +
-       'executive power in modern peacetime — genuinely alarming, corrosive to democratic quality, and still ' +
+       'executive power in modern peacetime, genuinely alarming, corrosive to democratic quality, and still ' +
        'operating inside a system that was checking it. All four of those clauses, Mr President. Not three."',
   choices:[
     { label:'Have counsel look at whether it can be stopped.', eff:{base:+6,courts:-13,congress:-11,press:-13,street:-10,auth:+11},

@@ -1,5 +1,5 @@
 /* ============================================================
-   AMERICAN DICTATOR — engine.js
+   AMERICAN DICTATOR, engine.js
    The rules. Draw a card, apply a choice, work out whether the
    republic just changed shape.
 
@@ -66,7 +66,7 @@ AD.Engine = {
   draw () {
     const run = this.run;
 
-    // The last November of a term always wins — but WHICH November card it is
+    // The last November of a term always wins, but WHICH November card it is
     // depends on the term, so this must go through the term-aware scheduler.
     // Term one gets the Re-election (survivable); term two gets the finale.
     if (AD.termMonth(run) >= run.termLength - 1) {
@@ -96,7 +96,7 @@ AD.Engine = {
 
     let card = AD.pickCard(run);
 
-    // Deck exhausted late in a long term — recycle everything except the
+    // Deck exhausted late in a long term, recycle everything except the
     // most recent handful so nothing repeats back to back.
     if (!card) {
       run.seen = run.seen.slice(-8);
@@ -142,7 +142,7 @@ AD.Engine = {
         this.finish(out.ending);
         return out;
       }
-      if (d.secondTerm) {                   // re-election won — the run continues
+      if (d.secondTerm) {                   // re-election won, the run continues
         out.secondTerm = this.beginSecondTerm(d.secondTerm);
         return out;
       }
@@ -170,7 +170,7 @@ AD.Engine = {
     AD.applyDoctrines(run, eff);
     AD.applyPassivesToEffect(run, eff);
 
-    /* The base rewards offence and chaos — see AD.applyBaseAppetite. This runs
+    /* The base rewards offence and chaos, see AD.applyBaseAppetite. This runs
        AFTER money (a bought media empire multiplies the reach of the red meat)
        and BEFORE the meters land, so the amplified figure is what the crowd
        actually feels and what the resolution reports. */
@@ -182,12 +182,12 @@ AD.Engine = {
       const before = run.meters[k];
       let delta = eff[k] || 0;
 
-      /* INSTITUTIONAL RESISTANCE — the last stretch of a capture is the
+      /* INSTITUTIONAL RESISTANCE, the last stretch of a capture is the
          hardest. A branch that is already mostly yours resists each further
          point; the die-hards are the ones left. Without this the deck's sheer
          volume of positive options made capture nearly automatic (optimal play
          hit a 94% win rate on the 300-card deck). Applies to gains only, and
-         only to capturable branches — the Base has its own dynamics. */
+         only to capturable branches, the Base has its own dynamics. */
       const f = AD.faction(k);
       if (delta > 0 && f.capturable) {
         if (before >= AD.RESIST_HARD)      delta = Math.ceil(delta * AD.RESIST_HARD_MULT);
@@ -195,11 +195,11 @@ AD.Engine = {
       }
 
       let after = AD.clamp(before + delta, 0, 100);
-      // The base creeps, never jumps — cap how far a single decision can raise it.
+      // The base creeps, never jumps, cap how far a single decision can raise it.
       if (k === 'base' && after > before + AD.BASE_RISE_CAP) after = before + AD.BASE_RISE_CAP;
       if (k === 'base' && AD.hasDoctrine(run, 'cult')) after = Math.max(34, after);
 
-      /* GUARDRAIL — no single decision is the killing blow (see AD.DECISION_FLOOR).
+      /* GUARDRAIL, no single decision is the killing blow (see AD.DECISION_FLOOR).
          A meter that was healthy can't be shoved below the survival floor by one
          choice, and no choice ever zeroes a live meter. A surprising −14 leaves
          you critical with a turn to recover, not dead on the spot. */
@@ -224,7 +224,7 @@ AD.Engine = {
       AD.recomputeAuthority(run);
       if (run.authority !== b) out.deltas.auth = run.authority - b;
       else if (eff.auth > 0) out.authCapped = true;   // grinding against the ceiling
-      // NB: authCapped lives on `out`, not `out.deltas` — deltas is persisted
+      // NB: authCapped lives on `out`, not `out.deltas`, deltas is persisted
       // into the crisis log and must only ever contain meter keys.
     }
 
@@ -252,8 +252,8 @@ AD.Engine = {
     });
 
     // THE BASE CREEPS. Enforce the cap on the TOTAL rise this decision produced
-    // — the choice's own effect PLUS any base a side-effect (a tariff, a war, a
-    // pardon) added — so nothing can leap the movement forward more than
+    //, the choice's own effect PLUS any base a side-effect (a tariff, a war, a
+    // pardon) added, so nothing can leap the movement forward more than
     // AD.BASE_RISE_CAP in a single turn.
     if (!run.locked.base && run.meters.base > baseAtStart + AD.BASE_RISE_CAP) {
       run.meters.base = baseAtStart + AD.BASE_RISE_CAP;
@@ -316,7 +316,7 @@ AD.Engine = {
   },
 
   /* ---------- SECOND TERM -------------------------------------------------
-     Winning re-election does not end the run — it restarts the arc on a
+     Winning re-election does not end the run, it restarts the arc on a
      harder setting. The honeymoon is over, the backlash intensifies
      permanently, and the deck's month windows reset so term two plays like a
      term rather than an epilogue. */
@@ -328,7 +328,7 @@ AD.Engine = {
     run.maxMonths = run.termStart + run.termLength - 1;
 
     // The country has now watched you do all of this once. A second term is
-    // twice the runway, so it has to cost more than it gives — otherwise the
+    // twice the runway, so it has to cost more than it gives, otherwise the
     // extra 48 months just hand you the win.
     const hit = how === 'contested' ? -16 : -11;
     AD.FKEYS.forEach(k => {
@@ -357,7 +357,7 @@ AD.Engine = {
       } : {
         head: 'FOUR MORE YEARS',
         sub: 'Re-elected. Outright. By people who watched the whole first term and asked for another one',
-        body: 'This is the outcome nobody had a plan for. Not stolen, not blocked, not postponed — voted for, ' +
+        body: 'This is the outcome nobody had a plan for. Not stolen, not blocked, not postponed, voted for, ' +
               'in daylight, by a majority of a country that had four years of evidence in front of it. ' +
               'Every institutional argument for restraint assumed the public would eventually object. ' +
               'The public has now been asked directly and has declined to.'
@@ -380,11 +380,11 @@ AD.Engine = {
         saved: dead.key,
         tabloid: {
           head: 'A CLOSE ONE',
-          sub: 'Training term — ' + dead.name.toLowerCase() + ' pulled back from the brink',
+          sub: 'Training term, ' + dead.name.toLowerCase() + ' pulled back from the brink',
           body: 'In a real administration that would have been the end of it. For your first few months the ' +
                 'guardrails are on: a power centre that hits zero is quietly restored so you can see what a ' +
                 'mistake costs without the mistake costing you the presidency. The guardrails come off shortly. ' +
-                'Watch which meter nearly went — that is the one the country will actually use against you.'
+                'Watch which meter nearly went, that is the one the country will actually use against you.'
         }
       };
     }
@@ -415,7 +415,7 @@ AD.Engine = {
 
     // Snapshot the meters so we can tell the player what the PASSAGE OF TIME did
     // to them this month (base decay, backlash, tick drains) as a plain-language
-    // brief — nothing here is the player's choice, so it should never be a
+    // brief, nothing here is the player's choice, so it should never be a
     // surprise. Filled in at the end of advance() as this.lastDrift.
     const preTurn = {}; AD.FKEYS.forEach(k => { preTurn[k] = run.meters[k]; });
 
@@ -427,7 +427,7 @@ AD.Engine = {
     }
 
     // A movement that is not fed every single month cools off on its own.
-    // NB: deliberately NOT harsher in term two — 95 months of accelerated
+    // NB: deliberately NOT harsher in term two, 95 months of accelerated
     // decay made zero-base swallow 40% of all endings.
     if (!run.locked.base) {
       let b = run.meters.base + AD.BASE_DECAY;
@@ -435,10 +435,10 @@ AD.Engine = {
       run.meters.base = AD.clamp(b, 0, 100);
     }
 
-    // VP AMBITION — the non-fatal replacement for the old max-base death. A
+    // VP AMBITION, the non-fatal replacement for the old max-base death. A
     // movement running hot lets the Vice President's stock rise; a cooler base,
     // or humbling him via the rivalry event, brings it back down. It never ends
-    // the game on its own — it surfaces as a manageable crisis (see reactive.js).
+    // the game on its own, it surfaces as a manageable crisis (see reactive.js).
     if (!run.locked.base) {
       const b = run.meters.base;
       let a = run.vpAmbition || 0;
@@ -455,19 +455,19 @@ AD.Engine = {
       });
     }
 
-    /* ESCALATING BACKLASH — the core difficulty curve.
+    /* ESCALATING BACKLASH, the core difficulty curve.
        Every branch you capture costs you 1 point per month on the branch you
        are currently closest to capturing. The institution with the most to
        lose fights hardest, and it fights harder for every colleague it has
        already watched fall. It targets rather than carpet-bombs, so the
        pressure is predictable enough to plan around and specific enough to
        make the third pillar the hardest thing in the game. */
-    /* Backlash has three sources, added (never multiplied — compounding them
+    /* Backlash has three sources, added (never multiplied, compounding them
        gave Historic 4-6 points of drain a month and made capture impossible):
 
-       1. PILLARS   — every branch taken makes the next one fight harder.
-       2. TERM      — a second term is permanently worse.
-       3. AUTHORITY — the continuous brake. Resistance scales with how
+       1. PILLARS , every branch taken makes the next one fight harder.
+       2. TERM    , a second term is permanently worse.
+       3. AUTHORITY, the continuous brake. Resistance scales with how
           authoritarian you have actually become, not just with what you have
           formally captured. Without this, a 300-card deck lets a focused player
           grind any single meter to 100 unopposed (optimal play hit 95%).
@@ -489,7 +489,7 @@ AD.Engine = {
       }
     } else run.pressureOn = null;
 
-    // Holdings pay out, drip and settle before the survival checks — then the
+    // Holdings pay out, drip and settle before the survival checks, then the
     // residence sends its bill, which is charged AFTER income so a mint can
     // pay for the ballroom in the same month it earns.
     this.lastTick = AD.corruptionTick(run);
@@ -497,7 +497,7 @@ AD.Engine = {
     /* ── THE SYSTEMIC GUARDRAIL ─────────────────────────────────────────────
        The one recurring hazard, fixed once. The three management-screen ticks
        below (the caucus, the press room, public order) each drain a meter when
-       their system is neglected. Individually each is now mild — but they STACK,
+       their system is neglected. Individually each is now mild, but they STACK,
        and stacked background drain forces a player to spend card-choices
        defending institutions until the Base, which cools on its own every month,
        collapses unfed. That cascade got hand-patched three separate times, once
@@ -505,8 +505,8 @@ AD.Engine = {
        AD.MGMT_LOSS_CAP, so no present or future combination of these opt-in
        systems can ever be the thing that starves a meter to death. Background
        systems create pressure; only a DECISION lands the killing blow.
-       (The intended costs above — base decay, backlash, exposure, Residence
-       scrutiny — are the real difficulty curve and are deliberately NOT capped.) */
+       (The intended costs above, base decay, backlash, exposure, Residence
+       scrutiny, are the real difficulty curve and are deliberately NOT capped.) */
     const preMgmt = {};
     AD.FKEYS.forEach(k => { preMgmt[k] = run.meters[k]; });
     this.lastSenate = AD.senateTick(run);
@@ -525,7 +525,7 @@ AD.Engine = {
     // A story hot enough to leak does damage without needing a card.
     this.lastLeak = AD.cayTick(run);
 
-    // Crossing the fortune line is announced once, and does not end the run —
+    // Crossing the fortune line is announced once, and does not end the run, 
     // it is banked and cashed in at whatever ending you eventually reach.
     this.pendingFortune = null;
     if (!run.flags.fortune && run.cash >= AD.wealthGoal(run)) {
@@ -535,12 +535,12 @@ AD.Engine = {
         sub: 'Personal fortune passes $' + AD.wealthGoal(run) + 'bn while in office; disclosure filed on a Friday',
         body: 'The figure is not disputed, concealed or even especially hidden. It is on a form, ' +
               'signed, in a public archive, and it is larger than the annual budget of eleven ' +
-              'federal agencies. Whatever else happens now — removal, defeat, a third term — ' +
+              'federal agencies. Whatever else happens now, removal, defeat, a third term, ' +
               'it happens to a man who has already won the other game entirely.'
       };
     }
 
-    // What the month did on its own — net meter drift + the named causes, so the
+    // What the month did on its own, net meter drift + the named causes, so the
     // next card can carry a one-line "since last month" brief.
     this.lastDrift = AD.monthBrief(run, preTurn, this);
 
@@ -560,7 +560,7 @@ AD.Engine = {
 
     /* THE SECOND OBJECTIVE. The fortune is cashed in at whatever ending you
        reached: it upgrades a win to 'the-full-set' and converts a loss into
-       'the-fortune'. Ten billion dollars is a parachute, and it should be —
+       'the-fortune'. Ten billion dollars is a parachute, and it should be, 
        that is the whole joke. */
     if (run.cash >= AD.wealthGoal(run) && endingId !== 'the-fortune' && endingId !== 'the-full-set') {
       const e = AD.ENDINGS[endingId];
@@ -623,7 +623,7 @@ AD.Engine = {
 };
 
 /* ============================================================
-   THE MONTHLY BRIEF — "what changed while you weren't choosing."
+   THE MONTHLY BRIEF, "what changed while you weren't choosing."
    Turns a month's passive drift (base decay, backlash, tick drains,
    backfires, war resolutions, holdings) into a short, plain-language
    line so the passage of time is never a silent surprise. Returns

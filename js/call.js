@@ -1,20 +1,20 @@
 /* ============================================================
-   AMERICAN DICTATOR — call.js
-   THE PHONE — executive time.
+   AMERICAN DICTATOR, call.js
+   THE PHONE, executive time.
 
-   A screen with three address books — Allies, The Press, Enemies —
+   A screen with three address books, Allies, The Press, Enemies, 
    and a long list of people to call under each. Pick who, pick what
    to say, and the country's ratings move accordingly.
 
    The register is deliberate: the President speaks in the bombastic,
    superlative, grievance-and-greatness voice the brief asks for. It
-   is a STYLE, not a person — every name in the address book is
+   is a STYLE, not a person, every name in the address book is
    fictional, like everything else in the game.
 
    Calls are free but rationed: two a month (AD.CALLS_PER_MONTH),
    refilled each time the clock ticks, so the phone is a monthly
    decision and not a base-farming button. Effects are smaller than a
-   policy card's — it is a phone call, not an executive order — and
+   policy card's, it is a phone call, not an executive order, and
    the SAME action lands very differently depending on who you rang:
    telling an enemy they are a loser is red meat; telling an ally the
    same thing chills your own caucus.
@@ -61,7 +61,7 @@ AD.CALL_ACTIONS = [
   {
     id: 'admire', label: 'Admire Them', icon: '🫡',
     line: t => '"' + t.name.replace(/^(President|Vice President|Chief of Staff|Czar|Reverend|Governor|Leader|Chairman|Premier) /, '') +
-      ', you are fantastic — one of the all-time greats, everybody says it, believe me."',
+      ', you are fantastic, one of the all-time greats, everybody says it, believe me."',
     eff: cat => cat === 'ally'  ? { congress: 3, base: 2, press: 1 }
              : cat === 'press' ? { press: 4, base: -1 }
              : { base: -5, press: 4, courts: 3, congress: 2 },
@@ -100,8 +100,8 @@ AD.CALL_ACTIONS = [
   },
   {
     id: 'ramble', label: 'Ramble For 40 Minutes', icon: '🌀',
-    line: () => '"...and the wind, you know, they say the wind, and the boats, the sharks, the batteries — ' +
-      'a lot of people don\'t know this — and the late great somebody, tremendous guy..."',
+    line: () => '"...and the wind, you know, they say the wind, and the boats, the sharks, the batteries, ' +
+      'a lot of people don\'t know this, and the late great somebody, tremendous guy..."',
     eff: cat => cat === 'ally'  ? { base: 5, press: -3, congress: -2, auth: 1 }
              : cat === 'press' ? { base: 5, press: -5, auth: 1 }
              : { base: 5, press: -4, courts: -1, street: -1, auth: 1 },

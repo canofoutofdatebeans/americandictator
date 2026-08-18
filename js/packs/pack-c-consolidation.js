@@ -1,22 +1,22 @@
 /* ============================================================
-   PACK C — CONSOLIDATION  (term months 22–48)
+   PACK C, CONSOLIDATION  (term months 22–48)
    The late term. Elections, succession, the comparison to other
    countries, and the question of what any of this was for.
 
    REWRITTEN against the research. Every crisis carries a `src`.
-   INSPIRED BY, NEVER COPIED — take the mechanism, invent the rest.
+   INSPIRED BY, NEVER COPIED, take the mechanism, invent the rest.
 
    This pack leans on the research's comparative section (Augustus,
    the Acerbo Law, the 2020 term-limit reset, the judicial purge)
    and on its four explicit "benchmarks that would change the
-   assessment" — open defiance of a direct high-court order,
+   assessment", open defiance of a direct high-court order,
    cancelling or rigging a national election, jailing an opposition
    figure or journalist on pretextual charges, and a legislature
    voting away its own powers. Those are the four cards the whole
    game has been walking toward, and the research names them as
    precisely the line it has not crossed.
 
-   Nine cards carry `breaks:` tags and MUST keep them — they are
+   Nine cards carry `breaks:` tags and MUST keep them, they are
    the only late-window routes to search, supremacy, religion,
    speech, posse, consent, presentment and vesting.
 
@@ -47,7 +47,7 @@ AD.CARDS.push(
 
 { id:'c-postpone', title:'The Date', who:C.cos, min:38, max:48, tags:['elections','power'],
   src:'the scholarly benchmark of cancelling, postponing or credibly rigging a national election',
-  text:'Deborah has closed the door. "There is an argument — a bad one, but an argument — that the emergency ' +
+  text:'Deborah has closed the door. "There is an argument, a bad one, but an argument, that the emergency ' +
        'authorities reach the administration of a federal election." She does not sit down. "Sir, I have worked ' +
        'for you for four years. I want it on the record that I told you this is the one."',
   choices:[
@@ -195,7 +195,7 @@ AD.CARDS.push(
     { label:'Four buildings. The ones we actually built.', eff:{base:+4,press:-3,street:-2,auth:+6},
       res:'Naming a thing you built after yourself is ordinary. Naming things you did not is the part that reads differently, and you have avoided it.' },
     { label:'None. The buildings keep the names they have.', eff:{press:+8,street:+7,congress:+6,courts:+5,base:-8,auth:-3},
-      res:'Deborah records the decision in the file with a single word — "declined" — and it is the entry she is proudest of.' },
+      res:'Deborah records the decision in the file with a single word, "declined", and it is the entry she is proudest of.' },
     { label:'Name them all after your predecessors, alphabetically.', eff:{base:+3,press:+5,street:+4,congress:+5,cash:-0.3,auth:-1}, wild:true,
       res:'It is bewildering, expensive and entirely charming. Four historical societies write to say so and one of them sends a cake.' }]},
 
@@ -217,7 +217,7 @@ AD.CARDS.push(
 { id:'c-monarch', title:'"Functionally A Monarch"', who:C.hist, min:32, max:48, tags:['press','power'],
   src:'a historian describing the office as having become functionally monarchical',
   text:'A historian on television used two words: functionally a monarch. Dr Weir was watching. ' +
-       '"He was not being rude, Mr President. He meant it structurally — an office with no effective ' +
+       '"He was not being rude, Mr President. He meant it structurally, an office with no effective ' +
        'check operating on it. He said it sadly. That is what made it land."',
   choices:[
     { label:'Embrace it. Have it printed.', eff:{base:+8,press:-10,courts:-9,congress:-9,street:-8,auth:+12},
@@ -234,7 +234,7 @@ AD.CARDS.push(
 { id:'c-restored-republic', title:'Restoring The Republic', who:C.hist, min:34, max:48, tags:['power','press'],
   src:'the Augustan template of theatrically restoring republican forms while retaining real power',
   text:'"He gave it all back." Dr Weir is describing a man dead two thousand years. "Publicly, formally, ' +
-       'in the senate house — every extraordinary power, surrendered. And then he kept two ordinary ones for life, ' +
+       'in the senate house, every extraordinary power, surrendered. And then he kept two ordinary ones for life, ' +
        'and those two were sufficient." She pauses. "It is the most successful political manoeuvre ever performed, ' +
        'Mr President, and it looked exactly like a resignation."',
   choices:[
@@ -280,7 +280,7 @@ AD.CARDS.push(
 
 { id:'c-crossed-over', title:'The Paper That Says We Crossed', who:C.hist, min:30, max:48, tags:['press','power'],
   src:'comparative political scientists classifying the country as having crossed into competitive authoritarianism',
-  text:'Dr Weir has the paper. "They argue the country ceased to be a full democracy — not that it is a ' +
+  text:'Dr Weir has the paper. "They argue the country ceased to be a full democracy, not that it is a ' +
        'dictatorship, that it is now in a different category. And they say the turn was faster than the first ' +
        'year of four cases they name." She sets it down. "Mr President, the word they use is *competitive*. ' +
        'The elections are real. That is the whole distinction and it is doing a lot of work."',
@@ -455,7 +455,7 @@ AD.CARDS.push(
 { id:'c-fdr', title:'Four Terms', who:C.hist, min:32, max:48, tags:['elections','power'],
   src:'the comparison to a president who served four terms and was rebuffed on court expansion',
   text:'Dr Weir has the other comparison. "Twelve years, four elections, an entire federal government rebuilt, ' +
-       'and an internment. He also tried to expand the Court and was refused — by his own party, in public." ' +
+       'and an internment. He also tried to expand the Court and was refused, by his own party, in public." ' +
        'She adds: "The refusal is the part your side never quotes, Mr President, and it is the part that mattered."',
   choices:[
     { label:'Try the Court expansion. See if this party refuses.', eff:{base:+7,congress:-14,courts:-13,press:-10,street:-8,auth:+15},
@@ -501,7 +501,7 @@ AD.CARDS.push(
   src:'the gap between expansive assertion of executive power and durable achievement',
   text:'It is late and Deborah has stopped pretending to hold a folder. "Four years. Two hundred and seventeen ' +
        'orders, eleven emergencies, four hundred buildings with your name on them." She is not being cruel. ' +
-       '"Sir — if I asked you which of it survives you, what would you say?"',
+       '"Sir, if I asked you which of it survives you, what would you say?"',
   choices:[
     { label:'"All of it. Because I am not going anywhere."', eff:{base:+8,congress:-11,courts:-10,press:-9,street:-9,auth:+16},
       res:'She writes it down. It is the sentence that opens every account of this administration written in the following forty years, and she is quoted for it.' },
@@ -516,7 +516,7 @@ AD.CARDS.push(
 
 { id:'c-lame-duck', title:'The Word Nobody Says', who:C.poll, min:40, max:48, tags:['congress','press'],
   src:'the erosion of presidential leverage in the final phase of a term',
-  text:'Nadia has the tell. "Four committee chairs did not return calls this week. Not hostile — busy. ' +
+  text:'Nadia has the tell. "Four committee chairs did not return calls this week. Not hostile, busy. ' +
        'Sir, that is what it looks like. Nobody announces that they have stopped being afraid of you. ' +
        'They just start being busy."',
   choices:[

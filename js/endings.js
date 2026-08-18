@@ -1,5 +1,5 @@
 /* ============================================================
-   AMERICAN DICTATOR — endings.js
+   AMERICAN DICTATOR, endings.js
    Every way a term can stop. Each ending ships with a front page
    for THE NATIONAL SCREAM, because the shareable failure state is
    the whole marketing plan.
@@ -36,7 +36,7 @@ AD.ENDINGS = {
     head: 'BLOCKED. ALL OF IT.',
     sub: 'Federal judiciary halts 340 executive actions in a single term; administration governs a building only',
     body: 'It ended not with a ruling but with a filing cabinet. Every order signed, every rule issued, every dollar ' +
-          'moved — enjoined, stayed, vacated. District judges in eleven states stopped waiting for cases to arrive ' +
+          'moved, enjoined, stayed, vacated. District judges in eleven states stopped waiting for cases to arrive ' +
           'and started clearing their calendars in anticipation. The President retained every power the office holds ' +
           'and the practical ability to exercise none of them. The government continued. He simply was not in it.',
     epitaph: 'You can lose to the judiciary slowly for years and then all at once.'
@@ -129,7 +129,7 @@ AD.ENDINGS = {
     sub: 'Eight years end with a handshake on the steps and a helicopter at 12:04pm',
     body: 'He tested every hinge in the building and then, on the day, walked out of it. ' +
           'Nobody who watched the previous eight years had this in their model. ' +
-          'The Twenty-Second Amendment did not stop him — it was never strong enough to stop anybody — ' +
+          'The Twenty-Second Amendment did not stop him, it was never strong enough to stop anybody, ' +
           'he simply decided that eight years was what he had come for. The republic is measurably ' +
           'worse than he found it and it is, unmistakably, still there.',
     epitaph: 'Eight years of reaching for it, and in the end you handed it over. That is a legacy. It is not a dictatorship.'
@@ -153,7 +153,7 @@ AD.ENDINGS = {
     body: 'He took the judiciary apart on a Tuesday and nobody could stop him. He moved money Congress had ' +
           'refused him and nobody could stop him. He was finished by a hardback ledger, kept in a wellness ' +
           'clinic on an island of eleven people, in which somebody had once written a name in blue ink. ' +
-          'The final vote was not close and not, in the end, about the island at all — it was about two years ' +
+          'The final vote was not close and not, in the end, about the island at all, it was about two years ' +
           'of a President explaining, in fourteen different ways, why a document could not be read. ' +
           'The document is now available in nine languages and has an index.',
     epitaph: 'It was never the flight. It was the two years of saying there was no manifest.'

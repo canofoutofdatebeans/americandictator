@@ -1,15 +1,15 @@
 /* ============================================================
-   AMERICAN DICTATOR — icons.js
+   AMERICAN DICTATOR, icons.js
    Bespoke line icons that replace the emoji throughout the HUD.
 
-   Monochrome, 24-unit viewBox, fill/stroke: currentColor — so each
+   Monochrome, 24-unit viewBox, fill/stroke: currentColor, so each
    icon takes the colour of whatever it sits in. Kept deliberately
    simple and heraldic to match the propaganda-poster register.
    ============================================================ */
 
 AD.ICON = {
   /* ---- the five power centres ---- */
-  base:                                            // a rising flame — the movement
+  base:                                            // a rising flame, the movement
     '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2c1.6 3 .3 4.8-1 6.4C9.4 10.4 8 12 8 14.6a4 4 0 0 0 2.2 3.6c-.5-1 .1-2.3 1-3 .1 1.4.9 2 1.7 2.7 1.2 1 1 2.4.4 3.5A4.6 4.6 0 0 0 16 14.4c0-2.4-1.3-3.7-2.3-5.2C12.4 7 11.7 5 12 2Z"/></svg>',
   congress:                                        // a capitol dome on a colonnade
     '<svg viewBox="0 0 24 24" aria-hidden="true"><g fill="currentColor"><path d="M12 2c1.4 0 2.5 1 2.7 2.3H9.3C9.5 3 10.6 2 12 2Z"/><rect x="8.5" y="4.6" width="7" height="1.4"/><path d="M8 7h8c-.6-1.4-1.9-1-4-1s-3.4-.4-4 1Z"/><rect x="4" y="19.4" width="16" height="1.6" rx=".4"/><rect x="4.6" y="17.6" width="14.8" height="1.4"/><g><rect x="5.6" y="8" width="1.6" height="9"/><rect x="8.4" y="8" width="1.6" height="9"/><rect x="11.2" y="8" width="1.6" height="9"/><rect x="14" y="8" width="1.6" height="9"/><rect x="16.8" y="8" width="1.6" height="9"/></g></g></svg>',

@@ -1,9 +1,9 @@
 /* ============================================================
-   PACK H — FRONTIER  (any month)
+   PACK H, FRONTIER  (any month)
    A fresh batch of evergreen crises, written to give the newer
    systems something to talk about: the tariff wars and summits,
    the phone, the War Room, the Residence, and the base's endless
-   appetite. Original satire in the house voice — INSPIRED BY THE
+   appetite. Original satire in the house voice, INSPIRED BY THE
    GENRE, NEVER COPIED FROM ANY REAL PERSON. Fictional stand-ins
    only; real countries, invented leaders.
 

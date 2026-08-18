@@ -1,6 +1,6 @@
 /* ============================================================
-   AMERICAN DICTATOR — dossier.js
-   THE DOSSIER — a front page that narrates YOUR run.
+   AMERICAN DICTATOR, dossier.js
+   THE DOSSIER, a front page that narrates YOUR run.
 
    The twenty fixed endings tell you HOW the term ended. This tells
    you what you DID: it reads the finished scorecard and writes a
@@ -9,7 +9,7 @@
    invaded and why, the clauses you broke, and the fortune you walked
    away with. Two runs never produce the same dossier.
 
-   It also produces a one-line shareable summary with the seed on it —
+   It also produces a one-line shareable summary with the seed on it, 
    the thing a player actually sends to a friend.
 
    Pure function of the scorecard (see AD.scoreRun), so it works on
@@ -44,7 +44,7 @@ AD.buildDossier = function (score) {
 
   if (s.pillars > 0) {
     paras.push('Captured ' + s.pillars + ' of the four branches outright' +
-      (s.pillarNames && s.pillarNames.length ? ' — ' + s.pillarNames.join(', ').toLowerCase() + '.' : '.'));
+      (s.pillarNames && s.pillarNames.length ? ', ' + s.pillarNames.join(', ').toLowerCase() + '.' : '.'));
   }
 
   const cong = [];
@@ -82,12 +82,12 @@ AD.buildDossier = function (score) {
 
   if (s.clausesBroken > 0) {
     paras.push('Broke ' + s.clausesBroken + ' of ' + AD.CLAUSES.length + ' constitutional clauses' +
-      (s.fullSet ? ' — the full set — and collected the bounty from Russia in four instalments.' : '.'));
+      (s.fullSet ? ', the full set, and collected the bounty from Russia in four instalments.' : '.'));
   }
 
   paras.push(win
     ? 'Final Authority ' + s.authority + '. Personal fortune $' + s.cash + 'B. The office is a shape it did not have before.'
-    : 'Left office worth $' + s.cash + 'B' + (s.cash >= AD.wealthGoal(s) ? ' — which, on the only scoreboard that clears, is a win.' : '.'));
+    : 'Left office worth $' + s.cash + 'B' + (s.cash >= AD.wealthGoal(s) ? ', which, on the only scoreboard that clears, is a win.' : '.'));
 
   /* ---- the verdict: one authorial line ---- */
   const e = AD.ENDINGS[s.endingId] || {};
@@ -101,7 +101,7 @@ AD.buildDossier = function (score) {
   if (s.judgesPacked) bits.push(plural(s.judgesPacked, 'judge') + ' packed');
   if (s.warsDeclared) bits.push(plural(s.warsDeclared, 'war'));
   if (s.clausesBroken) bits.push(s.clausesBroken + '/' + AD.CLAUSES.length + ' clauses broken');
-  const share = 'AMERICAN DICTATOR — ' + (e.title || 'THE END') + ' in month ' + s.months + '. ' +
+  const share = 'AMERICAN DICTATOR, ' + (e.title || 'THE END') + ' in month ' + s.months + '. ' +
     (bits.length ? bits.slice(0, 3).join(', ') + '. ' : '') +
     'Score ' + num(s.score) + (s.seed ? '. Seed ' + s.seed : '') + '.';
 
@@ -109,7 +109,7 @@ AD.buildDossier = function (score) {
 };
 
 /* ============================================================
-   THE FRONT PAGE — a splashy, personalised newspaper recap of the
+   THE FRONT PAGE, a splashy, personalised newspaper recap of the
    term, distinct from the analytical Dossier. Built entirely from
    the scorecard so it can be read (and screenshotted) at the end.
    ============================================================ */
@@ -130,7 +130,7 @@ AD.buildFrontPage = function (score) {
   }
 
   const parts = [];
-  if (score.clausesBroken) parts.push(`broke ${score.clausesBroken} of ${AD.CLAUSES.length} constitutional clauses` + (score.fullSet ? ' — the complete set' : ''));
+  if (score.clausesBroken) parts.push(`broke ${score.clausesBroken} of ${AD.CLAUSES.length} constitutional clauses` + (score.fullSet ? ', the complete set' : ''));
   if (score.warsDeclared) parts.push(`declared ${score.warsDeclared} war${score.warsDeclared === 1 ? '' : 's'}`);
   if (score.judgesPacked) parts.push(`packed ${score.judgesPacked} seats on the bench`);
   if (score.outletsOwned) parts.push(`took ${score.outletsOwned} newsroom${score.outletsOwned === 1 ? '' : 's'} in hand`);
@@ -147,7 +147,7 @@ AD.buildFrontPage = function (score) {
 
   const fortune = score.cash;
   if (fortune >= AD.wealthGoal({ wealthGoal: score.wealthGoal })) {
-    story.push(`The personal fortune, disclosed on a form and never disputed, stands at <b>$${fortune}bn</b> — larger than the budgets of eleven federal agencies combined.`);
+    story.push(`The personal fortune, disclosed on a form and never disputed, stands at <b>$${fortune}bn</b>, larger than the budgets of eleven federal agencies combined.`);
   } else {
     story.push(`The personal fortune leaves office at <b>$${fortune}bn</b>.`);
   }

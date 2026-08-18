@@ -1,5 +1,5 @@
 /* ============================================================
-   AMERICAN DICTATOR — styles.css
+   AMERICAN DICTATOR, styles.css
    Mobile-first. Dark marble + gold leaf + newsprint.
    Everything is sized for a phone and centred on desktop.
    ============================================================ */
@@ -36,7 +36,7 @@ html[data-motion="off"] *{animation:none!important;transition:none!important}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 
 /* The HTML `hidden` attribute must always win. Author rules that set `display`
-   silently beat the UA `[hidden]` rule, and several components do set it — that
+   silently beat the UA `[hidden]` rule, and several components do set it, that
    is how an always-visible "Resume Term" button and an empty news ticker both
    shipped. Guard it once, globally, rather than per component. */
 [hidden]{display:none!important}
@@ -50,7 +50,7 @@ html,body{height:100%}
 body{
   margin:0;
   background:
-    /* faint radial "searchlight" from above — monumental staging */
+    /* faint radial "searchlight" from above, monumental staging */
     radial-gradient(110% 55% at 50% -8%, rgba(47,93,168,.30) 0%, transparent 62%),
     radial-gradient(80% 45% at 50% 108%, rgba(179,32,43,.16) 0%, transparent 60%),
     var(--ink);
@@ -141,7 +141,7 @@ body::before{
 }
 .tagline{color:var(--paper2);font-style:italic;margin:12px 0 0;font-size:14px;
   letter-spacing:.4px}
-/* double rule under the title block — banner furniture */
+/* double rule under the title block, banner furniture */
 .tagline::before{content:'';display:block;width:110px;height:0;margin:0 auto 12px;
   border-top:3px solid var(--red);border-bottom:1px solid var(--gold);padding-bottom:3px}
 .disclaimer{color:#5b6880;font-size:11px;line-height:1.45;margin:12px 6px 0;font-style:italic}
@@ -382,7 +382,7 @@ body::before{
   display:inline-block;margin-bottom:9px;font-weight:700;
 }
 
-/* Four options per card — tighter spacing so a full crisis still fits a phone
+/* Four options per card, tighter spacing so a full crisis still fits a phone
    screen without the stage scrolling. */
 .choices{display:flex;flex-direction:column;gap:6px}
 .choice{
@@ -842,7 +842,7 @@ html[data-cb="on"] .fac.danger .fac-val{color:#93c5fd}
 .chip-ico{display:inline-flex;align-items:center;vertical-align:-2px;margin-right:5px}
 .chip-ico svg{width:13px;height:13px;color:currentColor;opacity:.9}
 
-/* subtle film grain over everything — the "expensive" finish */
+/* subtle film grain over everything, the "expensive" finish */
 #app::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:40;opacity:.04;
   mix-blend-mode:overlay;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
@@ -861,7 +861,7 @@ html[data-cb="on"] .fac.danger .fac-val{color:#93c5fd}
 .fac-name{font-size:8.5px;letter-spacing:1.6px;color:#6c7a94}
 .fac-bar{height:4px;border-radius:3px;background:#0a1120;margin:5px 3px 4px;overflow:hidden}
 
-/* refined chips — quieter, more premium */
+/* refined chips, quieter, more premium */
 .const-chip{
   background:linear-gradient(180deg,#16203a,#0f1728);
   border:1px solid #26324e;letter-spacing:2px;padding:7px 8px;
@@ -954,7 +954,7 @@ html[data-cb="on"] .fac.danger .fac-val{color:#93c5fd}
 .sen-row.econ-dip.rel-hostile{border-left-color:#c0392b}
 
 /* ============================================================
-   THE STRATEGIC FREEDOM RESERVE — the one-time heist banner
+   THE STRATEGIC FREEDOM RESERVE, the one-time heist banner
    ============================================================ */
 .heist{border:1px solid #6a1a22;border-radius:10px;padding:14px 14px 12px;margin:0 0 16px;
   background:linear-gradient(160deg,#2a0d12,#160a10);position:relative;overflow:hidden;
@@ -1002,7 +1002,7 @@ html[data-cb="on"] .fac.danger .fac-val{color:#93c5fd}
 .econ-dip .sen-act.econ-insult::before{align-self:flex-start;margin-top:1px}
 
 /* ============================================================
-   MICRO-ANIMATIONS — tactile feedback and "juice" throughout.
+   MICRO-ANIMATIONS, tactile feedback and "juice" throughout.
    All of it is disabled wholesale by html[data-motion="off"].
    ============================================================ */
 
@@ -1114,3 +1114,14 @@ html[data-cb="on"] .fac.danger .fac-val{color:#93c5fd}
 .mut:hover{border-color:var(--gold-soft)}
 .mut.on{border-color:var(--gold);background:linear-gradient(#33280f,#241c09);color:var(--gold-soft);font-weight:600}
 .mut:active{transform:scale(.97)}
+
+/* ---------- master mute button (always visible, above overlays) ---------- */
+.mute-btn{position:fixed;right:10px;bottom:10px;z-index:70;
+  width:40px;height:40px;border-radius:50%;
+  border:1px solid var(--edge2);background:rgba(13,20,36,.86);backdrop-filter:blur(4px);
+  color:var(--paper2);font-size:18px;line-height:1;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;transition:var(--fx);
+  box-shadow:0 6px 18px rgba(0,0,0,.5)}
+.mute-btn:hover{border-color:var(--gold-soft);transform:translateY(-1px)}
+.mute-btn:active{transform:scale(.94)}
+.mute-btn.muted{color:#7f8ca3;opacity:.85}

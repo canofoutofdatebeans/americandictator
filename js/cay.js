@@ -1,6 +1,6 @@
 /* ============================================================
-   AMERICAN DICTATOR — cay.js
-   THE SAINT AMBROSE FILES — the scandal that will not die
+   AMERICAN DICTATOR, cay.js
+   THE SAINT AMBROSE FILES, the scandal that will not die
 
    A recurring arc rather than a card. It surfaces every few months,
    it never fully resolves, and every attempt to bury it is the next
@@ -10,7 +10,7 @@
    THE STORY (entirely fictional)
    -----------------------------
    Auberon Vale, philanthropist and "longevity investor", ran the
-   MERIDIAN INSTITUTE on Saint Ambrose Cay — a private island in the
+   MERIDIAN INSTITUTE on Saint Ambrose Cay, a private island in the
    Freedom Ocean. Officially a wellness retreat. Actually an
    unregistered clinic running unapproved human trials on people
    flown in from three countries, financed through an art fund that
@@ -26,7 +26,7 @@
    0-10. Suppressing raises it, transparency lowers it. High heat
    leaks on its own between instalments, and decides the final stage:
    at heat >= 7 the arc can end the run outright with 'the-cay',
-   which is the point — a President can survive taking apart the
+   which is the point, a President can survive taking apart the
    judiciary and be finished by a guest book.
 
    The arc runs on TERM months, so a second term gets its own.
@@ -44,7 +44,7 @@ AD.cayState = function (run) {
     run.cay = { term: run.term, stage: 0, heat: 0, next: AD.CAY_FIRST, over: false, leaks: 0 };
   } else if (run.cay.term !== run.term) {
     // A new term inherits the HEAT and the STAGE. The story does not restart
-    // because you won an election — it picks up where it left off, which is
+    // because you won an election, it picks up where it left off, which is
     // also why a one-term president never finds out how it ends.
     run.cay.term = run.term;
     run.cay.next = AD.CAY_FIRST;
@@ -169,11 +169,11 @@ AD.CAY_STAGES = [
         res: 'Four hundred thousand entirely black pages, released on schedule, in full compliance with an act of Congress.' }
     ]},
 
-  /* 6 — the fork. Resolves against heat. ------------------------------ */
+  /* 6, the fork. Resolves against heat. ------------------------------ */
   { id: 'cay-7', title: 'The Last Instalment', who: CAY.cos, tags: ['press','power'], cayFinal: true,
     text: 'Deborah has closed the door, which she does not do. "Everything else in this building is a policy ' +
           'argument. This is not. This has been running for two years, it has outlived four of your press ' +
-          'secretaries, and this week it is the only story in America. Sir — how does this end?"',
+          'secretaries, and this week it is the only story in America. Sir, how does this end?"',
     choices: [
       { label: 'End it. Everything, unredacted, my own name included.', mode: 'clean' },
       { label: 'Outlast it. Say nothing, ever again, about the Cay.', mode: 'silence' },
@@ -228,7 +228,7 @@ AD.CAY_STAGES = [
       if (h >= 7 && grip < 52) return { ending: 'the-cay' };
       c.heat = AD.clamp(h + 2, 0, AD.CAY_MAX_HEAT);
       return { eff: { base: +6, press: -10, courts: -9, congress: -9, street: -7, auth: +11 },
-        res: 'Sealed. Permanently, by assertion, in a filing that itself cannot be read. It holds — and every ' +
+        res: 'Sealed. Permanently, by assertion, in a filing that itself cannot be read. It holds, and every ' +
              'institution in the country now knows exactly what this office will do to keep a document shut.' };
     }}
 ];

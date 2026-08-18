@@ -1,5 +1,5 @@
 /* ============================================================
-   PACK A — THE HONEYMOON  (term months 1–14)
+   PACK A, THE HONEYMOON  (term months 1–14)
    REWRITTEN against the research. Every crisis carries a `src`
    naming the documented item or sub-item it riffs on.
 
@@ -9,7 +9,7 @@
    as a joke about the dispute itself.
 
    Where a `src` cites a sub-item, it draws on one discrete element
-   of a larger research entry — a practice the research file's own
+   of a larger research entry, a practice the research file's own
    Caveats section explicitly invites.
 
    32 crises.
@@ -175,7 +175,7 @@ AD.CARDS.push(
     { label:'Say nothing about the case. Talk about anything else.', eff:{courts:+9,congress:+8,press:+6,base:-4,auth:+2},
       res:'Eleven minutes on hostage policy. She leaves puzzled and writes nothing down, which is the only outcome that helps you.' },
     { label:'Ask her, on the record, with counsel present.', eff:{courts:+5,congress:+4,press:+4,base:-2,auth:+3},
-      res:'Asking improperly with a witness present converts a deniable conversation into a documented one — but it is at least a conversation you can defend.' },
+      res:'Asking improperly with a witness present converts a deniable conversation into a documented one, but it is at least a conversation you can defend.' },
     { label:'Ask her to investigate you instead, as a distraction.', eff:{base:+3,courts:-4,congress:-4,press:-4,auth:+4}, wild:true,
       res:'She opens the file. It is a real file with a real number. It is still open in 2029 and nobody involved intended any of it.' }]},
 
@@ -239,7 +239,7 @@ AD.CARDS.push(
 
 { id:'a-order-struck', title:'Permanently Struck', who:C.lawyer, min:10, max:26, tags:['courts','power'],
   src:'a court permanently striking down an executive order targeting a law firm',
-  text:'A judge has struck your order against the firm — permanently — in an opinion using the word "unconstitutional" ' +
+  text:'A judge has struck your order against the firm, permanently, in an opinion using the word "unconstitutional" ' +
        'nine times. Sy: "She did not enjoin it. She voided it. There is nothing left to appeal about."',
   choices:[
     { label:'Attack the ruling. Sign a near-identical order.', eff:{base:+7,courts:-11,press:-6,congress:-6,street:-5,auth:+8},
@@ -247,7 +247,7 @@ AD.CARDS.push(
     { label:'Comply. Restore the clearances. Say nothing.', eff:{courts:+9,congress:+6,press:+7,base:-7,auth:-1},
       res:'The firm is made whole in a fortnight. Four other firms that had already conceded quietly reverse their concessions, which is the actual cost.' },
     { label:'Comply, and target the firm through procurement instead.', eff:{base:+5,courts:-4,press:-5,congress:-4,auth:+9},
-      res:'No order, no ruling, no headline — just contracts that stop being renewed. It works and there is nothing for a judge to void.' },
+      res:'No order, no ruling, no headline, just contracts that stop being renewed. It works and there is nothing for a judge to void.' },
     { label:'Hire the judge.', eff:{base:+3,courts:-7,congress:-5,press:-5,auth:+4}, wild:true,
       res:'She declines by letter in four sentences. The letter is entered on the docket, becomes public, and is the funniest document of the year.' }]},
 
@@ -369,7 +369,7 @@ AD.CARDS.push(
 
 { id:'a-passports', title:'The Marker', who:C.state, min:4, max:20, tags:['culture','street'],
   src:'suspending passport applications that request a change of sex marker',
-  text:'Muriel: "Applications requesting a marker change are being held. Not refused — held. Eleven thousand of them, ' +
+  text:'Muriel: "Applications requesting a marker change are being held. Not refused, held. Eleven thousand of them, ' +
        'and four hundred people have travel booked this month."',
   choices:[
     { label:'Hold them indefinitely. Issue no guidance.', eff:{base:+7,street:-9,courts:-8,press:-6,congress:-4,auth:+9}, breaks:'dueprocess',
@@ -400,14 +400,14 @@ AD.CARDS.push(
 { id:'a-retaliation', title:'The Answer', who:C.state, min:12, max:26, tags:['economy','foreign'],
   src:'retaliatory tariffs and a consumer backlash from trading partners',
   text:'Two partners have answered. One has targeted four agricultural states with surgical precision. ' +
-       'The other has done nothing official — its citizens have simply stopped buying American products.',
+       'The other has done nothing official, its citizens have simply stopped buying American products.',
   choices:[
     { label:'Escalate against both.', eff:{base:+7,street:-9,congress:-8,press:-5,cash:-0.4,auth:+7},
       res:'The precision targeting doubles. The boycott, having no official status, cannot be negotiated away and lasts eleven years.' },
     { label:'Negotiate with the state. Ignore the boycott.', eff:{street:+5,congress:+5,press:+4,base:-4,auth:+4},
       res:'You settle with the government in four months. Consumer sentiment takes nine years and no agreement ever touches it.' },
     { label:'Drop the tariffs. Declare the point made.', eff:{street:+8,congress:+7,press:+7,base:-8,auth:+1},
-      res:'Everything unwinds in six weeks. Two minor concessions for eleven months of disruption — a real if unimpressive result.' },
+      res:'Everything unwinds in six weeks. Two minor concessions for eleven months of disruption, a real if unimpressive result.' },
     { label:'Boycott them back. Personally. On camera.', eff:{base:+6,street:-4,press:-3,congress:-3,auth:+2}, wild:true,
       res:'You publicly forswear four of their most famous products. Sales of all four rise domestically. One sends you a free case with a very short note.' }]},
 
@@ -477,7 +477,7 @@ AD.CARDS.push(
        'Brayden thinks it makes you relatable. Kaylee thinks it makes you look like you post at 4am, which you do.',
   choices:[
     { label:'Keep posting unedited. It is authentic.', eff:{base:+7,press:-5,street:-3,auth:+3},
-      res:'The catalogue reaches 900 entries. It is also, genuinely, why four million people believe you write your own posts — which you do.' },
+      res:'The catalogue reaches 900 entries. It is also, genuinely, why four million people believe you write your own posts, which you do.' },
     { label:'Have somebody proofread before posting.', eff:{press:+6,congress:+4,street:+3,base:-6,auth:+1},
       res:'Engagement falls 22% within a month. Correct spelling reads as a committee, and a committee reads as everybody else.' },
     { label:'Misspell one word deliberately every time. Own it.', eff:{base:+8,press:-3,street:-2,auth:+3},
@@ -505,7 +505,7 @@ AD.CARDS.push(
        'Deborah has the legal note. "Sir, we do not have appropriated funds to pay them through September."',
   choices:[
     { label:'Send it to all 2.3 million. Work out the money later.', eff:{base:+7,congress:-9,courts:-8,street:-9,press:-6,auth:+12},
-      res:'Seventy-seven thousand accept. The ones with somewhere else to go leave first — air traffic, nuclear security, disease surveillance — because they always do.' },
+      res:'Seventy-seven thousand accept. The ones with somewhere else to go leave first, air traffic, nuclear security, disease surveillance, because they always do.' },
     { label:'Send it only where you actually want reductions.', eff:{base:+4,street:-4,congress:-3,press:-3,auth:+8},
       res:'Precision instead of a blunderbuss. Same headcount reduction in the places you chose, and the reactor inspectors stay.' },
     { label:'Do not send it. Reduce by attrition.', eff:{street:+7,congress:+6,courts:+5,press:+5,base:-7,auth:+2},

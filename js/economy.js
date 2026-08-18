@@ -1,29 +1,29 @@
 /* ============================================================
-   AMERICAN DICTATOR — economy.js
-   THE ECONOMY — tariffs and diplomacy.
+   AMERICAN DICTATOR, economy.js
+   THE ECONOMY, tariffs and diplomacy.
 
    Two halves of foreign economic policy, sharing the War Room's
    fictional nations, so a country you can invade you can also
    trade-war or summit.
 
-   TARIFFS — they feel like winning and end in tears.
+   TARIFFS, they feel like winning and end in tears.
      Slapping a tariff is an instant Base + Authority spike (we are
      finally getting tough) and a small customs windfall. Then, a
-     couple of months later, it BACKFIRES — retaliation, boycotts,
-     a price shock, a market crash — as one nasty delayed event, the
+     couple of months later, it BACKFIRES, retaliation, boycotts,
+     a price shock, a market crash, as one nasty delayed event, the
      way a war resolves into a quagmire. Before it lands you can
      RAISE it (bigger spike now, worse crash sooner) or LIFT it
      (dodge the crash, but the base sees you cave). Tariffing an ally
      hurts more than a rival; "Liberation Day" tariffs everyone at
      once for the biggest spike and the biggest crash in the game.
 
-   DIPLOMACY — a few silly options, one grown-up one.
+   DIPLOMACY, a few silly options, one grown-up one.
      Pick a fictional leader and pick your approach. The bombastic
      plays (fall in love with a strongman, call an ally "Governor",
      do the deal on the ninth green) thrill the base and appal the
      institutions; the one normal option per leader is dull, costs
      you the base, and actually works. Diplomacy moves RELATIONS,
-     and good relations soften that nation's tariff backfire — the
+     and good relations soften that nation's tariff backfire, the
      one thread tying the two halves together.
 
    Rationed to two summits a month; deterministic off the card RNG.
@@ -157,7 +157,7 @@ AD.liftTariff = function (run, id) {
 };
 
 /* Liberation Day: tariff every un-tariffed nation at once for the biggest spike
-   and — when they all backfire together — the biggest crash in the game. */
+   and, when they all backfire together, the biggest crash in the game. */
 AD.liberationDay = function (run) {
   AD.ensureEconomy(run);
   const targets = AD.ECON_NATIONS.filter(n => !AD.tariffOn(run, n.id));
@@ -203,7 +203,7 @@ AD.economyTick = function (run) {
 /* Each leader offers a few bombastic plays, ONE required Trump-style insult
    (flagged `insult`, unique to that country), and one grown-up option that is
    dull, costs the base, and actually works. `rel` moves relations, which soften
-   that nation's tariff backfire — the one thread tying the two halves together.
+   that nation's tariff backfire, the one thread tying the two halves together.
    Helpers keep the table readable and the balance consistent. */
 function dIns (label, res, eff, rel) {
   return { label, res, silly: true, insult: true,
@@ -219,7 +219,7 @@ function dNrm (label, res, eff, rel) {
 AD.DIPLOMACY = {
   china: [
     dSil(`Praise his strength. Concede on everything.`, `He is delighted. Your negotiators learn what you gave away by reading the Chinese newspapers.`, { base: 4, press: -3, courts: -2 }, 10),
-    dIns(`Tell them they've been ripping us off for thirty years — the greatest theft in the history of the world.`, `Fire and fury, live and uncut. Markets wobble, the base roars, and precisely nothing is resolved. Everything is simply louder now.`, { base: 8, street: -4, press: -3, cash: -0.2 }, -15),
+    dIns(`Tell them they've been ripping us off for thirty years, the greatest theft in the history of the world.`, `Fire and fury, live and uncut. Markets wobble, the base roars, and precisely nothing is resolved. Everything is simply louder now.`, { base: 8, street: -4, press: -3, cash: -0.2 }, -15),
     dSil(`Do the trade deal on the ninth green.`, `A framework is agreed between the sand trap and the pin. Nobody can subsequently locate the paperwork.`, { base: 3, cash: 0.3, courts: -3 }, 6),
     dNrm(`Send the trade team to negotiate a real, dull agreement.`, `Forty pages, tariffs down four per cent, no photo op. The best deal of your term. It trends for nine minutes.`, { base: -4, press: 6, congress: 5 }, 6)
   ],
@@ -228,11 +228,11 @@ AD.DIPLOMACY = {
     dNrm(`Reaffirm the alliance and split the burden on paper.`, `A joint communiqué, a modest cost-sharing table, a functioning partnership. The least interesting and most useful hour of your month.`, null, 9)
   ],
   japan: [
-    dIns(`Say they flood us with cars and buy none of ours — "not fair, very unfair."`, `An old grievance from the 1980s delivered as breaking news. Their automakers, who employ half of Ohio, are baffled and then quietly, expensively furious.`, { base: 4, press: -3, street: -2 }, -12),
+    dIns(`Say they flood us with cars and buy none of ours, "not fair, very unfair."`, `An old grievance from the 1980s delivered as breaking news. Their automakers, who employ half of Ohio, are baffled and then quietly, expensively furious.`, { base: 4, press: -3, street: -2 }, -12),
     dNrm(`Renew the alliance and the trade terms, quietly.`, `Bows, a signed annexe, no drama. It works so smoothly that no one covers it.`, null, 9)
   ],
   india: [
-    dIns(`Call their tariffs "the highest in the world — a total disgrace."`, `You are not entirely wrong, which is what makes it land. A billion people trend a nickname for you by lunchtime.`, { base: 5, press: -3, street: -2 }, -12),
+    dIns(`Call their tariffs "the highest in the world, a total disgrace."`, `You are not entirely wrong, which is what makes it land. A billion people trend a nickname for you by lunchtime.`, { base: 5, press: -3, street: -2 }, -12),
     dNrm(`Cut a genuine market-access deal, section by section.`, `Dull, technical, mutually grudging, and real. Both sides claim it as a loss at home, which is how you know it was fair.`, null, 8)
   ],
   uk: [
@@ -253,17 +253,17 @@ AD.DIPLOMACY = {
     dNrm(`Reaffirm the alliance and mean it.`, `A joint statement, a handshake, a functioning alliance. The least interesting thing you do all month.`, { base: -4, congress: 6, press: 5, street: 4 }, 12)
   ],
   brazil: [
-    dIns(`Call the rainforest "very overrated — lots of bugs, tremendous humidity."`, `Environmental ministers from forty nations respond at once. You have accidentally convened a global summit, about bugs.`, { base: 4, press: -3, street: -2 }, -12),
+    dIns(`Call the rainforest "very overrated, lots of bugs, tremendous humidity."`, `Environmental ministers from forty nations respond at once. You have accidentally convened a global summit, about bugs.`, { base: 4, press: -3, street: -2 }, -12),
     dNrm(`Strike a straight commodities-for-tech deal.`, `Soy and jets, on paper, in public. It clears customs and no one claps.`, null, 8)
   ],
   russia: [
     dSil(`Tell him you fell in love.`, `The letters are called beautiful. On inspection they are competent form letters. The romance is genuine and one-sided.`, { base: 5, press: -4, courts: -2 }, 12),
     dSil(`Believe him over your own intelligence agencies.`, `You side with a foreign strongman against your own services, at a podium, on camera. It is quoted for a decade.`, { base: 6, congress: -5, street: -4, press: -4 }, 15),
-    dIns(`Tell Volkov, to his face, that his army looked "weak — very weak, sad."`, `It is the only true thing you say to him all year. He takes it with a small, cold smile you find yourself thinking about later.`, { base: 5, press: -2, street: -2 }, -10),
-    dNrm(`A cautious, verified arms agreement.`, `Trust, but verify. Bipartisan, boring, and it outlives your presidency — which nothing else with his name near it does.`, { base: -5, press: 7, congress: 5 }, 6)
+    dIns(`Tell Volkov, to his face, that his army looked "weak, very weak, sad."`, `It is the only true thing you say to him all year. He takes it with a small, cold smile you find yourself thinking about later.`, { base: 5, press: -2, street: -2 }, -10),
+    dNrm(`A cautious, verified arms agreement.`, `Trust, but verify. Bipartisan, boring, and it outlives your presidency, which nothing else with his name near it does.`, { base: -5, press: 7, congress: 5 }, 6)
   ],
   mexico: [
-    dIns(`Announce, again, that they will pay for the wall — "one way or the other."`, `The President replies, in flawless English, that they will not. The clip of you insisting they will plays on a loop for a decade.`, { base: 6, press: -4, street: -2 }, -14),
+    dIns(`Announce, again, that they will pay for the wall, "one way or the other."`, `The President replies, in flawless English, that they will not. The clip of you insisting they will plays on a loop for a decade.`, { base: 6, press: -4, street: -2 }, -14),
     dNrm(`Quietly renew the trade pact that runs both economies.`, `Nobody campaigns on it and everybody depends on it. Signed on a Tuesday, saves a million jobs, trends nowhere.`, null, 9)
   ],
   skorea: [
@@ -279,7 +279,7 @@ AD.DIPLOMACY = {
     dNrm(`Do a quiet ports-and-defence arrangement.`, `Access for investment, initialled at lunch, effective for years. The lunch was the hard part.`, null, 8)
   ],
   indonesia: [
-    dIns(`Call it "a lot of islands — nobody's even counted them all."`, `There are, in fact, about seventeen thousand, and their foreign ministry names a representative sample of them at you in a very long statement.`, { base: 4, press: -3, street: -2 }, -11),
+    dIns(`Call it "a lot of islands, nobody's even counted them all."`, `There are, in fact, about seventeen thousand, and their foreign ministry names a representative sample of them at you in a very long statement.`, { base: 4, press: -3, street: -2 }, -11),
     dNrm(`Sign a resources-and-access framework.`, `Nickel for market access, disclosed and dull. It funds three factories and zero headlines.`, null, 8)
   ],
   netherlands: [
@@ -300,7 +300,7 @@ AD.DIPLOMACY = {
     dNrm(`Negotiate a calm banking-and-trade accord.`, `Nothing leaks, which is the entire product. You get terms; they get silence; the vault door closes.`, null, 8)
   ],
   poland: [
-    dIns(`Insist they thank us daily — "and they do, believe me."`, `You demand gratitude from one of the few allies actually grateful to you. It is unnecessary and it lands with a thud.`, { base: 4, press: -3, street: -2 }, -10),
+    dIns(`Insist they thank us daily, "and they do, believe me."`, `You demand gratitude from one of the few allies actually grateful to you. It is unnecessary and it lands with a thud.`, { base: 4, press: -3, street: -2 }, -10),
     dNrm(`Expand the basing deal they actually want.`, `They ask for more troops; you say yes. A rare summit where both sides leave happy and no one performs.`, null, 10)
   ],
   taiwan: [
@@ -312,7 +312,7 @@ AD.DIPLOMACY = {
     dNrm(`Work the deal through the EU institutions there.`, `Endless committees, one durable outcome. You hate the process and keep the result.`, null, 8)
   ],
   argentina: [
-    dIns(`Say they "default more than they pay — sad country, great steak."`, `The steak line saves it. Their economy minister frames the insult and hangs it beside the last eight defaults.`, { base: 4, press: -3, street: -2 }, -10),
+    dIns(`Say they "default more than they pay, sad country, great steak."`, `The steak line saves it. Their economy minister frames the insult and hangs it beside the last eight defaults.`, { base: 4, press: -3, street: -2 }, -10),
     dNrm(`Back a stabilisation-and-trade package.`, `Dollars for reform, on paper, fingers crossed. It might even hold this time. It has to hold sometime.`, null, 8)
   ],
   sweden: [
@@ -320,7 +320,7 @@ AD.DIPLOMACY = {
     dNrm(`Sign the defence-and-tech pact cleanly.`, `Minimalist, functional, built to last, faintly Scandinavian. It just works, like their furniture, mostly.`, null, 9)
   ],
   ireland: [
-    dIns(`Say every American company hides there — "and I get it, but no."`, `You are not wrong about the tax rate, which is the problem. Half your own donors' logos are, technically, in Dublin.`, { base: 4, press: -3, street: -2 }, -11),
+    dIns(`Say every American company hides there, "and I get it, but no."`, `You are not wrong about the tax rate, which is the problem. Half your own donors' logos are, technically, in Dublin.`, { base: 4, press: -3, street: -2 }, -11),
     dNrm(`Quietly bless the investment status quo.`, `You say nothing, they change nothing, the money stays put. Everyone's accountant sleeps soundly.`, null, 8)
   ],
   austria: [

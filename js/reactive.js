@@ -1,6 +1,6 @@
 /* ============================================================
-   AMERICAN DICTATOR — reactive.js
-   CROSS-SYSTEM TRIGGERS — the systems generate their own crises.
+   AMERICAN DICTATOR, reactive.js
+   CROSS-SYSTEM TRIGGERS, the systems generate their own crises.
 
    Until now the management screens (the caucus, the scandal, the
    bench, the press room) ran in parallel with the card deck. This is
@@ -28,7 +28,7 @@ function arm (run, key, gap) {
   run.flags['react_' + key] = AD.termMonth(run) + gap;
 }
 
-/* The Regular's escalating arc — a signature running bit. The story advances
+/* The Regular's escalating arc, a signature running bit. The story advances
    one stage per call no matter what you choose; the choices only decide what it
    costs you. Each call references the last. */
 AD.GARY_STAGES = [
@@ -119,7 +119,7 @@ AD.REACTIVE = [
             res: 'A bridge, a base, a judgeship for his cousin. He is back in the fold by Wednesday and it is the cheapest chamber you will ever buy.',
             act: r => { const s = AD.senatorById(r, rebel.id); if (s) { s.loyalty = 82; s.gripe = null; } } },
           { label: 'Humiliate him. End him in front of the base.', eff: { base: +9, congress: -9, press: -4, courts: -2, auth: +4 },
-            res: 'You call him a name that sticks. The base turns on him overnight — and the nine behind him take a careful step back, having seen it done.',
+            res: 'You call him a name that sticks. The base turns on him overnight, and the nine behind him take a careful step back, having seen it done.',
             act: r => { const s = AD.senatorById(r, rebel.id); if (s) s.loyalty = 6; (r.senate || []).forEach(o => { if (o.party === 'own' && o.loyalty < 60) o.loyalty = AD.clamp(o.loyalty + 6, 0, 100); }); } },
           { label: 'Let him walk. The caucus is smaller and purer.', eff: { base: +5, congress: -12, courts: -3, auth: -2 },
             res: 'He crosses the aisle and takes four with him. What remains answers to you completely, and there is a great deal less of it.',
@@ -145,7 +145,7 @@ AD.REACTIVE = [
         pillarBanner: 'THE ONLY STORY',
         title: 'Change The Subject',
         text: 'Saint Ambrose has led every bulletin for a fortnight. Deborah closes the door. ' +
-              '"There is a school of thought, sir — an old one, a bad one, a reliable one — that says the ' +
+              '"There is a school of thought, sir, an old one, a bad one, a reliable one, that says the ' +
               'fastest way off a front page is onto a different front page. Preferably one with a flag on it."',
         choices: [
           { label: 'Find a small country and a big reason. Tonight.', eff: { base: +8, press: -4, courts: -5, congress: -5, street: +2, auth: +5 },
@@ -218,7 +218,7 @@ AD.REACTIVE = [
             res: 'A portfolio, an office near yours, and a schedule you set. Ambition, salaried and supervised, is much easier to watch.',
             act: r => { r.vpAmbition = 25; } },
           { label: 'Do nothing. Let the crowd have two heroes.', eff: { base: +5, press: -3, auth: -1 },
-            res: 'You share the stage and the chant. The base loves the double act — right up until it decides which half it prefers.',
+            res: 'You share the stage and the chant. The base loves the double act, right up until it decides which half it prefers.',
             act: r => { r.vpAmbition = AD.clamp((r.vpAmbition || 60) + 4, 0, 92); } },
           { label: 'Send him on a very long goodwill tour. Antarctica, mostly.', eff: { base: +3, press: -2, auth: +2 }, wild: true,
             res: 'The Vice President is dispatched to inspect penguins for eleven weeks. He sends back photographs. The photographs are, annoyingly, charming.',

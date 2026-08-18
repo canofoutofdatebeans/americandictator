@@ -1,12 +1,12 @@
 /* ============================================================
-   PACK F — THE RECORD
+   PACK F, THE RECORD
    Every crisis in this pack is LOOSELY derived from a documented,
    sourced item in `Trump stories.md` / `Trump Research.md`.
 
    The `src` field names the item it riffs on. It is a research
    citation, not a claim that the fictional events occurred: names,
    numbers, countries and outcomes are all transformed. The rule is
-   INSPIRED BY, NEVER COPIED — take the mechanism, invent the rest.
+   INSPIRED BY, NEVER COPIED, take the mechanism, invent the rest.
 
    Contested [CONTEXT FLAG] items from the research are either
    excluded or played as a joke about the dispute itself, per that
@@ -433,7 +433,7 @@ AD.CARDS.push(
 
 { id:'f-war-hero', title:'The Senator', who:C.press, min:8, max:44, tags:['press','congress'],
   src:'disparagement of a decorated veteran and political rival',
-  text:'A senator from your own party — a decorated veteran, held prisoner for five years — has voted against you. ' +
+  text:'A senator from your own party, a decorated veteran, held prisoner for five years, has voted against you. ' +
        'Brayden has a line about his war record. Kaylee has stopped typing.',
   choices:[
     { label:'Use the line. About the capture.', eff:{base:+5,congress:-11,street:-10,press:-5,courts:-4,auth:+4},
@@ -493,7 +493,7 @@ AD.CARDS.push(
 
 { id:'f-rat-infested', title:'The District', who:C.social, min:10, max:44, tags:['rhetoric','congress'],
   src:'describing a congressman\'s majority-minority district in dehumanising terms',
-  text:'A committee chairman has subpoenaed your financial records. Brayden has drafted a post about his district — ' +
+  text:'A committee chairman has subpoenaed your financial records. Brayden has drafted a post about his district, ' +
        'its crime rate, its housing stock, and one adjective that is doing all of the work.',
   choices:[
     { label:'Post it. The adjective stays.', eff:{base:+8,street:-11,press:-5,congress:-9,courts:-4,auth:+5},
@@ -507,7 +507,7 @@ AD.CARDS.push(
 
 { id:'f-death-toll', title:'The Death Toll', who:C.home, min:10, max:44, tags:['street','press'],
   src:'public dispute of an official disaster mortality figure',
-  text:'An academic study has put the hurricane death toll on the territory at nearly three thousand — ' +
+  text:'An academic study has put the hurricane death toll on the territory at nearly three thousand, ' +
        'far above the initial official count. Duane has the methodology. It is sound.',
   choices:[
     { label:'Dispute the number. Say it was invented to hurt you.', eff:{base:+5,street:-13,press:-5,congress:-8,courts:-4,auth:+3},
@@ -559,7 +559,7 @@ AD.CARDS.push(
     { label:'Credit the justices and say nothing more.', eff:{base:+5,courts:+6,press:+4,street:+3,auth:+3},
       res:'Restraint, from you, on this. Muncy notices and says so from the pulpit, and it is worth more than the claim would have been.' },
     { label:'Say the Court decided and you had no part in it.', eff:{street:+7,press:+6,congress:+5,base:-8,auth:-2},
-      res:'It is not true — you appointed three of them and said so at the time — and the archive footage runs beside the denial within a day.' },
+      res:'It is not true, you appointed three of them and said so at the time, and the archive footage runs beside the denial within a day.' },
     { label:'Claim credit for a ruling that went against you.', eff:{base:+4,courts:-5,press:-5,street:-4,auth:+3}, wild:true,
       res:'You describe a 6-3 defeat as a personal victory in enough detail that two networks check whether they have the case name wrong.' }]},
 

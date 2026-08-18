@@ -1,5 +1,5 @@
 /* ============================================================
-   PACK D — EVERGREEN  (any month)
+   PACK D, EVERGREEN  (any month)
    Pacing material. Gaffes, vanity, foreign policy by instinct,
    and the ordinary weather of the office. Weighted early by the
    deck's own 'levity' tag rather than by month windows, so these
@@ -9,13 +9,13 @@
    INSPIRED BY, NEVER COPIED.
 
    The research's own Recommendations section flags the gaffe pile
-   as "Tier 1 — airtight and iconic (use freely)", which is why the
+   as "Tier 1, airtight and iconic (use freely)", which is why the
    comedy in this pack sits closer to the record than in packs B
    and C. Where an item is Tier 2 (contested), the joke is about
    the dispute rather than the claim; where it is Tier 3 (verify
    wording), the wording is not used at all.
 
-   No `breaks:` tags live in this pack and none are needed — the
+   No `breaks:` tags live in this pack and none are needed, the
    clause routes are all in A, B, C, E, F, G and the core deck.
 
    45 crises.
@@ -115,7 +115,7 @@ AD.CARDS.push(
     { label:'Have the weather agency issue a supporting statement.', eff:{base:+5,press:-9,street:-7,courts:-5,congress:-4,auth:+6},
       res:'An unsigned statement backing you goes out at 9pm. Every meteorologist in the agency learns something that evening about what the agency is for.' },
     { label:'"I was given an early projection." Move on.', eff:{press:+5,street:+4,base:-4,auth:+1},
-      res:'It is even true — an early projection did include the state. Saying so on day one would have ended it, and it is now day four.' },
+      res:'It is even true, an early projection did include the state. Saying so on day one would have ended it, and it is now day four.' },
     { label:'Redraw the entire coastline while you are there.', eff:{base:+5,press:-5,street:-4,courts:-3,auth:+3}, wild:true,
       res:'The amended map places two states inland. It is photographed, framed, and hangs in a meteorology department to this day.' }]},
 
@@ -324,7 +324,7 @@ AD.CARDS.push(
 
 { id:'e-testing', title:'Slow The Testing', who:C.health, min:8, max:48, tags:['press','street'],
   src:'suggesting reduced testing in order to record fewer cases',
-  text:'You have said that when you test to that extent, you find more cases — and that you had therefore asked ' +
+  text:'You have said that when you test to that extent, you find more cases, and that you had therefore asked ' +
        'for the testing to be slowed. Dr Pike is very still. "Sir, was that a joke? Because I have four state ' +
        'health directors asking me and I do not know what to tell them."',
   choices:[
@@ -452,7 +452,7 @@ AD.CARDS.push(
   src:'a gifted foreign aircraft proposed for use as the presidential transport',
   text:'A foreign government has offered an aircraft. Tarrant has the security assessment and is being very ' +
        'careful. "Stripping and rebuilding it to our standard takes four years and costs more than a new one. ' +
-       'And sir — the framing is contested. They say it was offered. Somebody on our side asked first."',
+       'And sir, the framing is contested. They say it was offered. Somebody on our side asked first."',
   choices:[
     { label:'Accept it. Call it an unsolicited gift.', eff:{base:+4,press:-11,courts:-10,congress:-11,street:-6,cash:+0.4,auth:+8},
       res:'The record of who approached whom surfaces within a fortnight, because it always does, and the word "unsolicited" becomes the story rather than the aircraft.' },
@@ -665,7 +665,7 @@ AD.CARDS.push(
 
 { id:'e-birthday-parade', title:'The Coincidence', who:C.sched, min:20, max:48, tags:['vanity','military'],
   src:'a major military commemoration scheduled to coincide with a presidential birthday',
-  text:'Boyd has the date problem. "The service anniversary parade falls on your birthday. Genuinely — ' +
+  text:'Boyd has the date problem. "The service anniversary parade falls on your birthday. Genuinely, ' +
        'it is a real anniversary and it is a real coincidence." He shifts. "Nobody outside this room will ' +
        'believe that, sir, and I have checked the calendar four times because I did not believe it either."',
   choices:[

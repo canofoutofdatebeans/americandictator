@@ -5,11 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no">
 <meta name="theme-color" content="#0d0b09">
 <title>American Dictator</title>
-<link rel="stylesheet" href="css/styles.css?v=72">
+<link rel="stylesheet" href="css/styles.css?v=73">
 </head>
 <body>
 
 <div id="app">
+
+  <!-- Master sound toggle, fixed and visible at all times, above every overlay -->
+  <button class="mute-btn" id="mute-btn" data-act="mute" aria-label="Toggle sound" title="Sound on/off">🔊</button>
 
   <!-- ══════════════════ TITLE ══════════════════ -->
   <section class="screen active" id="screen-title">
@@ -17,7 +20,7 @@
       <div class="seal" aria-hidden="true">
         <!-- Heraldic bald eagle: rigid bilateral symmetry, spread wings, standard
              bar, laurel and arrows. Authoritarian design grammar built entirely
-             from American symbols — which is the joke. -->
+             from American symbols, which is the joke. -->
         <svg viewBox="0 0 200 150">
           <circle cx="100" cy="70" r="52" class="seal-roundel"/>
           <circle cx="100" cy="70" r="52" class="seal-ring"/>
@@ -123,7 +126,7 @@
           </div>
 
           <label class="field">
-            <span>Seed <em>optional — share a run</em></span>
+            <span>Seed <em>optional, share a run</em></span>
             <input id="in-seed" type="text" maxlength="16" placeholder="leave blank for random" autocomplete="off">
           </label>
 
@@ -138,7 +141,7 @@
           </div>
 
           <div class="field">
-            <span>Modifiers <em>optional — stack any</em></span>
+            <span>Modifiers <em>optional, stack any</em></span>
             <div class="mutators" id="mutators"></div>
           </div>
         </div>
@@ -161,7 +164,7 @@
         <div class="rank-line" id="hud-rank">Duly Elected President</div>
       </div>
       <button class="hud-cash" id="hud-cash" data-act="corruption"
-              title="Private Interests — spend your fortune">$<span>3.0</span>B</button>
+              title="Private Interests, spend your fortune">$<span>3.0</span>B</button>
     </header>
 
     <div class="authority-wrap">
@@ -170,21 +173,21 @@
         <i class="tick" style="left:25%"></i><i class="tick" style="left:50%"></i>
         <i class="tick cap" id="auth-cap" title="Decisions alone stop here. Pillars go past it."></i>
       </div>
-      <div class="pillar-cap">Pillars of the Regime — capture three</div>
+      <div class="pillar-cap">Pillars of the Regime, capture three</div>
       <div class="pillar-row" id="pillar-row"></div>
       <div class="chip-row">
         <button class="const-chip" id="const-chip" data-act="constitution"
                 title="The Ledger of Broken Clauses">THE CONSTITUTION <b>0/16</b></button>
         <button class="const-chip reno-chip" id="reno-chip" data-act="renovations"
-                title="The Residence — improvements to the White House">THE RESIDENCE <b>0/13</b></button>
+                title="The Residence, improvements to the White House">THE RESIDENCE <b>0/13</b></button>
         <button class="const-chip call-chip" id="call-chip" data-act="call"
-                title="The Phone — executive time"><span class="chip-ico" id="ico-phone"></span>THE PHONE</button>
+                title="The Phone, executive time"><span class="chip-ico" id="ico-phone"></span>THE PHONE</button>
         <button class="const-chip war-chip" id="war-chip" data-act="war"
-                title="The War Room — declare war on anyone"><span class="chip-ico" id="ico-war"></span>THE WAR ROOM</button>
+                title="The War Room, declare war on anyone"><span class="chip-ico" id="ico-war"></span>THE WAR ROOM</button>
         <button class="const-chip econ-chip" id="econ-chip" data-act="economy"
-                title="The Economy — tariffs and diplomacy"><span class="chip-ico" id="ico-econ"></span>THE ECONOMY</button>
+                title="The Economy, tariffs and diplomacy"><span class="chip-ico" id="ico-econ"></span>THE ECONOMY</button>
         <button class="const-chip pardon-chip" id="pardon-chip" data-act="pardon"
-                title="The Pardon Power — the eraser with no check on it"><span class="chip-ico" id="ico-pardon"></span>THE PARDONS</button>
+                title="The Pardon Power, the eraser with no check on it"><span class="chip-ico" id="ico-pardon"></span>THE PARDONS</button>
       </div>
     </div>
 
@@ -202,11 +205,11 @@
       <div class="card" id="card">
         <div class="card-speaker">
           <div class="sil" id="card-sil"></div>
-          <div class="who"><b id="card-name">—</b><em id="card-role">—</em></div>
+          <div class="who"><b id="card-name">, </b><em id="card-role">, </em></div>
           <div class="timer" id="timer" hidden><svg viewBox="0 0 36 36"><circle class="t-bg" cx="18" cy="18" r="16"/><circle class="t-fg" id="t-fg" cx="18" cy="18" r="16"/></svg><span id="t-num">14</span></div>
         </div>
-        <h3 class="card-title" id="card-title">—</h3>
-        <p class="card-text" id="card-text">—</p>
+        <h3 class="card-title" id="card-title">, </h3>
+        <p class="card-text" id="card-text">, </p>
         <div class="choices" id="choices"></div>
       </div>
 
@@ -238,7 +241,7 @@
   <div class="overlay" id="ov-tabloid" hidden role="dialog" aria-modal="true">
     <div class="tabloid">
       <div class="tab-masthead">THE NATIONAL SCREAM</div>
-      <div class="tab-strap"><span id="tab-date">—</span><span>50¢ · FINAL EDITION</span></div>
+      <div class="tab-strap"><span id="tab-date">, </span><span>50¢ · FINAL EDITION</span></div>
       <h2 class="tab-head" id="tab-head">HEADLINE</h2>
       <h4 class="tab-sub" id="tab-sub">Subhead</h4>
       <div class="tab-body" id="tab-body"></div>
@@ -250,9 +253,9 @@
     <div class="doctrine-card">
       <div class="doc-kicker">DOCTRINE UNLOCKED</div>
       <div class="doc-glyph" id="doc-glyph">§</div>
-      <h2 id="doc-name">—</h2>
-      <p class="doc-quote" id="doc-quote">—</p>
-      <p class="doc-effect" id="doc-effect">—</p>
+      <h2 id="doc-name">, </h2>
+      <p class="doc-quote" id="doc-quote">, </p>
+      <p class="doc-effect" id="doc-effect">, </p>
       <button class="btn btn-primary wide" data-act="doctrine-close">Sign It</button>
     </div>
   </div>
@@ -266,7 +269,7 @@
         <div class="corr-exp">Exposure <b id="corr-exposure">none</b></div>
       </div>
       <p class="corr-note" id="corr-note">Holdings never grant Authority. They buy the machine that
-        takes it — shields, multipliers, monthly drip and the income to buy more of all three.</p>
+        takes it, shields, multipliers, monthly drip and the income to buy more of all three.</p>
       <div class="corr-list" id="corr-list"></div>
       <div id="corr-heist"></div>
       <button class="btn wide" data-act="corruption-close">Back to Governing</button>
@@ -297,7 +300,7 @@
         <div>Occupied <b id="street-occupied">0</b></div>
       </div>
       <p class="corr-note" id="street-note">Every city's unrest climbs on its own, and protests feed themselves.
-        Send in the force before a hotspot gets out of hand — or let the base watch you concede.</p>
+        Send in the force before a hotspot gets out of hand, or let the base watch you concede.</p>
       <div class="sen-list corr-list" id="street-list"></div>
       <button class="btn wide" data-act="street-close">Back to Governing</button>
     </div>
@@ -326,7 +329,7 @@
         <div>This Month <b id="rally-note-h">Red meat</b></div>
       </div>
       <p class="corr-note" id="rally-note">Give the base what it wants. Two spectacles a month. Every one thrills
-        the movement and appals the institutions — and feeding the base too hard is its own way to lose it.</p>
+        the movement and appals the institutions, and feeding the base too hard is its own way to lose it.</p>
       <div class="sen-list corr-list" id="rally-list"></div>
       <button class="btn wide" data-act="basepop-close">Back to Governing</button>
     </div>
@@ -382,7 +385,7 @@
         <div>Innocents <b id="pardon-saints">0</b></div>
       </div>
       <p class="corr-note" id="pardon-note">Article Two hands you an eraser with no check on it. Most of these
-        people should never touch it — and several are grateful in cash. A few are genuinely innocent: freeing them
+        people should never touch it, and several are grateful in cash. A few are genuinely innocent: freeing them
         pleases the institutions and annoys a base that wanted a scalp.</p>
       <div class="sen-list corr-list" id="pardon-list"></div>
       <button class="btn wide" data-act="pardon-close">Back to Governing</button>
@@ -416,7 +419,7 @@
         <div>Upkeep <b id="reno-upkeep">none</b></div>
         <div>Scrutiny <b id="reno-scrutiny">none</b></div>
       </div>
-      <p class="corr-note" id="reno-note">Every structure grants Authority the moment it is finished —
+      <p class="corr-note" id="reno-note">Every structure grants Authority the moment it is finished, 
         and bills you for the rest of your term.</p>
       <div class="corr-list" id="reno-list"></div>
       <button class="btn wide" data-act="renovations-close">Back to Governing</button>
@@ -438,7 +441,7 @@
     <div class="tut-spot" id="tut-spot" hidden></div>
     <div class="tut-box" id="tut-box">
       <div class="tut-step" id="tut-step">STEP 1 OF 10</div>
-      <h3 id="tut-title">—</h3>
+      <h3 id="tut-title">, </h3>
       <div class="tut-body" id="tut-body"></div>
       <div class="tut-actions">
         <button class="btn btn-ghost" data-act="tut-skip">Skip</button>
@@ -536,48 +539,49 @@
 </div>
 
 <!-- state.js creates the AD namespace, so it must load first. -->
-<script src="js/state.js?v=72"></script>
-<script src="js/icons.js?v=72"></script>
-<script src="js/portraits.js?v=72"></script>
-<script src="js/seed.js?v=72"></script>
-<script src="js/audio.js?v=72"></script>
-<script src="js/music.js?v=72"></script>
-<script src="js/doctrines.js?v=72"></script>
-<script src="js/corruption.js?v=72"></script>
-<script src="js/renovations.js?v=72"></script>
-<script src="js/senate.js?v=72"></script>
-<script src="js/press.js?v=72"></script>
-<script src="js/street.js?v=72"></script>
-<script src="js/call.js?v=72"></script>
-<script src="js/war.js?v=72"></script>
-<script src="js/courts.js?v=72"></script>
-<script src="js/basepop.js?v=72"></script>
-<script src="js/economy.js?v=72"></script>
-<script src="js/pardons.js?v=72"></script>
-<script src="js/dossier.js?v=72"></script>
-<script src="js/constitution.js?v=72"></script>
-<script src="js/tutorial.js?v=72"></script>
-<script src="js/achievements.js?v=72"></script>
-<script src="js/briefings.js?v=72"></script>
-<script src="js/cards.js?v=72"></script>
+<script src="js/state.js?v=73"></script>
+<script src="js/icons.js?v=73"></script>
+<script src="js/portraits.js?v=73"></script>
+<script src="js/seed.js?v=73"></script>
+<script src="js/audio.js?v=73"></script>
+<script src="js/music.js?v=73"></script>
+<script src="js/doctrines.js?v=73"></script>
+<script src="js/corruption.js?v=73"></script>
+<script src="js/renovations.js?v=73"></script>
+<script src="js/senate.js?v=73"></script>
+<script src="js/press.js?v=73"></script>
+<script src="js/street.js?v=73"></script>
+<script src="js/call.js?v=73"></script>
+<script src="js/war.js?v=73"></script>
+<script src="js/courts.js?v=73"></script>
+<script src="js/basepop.js?v=73"></script>
+<script src="js/economy.js?v=73"></script>
+<script src="js/pardons.js?v=73"></script>
+<script src="js/dossier.js?v=73"></script>
+<script src="js/constitution.js?v=73"></script>
+<script src="js/tutorial.js?v=73"></script>
+<script src="js/achievements.js?v=73"></script>
+<script src="js/briefings.js?v=73"></script>
+<script src="js/cards.js?v=73"></script>
 <!-- Content packs. Each pushes onto AD.CARDS, so adding a deck is adding a
-     file — no engine changes. Order does not matter. -->
-<script src="js/packs/pack-a-honeymoon.js?v=72"></script>
-<script src="js/packs/pack-b-machinery.js?v=72"></script>
-<script src="js/packs/pack-c-consolidation.js?v=72"></script>
-<script src="js/packs/pack-d-evergreen.js?v=72"></script>
-<script src="js/packs/pack-e-secondterm.js?v=72"></script>
-<script src="js/packs/pack-f-record.js?v=72"></script>
-<script src="js/packs/pack-g-record.js?v=72"></script>
-<script src="js/packs/pack-h-frontier.js?v=72"></script>
+     file, no engine changes. Order does not matter. -->
+<script src="js/packs/pack-a-honeymoon.js?v=73"></script>
+<script src="js/packs/pack-b-machinery.js?v=73"></script>
+<script src="js/packs/pack-c-consolidation.js?v=73"></script>
+<script src="js/packs/pack-d-evergreen.js?v=73"></script>
+<script src="js/packs/pack-e-secondterm.js?v=73"></script>
+<script src="js/packs/pack-f-record.js?v=73"></script>
+<script src="js/packs/pack-g-record.js?v=73"></script>
+<script src="js/packs/pack-h-frontier.js?v=73"></script>
 <!-- cay.js reads AD.CAST, so it must load after cards.js -->
-<script src="js/cay.js?v=72"></script>
-<script src="js/reactive.js?v=72"></script>
-<script src="js/sections.js?v=72"></script>
-<script src="js/events.js?v=72"></script>
-<script src="js/endings.js?v=72"></script>
-<script src="js/engine.js?v=72"></script>
-<script src="js/ui.js?v=72"></script>
-<script src="js/main.js?v=72"></script>
+<script src="js/cay.js?v=73"></script>
+<script src="js/reactive.js?v=73"></script>
+<script src="js/sections.js?v=73"></script>
+<script src="js/popups.js?v=73"></script>
+<script src="js/events.js?v=73"></script>
+<script src="js/endings.js?v=73"></script>
+<script src="js/engine.js?v=73"></script>
+<script src="js/ui.js?v=73"></script>
+<script src="js/main.js?v=73"></script>
 </body>
 </html>

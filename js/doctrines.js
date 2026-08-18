@@ -1,5 +1,5 @@
 /* ============================================================
-   AMERICAN DICTATOR — doctrines.js
+   AMERICAN DICTATOR, doctrines.js
    Permanent rule-changing upgrades unlocked at Authority thresholds.
    Each is a legal theory that sounds reasonable right up until you
    read the second sentence.
@@ -66,7 +66,7 @@ AD.doctrineById = id => AD.DOCTRINES.find(d => d.id === id);
 AD.hasDoctrine  = (run, id) => run.doctrines.indexOf(id) !== -1;
 
 /* Returns the doctrine newly crossed by this authority value, or null. It no
-   longer GRANTS the doctrine — it only OFFERS it (once). Signing happens on the
+   longer GRANTS the doctrine, it only OFFERS it (once). Signing happens on the
    decision card built by AD.buildDoctrineCard; a bin leaves it un-adopted but
    marked offered so it is not dangled again. */
 AD.checkDoctrineUnlock = function (run) {
@@ -93,7 +93,7 @@ AD.applyDoctrines = function (run, eff) {
 /* ============================================================
    DOCTRINES ARE NOW A DECISION, not a notification. Crossing the
    Authority threshold OFFERS the doctrine as a three-way card:
-   Sign it (adopt the power), Bin it (decline — the institutions
+   Sign it (adopt the power), Bin it (decline, the institutions
    exhale, the base sulks), or the comedy option (adopt it the
    stupid way). Sign and comedy grant the doctrine; bin does not.
    ============================================================ */
@@ -166,7 +166,7 @@ AD.buildDoctrineCard = function (run, d) {
     who: C.ag || C.lawyer || C.cos, tags: ['power', 'doctrine'],
     pillarBanner: 'A NEW DOCTRINE',
     title: d.glyph + ' ' + d.name,
-    text: 'Bo slides a single page across the desk. "It is drawn up and ready to sign, sir — the whole theory ' +
+    text: 'Bo slides a single page across the desk. "It is drawn up and ready to sign, sir, the whole theory ' +
           'in one paragraph, and it changes the rules of the game." ' + d.quote + ' (' + d.effect + ')',
     choices: [
       { label: dec.sign.label, eff: dec.sign.eff, res: dec.sign.res, act: grant },

@@ -1,8 +1,8 @@
 /* ============================================================
-   PACK G — THE RECORD, CONTINUED
+   PACK G, THE RECORD, CONTINUED
    Second grounded pack. Same rule as pack F: every crisis carries
    a `src` citation naming the documented item it riffs on, and
-   every one is INSPIRED BY, NEVER COPIED — the mechanism is taken,
+   every one is INSPIRED BY, NEVER COPIED, the mechanism is taken,
    everything else is invented.
 
    Drawn from the items pack F left unused, plus the institutional
@@ -93,7 +93,7 @@ AD.CARDS.push(
 
 { id:'g-power-plan', title:'The Rule About Coal', who:C.energy, min:6, max:34, tags:['economy','street'],
   src:'repeal of a power-sector emissions rule, replaced with a weaker one',
-  text:'"You can repeal it, but you cannot repeal nothing — a court will require a replacement." ' +
+  text:'"You can repeal it, but you cannot repeal nothing, a court will require a replacement." ' +
        'Cassandra shrugs. "So the question is how weak the replacement is before it stops counting as one."',
   choices:[
     { label:'Replace it with something that changes nothing.', eff:{base:+7,street:-7,courts:-7,press:-5,cash:+0.3,auth:+8},
@@ -108,7 +108,7 @@ AD.CARDS.push(
 { id:'g-refuge', title:'The Refuge', who:C.energy, min:10, max:40, tags:['economy','street'],
   src:'opening a protected wilderness area to drilling leases',
   text:'The coastal plain has been closed to drilling since 1980. ' +
-       'Cassandra: "The lease sale can be held. Whether anybody bids is a different question — four majors have already said they will not."',
+       'Cassandra: "The lease sale can be held. Whether anybody bids is a different question, four majors have already said they will not."',
   choices:[
     { label:'Hold the sale. The point is that it happened.', eff:{base:+7,street:-8,courts:-7,press:-5,cash:+0.2,auth:+8},
       res:'Two bidders, one of them a state agency buying to prevent development. It raises $14 million against a projected $1.8 billion and the precedent is permanent.' },
@@ -128,7 +128,7 @@ AD.CARDS.push(
   choices:[
     { label:'Let it run. Say nothing. Wait it out.', eff:{base:+8,street:-12,press:-5,congress:-9,courts:-4,auth:+5},
       res:'Thirteen seconds becomes the whole story. Four members of your own party condemn it by name and you spend a week explaining a silence.' },
-    { label:'Cut it off. "No — she is an American."', eff:{street:+10,press:+9,congress:+8,base:-9,auth:-2},
+    { label:'Cut it off. "No, she is an American."', eff:{street:+10,press:+9,congress:+8,base:-9,auth:-2},
       res:'Six words into a live microphone at a rally. The crowd stops. It is the bravest thing you do in front of your own supporters and they never quite forgive it.' },
     { label:'Talk over it until it dies.', eff:{base:+3,street:-4,press:-3,congress:-3,auth:+2},
       res:'The professional move: no clip of you endorsing it, no clip of you stopping it. Both sides claim the tape and neither can use it.' },
@@ -271,7 +271,7 @@ AD.CARDS.push(
 
 { id:'g-pool-slot', title:'The Permanent Slot', who:C.press, min:14, max:46, tags:['press','power'],
   src:'restructuring of the White House press pool and wire-service access',
-  text:'"The wire services have had a permanent seat in the pool since the 1880s. Not by law — by custom." ' +
+  text:'"The wire services have had a permanent seat in the pool since the 1880s. Not by law, by custom." ' +
        'Kaylee closes the folder. "We control the pool. We could simply stop having one."',
   choices:[
     { label:'Abolish the permanent slot. Pick the pool ourselves.', eff:{base:+6,press:-13,courts:-6,congress:-6,street:-5,auth:+11},
@@ -361,7 +361,7 @@ AD.CARDS.push(
 
 { id:'g-anticipatory-two', title:'The University', who:C.edu, min:16, max:46, tags:['culture','power'],
   src:'a major university conceding to federal demands to protect its funding',
-  text:'A second university has folded — before any funding was actually frozen, before any letter was sent. ' +
+  text:'A second university has folded, before any funding was actually frozen, before any letter was sent. ' +
        'Ollis: "They read what happened to the first one and did the arithmetic. Nobody in this building spoke to them."',
   choices:[
     { label:'Publicise it. Make the arithmetic obvious to the rest.', eff:{base:+7,street:-9,courts:-8,press:-8,congress:-6,auth:+12},
@@ -407,7 +407,7 @@ AD.CARDS.push(
 
 { id:'g-inspector-report', title:'The Report Nobody Reads', who:C.ethics, min:20, max:48, tags:['agencies','press'], req:r=>r.flags.igPurge,
   src:'a court finding removals unlawful while declining to reverse them',
-  text:'A judge has ruled the removals unlawful — and declined to reinstate anybody, reasoning that you would simply ' +
+  text:'A judge has ruled the removals unlawful, and declined to reinstate anybody, reasoning that you would simply ' +
        'do it again with proper notice. Miriam: "You have been found to have broken the law and you have kept the outcome."',
   choices:[
     { label:'Cite the ruling as a vindication.', eff:{base:+6,courts:-7,congress:-6,press:-6,street:-4,auth:+9},

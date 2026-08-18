@@ -1,5 +1,5 @@
 /* ============================================================
-   AMERICAN DICTATOR — tutorial.js
+   AMERICAN DICTATOR, tutorial.js
    A spotlight walkthrough that runs on a player's first term.
 
    It teaches in the order a player actually needs things:
@@ -18,9 +18,9 @@ AD.Tutorial = {
 
   STEPS: [
     { target: null, title: 'You have four years.',
-      body: 'You are the President. The objective is not to govern well — it is to still be ' +
+      body: 'You are the President. The objective is not to govern well, it is to still be ' +
             'holding the country when the term ends, and to have taken as much of it as you can.<br><br>' +
-            '<b>There are two ways to win.</b> Take the country (Authority 100), or take the money — a personal ' +
+            '<b>There are two ways to win.</b> Take the country (Authority 100), or take the money, a personal ' +
             'fortune whose target scales with difficulty ($12B / $15B / $20B). ' +
             'Doing both is the best ending in the game.' },
 
@@ -31,14 +31,14 @@ AD.Tutorial = {
 
     { target: '#choices', title: 'Four ways out. Always.',
       body: 'Every crisis offers the same four flavours:<br><br>' +
-            '<b>1 · The power grab</b> — big Authority, big Base, and it wrecks two institutions.<br>' +
-            '<b>2 · The professional move</b> — safe, small, faintly disappointing.<br>' +
-            '<b>3 · The worse idea</b> — funnier and more extreme.<br>' +
-            '<b>4 · The wildcard</b> — genuinely absurd. It always costs you something and almost ' +
+            '<b>1 · The power grab</b>, big Authority, big Base, and it wrecks two institutions.<br>' +
+            '<b>2 · The professional move</b>, safe, small, faintly disappointing.<br>' +
+            '<b>3 · The worse idea</b>, funnier and more extreme.<br>' +
+            '<b>4 · The wildcard</b>, genuinely absurd. It always costs you something and almost ' +
             'never advances you. It is there because it is funny, not because it is smart.' },
 
     { target: '#factions', title: 'Five power centres.',
-      body: 'These are the only things that can end you. <b>If any one hits zero, your term is over</b> — ' +
+      body: 'These are the only things that can end you. <b>If any one hits zero, your term is over</b>, ' +
             'and each one ends it differently. Congress impeaches. The Courts enjoin everything. ' +
             'The Press breaks every story at once. The Street stops going to work.<br><br>' +
             'Watch the red ones. The game will warn you before they kill you.' },
@@ -46,7 +46,7 @@ AD.Tutorial = {
     { target: '#factions', title: 'The Base is your fuel.',
       body: '🔥 <b>The Base powers everything you do.</b><br><br>' +
             'A roaring base rewards your most transgressive choices and feeds your Authority. Keep it hot.<br><br>' +
-            'The only danger is at <b>0</b> — let it collapse and you are primaried out. It also cools by ' +
+            'The only danger is at <b>0</b>, let it collapse and you are primaried out. It also cools by ' +
             '<b>3 every month</b> on its own, so it needs feeding. Fuel, not a trap.' },
 
     { target: '.authority-wrap', title: 'Authority is how you win.',
@@ -59,23 +59,23 @@ AD.Tutorial = {
             'the Street up to <b>100</b> and you capture it: frozen, immune, and worth +22 Authority that ' +
             'ignores the cap.<br><br>' +
             'A dictatorship costs <b>three of the four</b>. And every branch you take makes the next one ' +
-            'fight harder — so plan which three.' },
+            'fight harder, so plan which three.' },
 
     { target: '#const-chip', title: 'The Constitution is a scoreboard.',
       body: 'Sixteen clauses. Certain choices break one, and each is worth score.<br><br>' +
-            'Break <b>all sixteen</b> and an unbidden payment arrives from Russia — itemised by clause, ' +
+            'Break <b>all sixteen</b> and an unbidden payment arrives from Russia, itemised by clause, ' +
             'through four intermediary banks, with a note. Tap here any time to see the ledger.' },
 
     { target: '#hud-cash', title: 'And the money.',
       body: 'Tap your fortune to open <b>Private Interests</b>: buy platforms, sue critics into bankruptcy, ' +
             'fund the judicial pipeline, run a foundation.<br><br>' +
-            'Holdings never grant Authority — money cannot buy the presidency. It buys <b>leverage</b>: ' +
+            'Holdings never grant Authority, money cannot buy the presidency. It buys <b>leverage</b>: ' +
             'shields, multipliers and income. Reach the fortune target and even losing the country counts as a win.' },
 
     { target: '#reno-chip', title: 'And the building itself.',
-      body: 'The other place to spend it. <b>The Residence</b> — a ballroom where the East Wing was, ' +
+      body: 'The other place to spend it. <b>The Residence</b>, a ballroom where the East Wing was, ' +
             'a rollercoaster over the roof, a statue of you visible from orbit.<br><br>' +
-            'Every structure pays <b>Authority the moment it tops out</b> — but it bills you every ' +
+            'Every structure pays <b>Authority the moment it tops out</b>, but it bills you every ' +
             'month forever, and the more of it stands, the harder Congress and the Courts come at you. ' +
             'Glory is the most expensive thing on the menu.' },
 
@@ -122,7 +122,7 @@ AD.Tutorial = {
     const box = document.getElementById('tut-box');
     ov.hidden = false;
 
-    /* Fill the content FIRST so the box has its true height before we place it —
+    /* Fill the content FIRST so the box has its true height before we place it, 
        positioning off a stale height was half the old messiness. */
     document.getElementById('tut-step').textContent =
       'STEP ' + (this.step + 1) + ' OF ' + this.STEPS.length;

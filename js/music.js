@@ -1,5 +1,5 @@
 /* ============================================================
-   AMERICAN DICTATOR — music.js
+   AMERICAN DICTATOR, music.js
    Background music: public-domain United States Marine Band marches
    (recordings in the /Music folder), shuffled and looped at a low
    volume under the game. Starts on the first user gesture (browsers
@@ -48,7 +48,7 @@ AD.Music = {
     this.el.preload = 'none';
     this.el.addEventListener('ended', () => this.next());
     this.el.addEventListener('error', () => this.next());   // skip a missing/bad track
-    // shuffle (Math.random is fine here — music order is not part of run determinism)
+    // shuffle (Math.random is fine here, music order is not part of run determinism)
     this.order = this.tracks.map((_, i) => i);
     for (let i = this.order.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));

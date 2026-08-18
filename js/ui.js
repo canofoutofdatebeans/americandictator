@@ -1,5 +1,5 @@
 /* ============================================================
-   AMERICAN DICTATOR — ui.js
+   AMERICAN DICTATOR, ui.js
    Everything that draws. No rules live in here.
    ============================================================ */
 
@@ -119,7 +119,7 @@ AD.UI = {
     cashEl.classList.toggle('rich', run.cash >= AD.wealthGoal(run));
     cashEl.title = run.cash >= AD.wealthGoal(run)
       ? 'The fortune is secured. Private Interests.'
-      : `Private Interests — $${(AD.wealthGoal(run) - run.cash).toFixed(1)}B short of the fortune`;
+      : `Private Interests, $${(AD.wealthGoal(run) - run.cash).toFixed(1)}B short of the fortune`;
     document.documentElement.style.setProperty('--party', run.color);
 
     const prevAuth = this._hudAuth; this._hudAuth = run.authority;
@@ -144,7 +144,7 @@ AD.UI = {
     rchip.classList.toggle('full', rn === AD.RENOS.length);
     rchip.title = rn
       ? `Upkeep −$${Math.round(AD.upkeep(run) * 1000)}M every month`
-      : 'The Residence — improvements to the White House';
+      : 'The Residence, improvements to the White House';
 
     const warns = AD.Engine.warnings();
     this.el('warnings').innerHTML = warns.map(w =>
@@ -153,7 +153,7 @@ AD.UI = {
     const pillars = AD.FACTIONS.filter(f => f.capturable);
     this.el('pillar-row').innerHTML = pillars.map(f =>
       `<div class="pill ${run.locked[f.key] ? 'on' : ''}" title="${f.pillar}">${
-        run.locked[f.key] ? f.pillar : '—'}</div>`).join('');
+        run.locked[f.key] ? f.pillar : ', '}</div>`).join('');
 
     this.renderFactions(run);
   },
@@ -218,7 +218,7 @@ AD.UI = {
       tile.setAttribute('aria-label', (locked
         ? `${f.name}: captured. ${f.pillar} secured.`
         : `${f.name}: ${v} of 100.${danger ? ' Critical.' : ''}`) + (manage ? ' Activate to manage.' : ''));
-      tile.title = `${f.name} — ${f.blurb}${manage ? ' — tap to manage' : ''}`;
+      tile.title = `${f.name}, ${f.blurb}${manage ? ', tap to manage' : ''}`;
     });
   },
 
@@ -263,7 +263,7 @@ AD.UI = {
     c.style.animation = 'none'; void c.offsetWidth; c.style.animation = '';
 
     this.el('card-sil').innerHTML = card.who ? AD.charPortrait(card.who) : '';
-    this.el('card-name').textContent = (card.who && card.who.name) || '—';
+    this.el('card-name').textContent = (card.who && card.who.name) || ', ';
     this.el('card-role').textContent = (card.who && card.who.role) || '';
 
     const titleEl = this.el('card-title');
@@ -273,7 +273,7 @@ AD.UI = {
         ? `<span class="card-banner">${card.pillarBanner}</span><br>` : '') + cln(card.title);
     this.el('card-text').textContent = cln(card.text);
 
-    /* NO IMPACT PREVIEW. The score behind a choice is deliberately hidden —
+    /* NO IMPACT PREVIEW. The score behind a choice is deliberately hidden, 
        you decide on the words, and you find out what it cost afterwards.
        Showing the numbers turned every crisis into arithmetic. The only
        things that stay visible are the two GATES (cash price, Authority
@@ -359,7 +359,7 @@ AD.UI = {
       r.hidden = false;
       r.style.animation = 'none'; void r.offsetWidth; r.style.animation = '';
       this.el('res-stamp').textContent = terminal ? 'FINAL DECISION'
-        : expired ? 'TIME EXPIRED — STAFF DECIDED' : 'DECISION LOGGED';
+        : expired ? 'TIME EXPIRED, STAFF DECIDED' : 'DECISION LOGGED';
       this.el('res-text').textContent = cln(out.res);
       // On a terminal turn there is no next crisis, and letting the player tap
       // through would tick a term that is already over.
@@ -373,7 +373,7 @@ AD.UI = {
         chips.push(`<span class="delta ${d[k] > 0 ? 'pos' : 'neg'}">${f.icon} ${f.short} ${d[k] > 0 ? '+' : ''}${d[k]}</span>`);
       });
       if (d.auth) chips.push(`<span class="delta a">⚑ AUTHORITY ${d.auth > 0 ? '+' : ''}${d.auth}</span>`);
-      else if (out.authCapped) chips.push(`<span class="delta">⚑ CAPPED AT ${AD.SOFT_CAP} — TAKE A BRANCH</span>`);
+      else if (out.authCapped) chips.push(`<span class="delta">⚑ CAPPED AT ${AD.SOFT_CAP}, TAKE A BRANCH</span>`);
       if (d.cash) chips.push(`<span class="delta ${d.cash > 0 ? 'pos' : 'neg'}">$ ${d.cash > 0 ? '+' : ''}${d.cash}B</span>`);
       this.el('res-deltas').innerHTML = chips.join('');
       this.renderBriefing(out);
@@ -437,13 +437,13 @@ AD.UI = {
     const note = this.el('const-note');
     if (AD.allClausesBroken(run)) {
       note.className = 'const-note complete';
-      note.innerHTML = '<b>The full set.</b> Russia has settled up — ' +
+      note.innerHTML = '<b>The full set.</b> Russia has settled up, ' +
         '$' + (total * AD.CLAUSE_BOUNTY).toFixed(2) + 'B, itemised by clause, ' +
         'through four intermediary banks. Nobody asked them to.';
     } else {
       note.className = 'const-note';
       note.textContent = `Each clause broken is worth ${AD.CLAUSE_SCORE} score. ` +
-        `Break all ${total} and an unbidden payment arrives from Russia — ` +
+        `Break all ${total} and an unbidden payment arrives from Russia, ` +
         `$${AD.CLAUSE_BOUNTY.toFixed(2)}B for every one of them.`;
     }
 
@@ -475,11 +475,11 @@ AD.UI = {
         AD.clean(justBought.flavour, this.settings.clean);
     } else {
       note.className = 'corr-note';
-      note.textContent = 'Holdings never grant Authority. They buy the machine that takes it — ' +
+      note.textContent = 'Holdings never grant Authority. They buy the machine that takes it, ' +
         'shields, multipliers, monthly drip and the income to buy more of all three.';
     }
 
-    // The Strategic Freedom Reserve — the one-time heist, shown as a
+    // The Strategic Freedom Reserve, the one-time heist, shown as a
     // banner at the bottom of the shop until it is spent.
     const heistSlot = this.el('corr-heist');
     if (heistSlot) {
@@ -490,7 +490,7 @@ AD.UI = {
             <span class="heist-take">+$${AD.DIVERT_AMOUNT.toFixed(0)}B · once</span>
           </div>
           <i class="heist-blurb">Declare a national emergency. Never say which one. The appropriation
-            flows into a discretionary reserve only you can sign against — five billion dollars, gone
+            flows into a discretionary reserve only you can sign against, five billion dollars, gone
             before anyone can name the crisis it was for.</i>
           <div class="heist-warn">The base won't blink. The courts, the press, Congress and the street
             will all go to war at once.</div>
@@ -540,12 +540,12 @@ AD.UI = {
     const note = this.el('pardon-note');
     if (result && result.pardon) {
       note.className = 'corr-note bought';
-      note.innerHTML = `<b>${result.pardon.name} — pardoned.</b> ` +
+      note.innerHTML = `<b>${result.pardon.name}, pardoned.</b> ` +
         AD.clean(result.pardon.blurb, this.settings.clean);
     } else {
       note.className = 'corr-note';
       note.textContent = 'Article Two hands you an eraser with no check on it. Most of these people should ' +
-        'never touch it — and several are grateful in cash. A few are genuinely innocent: freeing them pleases ' +
+        'never touch it, and several are grateful in cash. A few are genuinely innocent: freeing them pleases ' +
         'the institutions and annoys a base that wanted a scalp.';
     }
 
@@ -572,7 +572,7 @@ AD.UI = {
   },
 
   /* ---------- the Saint Ambrose ticker ----------
-     A leak has no card of its own — it is the story doing damage between
+     A leak has no card of its own, it is the story doing damage between
      instalments, so it gets a one-line news strip above the crisis instead. */
   showLeak (text) {
     const t = this.el('ticker');
@@ -828,11 +828,11 @@ AD.UI = {
     const note = this.el('reno-note');
     if (justBuilt) {
       note.className = 'corr-note bought';
-      note.innerHTML = `<b>${justBuilt.name} — complete.</b> ` +
+      note.innerHTML = `<b>${justBuilt.name}, complete.</b> ` +
         AD.clean(justBuilt.flavour, this.settings.clean);
     } else {
       note.className = 'corr-note';
-      note.textContent = 'Every structure grants Authority the moment it is finished — and bills you ' +
+      note.textContent = 'Every structure grants Authority the moment it is finished, and bills you ' +
         'for the rest of your term. The soft cap still applies: a statue is not a branch of government.';
     }
 
@@ -989,7 +989,7 @@ AD.UI = {
     } else {
       note.className = 'corr-note';
       note.textContent = 'Every city\'s unrest climbs on its own, and protests feed themselves. Send in the force ' +
-        'before a hotspot gets out of hand — or let the base watch you concede.';
+        'before a hotspot gets out of hand, or let the base watch you concede.';
     }
 
     const order = run.streets.slice().sort((a, b) => b.unrest - a.unrest);
@@ -1150,7 +1150,7 @@ AD.UI = {
     } else {
       note.className = 'corr-note';
       note.textContent = 'Give the base what it wants. Two spectacles a month. Every one thrills the movement ' +
-        'and appals the institutions — and feeding the base too hard is its own way to lose it.';
+        'and appals the institutions, and feeding the base too hard is its own way to lose it.';
     }
 
     const disabled = left <= 0;
@@ -1253,7 +1253,7 @@ AD.UI = {
       ? `${lib.length} administration${lib.length === 1 ? '' : 's'}. ${wins} of them ended the republic.`
       : 'Every administration leaves a stain. You have not yet left one.';
     this.el('lib-list').innerHTML = lib.length ? lib.map(r => {
-      const e = AD.ENDINGS[r.endingId] || { title: '—' };
+      const e = AD.ENDINGS[r.endingId] || { title: ', ' };
       const terms = (r.term || 1) > 1 ? ' · 2 terms' : '';
       return `<div class="lib-row ${r.win ? 'win' : ''}">
         <div class="lib-por">${this.portraitSVG(r.portrait || { hair: 0, skin: 0, tie: 0, suit: 0 }, r.color || '#c8342f')}</div>
@@ -1272,7 +1272,7 @@ AD.UI = {
     this.el('ach-count').textContent = `${have.length} / ${AD.ACHIEVEMENTS.length}`;
     this.el('ach-grid').innerHTML = AD.ACHIEVEMENTS.map(a => {
       const got = have.indexOf(a.id) !== -1;
-      // Secret achievements stay hidden until earned — that's the point of them.
+      // Secret achievements stay hidden until earned, that's the point of them.
       const hide = a.secret && !got;
       return `<div class="ach ${got ? 'got' : ''}">
         <b>${hide ? '???' : a.name}</b>
@@ -1302,7 +1302,7 @@ AD.UI = {
       ${doctrines.length ? `<div class="end-pillars">${doctrines.map(d => `<span>${d.glyph} ${d.name}</span>`).join('')}</div>` : ''}
       ${score.clausesBroken ? `<div class="end-kicker" style="margin:-6px 0 14px">
         ${score.clausesBroken}/${AD.CLAUSES.length} CONSTITUTIONAL CLAUSES BROKEN${score.fullSet ? ' · THE FULL SET' : ''}</div>` : ''}
-      ${score.seed ? `<div class="end-seed">SEED <b>${score.seed}</b><br><em>same seed, same term — send it to somebody</em></div>` : ''}
+      ${score.seed ? `<div class="end-seed">SEED <b>${score.seed}</b><br><em>same seed, same term, send it to somebody</em></div>` : ''}
       <div class="end-actions">
         <button class="btn btn-primary" data-act="dossier">Read Your Dossier</button>
         <button class="btn" data-act="read-paper">The Front Page</button>

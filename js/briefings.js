@@ -1,5 +1,5 @@
 /* ============================================================
-   AMERICAN DICTATOR — briefings.js
+   AMERICAN DICTATOR, briefings.js
    The fourth Chief of Staff Pack feature: a short read on what a
    decision actually cost you, in Deborah Krank's voice.
 
@@ -27,7 +27,7 @@ AD.briefing = function (run, out) {
   if (biggest) {
     const f = AD.faction(biggest);
     lines.push(d[biggest] > 0
-      ? `That bought you ${f.name.toLowerCase()} — ${d[biggest]} points of it, which is more than most weeks deliver.`
+      ? `That bought you ${f.name.toLowerCase()}, ${d[biggest]} points of it, which is more than most weeks deliver.`
       : `That cost you ${Math.abs(d[biggest])} points of ${f.name.toLowerCase()}. Worth knowing before the next one lands.`);
   }
 
@@ -50,7 +50,7 @@ AD.briefing = function (run, out) {
     if (run.meters[f.key] > high) { high = run.meters[f.key]; near = f; }
   });
   if (near && high >= cap - 22) {
-    lines.push(`${near.name} is ${cap - high} points from capture. That is ${near.pillar} — and it is worth more than anything on this desk.`);
+    lines.push(`${near.name} is ${cap - high} points from capture. That is ${near.pillar}, and it is worth more than anything on this desk.`);
   }
 
   /* --- the cap --- */
@@ -70,7 +70,7 @@ AD.briefing = function (run, out) {
   const pillars = Object.keys(run.locked).length;
   if (pillars && run.pressureOn) {
     const f = AD.faction(run.pressureOn);
-    lines.push(`${f.name} is absorbing the backlash from what we have already taken — ${pillars * (AD.DIFFS[run.difficulty].pressureMult || 1)} a month, every month, until we take it too.`);
+    lines.push(`${f.name} is absorbing the backlash from what we have already taken, ${pillars * (AD.DIFFS[run.difficulty].pressureMult || 1)} a month, every month, until we take it too.`);
   }
 
   /* --- money --- */

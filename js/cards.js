@@ -1,5 +1,5 @@
 /* ============================================================
-   AMERICAN DICTATOR — cards.js
+   AMERICAN DICTATOR, cards.js
    The crisis deck. See WRITING-GUIDE.md before adding to it.
 
    SHAPE
@@ -11,7 +11,7 @@
      text   : the situation, 2–3 sentences, present tense
      tags   : ['press','courts',...]  for flavour + future filtering
      min/max: month window (inclusive). omit for "any time"
-     once   : true (default) — never repeats in a run
+     once   : true (default), never repeats in a run
      req    : optional fn(run) -> bool
      choices: [ { label, eff, res, flag, queue, cost } ]
    }
@@ -69,7 +69,7 @@ const C = AD.CAST;
 
 AD.CARDS = [
 
-/* ══════════════ ACT ONE — THE HONEYMOON (months 1–12) ══════════════ */
+/* ══════════════ ACT ONE, THE HONEYMOON (months 1–12) ══════════════ */
 
 {
   id: 'crowd-size', src:"disputed inauguration crowd size", title: 'The Numbers', who: C.press, min: 1, max: 3,
@@ -79,7 +79,7 @@ AD.CARDS = [
   choices: [
     { label: 'Send Kaylee out to say it was the largest ever. Period.',
       eff:{base: +7,press: -8,auth: +2},
-      res: 'She says it with her whole chest. Nobody believes her. Everybody notices that she said it anyway — which was the point.' },
+      res: 'She says it with her whole chest. Nobody believes her. Everybody notices that she said it anyway, which was the point.' },
     { label: '"Crowds are a media obsession. Next question."',
       eff:{base: -2,press: +3},
       res: 'The story dies in forty minutes. Something in you dies with it.' },
@@ -214,8 +214,8 @@ AD.CARDS = [
 {
   id: 'wire-service', src:"wire service barred from White House spaces over style guide", title: 'The Wire Service', who: C.press, min: 4, max: 34,
   tags: ['press'], req: r => r.flags.ocean,
-  text: 'The wire service you barred has won a preliminary injunction. A judge — one of yours, appointed by you, ' +
-        'confirmed by your Senate — has ordered you to let them back in the room.',
+  text: 'The wire service you barred has won a preliminary injunction. A judge, one of yours, appointed by you, ' +
+        'confirmed by your Senate, has ordered you to let them back in the room.',
   choices: [
     { label: 'Comply. Then abolish the permanent wire slot entirely.',
       eff:{press: -9,courts: +5,auth: +6},
@@ -371,7 +371,7 @@ AD.CARDS = [
       res:'Secretary of Morale. It attends four meetings, sleeps through all of them, and polls higher than every other Secretary combined.' }]
 },
 
-/* ══════════════ ACT TWO — THE MACHINERY (months 8–30) ══════════════ */
+/* ══════════════ ACT TWO, THE MACHINERY (months 8–30) ══════════════ */
 
 {
   id: 'birthright', src:"executive order seeking to end birthright citizenship", title: 'The Fourteenth', who: C.ag, min: 5, max: 22,
@@ -421,7 +421,7 @@ AD.CARDS = [
   choices: [
     { label: '"Facilitate" is a big word. Facilitate very slowly.',
       eff:{courts: -10,press:-4,base: +4,street: -6,auth: +9},breaks:'judicial',
-      res: 'Months of hearings about the meaning of one verb. He comes back eventually. The precedent — that "eventually" is an acceptable answer to the Supreme Court — does not go back.' },
+      res: 'Months of hearings about the meaning of one verb. He comes back eventually. The precedent, that "eventually" is an acceptable answer to the Supreme Court, does not go back.' },
     { label: 'Fly him home this week. Apologise in writing.',
       eff:{courts: +11,press: +7,street: +6,base: -9,auth: -4},
       res: 'The rule of law survives the week. Three cable hosts describe you as broken. Both assessments are correct.' },
@@ -456,7 +456,7 @@ AD.CARDS = [
 {
   id: 'market-crash', src:"12.4% market fall following tariffs", title: 'The Number Went Down', who: C.treas, min: 9, max: 34,
   tags: ['economy'], req: r => r.flags.tariffs,
-  text: 'The market is down 12% in a week — the worst since the pandemic. Four donors have called. ' +
+  text: 'The market is down 12% in a week, the worst since the pandemic. Four donors have called. ' +
         'One of them cried. Lyle is holding a printed sheet that he keeps turning over as if the other side will be different.',
   choices: [
     { label: 'Pause for 90 days. Call it a strategic pause you always planned.',
@@ -976,7 +976,7 @@ AD.CARDS = [
 {
   id: 'vacancy', src:"Supreme Court appointments", title: 'A Vacancy', who: C.ag, min: 18, max: 46,
   tags: ['courts','power'],
-  text: 'A justice has died. You have 53 senators, a shortlist, and — for the first time — a genuine choice: ' +
+  text: 'A justice has died. You have 53 senators, a shortlist, and, for the first time, a genuine choice: ' +
         'a brilliant jurist who will rule against you sometimes, or a loyal one who will not.',
   choices: [
     { label: 'The loyal one. Confirm in 27 days.',
@@ -1057,7 +1057,7 @@ AD.CARDS = [
   id: 'fcc-license', src:"should lose its license and regulator pressure", title: 'The License', who: C.cos, min: 14, max: 44,
   tags: ['press','power'],
   text: '"The broadcast regulator has opened reviews touching four networks. You have said publicly that one of them ' +
-        '\'should lose its license.\' Sir — legally you don\'t control the regulator. Practically, you appointed him."',
+        '\'should lose its license.\' Sir, legally you don\'t control the regulator. Practically, you appointed him."',
   choices: [
     { label: 'Say it again. Louder. Name the network.',
       eff:{base: +7,press: -12,courts: -6,congress: -5,auth: +10},breaks:'speech',
@@ -1093,7 +1093,7 @@ AD.CARDS = [
       res:'The President of the United States hands out coffee at a port gate. Nobody has a script for this. The strike ends in four days and nobody can agree who won.' }]
 },
 
-/* ══════════════ ACT THREE — CONSOLIDATION (months 26–48) ══════════════ */
+/* ══════════════ ACT THREE, CONSOLIDATION (months 26–48) ══════════════ */
 
 {
   id: 'parade', src:"military parade with armour", title: 'The Parade', who: C.gen, min: 20, max: 48,
@@ -1239,7 +1239,7 @@ AD.CARDS = [
   id: 'nomenclature', title: 'Nomenclature', who: C.cos, min: 20, max: 48,
   tags: ['vanity','levity'],
   text: '"Requests to rename things after you: eleven airports, a mountain, four highways, a federal courthouse, ' +
-        'an aircraft carrier, and — this one came from a fourth grader — the moon."',
+        'an aircraft carrier, and, this one came from a fourth grader, the moon."',
   choices: [
     { label: 'All of them. Including the moon. Especially the moon.',
       eff:{base: +8,press: -5,street: -4,courts: -3,auth: +6},
@@ -1299,7 +1299,7 @@ AD.CARDS = [
   id: 'emergency-standing', title: 'The Emergency', who: C.lawyer, min: 24, max: 48,
   tags: ['power'],
   text: '"There are 41 statutory powers that unlock during a declared national emergency. You have declared six emergencies. ' +
-        'None has ever been terminated. Sir — under the law, only you can end them."',
+        'None has ever been terminated. Sir, under the law, only you can end them."',
   choices: [
     { label: 'Declare a seventh. Consolidate all of them under one order.',
       eff:{base: +5,congress: -9,courts: -10,press: -5,street: -7,auth: +15},
@@ -1487,8 +1487,8 @@ AD.CARDS = [
 
 /* ---------- Deck helpers -------------------------------------------------- */
 
-/* min/max are TERM-relative, so a second term replays the same arc — early
-   honeymoon material, then the machinery, then consolidation — rather than
+/* min/max are TERM-relative, so a second term replays the same arc, early
+   honeymoon material, then the machinery, then consolidation, rather than
    falling off the end of every window at month 49. */
 AD.eligible = function (run) {
   const m = AD.termMonth(run);
@@ -1535,7 +1535,7 @@ AD.pickCard = function (run) {
 
   const weights = pool.map(c => {
     let w = 10;
-    /* Surface crises about institutions that are IN crisis — a collapsing
+    /* Surface crises about institutions that are IN crisis, a collapsing
        branch generates news. Deliberately asymmetric: an earlier version also
        boosted meters NEAR CAPTURE, which with a 300-card deck handed the
        player a ladder every single turn and pushed optimal play to a 96% win
@@ -1560,7 +1560,7 @@ AD.pickCard = function (run) {
           old flat value, so ordinary play is untouched. At or above it the
           deck concludes you are collecting and starts actively feeding you.
           A flat strong bonus from the first clause cost Rookie 8 points of
-          win rate — the clause cards are aggressive, and pushing them at a
+          win rate, the clause cards are aggressive, and pushing them at a
           player who is not hunting just damages their institutions.
 
        2. IT SCALES WITH SCARCITY. A clause with three routes in the whole

@@ -1,5 +1,5 @@
 /* ============================================================
-   AMERICAN DICTATOR — state.js
+   AMERICAN DICTATOR, state.js
    Core data shapes, faction definitions, difficulty, persistence.
    Loaded first. Everything hangs off the global AD namespace.
    ============================================================ */
@@ -9,7 +9,7 @@ window.AD = window.AD || {};
 /* ---------- Factions ------------------------------------------------------
    Five power centres. Four of them are CAPTURABLE: drive one to 100 and it
    stops being a threat and becomes a Pillar of the regime (+25 Authority).
-   THE BASE is not capturable — it is fuel. It is fatal only at 0 (you get
+   THE BASE is not capturable, it is fuel. It is fatal only at 0 (you get
    primaried out); a roaring base powers your transgressions and Authority.
 -------------------------------------------------------------------------- */
 AD.FACTIONS = [
@@ -57,8 +57,8 @@ AD.faction = k => AD.FACTIONS.find(f => f.key === k);
 /* ---------- Authority ------------------------------------------------------
    Authority has two components and this is the central rule of the game:
 
-     rawAuth     — earned one decision at a time. HARD CAPPED at SOFT_CAP.
-     pillarAuth  — earned only by capturing a power centre outright.
+     rawAuth   , earned one decision at a time. HARD CAPPED at SOFT_CAP.
+     pillarAuth, earned only by capturing a power centre outright.
 
    authority = min(SOFT_CAP, rawAuth) + pillarAuth
 
@@ -78,11 +78,11 @@ AD.recomputeAuthority = function (run) {
 /* First-run training wheels: a brand-new player gets a few months where a
    meter that hits zero is floored instead of fatal, so they can make a mistake
    and watch the consequence without an instant loss. Set only in the real
-   begin() flow for a first-ever run — bots and normal runs never have it. */
+   begin() flow for a first-ever run, bots and normal runs never have it. */
 AD.inGrace = run => !!(run.graceUntil && run.month <= run.graceUntil);
 
 /* Institutional resistance thresholds. Gains on a capturable branch are cut to
-   70% above RESIST_SOFT and 40% above RESIST_HARD — the last quarter of taking
+   70% above RESIST_SOFT and 40% above RESIST_HARD, the last quarter of taking
    an institution is where the people who will actually refuse are. */
 AD.RESIST_SOFT = 58;  AD.RESIST_SOFT_MULT = 0.80;
 /* HARD_MULT is the single most sensitive constant in the game: 0.60 → 43% win,
@@ -90,13 +90,13 @@ AD.RESIST_SOFT = 58;  AD.RESIST_SOFT_MULT = 0.80;
 AD.RESIST_HARD = 76;  AD.RESIST_HARD_MULT = 0.58;
 
 /* Backlash also scales continuously with Authority: pressure gains one point
-   per this many points of Authority. Lower = harsher, and it is SHARP — 45
+   per this many points of Authority. Lower = harsher, and it is SHARP, 45
    adds a second point at Authority 90 and drops optimal play from 38% to 22%. */
 AD.AUTH_PRESSURE_DIV = 50;
 
 /* The systemic guardrail on the management-screen ticks. See engine.advance().
    The caucus, press room and public order ticks combined can never remove more
-   than this many points from any single meter in one month — so background
+   than this many points from any single meter in one month, so background
    drains create pressure but never deliver the killing blow. Raising it lets
    neglect bite harder; 3 keeps the screens as opt-in leverage, not a tax. */
 AD.MGMT_LOSS_CAP = 3;
@@ -104,13 +104,13 @@ AD.MGMT_LOSS_CAP = 3;
 /* The same principle for CARD DECISIONS: no single choice may be the killing
    blow. A healthy meter (>= the floor) can't be pushed below the floor by one
    decision, and no decision ever zeroes a live meter outright. You always get a
-   turn to react — death comes from sustained neglect (decay + ticks bleeding a
+   turn to react, death comes from sustained neglect (decay + ticks bleeding a
    meter to zero over several months), never one surprise card. */
 AD.DECISION_FLOOR = 8;
 
 /* ---------- The second objective ------------------------------------------
    There are two ways to win. Take the country (Authority 100), or take the
-   money ($10B). Reaching the fortune does not end the run — it is banked, and
+   money ($10B). Reaching the fortune does not end the run, it is banked, and
    it is cashed in at whatever ending you eventually reach:
      win  + fortune -> 'the-full-set'   (both)
      loss + fortune -> 'the-fortune'    (you lost the country and kept the money)
@@ -122,8 +122,8 @@ AD.wealthGoal = run => (run && run.wealthGoal) || AD.WEALTH_GOAL;
 
 AD.BASE_DECAY = -3;      // a movement that isn't fed every month cools off
 
-/* The base CREEPS, it never jumps. No single action — card, rally, pardon,
-   tariff, war — may raise the Base by more than this in one go. A movement is
+/* The base CREEPS, it never jumps. No single action, card, rally, pardon,
+   tariff, war, may raise the Base by more than this in one go. A movement is
    built rally by rally, not seized in an afternoon; combined with the −3/mo
    decay it makes a maxed base a term-long project, not a two-card spike. */
 AD.BASE_RISE_CAP = 5;
@@ -131,8 +131,8 @@ AD.BASE_RISE_CAP = 5;
 /* ---------- The Base's appetite ------------------------------------------
    The movement is, by design and per the brief, largely far-right and
    poorly served by the education system it keeps voting to defund. It does
-   not reward good governance. It rewards TRANSGRESSION — the more
-   institutions a choice offends, the more the crowd loves it — and it
+   not reward good governance. It rewards TRANSGRESSION, the more
+   institutions a choice offends, the more the crowd loves it, and it
    rewards CHAOS, so the deliberately absurd wildcard options land better
    with the base than their raw numbers suggest.
 
@@ -145,13 +145,31 @@ AD.BASE_WILD_BONUS = 0.38;   // the crowd loves the silly, chaotic option
 AD.BASE_APPETITE_CAP = 1.8;  // hard ceiling on the total multiplier
 
 AD.applyBaseAppetite = function (eff, choice) {
+  const wild = !!(choice && choice.wild);
+  // Net effect on the four institutions. Positive means the choice HELPS them,
+  // i.e. it is the sensible, grown-up, common-sense move.
+  let offended = 0, net = 0;
+  ['congress', 'courts', 'press', 'street'].forEach(k => {
+    const v = eff[k] || 0; net += v; if (v < 0) offended++;
+  });
+
+  // THE BASE ARE STUPID AND MEAN. They only ever reward transgression, lies and
+  // silliness. A common-sense choice (net-good for the institutions, and not a
+  // wildcard) can NEVER please them: it always costs base, however the card was
+  // written. Honesty reads to the movement as weakness.
+  if (net > 0 && !wild) {
+    eff.base = Math.min(eff.base || 0, -2);
+    return eff;
+  }
+
+  // Otherwise the base can be fed, but only red meat (a positive base value on a
+  // transgressive or silly choice). Amplify it for every institution offended,
+  // and again if the choice is pure chaos.
   const b = eff.base || 0;
-  if (b <= 0) return eff;                 // only ever amplifies red meat, never punishes
-  let offended = 0;
-  ['congress', 'courts', 'press', 'street'].forEach(k => { if ((eff[k] || 0) < 0) offended++; });
+  if (b <= 0) return eff;
   let mult = 1;
-  if (offended >= 2) mult += AD.BASE_APPETITE * offended;   // transgression
-  if (choice && choice.wild) mult += AD.BASE_WILD_BONUS;    // chaos
+  if (offended >= 1) mult += AD.BASE_APPETITE * offended;   // transgression
+  if (wild) mult += AD.BASE_WILD_BONUS;                     // chaos
   mult = Math.min(mult, AD.BASE_APPETITE_CAP);
   if (mult > 1) eff.base = Math.round(b * mult);
   return eff;
@@ -171,7 +189,7 @@ AD.rankFor = a => AD.RANKS.filter(r => a >= r.at).pop().name;
 
 /* ---------- Difficulty ---------------------------------------------------- */
 /* pillarValue is tuned against AD.SOFT_CAP (55) to set how many branches a
-   dictatorship costs: rookie 2 (55+52=107), standard 3 (55+44=99 — one short),
+   dictatorship costs: rookie 2 (55+52=107), standard 3 (55+44=99, one short),
    historic 2 but on a 40-month clock with every meter sagging underneath you. */
 AD.DIFFS = {
   rookie: {
@@ -186,11 +204,11 @@ AD.DIFFS = {
   },
   historic: {
     // pillarValue 23 puts two pillars at 46, so a win needs rawAuth 54 of a
-    // possible 55 — effectively "max out everything AND take two branches, or
+    // possible 55, effectively "max out everything AND take two branches, or
     // take three." 22 makes it impossible; 25 makes it easy. It is a cliff.
     id: 'historic', label: 'Historic', months: 40, capture: 100, pillarValue: 23, timer: 30,
     startCash: 2, drift: 0, pressureMult: 2, wealthGoal: 20, inheritMult: 1.6,
-    hint: 'Forty months, three branches, twenty seconds a decision — and every institution you take ' +
+    hint: 'Forty months, three branches, twenty seconds a decision, and every institution you take ' +
           'makes the next one fight twice as hard.'
   }
 };
@@ -201,7 +219,7 @@ AD.DIFFS = {
    for variety without a new difficulty. Applied once, after inheritance, at
    the very start of a term. `mods` shifts the opening meters; `cash` shifts
    the opening fortune; `heat` seeds the Saint Ambrose scandal; `flag` marks
-   the run so systems can react. Stackable — pick as many as you like. */
+   the run so systems can react. Stackable, pick as many as you like. */
 AD.MUTATORS = [
   { id: 'landslide', label: 'Landslide', glyph: '🎉',
     blurb: 'You won by forty points. The whole country starts warmer to you.',
@@ -245,7 +263,7 @@ AD.PORTRAIT = {
 AD.PARTY_COLORS = ['#c8342f', '#2d5fa8', '#e0b33a', '#2f7a52', '#6b3f8f', '#e07a2d'];
 
 /* ---------- Default settings --------------------------------------------- */
-AD.DEFAULT_SETTINGS = { timer: true, motion: false, clean: false, pack: false, cb: false, haptics: true, music: true };
+AD.DEFAULT_SETTINGS = { timer: true, motion: false, clean: false, pack: false, cb: false, haptics: true, music: true, muted: false };
 
 /* ---------- A fresh run --------------------------------------------------- */
 AD.newRun = function (opts) {
@@ -280,7 +298,7 @@ AD.newRun = function (opts) {
     cash: d.startCash,
     wealthGoal: d.wealthGoal || AD.WEALTH_GOAL,   // fortune target for this run
     authority: 0,
-    rawAuth: 0,                 // earned by decisions — capped at AD.SOFT_CAP
+    rawAuth: 0,                 // earned by decisions, capped at AD.SOFT_CAP
     pillarAuth: 0,              // earned only by capturing power centres
     vpAmbition: 0,              // how far the Vice President has outgrown you (0-100)
     doctrines: [],              // ids of unlocked doctrines
@@ -290,20 +308,20 @@ AD.newRun = function (opts) {
     flags: {},                  // story flags set by choices
     queue: [],                  // forced next cards (scripted beats)
     log: [],                    // {month, title, choice, deltas}
-    assets: [],                 // owned corruption holdings — see corruption.js
-    renos: [],                  // structures built on the residence — see renovations.js
-    senate: [],                 // the 100-seat chamber — see senate.js
-    press: [],                  // the press room — see press.js
-    streets: [],                // the cities and their unrest — see street.js
-    wars: [],                   // ongoing wars — see war.js
-    judges: [],                 // the bench — see courts.js
-    tariffs: [],                // active tariffs — see economy.js
-    pardoned: [],               // ids of people pardoned — see pardons.js
-    relations: {},              // diplomacy standing by nation — see economy.js
-    clauses: [],                // constitutional clauses broken — see constitution.js
+    assets: [],                 // owned corruption holdings, see corruption.js
+    renos: [],                  // structures built on the residence, see renovations.js
+    senate: [],                 // the 100-seat chamber, see senate.js
+    press: [],                  // the press room, see press.js
+    streets: [],                // the cities and their unrest, see street.js
+    wars: [],                   // ongoing wars, see war.js
+    judges: [],                 // the bench, see courts.js
+    tariffs: [],                // active tariffs, see economy.js
+    pardoned: [],               // ids of people pardoned, see pardons.js
+    relations: {},              // diplomacy standing by nation, see economy.js
+    clauses: [],                // constitutional clauses broken, see constitution.js
     stats: { grabs: 0, restraints: 0, timeouts: 0, peakCash: d.startCash, briefings: 0, bought: 0, built: 0 },
     over: false,
-    legacy: opts.legacy || null // inherited wreckage — see AD.inheritance()
+    legacy: opts.legacy || null // inherited wreckage, see AD.inheritance()
   };
 };
 
@@ -325,7 +343,7 @@ AD.SCARS = {
   'the-standoff': { street: -12, congress: -8, note: 'For eleven days this country had two presidents. It is still arguing about which one it had.' },
   'the-refusal':  { congress: -10, courts: -8, note: 'Somebody in this building said "no, sir" and it worked. That is now a thing people know can be done.' },
   'dictator':     { base: -5, congress: -12, courts: -12, press: -12, street: -12,
-                    note: 'You inherit an office that was already bent into a new shape — and a country that has watched it happen once.' },
+                    note: 'You inherit an office that was already bent into a new shape, and a country that has watched it happen once.' },
   'indefinite':   { courts: -12, street: -12, note: 'The emergency your predecessor declared has still not formally ended.' },
   'certified':    { courts: -12, congress: -10, note: 'The last result was certified before it was counted. Every board in the country lawyered up afterwards.' },
   'second-term-consolidation': { press: -10, street: -8, note: 'Your predecessor did all of this and then won anyway. That is the part people cannot get past.' },
@@ -338,7 +356,7 @@ AD.SCARS = {
 };
 
 AD.CHAOS_KEY = 'americandictator.chaos.v1';
-AD.CHAOS_CAP = 3;    // a long save file must stay winnable — this is the floor of hope
+AD.CHAOS_CAP = 3;    // a long save file must stay winnable, this is the floor of hope
 AD.CHAOS_DRAG = 2;   // points per chaos level, institutions only
 
 /* Builds the inheritance for a new run from the previous administration.
@@ -439,7 +457,7 @@ AD.dateLabel = function (month) {
 
 /* Swap salty words out when Clean Language is on. */
 AD.SALT = [
-  [/\bshit\b/gi, 'shhh—'], [/\bshitty\b/gi, 'rotten'], [/\bass\b/gi, 'rear'],
+  [/\bshit\b/gi, 'shhh, '], [/\bshitty\b/gi, 'rotten'], [/\bass\b/gi, 'rear'],
   [/\bbastard\b/gi, 'gentleman'], [/\bdamn\b/gi, 'darn'], [/\bhell\b/gi, 'heck'],
   [/\bbastards\b/gi, 'gentlemen'], [/\bpiss\b/gi, 'irk'], [/\bcrap\b/gi, 'nonsense']
 ];

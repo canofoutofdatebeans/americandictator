@@ -1,7 +1,7 @@
 /* ============================================================
-   AMERICAN DICTATOR — audio.js
+   AMERICAN DICTATOR, audio.js
    Every sound is SYNTHESISED at runtime with WebAudio. No files,
-   no fetches, no build step — the game stays a folder you can
+   no fetches, no build step, the game stays a folder you can
    open on any static host, which was the whole point.
 
    Sounds are deliberately austere: a stamped seal, a struck bar,
@@ -114,7 +114,7 @@ AD.Audio = {
       case 'tick':                                     // timer running out
         this.tone({ freq: 1400, dur: 0.04, type: 'square', gain: 0.05 });
         break;
-      case 'war':                                      // the drums — declaring war
+      case 'war':                                      // the drums, declaring war
         [70, 62, 70, 52].forEach((f, i) =>
           this.tone({ freq: f, dur: 0.30, type: 'square', gain: 0.15, delay: i * 0.17 }));
         this.noise({ dur: 0.5, gain: 0.08, hp: 120, delay: 0.05 });
@@ -123,7 +123,7 @@ AD.Audio = {
         this.tone({ freq: 330, dur: 0.5, type: 'sawtooth', gain: 0.10, slideTo: 220 });
         this.tone({ freq: 311, dur: 0.55, type: 'sine', gain: 0.08, delay: 0.02 });
         break;
-      case 'jackpot':                                  // casino win — brighter than 'money'
+      case 'jackpot':                                  // casino win, brighter than 'money'
         [784, 988, 1319, 1568, 2093].forEach((f, i) =>
           this.tone({ freq: f, dur: 0.17, type: 'sine', gain: 0.08, delay: i * 0.06 }));
         this.noise({ dur: 0.10, gain: 0.05, hp: 3000, delay: 0.30 });

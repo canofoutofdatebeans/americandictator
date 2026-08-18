@@ -1,5 +1,5 @@
 /* ============================================================
-   AMERICAN DICTATOR — events.js
+   AMERICAN DICTATOR, events.js
    Scripted beats that interrupt the random deck: the annual
    Address, the Midterms, the backlash after each Pillar falls,
    and the Election that ends the term.
@@ -109,11 +109,11 @@ AD.EVENTS = {
   reelection: {
     id: 'evt-reelection', scripted: true, title: 'The Re-election', who: E.cos,
     tags: ['elections','power'], final: true,
-    text: 'It is the last November of the first term. The ballots are printed. Four more years is on the table — ' +
+    text: 'It is the last November of the first term. The ballots are printed. Four more years is on the table, ' +
           'and so is not needing them. Deborah has already worked out which door you are going to take.',
     choices: [
       { label: 'Run. Win it. The normal way.', mode: 'run' },
-      { label: 'Run — and contest every close county before the count.', mode: 'contest' },
+      { label: 'Run, and contest every close county before the count.', mode: 'contest' },
       { label: 'Postpone. The emergency is ongoing. Elections can wait.', mode: 'postpone', needsAuth: 62 }
     ],
     dynamic (run, i) {
@@ -124,7 +124,7 @@ AD.EVENTS = {
       if (mode === 'run') {
         // Authority is a PENALTY here: the more openly you have taken the
         // country apart, the harder it is to win a clean election. That's the
-        // real tension at this card — the fair door closes as the other two open.
+        // real tension at this card, the fair door closes as the other two open.
         const score = m.base * 0.45 + m.street * 0.45 + m.press * 0.35 + m.congress * 0.15
                       - a * 0.30 + (AD.rng() * 30 - 15);
         return score > 56 ? { secondTerm: 'won' } : { ending: 'peaceful-transfer' };
@@ -150,7 +150,7 @@ AD.EVENTS = {
   election: {
     id: 'evt-election', scripted: true, title: 'The Twenty-Second', who: E.lawyer,
     tags: ['elections','power'], final: true,
-    text: '"Eight years. You are not eligible and there is no argument about it — the Amendment is eighty-seven words ' +
+    text: '"Eight years. You are not eligible and there is no argument about it, the Amendment is eighty-seven words ' +
           'long and unusually well drafted." Sy closes the folder. "Which is not the same as saying there is no door. ' +
           'It is saying the door is not a legal one."',
     choices: [
@@ -177,7 +177,7 @@ AD.EVENTS = {
     id: 'evt-second-term', scripted: true, title: 'The Second Inaugural', who: E.cos,
     tags: ['power'], pillarBanner: 'THE SECOND TERM BEGINS',
     text: 'You are the first person in this building to have done all of it once already. There is no learning curve, ' +
-          'no transition team, no honeymoon, and — Deborah notes, reading from a card — no next election you are ' +
+          'no transition team, no honeymoon, and, Deborah notes, reading from a card, no next election you are ' +
           'eligible for. "Sir, the restraint that was operating on you was the ballot. It has been removed."',
     choices: [
       { label: '"Then we stop pretending." Govern like there is no bill coming.',

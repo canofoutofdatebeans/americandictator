@@ -1,13 +1,13 @@
 /* ============================================================
-   AMERICAN DICTATOR — courts.js
-   THE BENCH — ten judges you can lean on, buy, or remove.
+   AMERICAN DICTATOR, courts.js
+   THE BENCH, ten judges you can lean on, buy, or remove.
 
    The Courts were one meter. This turns them into named judges,
    each with an ALIGNMENT toward you from hostile (0) to captured
    (100), and three ways to move it:
 
      PRESSURE     free. Attack the judge by name. Intimidation nudges
-                  them your way and the base loves the disrespect —
+                  them your way and the base loves the disrespect, 
                   but it chips at judicial independence.
      BUY          a very understanding judge is an affordable judge.
                   Cash flips their alignment friendly. Everyone

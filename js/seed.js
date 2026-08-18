@@ -1,10 +1,10 @@
 /* ============================================================
-   AMERICAN DICTATOR — seed.js
+   AMERICAN DICTATOR, seed.js
    Deterministic runs. Every run gets a short human-typeable seed;
    the same seed plus the same choices produces the same term.
 
    This is the shareable-failure engine your research identifies as
-   the word-of-mouth lever: "I got impeached in month 14 — seed
+   the word-of-mouth lever: "I got impeached in month 14, seed
    RAVEN-4471" is a thing a person will actually send to a friend.
 
    Replaces Math.random inside the engine only. Cosmetic randomness
@@ -25,7 +25,7 @@ AD.Seed = {
     return w + '-' + n;
   },
 
-  /* FNV-1a — small, fast, good enough to scatter a string into 32 bits. */
+  /* FNV-1a, small, fast, good enough to scatter a string into 32 bits. */
   hash (str) {
     let h = 0x811c9dc5;
     const s = String(str).toUpperCase();
@@ -36,7 +36,7 @@ AD.Seed = {
     return h >>> 0;
   },
 
-  /* mulberry32 — tiny, well-distributed, entirely deterministic. */
+  /* mulberry32, tiny, well-distributed, entirely deterministic. */
   set (seed) {
     this.current = String(seed).toUpperCase();
     this.state = this.hash(this.current) || 1;

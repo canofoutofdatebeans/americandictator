@@ -1,12 +1,12 @@
 /* ============================================================
-   AMERICAN DICTATOR — war.js
-   THE WAR ROOM — declare war on anyone, for any reason at all.
+   AMERICAN DICTATOR, war.js
+   THE WAR ROOM, declare war on anyone, for any reason at all.
 
    Pick a country and pick a pretext. There is no requirement that
    the pretext be good, or true, or connected to anything the country
    has done. The five reasons on offer are: you want their resources,
    you are bored, you do not like their leader, you are trying to
-   impress somebody, and — the useful one — you need a war to bury a
+   impress somebody, and, the useful one, you need a war to bury a
    scandal at home.
 
    Declaring is immediate and juicy: the base rallies, Authority
@@ -16,7 +16,7 @@
    the street turns, the courts wake up). A weak country and high
    Authority make victory likely; a great power is a coin-flip at best.
 
-   The "deflect" pretext knocks the Saint Ambrose heat down hard — a
+   The "deflect" pretext knocks the Saint Ambrose heat down hard, a
    war really will push a scandal off the front page, which is the
    entire reason presidents reach for one.
 

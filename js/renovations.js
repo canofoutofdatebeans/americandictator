@@ -1,6 +1,6 @@
 /* ============================================================
-   AMERICAN DICTATOR — renovations.js
-   THE RESIDENCE — improvements to the White House
+   AMERICAN DICTATOR, renovations.js
+   THE RESIDENCE, improvements to the White House
 
    The third spend track, and deliberately the WORST one on a
    spreadsheet.
@@ -8,7 +8,7 @@
    DESIGN
    ------
    Corruption converts cash into leverage. Renovations convert cash
-   into GLORY: raw Authority and Base, immediately, in large lumps —
+   into GLORY: raw Authority and Base, immediately, in large lumps, 
    and then charge you rent on it forever.
 
    Three rules make it a real decision rather than a shop:
@@ -21,7 +21,7 @@
 
    2. AUTHORITY HERE IS RAW AUTHORITY. It goes into rawAuth, which is
       hard-capped at SOFT_CAP (55). So you can gild your way to the
-      cap much faster — and not one point past it. Three Pillars are
+      cap much faster, and not one point past it. Three Pillars are
       still the only route to 100. A statue is not a branch of
       government, however large.
 
@@ -177,7 +177,7 @@ AD.RENOS = [
 
   {
     id: 'casino', cat: 'glory', name: 'The Casino', cost: 1.30, upkeep: 0.030,
-    blurb: 'Convert the whole residence into a multi-storey casino — your name, in neon, on the front.',
+    blurb: 'Convert the whole residence into a multi-storey casino, your name, in neon, on the front.',
     effect: '+10 Authority · Base +8 · +$70M every month',
     flavour: '"Twelve floors of slot machines where the state rooms used to be, and a name in lights ' +
              'you can read from the far bank of the river. The house always wins, and now you are the house."',
@@ -208,7 +208,7 @@ AD.renoAvailable = function (run, x) {
   return true;
 };
 
-/* SCRUTINY — the cost that actually bites.
+/* SCRUTINY, the cost that actually bites.
    Upkeep alone was not a real price: a player on the Pillar route does not
    need cash, so a $305M monthly bill was free and the shields, Base lumps
    and raw Authority were pure upside. Measured, that took a fixed bot from
@@ -216,7 +216,7 @@ AD.renoAvailable = function (run, x) {
 
    So construction is charged politically as well as financially. Every
    structure standing is an appropriation nobody voted for, sitting in
-   public, permanently — Congress and the Courts bill you for it every
+   public, permanently, Congress and the Courts bill you for it every
    month, and the Press bills you at half rate. It scales with the SIZE of
    the residence, which means the sprawling monument build is genuinely
    worse than the two-item one, and it cancels precisely the shields the
@@ -256,7 +256,7 @@ AD.buildReno = function (run, id) {
     if (run.meters[k] !== before) deltas[k] = run.meters[k] - before;
   });
 
-  // Glory is raw Authority. AD.SOFT_CAP still applies — a monument is not
+  // Glory is raw Authority. AD.SOFT_CAP still applies, a monument is not
   // a captured branch of government, however visible from orbit.
   let auth = 0;
   if (x.auth) {
@@ -269,7 +269,7 @@ AD.buildReno = function (run, id) {
 };
 
 /* Monthly bill. Called from Engine.advance() alongside corruptionTick.
-   If you cannot pay, the residence starts falling apart in public — the
+   If you cannot pay, the residence starts falling apart in public, the
    shortfall is charged to the Base and the Press instead of the cash. */
 AD.renovationTick = function (run) {
   const out = { cash: 0, deltas: {}, arrears: false };

@@ -1,6 +1,6 @@
 /* ============================================================
-   AMERICAN DICTATOR — basepop.js
-   THE RALLY — red meat for the base.
+   AMERICAN DICTATOR, basepop.js
+   THE RALLY, red meat for the base.
 
    The Base was fuel with no controls of its own. This gives it a
    screen: a menu of gloriously stupid, all-American stunts that the
@@ -12,7 +12,7 @@
    spirit of the game: the joke is on the cynical President staging
    the spectacle, not on the crowd enjoying it. Rationed to two a
    month (AD.RALLIES_PER_MONTH, refilled by the clock) so the Base is
-   a thing you feed on purpose, not a button you hold down — and
+   a thing you feed on purpose, not a button you hold down, and
    because over-feeding the Base is its own way to die, the movement
    will happily replace a man who has become surplus to the show.
    ============================================================ */

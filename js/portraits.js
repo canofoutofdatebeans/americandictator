@@ -1,10 +1,10 @@
 /* ============================================================
-   AMERICAN DICTATOR — portraits.js
+   AMERICAN DICTATOR, portraits.js
    Procedural character portraits for the cast.
 
    Every recurring speaker gets a distinct, CONSISTENT face generated
-   deterministically from their name — so Deborah always looks like
-   Deborah — instead of a shared emoji. Same building blocks as the
+   deterministically from their name, so Deborah always looks like
+   Deborah, instead of a shared emoji. Same building blocks as the
    player portrait, plus feature variation (hair style, brows, glasses,
    facial hair, a few role hints) so ~40 characters read as individuals.
    ============================================================ */

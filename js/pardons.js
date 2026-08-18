@@ -1,10 +1,10 @@
 /* ============================================================
-   AMERICAN DICTATOR — pardons.js
-   THE PARDON POWER — the one authority with no check on it at all.
+   AMERICAN DICTATOR, pardons.js
+   THE PARDON POWER, the one authority with no check on it at all.
 
    Article Two, in five words, hands you an eraser. The list is mostly
-   people who should never touch it — cronies, fraudsters, a war
-   criminal, the man in the costume who stormed the Capitol — and each
+   people who should never touch it, cronies, fraudsters, a war
+   criminal, the man in the costume who stormed the Capitol, and each
    of them is grateful in ways that move the meters (and, for a few,
    quietly top up the fortune). Buried in the pile are a small number
    of genuine miscarriages of justice: pardoning THOSE pleases the
@@ -199,7 +199,7 @@ AD.PARDONS = [
     id: 'exon', name: 'Marcus Bell', kind: 'saint', saint: true,
     crime: '22 years wrongly imprisoned · exonerated by DNA',
     blurb: 'Lost his twenties and thirties to a case that fell apart the moment anyone looked. ' +
-           'There is no gift here, no leverage, no angle — only a decent thing you could do.',
+           'There is no gift here, no leverage, no angle, only a decent thing you could do.',
     eff: { press: 8, courts: 6, street: 7, base: -4, auth: -2 }
   },
   {

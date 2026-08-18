@@ -1,5 +1,5 @@
 /* ============================================================
-   PACK B — THE MACHINERY  (term months 6–34)
+   PACK B, THE MACHINERY  (term months 6–34)
    Agencies, courts, money, enforcement. The part of the term
    where the country actually changes shape.
 
@@ -10,7 +10,7 @@
    outcomes. Contested [CONTEXT FLAG] items are excluded or played
    as a joke about the dispute itself.
 
-   Twelve cards carry `breaks:` tags and MUST keep them — they are
+   Twelve cards carry `breaks:` tags and MUST keep them, they are
    the only routes to search, judicial, emoluments, purse, takecare,
    vesting, consent, supremacy and speech in this window. Rewriting
    this pack without them zeroes out two clauses. It has happened.
@@ -116,7 +116,7 @@ AD.CARDS.push(
 
 { id:'b-facilitate', title:'One Word, Unanimously', who:C.state, min:14, max:40, tags:['courts','foreign'],
   src:'a unanimous order requiring the government to facilitate the return of a wrongly removed man',
-  text:'Nine to nothing. Not six-three, not five-four — nine. The order uses one verb: *facilitate*. ' +
+  text:'Nine to nothing. Not six-three, not five-four, nine. The order uses one verb: *facilitate*. ' +
        'Muriel: "There is no daylight in a nine-nothing, sir. There is only the word. And their lawyers ' +
        'and our lawyers are going to spend a year on what it means."',
   choices:[
@@ -209,7 +209,7 @@ AD.CARDS.push(
 { id:'b-usaid', title:'The Agency That Was There On Monday', who:C.state, min:8, max:32, tags:['agencies','foreign'],
   src:'the rapid dismantling of a foreign assistance agency and the litigation over unpaid completed work',
   text:'Muriel has a list of things that stopped. "Eleven clinics, four famine-response pipelines, a vaccine ' +
-       'cold chain in three countries. And $2 billion owed for work already finished — contractors who delivered, ' +
+       'cold chain in three countries. And $2 billion owed for work already finished, contractors who delivered, ' +
        'invoiced, and are now suing. Sir, they did the work. That part is not arguable."',
   choices:[
     { label:'Pay nobody. Let them sue.', eff:{base:+6,courts:-11,congress:-9,press:-7,street:-7,cash:+0.4,auth:+11},
@@ -574,7 +574,7 @@ AD.CARDS.push(
 { id:'b-state-guard', title:'The Governor Says No', who:C.gov, min:14, max:44, tags:['street','military'],
   src:'federalising a state\'s National Guard over the governor\'s objection',
   text:'Governor Vasquez-Moore has refused, in writing, and posted the letter. ' +
-       '"Her Guard, her state, her call — unless you federalise them, at which point they are yours and she ' +
+       '"Her Guard, her state, her call, unless you federalise them, at which point they are yours and she ' +
        'is a spectator." Tarrant adds: "Sir, they are the same soldiers either way. Only the letterhead moves."',
   choices:[
     { label:'Federalise them. Her objection is noted and irrelevant.', eff:{base:+8,street:-12,courts:-10,congress:-9,press:-6,auth:+14},
@@ -588,7 +588,7 @@ AD.CARDS.push(
 
 { id:'b-poll-worker', title:'The County Boards', who:C.ag, min:20, max:46, tags:['elections','courts'],
   src:'federal pressure on state and county officials who administer elections',
-  text:'"Certification is a state function. It is done by county boards — volunteers, retired teachers, a man ' +
+  text:'"Certification is a state function. It is done by county boards, volunteers, retired teachers, a man ' +
        'who fixes boilers." Bo is uneasy. "We can open federal inquiries into any of them. Not to charge them. ' +
        'To be a thing that is happening to them in the four weeks before they certify."',
   choices:[
@@ -668,7 +668,7 @@ AD.CARDS.push(
 { id:'b-article-48', title:'The Comparison In The Footnote', who:C.hist, min:22, max:46, tags:['power','press'],
   src:'a legal-journal comparison between open-ended emergency statutes and an interwar constitutional article',
   text:'Dr Weir has a law journal piece. "It argues that your emergency statutes function as an American ' +
-       'analogue to an open-ended emergency article — and it names the one from Weimar." She closes it. ' +
+       'analogue to an open-ended emergency article, and it names the one from Weimar." She closes it. ' +
        '"The author is careful. The footnote is not an accusation. It is a warning about the architecture."',
   choices:[
     { label:'Attack the author. Call it a Nazi comparison.', eff:{base:+8,press:-9,street:-8,congress:-6,courts:-6,auth:+5},
@@ -838,7 +838,7 @@ AD.CARDS.push(
 
 { id:'b-weyland', title:'The Dissenting Scholar', who:C.hist, min:22, max:46, tags:['press','power'],
   src:'a minority scholarly view that institutions will withstand the pressure',
-  text:'Dr Weir has brought you something unexpected. "A serious scholar arguing the opposite of the consensus — ' +
+  text:'Dr Weir has brought you something unexpected. "A serious scholar arguing the opposite of the consensus, ' +
        'that the institutions hold, that the alarm is overstated, that this passes." She hands it over. ' +
        '"Mr President, I want to be clear that I brought this because it is good work, and not because I agree with it."',
   choices:[

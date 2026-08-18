@@ -1,13 +1,13 @@
 /* ============================================================
-   AMERICAN DICTATOR — street.js
-   PUBLIC ORDER — the cities, the unrest, and the forces you
+   AMERICAN DICTATOR, street.js
+   PUBLIC ORDER, the cities, the unrest, and the forces you
    send to shut it down before it gets out of hand.
 
    The Street was one meter. This turns it into a map of cities,
    each with an UNREST level that climbs on its own every month.
    Protests feed themselves: the hotter a city, the faster it grows.
-   Let the country's total unrest run and the Street meter — your
-   grip on public order — bleeds out.
+   Let the country's total unrest run and the Street meter, your
+   grip on public order, bleeds out.
 
    Four responses per city, and every one moves all five power
    centres, Authority and cash:
@@ -142,8 +142,8 @@ AD.streetTick = function (run) {
     return out;
   }
 
-  // Unrest still climbs and protests still feed themselves — the "boiling over"
-  // list is meant to grow so there is always something to send a force to — but
+  // Unrest still climbs and protests still feed themselves, the "boiling over"
+  // list is meant to grow so there is always something to send a force to, but
   // it climbs on the half-beat, so an untended country reaches the election
   // tense, not in flames.
   const grow = (run.month % 2) === 0;

@@ -1,6 +1,6 @@
 /* ============================================================
-   AMERICAN DICTATOR — sections.js
-   SECTION POP-UPS — the interactive systems reach out and grab you.
+   AMERICAN DICTATOR, sections.js
+   SECTION POP-UPS, the interactive systems reach out and grab you.
 
    The management screens (Economy, Pardons, Phone, War Room, Street,
    Press, Congress, Base, Money) shouldn't just sit there waiting to be
@@ -70,7 +70,7 @@ AD.SECTION_EVENTS = [
         id: 'sec-pardon-' + p.id, scripted: true, who: C.lawyer, tags: ['pardon','courts'],
         pillarBanner: 'A REQUEST FOR CLEMENCY',
         title: 'Someone Wants a Pardon',
-        text: `Sy has a file and a hopeful expression. "` + p.name + `, sir — ` + p.crime + `. He is asking, through ` +
+        text: `Sy has a file and a hopeful expression. "` + p.name + `, sir, ` + p.crime + `. He is asking, through ` +
               `counsel, through donors, through your own son at one point, for a pardon. The base would cheer it. ` +
               `The lawyers would very much not."`,
         choices: [
@@ -78,7 +78,7 @@ AD.SECTION_EVENTS = [
             res: (p.eff.cash ? `The pardon is signed before the ink on the conviction is dry, and a token of gratitude follows discreetly.` :
                                `The pardon is signed before the ink on the conviction is dry. Gratitude is expressed, loudly, on television.`),
             act: grant },
-          { label: `Make him sweat. Refuse — for now.`, eff: { press: 4, courts: 5, congress: 3, base: -3 },
+          { label: `Make him sweat. Refuse, for now.`, eff: { press: 4, courts: 5, congress: 3, base: -3 },
             res: `You decline, for today. He remains, technically, a convict, and remains, practically, entirely in your debt.` },
           { label: `Pardon him AND appoint him to something.`, eff: comedyEff, wild: true,
             res: `Not content to free him, you give him a title. The confirmation hearing is the single funniest afternoon of the term.`,
@@ -220,7 +220,7 @@ AD.SECTION_EVENTS = [
         id: 'sec-congress', scripted: true, who: C.speaker, tags: ['congress','power'],
         pillarBanner: 'CONGRESS',
         title: 'The Bill',
-        text: `Hal Grimes has a bill and a headcount. "It's yours if you want it, sir — it does three good things and ` +
+        text: `Hal Grimes has a bill and a headcount. "It's yours if you want it, sir, it does three good things and ` +
               `one thing you'd have to defend forever. I can get it through, but I'll need you to lean on four of ` +
               `our own, and leaning leaves marks."`,
         choices: [
@@ -246,13 +246,13 @@ AD.SECTION_EVENTS = [
       const want = pick([
         `they want you to say the quiet thing out loud, at the rally, tonight`,
         `they want an enemy named, and they are not fussy about which`,
-        `they want a war on a word — a book, a holiday, a colour, a school`
+        `they want a war on a word, a book, a holiday, a colour, a school`
       ]);
       return {
         id: 'sec-base', scripted: true, who: C.poll, tags: ['base','levity'],
         pillarBanner: 'THE BASE',
         title: 'The Crowd Wants Something',
-        text: `Nadia slides over the numbers. "The movement is restless, sir. It doesn't want policy — it has never ` +
+        text: `Nadia slides over the numbers. "The movement is restless, sir. It doesn't want policy, it has never ` +
               `wanted policy. Right now ` + want + `. Common sense says don't. The base has never once sided with ` +
               `common sense, and it never will."`,
         choices: [
@@ -296,27 +296,48 @@ AD.SECTION_EVENTS = [
   }
 ];
 
-/* Paced selector: at most one section pop-up every few months, chosen at random
-   from whatever is currently relevant, each with its own cooldown so the same
-   section doesn't recur back to back. Consulted from Engine.draw(). */
+/* Draw a fresh, never-before-seen flavour pop-up from the 200-strong pool
+   (see popups.js). Random, no-repeat within a run, so each playthrough shows a
+   different subset. Falls back to allowing repeats once the pool is exhausted. */
+function poolCard (run) {
+  const pool = AD.SECTION_POOL || [];
+  if (!pool.length) return null;
+  const seen = run.seen || [];
+  let fresh = pool.filter(c => seen.indexOf(c.id) === -1);
+  if (!fresh.length) fresh = pool;                          // seen them all: repeats allowed
+  return fresh[Math.floor(AD.rng() * fresh.length)];
+}
+
+/* Paced selector: at most one section pop-up every few months. MOST of the time
+   it pulls a random card from the big flavour pool (so no two runs feel alike);
+   the rest of the time it fires a templated event that routes back into a
+   system's mechanics (impose a tariff, declare a war, sweep a city, sign a
+   pardon). Consulted from Engine.draw(). */
 AD.sectionEventFor = function (run) {
   const m = AD.termMonth(run);
   if (m < 3) return null;                                   // let the honeymoon breathe
   run.flags = run.flags || {};
   if (m < (run.flags.sectionUntil || 0)) return null;       // global pacing gate
 
-  const ready = AD.SECTION_EVENTS.filter(t => {
-    if (m < (run.flags['sec_' + t.key] || 0)) return false;
-    try { return t.test(run); } catch (e) { return false; }
-  });
-  if (!ready.length) return null;
-
-  const t = ready[Math.floor(AD.rng() * ready.length)];
   let card = null;
-  try { card = t.build(run); } catch (e) { card = null; }
+
+  // ~22% of the time, try a mechanic-routing templated event.
+  if (AD.rng() < 0.22) {
+    const ready = AD.SECTION_EVENTS.filter(t => {
+      if (m < (run.flags['sec_' + t.key] || 0)) return false;
+      try { return t.test(run); } catch (e) { return false; }
+    });
+    if (ready.length) {
+      const t = ready[Math.floor(AD.rng() * ready.length)];
+      try { card = t.build(run); } catch (e) { card = null; }
+      if (card) run.flags['sec_' + t.key] = m + (t.gap || 8);
+    }
+  }
+
+  // Otherwise (and as a fallback), a fresh pool pop-up.
+  if (!card) card = poolCard(run);
   if (!card) return null;
 
-  run.flags['sec_' + t.key] = m + (t.gap || 8);             // per-section cooldown
   run.flags.sectionUntil = m + 3;                           // no two pop-ups within 3 months
   return card;
 };

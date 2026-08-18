@@ -1,13 +1,13 @@
 /* ============================================================
-   AMERICAN DICTATOR — press.js
-   THE PRESS ROOM — twelve outlets you can sue, buy or capture.
+   AMERICAN DICTATOR, press.js
+   THE PRESS ROOM, twelve outlets you can sue, buy or capture.
 
    The Press was one meter. This turns it into a room full of
    individual publications, each with a STANCE toward you from
    hostile (0) to captured (100), and three ways to move it:
 
      SUE            lawfare. The suit is usually weak and that is the
-                    point — it cows them and costs them a legal budget.
+                    point, it cows them and costs them a legal budget.
      SETTLE / BUY   pay them to come onside. Their stance jumps toward
                     friendly; the coverage softens; it is a payoff and
                     everyone eventually knows it.
@@ -15,19 +15,19 @@
                     The outlet is effectively yours. Big Press control,
                     and the institutions notice.
 
-   Plus a free ENEMY OF THE PEOPLE attack — pure red meat for the base,
+   Plus a free ENEMY OF THE PEOPLE attack, pure red meat for the base,
    and it hardens the outlet against you.
 
    Friendly outlets nudge the Press meter up each month; hostile ones
    drag it down. And the Press is the MEGAPHONE: the Press meter itself
-   feeds back into the Base and the Street every month — a press you
+   feeds back into the Base and the Street every month, a press you
    control amplifies your message (Base up) and legitimises the
    crackdown (Street up), while a hostile press dispirits the movement
    and inflames the cities. Deterministic from the seed, off the card
-   RNG stream — same pattern as the Senate.
+   RNG stream, same pattern as the Senate.
    ============================================================ */
 
-/* Fictional outlets only — no real mastheads. `reach` weights how much
+/* Fictional outlets only, no real mastheads. `reach` weights how much
    the outlet moves the Press meter each month. */
 AD.OUTLETS_SEED = [
   { id: 'scream',   name: 'The National Scream', type: 'Tabloid',     reach: 3, stance: 82 },
@@ -138,7 +138,7 @@ AD.doPressAction = function (run, outletId, actionId) {
   return { ok: true, action, outlet: o, deltas };
 };
 
-/* Monthly: the balance of the room nudges the Press meter. Mild by design —
+/* Monthly: the balance of the room nudges the Press meter. Mild by design, 
    the real value of the room is the instant jump from an action. */
 AD.pressTick = function (run) {
   const out = { deltas: {} };
@@ -148,7 +148,7 @@ AD.pressTick = function (run) {
     if (o.owned || o.stance >= 65) net += o.reach;
     else if (o.stance <= 30) net -= o.reach;
   });
-  // Neutral by default — the starting room sits inside the dead zone, so a
+  // Neutral by default, the starting room sits inside the dead zone, so a
   // player who never opens this screen pays nothing. Only a room you have
   // actively made lopsided drifts the meter, and only by a point. (An earlier
   // -1/mo baseline drain cascaded into Base collapse for inattentive play.)
@@ -170,7 +170,7 @@ AD.pressTick = function (run) {
   // Asymmetric on purpose: dominating the press is a real, repeatable reward
   // for the Base and the Street, but a hostile press only bites once it is
   // nearly at zero (where the run is already lost to zero-press). A stronger
-  // punishment side made zero-base the dominant death — the press is a
+  // punishment side made zero-base the dominant death, the press is a
   // megaphone you WANT, not a second way to starve the movement.
   const pv = run.meters.press;
   let bd = 0, sd = 0;

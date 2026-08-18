@@ -1,5 +1,5 @@
 /* ============================================================
-   AMERICAN DICTATOR — constitution.js
+   AMERICAN DICTATOR, constitution.js
    THE LEDGER OF BROKEN CLAUSES
 
    Sixteen clauses. Every one has at least two routes in the deck,
@@ -7,7 +7,7 @@
 
    Breaking a clause pays SCORE. Breaking ALL SIXTEEN triggers the
    completion payment: a lump sum per clause, wired from Russia,
-   with a note. Nobody asked them to send it. That is the joke —
+   with a note. Nobody asked them to send it. That is the joke, 
    the money arrives unbidden, itemised, from a government that has
    been keeping better score than you have.
 

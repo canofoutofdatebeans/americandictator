@@ -1,5 +1,5 @@
 /* ============================================================
-   AMERICAN DICTATOR — corruption.js
+   AMERICAN DICTATOR, corruption.js
    THE PRIVATE INTERESTS SCREEN
 
    Cash used to be a passive number. This turns it into the game's
@@ -10,7 +10,7 @@
    Assets never grant Authority. That is deliberate: the Authority
    soft cap (55) and the Pillar route are the only way to win, and
    letting money buy Authority would collapse that. What money buys
-   is LEVERAGE — shields that blunt incoming damage, multipliers on
+   is LEVERAGE, shields that blunt incoming damage, multipliers on
    your gains, monthly drip on a meter you are trying to capture,
    and income to buy more of all three.
 
@@ -253,7 +253,7 @@ AD.buyAsset = function (run, id) {
   if (run.cash < a.cost) return { ok: false, reason: 'You cannot afford it.' };
 
   // Passives are read BEFORE the asset is added, so a holding never shields
-  // its own purchase cost — you pay full price for the thing that protects you.
+  // its own purchase cost, you pay full price for the thing that protects you.
   const pas = AD.passives(run);
 
   run.cash = Math.round((run.cash - a.cost) * 100) / 100;
@@ -273,7 +273,7 @@ AD.buyAsset = function (run, id) {
   return { ok: true, asset: a, deltas };
 };
 
-/* EXPOSURE — the missing cost.
+/* EXPOSURE, the missing cost.
    Holdings used to be pure upside once bought, so a player who mastered both
    tracks won ~77% against a 38% baseline. Every thing you own is surface area:
    a filing, a counterparty, a disclosure, a board seat somebody can subpoena.
@@ -281,7 +281,7 @@ AD.buyAsset = function (run, id) {
    worse than a focused one and you cannot simply accumulate everything. */
 /* One point of exposure per this many holdings, charged monthly to BOTH press
    and courts. Extremely sensitive: 2 kills every build (0% win), 6 barely bites
-   (67%), 4 lands optimal play at ~49% against a 38% no-corruption baseline —
+   (67%), 4 lands optimal play at ~49% against a 38% no-corruption baseline, 
    corruption stays clearly worth using without doubling your odds. */
 AD.EXPOSURE_PER = 4;
 
@@ -345,7 +345,7 @@ AD.applyPassivesToEffect = function (run, eff) {
 };
 
 /* ============================================================
-   THE STRATEGIC FREEDOM RESERVE — the one-time heist.
+   THE STRATEGIC FREEDOM RESERVE, the one-time heist.
 
    The single most lucrative and most dangerous thing you can do with
    the office: go on television, declare a national emergency about a
@@ -353,8 +353,8 @@ AD.applyPassivesToEffect = function (run, eff) {
    discretionary reserve only you can sign against. Five billion
    dollars, gone before anyone can name the emergency it was for.
 
-   Once per game. The base barely notices — an emergency is an
-   emergency — but the courts, the press, Congress and the street all
+   Once per game. The base barely notices, an emergency is an
+   emergency, but the courts, the press, Congress and the street all
    go to war over it at once, and you will spend months digging out.
    ============================================================ */
 AD.canDivert = run => !(run.flags && run.flags.divertedFunds);
@@ -366,7 +366,7 @@ AD.divertFunds = function (run) {
   run.flags = run.flags || {};
   run.flags.divertedFunds = true;
   // The institutions go to war; the base shrugs. Routed through the shared
-  // applier so any shields you own blunt the blow — a reason to build the
+  // applier so any shields you own blunt the blow, a reason to build the
   // machine before you pull the lever.
   const deltas = AD.applySenateEffect(run, {
     courts: -20, press: -20, congress: -18, street: -16, base: 3, auth: 5

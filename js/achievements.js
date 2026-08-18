@@ -1,5 +1,5 @@
 /* ============================================================
-   AMERICAN DICTATOR — achievements.js
+   AMERICAN DICTATOR, achievements.js
    Unlocked at the end of a term, evaluated from the finished run
    plus its scorecard. Persisted across every administration.
 
