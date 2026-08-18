@@ -1015,11 +1015,31 @@ AD.UI = {
         ${score.clausesBroken}/${AD.CLAUSES.length} CONSTITUTIONAL CLAUSES BROKEN${score.fullSet ? ' · THE FULL SET' : ''}</div>` : ''}
       ${score.seed ? `<div class="end-seed">SEED <b>${score.seed}</b><br><em>same seed, same term — send it to somebody</em></div>` : ''}
       <div class="end-actions">
-        <button class="btn btn-primary" data-act="read-paper">Read the Front Page</button>
-        <button class="btn" data-act="new">Try Again With A New President</button>
+        <button class="btn btn-primary" data-act="dossier">Read Your Dossier</button>
+        <button class="btn" data-act="read-paper">The Front Page</button>
+        <button class="btn" data-act="new">New President</button>
         <button class="btn btn-ghost" data-act="library">Presidential Library</button>
         <button class="btn btn-ghost" data-act="title">Main Menu</button>
       </div>`;
     this.show('ending');
+  },
+
+  /* ---------- the generated dossier ---------- */
+  renderDossier (score) {
+    const d = AD.buildDossier(score);
+    const cln = s => AD.clean(s, this.settings.clean);
+    this.el('dossier-body').innerHTML = `
+      <div class="dos-masthead">THE NATIONAL SCREAM</div>
+      <div class="dos-strap"><span>SPECIAL DOSSIER EDITION</span><span>THE COMPLETE RECORD</span></div>
+      <h2 class="dos-head ${d.win ? 'win' : ''}">${d.headline}</h2>
+      <h4 class="dos-stand">${cln(d.standfirst)}</h4>
+      <div class="dos-copy">${d.paras.map(p => `<p>${cln(p)}</p>`).join('')}</div>
+      <div class="dos-verdict">${cln(d.verdict)}</div>
+      <div class="dos-share" id="dos-share">${cln(d.share)}</div>
+      <div class="dos-actions">
+        <button class="btn btn-primary" data-act="dossier-copy">Copy to Share</button>
+        <button class="btn btn-ghost" data-act="dossier-close">Close</button>
+      </div>`;
+    this._dossierShare = d.share;
   }
 };

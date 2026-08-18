@@ -103,6 +103,8 @@ AD.declareWar = function (run, targetId, pretextId) {
   if (p.deflect && AD.bumpHeat) heat = AD.bumpHeat(run, -p.deflect);
 
   run.wars.push({ target: targetId, pretext: pretextId, months: 0, done: false, loot: !!p.loot });
+  run.warLog = run.warLog || [];
+  run.warLog.push({ name: t.name, pretext: p.id, won: null });
   run.stats = run.stats || {};
   run.stats.wars = (run.stats.wars || 0) + 1;
   return { ok: true, target: t, pretext: p, deltas, heat, line: p.line(t) };
@@ -135,6 +137,8 @@ AD.warTick = function (run) {
       res = 'The war in ' + t.name + ' has become a quagmire. The body bags are on the news and the street has turned.';
     }
     w.won = won;
+    const rec = (run.warLog || []).slice().reverse().find(x => x.name === t.name && x.won === null);
+    if (rec) rec.won = won;
     const deltas = AD.applySenateEffect(run, eff);
     out.resolved.push({ target: t, won, res, deltas });
   });

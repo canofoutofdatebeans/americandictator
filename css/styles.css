@@ -769,3 +769,31 @@ body::before{
 .sen-act.rally-do{flex:1 1 100%;background:linear-gradient(var(--red),var(--red-hot));
   border-color:#e05159;color:#fff;font-weight:600;letter-spacing:1px}
 .sen-act.rally-do:hover:not(:disabled){filter:brightness(1.12)}
+
+/* ---------- the generated dossier ---------- */
+.dossier{
+  background:linear-gradient(#f3efe4,#e8e2d2);color:#1a1712;
+  max-width:520px;width:100%;max-height:88vh;overflow-y:auto;
+  border-radius:6px;padding:22px 24px 20px;box-shadow:var(--shadow);
+  font-family:ui-serif, Georgia, "Times New Roman", serif;
+  animation:slam .4s cubic-bezier(.2,1.2,.3,1) both;
+}
+.dos-masthead{font-size:clamp(22px,6vw,30px);font-weight:900;letter-spacing:1px;
+  text-align:center;text-transform:uppercase;border-bottom:3px double #1a1712;padding-bottom:8px}
+.dos-strap{display:flex;justify-content:space-between;font-size:10px;letter-spacing:2px;
+  text-transform:uppercase;color:#5a5348;padding:6px 0;border-bottom:1px solid #b8b0a0;margin-bottom:14px}
+.dos-head{font-size:clamp(26px,8vw,40px);font-weight:900;line-height:1.02;text-transform:uppercase;
+  margin:0 0 8px;color:#12100c}
+.dos-head.win{color:#7a1420}
+.dos-stand{font-size:14px;font-weight:600;font-style:italic;color:#3a3530;margin:0 0 14px;
+  border-bottom:1px solid #cfc7b6;padding-bottom:12px}
+.dos-copy{columns:2;column-gap:20px;font-size:12.5px;line-height:1.5;color:#22201b}
+.dos-copy p{margin:0 0 9px;break-inside:avoid}
+.dos-copy p:first-child::first-letter{font-size:34px;font-weight:900;float:left;line-height:.8;padding:2px 6px 0 0}
+.dos-verdict{clear:both;margin:14px 0 12px;padding:12px;border-top:2px solid #1a1712;border-bottom:2px solid #1a1712;
+  font-size:15px;font-style:italic;font-weight:600;text-align:center;color:#12100c}
+.dos-share{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11px;line-height:1.5;
+  background:#1a1712;color:#e8e2d2;padding:10px 12px;border-radius:5px;margin-bottom:14px;word-break:break-word}
+.dos-actions{display:flex;gap:8px}
+.dos-actions .btn{flex:1}
+@media (max-width:420px){.dos-copy{columns:1}}

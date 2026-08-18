@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no">
 <meta name="theme-color" content="#0d0b09">
 <title>American Dictator</title>
-<link rel="stylesheet" href="css/styles.css?v=49">
+<link rel="stylesheet" href="css/styles.css?v=50">
 </head>
 <body>
 
@@ -212,6 +212,10 @@
   </section>
 
   <!-- ══════════════════ OVERLAYS ══════════════════ -->
+  <div class="overlay" id="ov-dossier" hidden>
+    <div class="dossier" id="dossier-body"></div>
+  </div>
+
   <div class="overlay" id="ov-tabloid" hidden>
     <div class="tabloid">
       <div class="tab-masthead">THE NATIONAL SCREAM</div>
@@ -471,39 +475,40 @@
 </div>
 
 <!-- state.js creates the AD namespace, so it must load first. -->
-<script src="js/state.js?v=49"></script>
-<script src="js/seed.js?v=49"></script>
-<script src="js/audio.js?v=49"></script>
-<script src="js/doctrines.js?v=49"></script>
-<script src="js/corruption.js?v=49"></script>
-<script src="js/renovations.js?v=49"></script>
-<script src="js/senate.js?v=49"></script>
-<script src="js/press.js?v=49"></script>
-<script src="js/street.js?v=49"></script>
-<script src="js/call.js?v=49"></script>
-<script src="js/war.js?v=49"></script>
-<script src="js/courts.js?v=49"></script>
-<script src="js/basepop.js?v=49"></script>
-<script src="js/constitution.js?v=49"></script>
-<script src="js/tutorial.js?v=49"></script>
-<script src="js/achievements.js?v=49"></script>
-<script src="js/briefings.js?v=49"></script>
-<script src="js/cards.js?v=49"></script>
+<script src="js/state.js?v=50"></script>
+<script src="js/seed.js?v=50"></script>
+<script src="js/audio.js?v=50"></script>
+<script src="js/doctrines.js?v=50"></script>
+<script src="js/corruption.js?v=50"></script>
+<script src="js/renovations.js?v=50"></script>
+<script src="js/senate.js?v=50"></script>
+<script src="js/press.js?v=50"></script>
+<script src="js/street.js?v=50"></script>
+<script src="js/call.js?v=50"></script>
+<script src="js/war.js?v=50"></script>
+<script src="js/courts.js?v=50"></script>
+<script src="js/basepop.js?v=50"></script>
+<script src="js/dossier.js?v=50"></script>
+<script src="js/constitution.js?v=50"></script>
+<script src="js/tutorial.js?v=50"></script>
+<script src="js/achievements.js?v=50"></script>
+<script src="js/briefings.js?v=50"></script>
+<script src="js/cards.js?v=50"></script>
 <!-- Content packs. Each pushes onto AD.CARDS, so adding a deck is adding a
      file — no engine changes. Order does not matter. -->
-<script src="js/packs/pack-a-honeymoon.js?v=49"></script>
-<script src="js/packs/pack-b-machinery.js?v=49"></script>
-<script src="js/packs/pack-c-consolidation.js?v=49"></script>
-<script src="js/packs/pack-d-evergreen.js?v=49"></script>
-<script src="js/packs/pack-e-secondterm.js?v=49"></script>
-<script src="js/packs/pack-f-record.js?v=49"></script>
-<script src="js/packs/pack-g-record.js?v=49"></script>
+<script src="js/packs/pack-a-honeymoon.js?v=50"></script>
+<script src="js/packs/pack-b-machinery.js?v=50"></script>
+<script src="js/packs/pack-c-consolidation.js?v=50"></script>
+<script src="js/packs/pack-d-evergreen.js?v=50"></script>
+<script src="js/packs/pack-e-secondterm.js?v=50"></script>
+<script src="js/packs/pack-f-record.js?v=50"></script>
+<script src="js/packs/pack-g-record.js?v=50"></script>
 <!-- cay.js reads AD.CAST, so it must load after cards.js -->
-<script src="js/cay.js?v=49"></script>
-<script src="js/events.js?v=49"></script>
-<script src="js/endings.js?v=49"></script>
-<script src="js/engine.js?v=49"></script>
-<script src="js/ui.js?v=49"></script>
-<script src="js/main.js?v=49"></script>
+<script src="js/cay.js?v=50"></script>
+<script src="js/events.js?v=50"></script>
+<script src="js/endings.js?v=50"></script>
+<script src="js/engine.js?v=50"></script>
+<script src="js/ui.js?v=50"></script>
+<script src="js/main.js?v=50"></script>
 </body>
 </html>

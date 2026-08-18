@@ -407,6 +407,16 @@ AD.Game = {
     }
   },
 
+  copyDossier () {
+    const txt = AD.UI._dossierShare || '';
+    const done = () => { const b = document.querySelector('[data-act="dossier-copy"]'); if (b) { b.textContent = 'Copied!'; setTimeout(() => { b.textContent = 'Copy to Share'; }, 1600); } };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(done, done);
+    else {
+      const ta = document.createElement('textarea'); ta.value = txt; document.body.appendChild(ta);
+      ta.select(); try { document.execCommand('copy'); } catch (e) {} document.body.removeChild(ta); done();
+    }
+  },
+
   /* ---------- input ---------- */
   wire () {
     const U = AD.UI;
@@ -614,6 +624,12 @@ AD.Game = {
         U.overlay('renovations', false);
         if (AD.Engine.card && !U.el('card').hidden) U.startTimer(AD.Engine.card);
         break;
+
+      case 'dossier':
+        if (!AD.Engine.lastScore) break;
+        U.renderDossier(AD.Engine.lastScore); U.overlay('dossier', true); break;
+      case 'dossier-close': U.overlay('dossier', false); break;
+      case 'dossier-copy': this.copyDossier(); break;
 
       case 'log':      U.renderLog(); U.overlay('log', true); break;
       case 'log-close':U.overlay('log', false); break;

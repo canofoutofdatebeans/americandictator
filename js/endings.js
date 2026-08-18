@@ -288,6 +288,22 @@ AD.scoreRun = function (run, endingId) {
     fullSet: AD.allClausesBroken(run),
     cash: Math.round(run.cash * 10) / 10,
     inherited: !!(run.legacy && Object.keys(run.legacy.mods || {}).length),
+    // --- the record of HOW you governed, for the generated dossier ---
+    sacked: (run.senate || []).filter(s => s.gone).length,
+    sackedName: (run.senate || []).filter(s => s.gone).map(s => 'Sen. ' + s.last + ' of ' + s.state)[0] || null,
+    caucusAvg: (AD.senateSummary ? AD.senateSummary(run).avgOwn : null),
+    judgesPacked: (run.judges || []).filter(j => j.appointee).length,
+    packedName: (run.judges || []).filter(j => j.appointee).map(j => j.name)[0] || null,
+    outletsOwned: (run.press || []).filter(o => o.owned).length,
+    ownedName: (run.press || []).filter(o => o.owned).map(o => o.name)[0] || null,
+    warsDeclared: (run.stats && run.stats.wars) || 0,
+    warLog: (run.warLog || []).slice(),
+    rallies: (run.stats && run.stats.rallies) || 0,
+    calls: (run.stats && run.stats.calls) || 0,
+    bought: (run.assets || []).length,
+    renos: (run.renos || []).length,
+    cayHeat: (AD.cayHeat ? AD.cayHeat(run) : 0),
+    cayStage: (run.cay && run.cay.stage) || 0,
     score: score,
     stamp: Date.now()
   };
