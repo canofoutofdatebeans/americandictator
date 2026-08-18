@@ -155,6 +155,23 @@ AD.UI = {
       `<div class="pill ${run.locked[f.key] ? 'on' : ''}" title="${f.pillar}">${
         run.locked[f.key] ? f.pillar : '·'}</div>`).join('');
 
+    // THE TWO PATHS TO VICTORY, made legible. The number-one lesson players miss
+    // is that you WIN by capturing branches (decisions alone cap at 55), so show
+    // live progress toward both the dictatorship and the fortune, side by side.
+    const vt = this.el('victory-tracker');
+    if (vt) {
+      const held = pillars.filter(f => run.locked[f.key]).length;
+      const need = Math.max(1, Math.ceil((100 - AD.SOFT_CAP) / (AD.Engine.diff().pillarValue || 22)));
+      const goal = AD.wealthGoal(run);
+      const authWin = run.authority >= 100, cashWin = run.cash >= goal;
+      vt.innerHTML =
+        `<span class="vt-path ${authWin ? 'won' : ''}">👑 <b>The Country</b> ` +
+          `<i>Authority ${run.authority}/100 · ${held}/${need} branches</i></span>` +
+        `<span class="vt-path ${cashWin ? 'won' : ''}">💰 <b>The Money</b> ` +
+          `<i>$${run.cash.toFixed(1)} / $${goal}B</i></span>` +
+        `<span class="vt-help">?</span>`;
+    }
+
     this.renderFactions(run);
   },
 

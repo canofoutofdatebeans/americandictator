@@ -1138,3 +1138,19 @@ html[data-cb="on"] .fac.danger .fac-val{color:#93c5fd}
 .clause-break:active{transform:scale(.98)}
 .clause-break em{display:block;font-style:normal;font-weight:400;font-size:10px;
   letter-spacing:.4px;color:#c98d8d;margin-top:2px}
+
+/* ---------- paths-to-victory tracker (teaches the win conditions) ---------- */
+.victory-tracker{display:flex;align-items:center;gap:8px;width:100%;flex-wrap:wrap;
+  margin-top:7px;padding:6px 10px;border-radius:8px;border:1px solid var(--edge);
+  background:linear-gradient(#141d33,#0d1424);cursor:pointer;font:inherit;text-align:left;
+  transition:var(--fx)}
+.victory-tracker:hover{border-color:var(--gold-soft);transform:translateY(-1px)}
+.victory-tracker:active{transform:scale(.995)}
+.vt-path{font-size:10.5px;color:var(--paper2);display:flex;gap:5px;align-items:baseline;
+  flex:1 1 130px;min-width:0}
+.vt-path b{color:var(--gold-soft);font-size:11px;white-space:nowrap}
+.vt-path i{font-style:normal;color:var(--muted);white-space:nowrap}
+.vt-path.won b,.vt-path.won i{color:var(--green)}
+.vt-help{margin-left:auto;flex:0 0 auto;width:18px;height:18px;border-radius:50%;
+  border:1px solid var(--edge2);display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:700;color:var(--muted)}

@@ -338,7 +338,7 @@ AD.sectionEventFor = function (run) {
   if (!card) card = poolCard(run);
   if (!card) return null;
 
-  run.flags.sectionUntil = m + 2;                           // roughly one pop-up every couple of months
+  run.flags.sectionUntil = m + 3;                           // about one pop-up every three months (~a quarter of turns)
   return card;
 };
 })();

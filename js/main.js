@@ -85,15 +85,19 @@ AD.Game = {
 
   buildHowTo () {
     AD.UI.el('howto-body').innerHTML = `
-      <h4>The Objective</h4>
-      <p>You have one four-year term. Reach <b>Authority 100</b> before it ends, or take the last
-      exit at the final election. Anything less and you were merely President, which is a loss.</p>
+      <h4>Two Ways to Win</h4>
+      <p><b>Take the country</b> (Authority 100) or <b>take the money</b> (a personal fortune, $12B to
+      $20B depending on difficulty). Doing both is the best ending in the game. You get a full term,
+      then an election: win it for a second term, and the second term decides everything.</p>
 
-      <h4>The One Rule That Matters</h4>
-      <p>Authority earned from <em>decisions</em> is <b>hard capped at ${AD.SOFT_CAP}</b>, that's the
-      white line on the bar. Grinding out little power grabs forever gets you to ${AD.SOFT_CAP} and
-      then stops dead. The last thirty points can only come from <b>Pillars</b>. You will have to
-      actually take a branch of government.</p>
+      <h4>The Winning Move (read this one)</h4>
+      <p>Authority from <em>decisions</em> is <b>hard capped at ${AD.SOFT_CAP}</b>, the white line on
+      the bar. The rest of the way to 100 can only come from <b>capturing branches</b>: drive
+      <b>Congress</b>, <b>The Courts</b>, <b>The Press</b> or <b>The Street</b> up to 100 and it
+      becomes a captured <b>Pillar</b>, worth <b>+22 Authority that ignores the cap</b>. You need
+      about <b>three</b>. So the winning play is to <b>commit</b>: pick three branches and push them
+      hard, feeding the base just enough to survive. Spreading yourself thin across every system,
+      reacting to whatever lands, is exactly how you end up <em>merely President</em>, which is a loss.</p>
 
       <h4>The Five Power Centres</h4>
       <ul>
