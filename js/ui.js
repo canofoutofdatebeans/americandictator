@@ -34,10 +34,11 @@ AD.UI = {
   /* ---------- portrait ---------- */
   portraitSVG (p, party) {
     const P = AD.PORTRAIT;
-    const hair = P.hair[p.hair % P.hair.length];
-    const skin = P.skin[p.skin % P.skin.length];
-    const tie  = P.tie[p.tie % P.tie.length];
-    const suit = P.suit[p.suit % P.suit.length];
+    p = p || {};
+    const hair = P.hair[(p.hair || 0) % P.hair.length];
+    const skin = P.skin[(p.skin || 0) % P.skin.length];
+    const tie  = P.tie[(p.tie || 0) % P.tie.length];
+    const suit = P.suit[(p.suit || 0) % P.suit.length];
     const shade = this.darken(skin, .18);
     // Body size (build) scales the torso horizontally around the centre line, so
     // the president reads fatter or thinner while the head stays put. Sex swaps
@@ -1290,7 +1291,32 @@ AD.UI = {
       </div>`;
     }).join('') : '<div class="lib-empty">No presidencies on record.<br>Suspiciously clean.</div>';
 
+    this.renderEndingsGallery();
     this.renderAchievements();
+  },
+
+  /* ---------- endings gallery (discover every way it can end) ---------- */
+  renderEndingsGallery () {
+    const hide = { certified: 1, indefinite: 1 };   // orphaned legacy endings
+    const ids = Object.keys(AD.ENDINGS).filter(k => !hide[k]);
+    const seen = new Set(AD.loadLibrary().map(r => r.endingId));
+    const got = ids.filter(id => seen.has(id)).length;
+    const cnt = this.el('end-gal-count');
+    if (cnt) cnt.textContent = got + ' / ' + ids.length;
+    const gal = this.el('end-gallery');
+    if (!gal) return;
+    // wins first, then losses; discovered before locked within each
+    const order = ids.slice().sort((a, b) => {
+      const A = AD.ENDINGS[a], B = AD.ENDINGS[b];
+      return (B.win - A.win) || (seen.has(b) - seen.has(a));
+    });
+    gal.innerHTML = order.map(id => {
+      const e = AD.ENDINGS[id], have = seen.has(id);
+      return `<div class="end-cell ${have ? (e.win ? 'got win' : 'got') : 'locked'}">
+        <b>${have ? e.title : '？？？'}</b>
+        <i>${have ? e.kicker : (e.win ? 'A victory you have not found.' : 'A defeat you have yet to suffer.')}</i>
+      </div>`;
+    }).join('');
   },
 
   /* ---------- achievements gallery ---------- */

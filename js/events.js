@@ -140,8 +140,15 @@ AD.EVENTS = {
 
       if (score > 52) return { secondTerm: 'won' };
 
-      // LOST. Do not end the run: queue the concede-or-contest decision and let
-      // the player choose what losing means.
+      // CATASTROPHE. If a power centre was left in ruins, the defeat is themed to
+      // it (Congress removed you, the Courts enjoined you, the Street stopped),
+      // a dramatic, uncontestable ending rather than a close-run vote. This also
+      // revives the five 'zero' endings now that meters no longer end a term.
+      const themed = AD.electionLossEnding(run);
+      if (themed !== 'peaceful-transfer') return { ending: themed };
+
+      // LOST a survivable vote. Do not end the run: queue the concede-or-contest
+      // decision and let the player choose what losing means.
       run.queue.unshift(AD.EVENTS.contestDecision);
       return {
         res: 'The networks call it at 11:40pm, and not by a rounding error. You lost. There is still a decision ' +
@@ -320,6 +327,22 @@ AD.backlashFor = function (key) {
 /* ---------- Scheduling ----------------------------------------------------
    All beats are scheduled against the TERM month, so term two gets its own
    Address, its own Midterms and its own November. */
+/* If the term left a power centre in ruins (collapsed to the floor, or simply
+   sitting very low at the ballot), a defeat is themed to that institution and
+   uses its dramatic 'zero' ending. Otherwise it is an ordinary lost election. */
+AD.electionLossEnding = function (run) {
+  const wounded = Object.keys(run.wounded || {}).filter(k => !run.locked[k]);
+  let worst = null, low = 101;
+  AD.FKEYS.forEach(k => { if (!run.locked[k] && run.meters[k] < low) { low = run.meters[k]; worst = k; } });
+  // A wounded (once-collapsed) centre, or any centre still in the gutter, decides it.
+  if (wounded.length) {
+    const k = wounded.sort((a, b) => run.meters[a] - run.meters[b])[0];
+    return 'zero-' + k;
+  }
+  if (worst && low <= 18) return 'zero-' + worst;
+  return 'peaceful-transfer';
+};
+
 AD.scriptedFor = function (run) {
   const len = run.termLength;
   const tm = AD.termMonth(run);

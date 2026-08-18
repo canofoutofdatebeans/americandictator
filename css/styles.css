@@ -1154,3 +1154,14 @@ html[data-cb="on"] .fac.danger .fac-val{color:#93c5fd}
 .vt-help{margin-left:auto;flex:0 0 auto;width:18px;height:18px;border-radius:50%;
   border:1px solid var(--edge2);display:flex;align-items:center;justify-content:center;
   font-size:11px;font-weight:700;color:var(--muted)}
+
+/* ---------- endings gallery ---------- */
+.end-gallery{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.end-cell{padding:9px 11px;border-radius:9px;border:1px solid var(--edge);background:var(--ink2);opacity:.5}
+.end-cell.got{opacity:1;border-color:var(--edge2);background:#171208}
+.end-cell.got.win{border-color:#2f5138;background:#14210f}
+.end-cell b{display:block;font-size:12px;color:var(--paper2);letter-spacing:.5px}
+.end-cell.got b{color:var(--gold-soft)}
+.end-cell.got.win b{color:#8fd6a0}
+.end-cell.locked b{color:var(--muted);letter-spacing:2px}
+.end-cell i{display:block;font-size:10px;color:var(--muted);font-style:normal;margin-top:2px;line-height:1.3}
