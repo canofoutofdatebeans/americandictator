@@ -50,6 +50,8 @@ AD.FACTIONS = [
 ];
 
 AD.FKEYS = AD.FACTIONS.map(f => f.key);
+/* Which power centres have a live management screen behind the meter tile. */
+AD.FAC_SCREEN = { congress: 'senate' };
 AD.faction = k => AD.FACTIONS.find(f => f.key === k);
 
 /* ---------- Authority ------------------------------------------------------
@@ -102,6 +104,35 @@ AD.WEALTH_GOAL = 10;
 AD.BASE_DANGER = 95;
 AD.BASE_FUSE = 3;
 AD.BASE_DECAY = -3;      // a movement that isn't fed every month cools off
+
+/* ---------- The Base's appetite ------------------------------------------
+   The movement is, by design and per the brief, largely far-right and
+   poorly served by the education system it keeps voting to defund. It does
+   not reward good governance. It rewards TRANSGRESSION — the more
+   institutions a choice offends, the more the crowd loves it — and it
+   rewards CHAOS, so the deliberately absurd wildcard options land better
+   with the base than their raw numbers suggest.
+
+   Mechanically: a choice that pleases the base (base > 0) while damaging
+   institutions gets its base gain multiplied, once per offended power
+   centre. Wildcards get an extra bump. The multiplier is capped so a single
+   card cannot vault the movement to the fatal ceiling on its own. */
+AD.BASE_APPETITE   = 0.11;   // extra base gain per offended institution
+AD.BASE_WILD_BONUS = 0.38;   // the crowd loves the silly, chaotic option
+AD.BASE_APPETITE_CAP = 1.8;  // hard ceiling on the total multiplier
+
+AD.applyBaseAppetite = function (eff, choice) {
+  const b = eff.base || 0;
+  if (b <= 0) return eff;                 // only ever amplifies red meat, never punishes
+  let offended = 0;
+  ['congress', 'courts', 'press', 'street'].forEach(k => { if ((eff[k] || 0) < 0) offended++; });
+  let mult = 1;
+  if (offended >= 2) mult += AD.BASE_APPETITE * offended;   // transgression
+  if (choice && choice.wild) mult += AD.BASE_WILD_BONUS;    // chaos
+  mult = Math.min(mult, AD.BASE_APPETITE_CAP);
+  if (mult > 1) eff.base = Math.round(b * mult);
+  return eff;
+};
 
 /* ---------- Authority ranks ---------------------------------------------- */
 AD.RANKS = [
@@ -195,6 +226,7 @@ AD.newRun = function (opts) {
     log: [],                    // {month, title, choice, deltas}
     assets: [],                 // owned corruption holdings — see corruption.js
     renos: [],                  // structures built on the residence — see renovations.js
+    senate: [],                 // the 100-seat chamber — see senate.js
     clauses: [],                // constitutional clauses broken — see constitution.js
     stats: { grabs: 0, restraints: 0, timeouts: 0, peakCash: d.startCash, briefings: 0, bought: 0, built: 0 },
     over: false,

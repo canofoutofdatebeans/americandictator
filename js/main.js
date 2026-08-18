@@ -290,6 +290,24 @@ AD.Game = {
   },
 
   /* ---------- the residence ---------- */
+  senateAction (senId, actionId) {
+    const run = AD.Engine.run;
+    if (!run || run.over) return;
+    const r = AD.doSenateAction(run, senId, actionId);
+    if (!r.ok) return;
+    AD.saveRun(run);
+    AD.Audio.play(actionId === 'sack' ? 'stamp' : actionId === 'humiliate' ? 'bad' : 'good');
+    AD.UI.renderSenate(r);
+    AD.UI.renderHUD();
+    // an action can starve a meter to death like anything else
+    const collapse = AD.Engine.checkCollapse();
+    if (collapse.ending) {
+      AD.Engine.finish(collapse.ending);
+      this.pending = [];
+      setTimeout(() => this.showEnding(AD.Engine.lastScore), 900);
+    }
+  },
+
   buildReno (id) {
     const run = AD.Engine.run;
     if (!run || run.over) return;
@@ -351,6 +369,16 @@ AD.Game = {
 
       const build = e.target.closest('[data-build]');
       if (build && !build.disabled) { this.buildReno(build.dataset.build); return; }
+
+      // Clicking a power-centre tile opens its management screen.
+      const manage = e.target.closest('[data-manage]');
+      if (manage) { this.act(AD.FAC_SCREEN[manage.dataset.manage]); return; }
+
+      const sentab = e.target.closest('[data-sentab]');
+      if (sentab) { AD.UI.senTab = sentab.dataset.sentab; AD.UI.renderSenate(); return; }
+
+      const senact = e.target.closest('[data-senact]');
+      if (senact && !senact.disabled) { this.senateAction(senact.dataset.sen, senact.dataset.senact); return; }
 
       const act = e.target.closest('[data-act]');
       if (act) this.act(act.dataset.act);
@@ -420,6 +448,14 @@ AD.Game = {
       case 'corruption-close':
         U.overlay('corruption', false);
         // resume the clock only if a crisis is actually on screen
+        if (AD.Engine.card && !U.el('card').hidden) U.startTimer(AD.Engine.card);
+        break;
+
+      case 'senate':
+        if (U.current !== 'game' || !AD.Engine.run || AD.Engine.run.over) break;
+        U.stopTimer(); U.renderSenate(); U.overlay('senate', true); break;
+      case 'senate-close':
+        U.overlay('senate', false);
         if (AD.Engine.card && !U.el('card').hidden) U.startTimer(AD.Engine.card);
         break;
 

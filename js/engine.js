@@ -32,6 +32,7 @@ AD.Engine = {
     if (!run.assets) run.assets = [];      // saves written before the corruption track
     if (!run.clauses) run.clauses = [];    // saves written before the constitution ledger
     if (!run.renos) run.renos = [];        // saves written before the residence track
+    if (!run.senate || !run.senate.length) run.senate = AD.makeSenate(run); // pre-senate saves
 
     this.run = run;
     this.card = null;
@@ -146,6 +147,12 @@ AD.Engine = {
            money, and money gets the last word. --- */
     AD.applyDoctrines(run, eff);
     AD.applyPassivesToEffect(run, eff);
+
+    /* The base rewards offence and chaos — see AD.applyBaseAppetite. This runs
+       AFTER money (a bought media empire multiplies the reach of the red meat)
+       and BEFORE the meters land, so the amplified figure is what the crowd
+       actually feels and what the resolution reports. */
+    AD.applyBaseAppetite(eff, choice);
 
     /* --- Apply to meters --- */
     AD.FKEYS.forEach(k => {
@@ -407,6 +414,8 @@ AD.Engine = {
     // pay for the ballroom in the same month it earns.
     this.lastTick = AD.corruptionTick(run);
     this.lastUpkeep = AD.renovationTick(run);
+    // The caucus drifts and, if neglected, drags the Congress meter down.
+    this.lastSenate = AD.senateTick(run);
     // A story hot enough to leak does damage without needing a card.
     this.lastLeak = AD.cayTick(run);
 

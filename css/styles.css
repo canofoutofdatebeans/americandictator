@@ -641,3 +641,53 @@ body::before{
   font-size:9px;letter-spacing:2px;font-style:normal;text-transform:uppercase;
   color:#fff;background:var(--red);padding:2px 6px;border-radius:5px;flex:0 0 auto;
 }
+
+/* ---------- manageable power-centre tiles ---------- */
+.fac.has-screen{cursor:pointer}
+.fac.has-screen:hover{background:rgba(47,93,168,.10);border-radius:8px}
+.fac-cog{position:absolute;top:1px;right:3px;font-size:9px;color:var(--gold);opacity:.65}
+.fac{padding-top:2px}
+
+/* ---------- the caucus (senate) ---------- */
+.sen-head>div{min-width:calc(25% - 6px)}
+#sen-avg.low,#sen-rebels.hot{color:var(--red-hot)}
+.sen-tabs{display:flex;gap:5px;margin-bottom:10px}
+.sen-tab{flex:1;padding:7px 4px;font:inherit;font-size:11px;letter-spacing:.4px;
+  background:var(--ink2);border:1px solid var(--edge);border-radius:8px;color:var(--muted);
+  cursor:pointer;transition:var(--fx)}
+.sen-tab:hover{border-color:var(--edge2);color:var(--paper2)}
+.sen-tab.on{background:linear-gradient(var(--blue-hot),var(--blue));color:#fff;border-color:var(--edge2)}
+.sen-list{max-height:56vh;overflow-y:auto}
+.sen-row{background:var(--ink2);border:1px solid var(--edge);border-left:3px solid var(--edge2);
+  border-radius:10px;padding:9px 11px;margin-bottom:7px}
+.sen-row.mood-loyal{border-left-color:var(--gold)}
+.sen-row.mood-wavering{border-left-color:#c98d3a}
+.sen-row.mood-rebel{border-left-color:var(--red-hot)}
+.sen-row.mood-hostile{border-left-color:#3a6ea5}
+.sen-row.mood-flipped{border-left-color:#4f9160}
+.sen-row.mood-gone{opacity:.5}
+.sen-top{display:flex;align-items:baseline;gap:7px;flex-wrap:wrap}
+.sen-dot{width:8px;height:8px;border-radius:50%;flex:0 0 auto;align-self:center}
+.party-own .sen-dot{background:var(--party)}
+.party-opp .sen-dot{background:#3a6ea5}
+.sen-top b{font-size:13.5px;color:var(--paper)}
+.sen-top i{font-size:10.5px;color:var(--muted);font-style:normal;letter-spacing:.3px}
+.sen-mood{margin-left:auto;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--muted)}
+.mood-rebel .sen-mood{color:var(--red-hot)}
+.mood-loyal .sen-mood{color:var(--gold-soft)}
+.sen-loywrap{height:5px;background:#0c1220;border-radius:3px;overflow:hidden;margin:7px 0 5px}
+.sen-loy{height:100%;background:linear-gradient(90deg,#8d8271,#c9a227)}
+.mood-rebel .sen-loy{background:#c0392b}
+.mood-wavering .sen-loy{background:#c98d3a}
+.mood-hostile .sen-loy{background:#3a6ea5}
+.sen-gripe{font-size:11px;color:var(--muted);font-style:italic;margin-bottom:7px}
+.sen-acts{display:flex;gap:5px;flex-wrap:wrap}
+.sen-act{flex:1 1 calc(50% - 3px);min-width:0;padding:7px 6px;font:inherit;font-size:11.5px;
+  border-radius:7px;border:1px solid var(--edge);background:var(--ink3);color:var(--paper2);
+  cursor:pointer;transition:var(--fx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sen-act em{font-style:normal;color:#9ec9a5;font-size:10px}
+.sen-act:hover:not(:disabled){border-color:var(--gold-soft)}
+.sen-act:disabled{opacity:.35;cursor:not-allowed}
+.sen-act.act-acknowledge{border-color:#2f5138;background:linear-gradient(#1d3325,#142519);color:#a8d4b0}
+.sen-act.act-humiliate{border-color:#5a2030;background:linear-gradient(#2a1016,#1c0b0f);color:#e0a0a6}
+.sen-act.act-sack{border-color:#6a1a22;background:linear-gradient(#33101a,#220a10);color:#f0b0b6}

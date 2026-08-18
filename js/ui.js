@@ -110,11 +110,16 @@ AD.UI = {
       const label = locked
         ? `${f.name}: captured. ${f.pillar} secured.`
         : `${f.name}: ${v} of 100.${danger ? ' Critical.' : ''}`;
-      return `<div class="fac ${locked ? 'locked' : ''} ${danger ? 'danger' : ''}"
-             title="${f.name} — ${f.blurb}"
+      // Three of the five power centres have a management screen behind them;
+      // clicking the tile opens it. The others are governed only through cards.
+      const screen = AD.FAC_SCREEN[f.key];
+      const manage = screen && !locked ? ` data-manage="${f.key}"` : '';
+      return `<div class="fac ${locked ? 'locked' : ''} ${danger ? 'danger' : ''} ${screen && !locked ? 'has-screen' : ''}"${manage}
+             title="${f.name} — ${f.blurb}${screen && !locked ? ' — tap to manage' : ''}"
              role="meter" tabindex="0"
-             aria-label="${label}" aria-valuenow="${v}" aria-valuemin="0" aria-valuemax="100">
+             aria-label="${label}${screen && !locked ? ' Activate to manage.' : ''}" aria-valuenow="${v}" aria-valuemin="0" aria-valuemax="100">
         ${locked ? '<span class="lock" aria-hidden="true">🔒</span>' : ''}
+        ${screen && !locked ? '<span class="fac-cog" aria-hidden="true">⚙</span>' : ''}
         <div class="fac-fig" aria-hidden="true">${f.icon}</div>
         <div class="fac-bar" aria-hidden="true"><div class="fac-fill" style="width:${v}%;background:${col}"></div></div>
         <div class="fac-val" aria-hidden="true">${v}</div>
@@ -610,6 +615,74 @@ AD.UI = {
       }).join('');
       return `<div class="asset-cat"><div class="asset-cat-h">${cat.icon} ${cat.name}</div>
         <p class="asset-cat-b">${cat.blurb}</p>${rows}</div>`;
+    }).join('');
+  },
+
+  /* ---------- the caucus (senate) ---------- */
+  senTab: 'attention',
+  renderSenate (result) {
+    const run = AD.Engine.run;
+    AD.ensureSenate(run);
+    const sum = AD.senateSummary(run);
+    this.el('sen-own').textContent = sum.own;
+    this.el('sen-opp').textContent = sum.opp;
+    const avg = this.el('sen-avg');
+    avg.textContent = sum.avgOwn;
+    avg.className = sum.avgOwn < 50 ? 'low' : '';
+    const reb = this.el('sen-rebels');
+    reb.textContent = sum.outOfLine;
+    reb.className = sum.outOfLine > 0 ? 'hot' : '';
+
+    const note = this.el('sen-note');
+    if (result && result.action) {
+      note.className = 'corr-note bought';
+      const s = result.senator;
+      const verb = { acknowledge: 'brought into line', humiliate: 'humiliated in public',
+                     sue: 'served with a lawsuit', sack: 'forced out of the Senate' }[result.action.id];
+      note.innerHTML = `<b>Senator ${s.last} of ${s.state} ${verb}.</b> ` +
+        (result.action.id === 'sue' ? 'The rest of the caucus has taken note.'
+         : result.action.id === 'sack' ? 'A loyalist of your choosing now holds the seat.'
+         : AD.SENATE_ACTIONS.find(a => a.id === result.action.id).blurb);
+    } else {
+      note.className = 'corr-note';
+      note.textContent = 'Keep your own party in line. Loyalty drifts down every month, and once the caucus ' +
+        'average sags the whole chamber turns on you. The opposition will almost never approve.';
+    }
+
+    const tabs = [['attention', 'Needs You'], ['party', 'Your Party'], ['opp', 'Opposition'], ['all', 'All 100']];
+    this.el('sen-tabs').innerHTML = tabs.map(([k, lab]) =>
+      `<button class="sen-tab ${this.senTab === k ? 'on' : ''}" data-sentab="${k}">${lab}</button>`).join('');
+
+    let list = run.senate.filter(s => !s.gone);
+    if (this.senTab === 'attention') list = list.filter(s => s.party === 'own' && s.loyalty < 60);
+    else if (this.senTab === 'party') list = list.filter(s => s.party === 'own');
+    else if (this.senTab === 'opp') list = list.filter(s => s.party === 'opp');
+    list = list.slice().sort((a, b) => a.loyalty - b.loyalty);
+
+    if (!list.length) {
+      this.el('sen-list').innerHTML = '<div class="lib-empty">' +
+        (this.senTab === 'attention' ? 'Every one of your senators is in line. For now.' : 'Nobody here.') + '</div>';
+      return;
+    }
+
+    this.el('sen-list').innerHTML = list.map(s => {
+      const mood = AD.senMood(s);
+      const buttons = AD.SENATE_ACTIONS.map(act => {
+        const avail = AD.senateActionAvailable(run, s, act);
+        const cost = act.cost ? ` <em>$${act.cost}B</em>` : '';
+        return `<button class="sen-act act-${act.id}" data-sen="${s.id}" data-senact="${act.id}" ${avail.ok ? '' : 'disabled'} title="${act.blurb}">${act.icon} ${act.label}${cost}</button>`;
+      }).join('');
+      return `<div class="sen-row mood-${mood.key} party-${s.party}">
+        <div class="sen-top">
+          <span class="sen-dot"></span>
+          <b>Sen. ${s.first} ${s.last}</b>
+          <i>${s.state}${s.appointee ? ' · appointed' : ''}${s.sued ? ' · sued' : ''}</i>
+          <span class="sen-mood">${mood.label}</span>
+        </div>
+        <div class="sen-loywrap"><div class="sen-loy" style="width:${s.loyalty}%"></div></div>
+        ${s.gripe && s.party === 'own' ? `<div class="sen-gripe">${s.gripe}</div>` : ''}
+        <div class="sen-acts">${buttons}</div>
+      </div>`;
     }).join('');
   },
 
