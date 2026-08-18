@@ -252,6 +252,8 @@ AD.applySenateEffect = function (run, eff) {
     if (!v || run.locked[k]) return;
     // owned shields still blunt incoming institutional damage from a purge
     if (v < 0 && p[k + 'Shield']) v = Math.ceil(v * (1 - p[k + 'Shield']));
+    // the base creeps, never jumps — even a rally or a Liberation Day is capped
+    if (k === 'base' && v > AD.BASE_RISE_CAP) v = AD.BASE_RISE_CAP;
     const before = run.meters[k];
     run.meters[k] = AD.clamp(before + v, 0, 100);
     if (run.meters[k] !== before) deltas[k] = run.meters[k] - before;

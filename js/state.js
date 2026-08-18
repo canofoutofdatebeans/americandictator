@@ -122,6 +122,12 @@ AD.wealthGoal = run => (run && run.wealthGoal) || AD.WEALTH_GOAL;
 
 AD.BASE_DECAY = -3;      // a movement that isn't fed every month cools off
 
+/* The base CREEPS, it never jumps. No single action — card, rally, pardon,
+   tariff, war — may raise the Base by more than this in one go. A movement is
+   built rally by rally, not seized in an afternoon; combined with the −3/mo
+   decay it makes a maxed base a term-long project, not a two-card spike. */
+AD.BASE_RISE_CAP = 5;
+
 /* ---------- The Base's appetite ------------------------------------------
    The movement is, by design and per the brief, largely far-right and
    poorly served by the education system it keeps voting to defund. It does
@@ -278,6 +284,7 @@ AD.newRun = function (opts) {
     pillarAuth: 0,              // earned only by capturing power centres
     vpAmbition: 0,              // how far the Vice President has outgrown you (0-100)
     doctrines: [],              // ids of unlocked doctrines
+    doctrineOffered: [],        // doctrines already offered (signed or binned)
     shieldUsed: false,          // Immunity Shield consumed?
     seen: [],                   // card ids already played
     flags: {},                  // story flags set by choices

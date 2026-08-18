@@ -40,6 +40,7 @@ AD.Engine = {
     if (!run.tariffs) run.tariffs = [];      // pre-economy saves
     if (!run.relations) run.relations = {};
     if (!run.pardoned) run.pardoned = [];    // pre-pardon saves
+    if (!run.doctrineOffered) run.doctrineOffered = [];
 
     this.run = run;
     this.card = null;
@@ -86,6 +87,13 @@ AD.Engine = {
     const reactive = AD.reactiveFor(run);
     if (reactive) { this.card = reactive; return this.card; }
 
+    // Section pop-ups: a live system (economy, pardons, phone, war room,
+    // street, press, congress, base, money) reaches out, paced to punctuate.
+    if (AD.sectionEventFor) {
+      const section = AD.sectionEventFor(run);
+      if (section) { this.card = section; return this.card; }
+    }
+
     let card = AD.pickCard(run);
 
     // Deck exhausted late in a long term — recycle everything except the
@@ -122,6 +130,7 @@ AD.Engine = {
     const choice = card.choices[index];
     if (!choice) return out;
     if (card.sfx) out.sfx = card.sfx;        // a card can name its own sound
+    const baseAtStart = run.meters.base;     // enforce the per-decision base creep cap below
 
     /* --- Dynamic events (midterms, election) compute their own outcome --- */
     let eff;
@@ -186,6 +195,8 @@ AD.Engine = {
       }
 
       let after = AD.clamp(before + delta, 0, 100);
+      // The base creeps, never jumps — cap how far a single decision can raise it.
+      if (k === 'base' && after > before + AD.BASE_RISE_CAP) after = before + AD.BASE_RISE_CAP;
       if (k === 'base' && AD.hasDoctrine(run, 'cult')) after = Math.max(34, after);
 
       /* GUARDRAIL — no single decision is the killing blow (see AD.DECISION_FLOOR).
@@ -240,6 +251,15 @@ AD.Engine = {
       if (c) run.queue.push(c);
     });
 
+    // THE BASE CREEPS. Enforce the cap on the TOTAL rise this decision produced
+    // — the choice's own effect PLUS any base a side-effect (a tariff, a war, a
+    // pardon) added — so nothing can leap the movement forward more than
+    // AD.BASE_RISE_CAP in a single turn.
+    if (!run.locked.base && run.meters.base > baseAtStart + AD.BASE_RISE_CAP) {
+      run.meters.base = baseAtStart + AD.BASE_RISE_CAP;
+      out.deltas.base = run.meters.base - baseAtStart;
+    }
+
     /* --- Play-style stats (drive achievements and briefings) --- */
     const rawAuthGain = (choice.eff && choice.eff.auth) || 0;
     if (rawAuthGain >= 5) run.stats.grabs++;
@@ -286,8 +306,10 @@ AD.Engine = {
     // 3. Total authority.
     if (run.authority >= 100) { out.ending = 'dictator'; this.finish(out.ending); return out; }
 
-    // 4. New doctrine?
-    out.doctrine = AD.checkDoctrineUnlock(run);
+    // 4. New doctrine crossed? Queue it as a three-way DECISION card (sign /
+    //    bin / the comedy option) rather than granting it silently.
+    const newDoc = AD.checkDoctrineUnlock(run);
+    if (newDoc) run.queue.push(AD.buildDoctrineCard(run, newDoc));
 
     AD.saveRun(run);
     return out;
