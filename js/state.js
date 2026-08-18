@@ -237,6 +237,7 @@ AD.newRun = function (opts) {
     authority: 0,
     rawAuth: 0,                 // earned by decisions — capped at AD.SOFT_CAP
     pillarAuth: 0,              // earned only by capturing power centres
+    vpAmbition: 0,              // how far the Vice President has outgrown you (0-100)
     doctrines: [],              // ids of unlocked doctrines
     shieldUsed: false,          // Immunity Shield consumed?
     seen: [],                   // card ids already played
@@ -251,6 +252,7 @@ AD.newRun = function (opts) {
     wars: [],                   // ongoing wars — see war.js
     judges: [],                 // the bench — see courts.js
     tariffs: [],                // active tariffs — see economy.js
+    pardoned: [],               // ids of people pardoned — see pardons.js
     relations: {},              // diplomacy standing by nation — see economy.js
     clauses: [],                // constitutional clauses broken — see constitution.js
     stats: { grabs: 0, restraints: 0, timeouts: 0, peakCash: d.startCash, briefings: 0, bought: 0, built: 0 },

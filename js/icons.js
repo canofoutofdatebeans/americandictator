@@ -30,7 +30,9 @@ AD.ICON = {
   war:                                             // crossed sabres
     '<svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M4 4l10 10M20 4L10 14"/><path d="M13 15l-2 2 1.5 1.5M11 15l2 2-1.5 1.5"/><path d="M5 6 4 4l2 1M19 6l1-2-2 1"/></g></svg>',
   economy:                                         // a chart with a turning trend
-    '<svg viewBox="0 0 24 24" aria-hidden="true"><g stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16"/><path d="M4 20V4"/><path d="M7 16l4-4 3 2 4-6"/><path d="M18 12h-2m2 0v2"/></g></svg>'
+    '<svg viewBox="0 0 24 24" aria-hidden="true"><g stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16"/><path d="M4 20V4"/><path d="M7 16l4-4 3 2 4-6"/><path d="M18 12h-2m2 0v2"/></g></svg>',
+  pardon:                                          // a sealed scroll / clemency writ
+    '<svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4h10v13a3 3 0 0 1-3 3H7a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z"/><path d="M9 8h6M9 11h6M9 14h3"/></g><circle cx="16.5" cy="18" r="2.4" fill="currentColor"/></svg>'
 };
 
 AD.icon = k => AD.ICON[k] || '';

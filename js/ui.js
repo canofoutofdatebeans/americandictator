@@ -130,6 +130,7 @@ AD.UI = {
     const pico = this.el('ico-phone'); if (pico && !pico.innerHTML) pico.innerHTML = AD.icon('phone');
     const wico = this.el('ico-war');   if (wico && !wico.innerHTML) wico.innerHTML = AD.icon('war');
     const eico = this.el('ico-econ');  if (eico && !eico.innerHTML) eico.innerHTML = AD.icon('economy');
+    const dico = this.el('ico-pardon'); if (dico && !dico.innerHTML) dico.innerHTML = AD.icon('pardon');
     const chip = this.el('const-chip');
     const cn = AD.clauseCount(run);
     chip.innerHTML = '<span class="chip-ico">' + AD.icon('constitution') + '</span>THE CONSTITUTION <b>' + cn + '/' + AD.CLAUSES.length + '</b>';
@@ -460,7 +461,7 @@ AD.UI = {
     }
 
     // The Strategic Freedom Reserve — the one-time heist, shown as a
-    // banner above the shop until it is spent.
+    // banner at the bottom of the shop until it is spent.
     const heistSlot = this.el('corr-heist');
     if (heistSlot) {
       if (AD.canDivert(run)) {
@@ -505,6 +506,49 @@ AD.UI = {
       }).join('');
       return `<div class="asset-cat"><div class="asset-cat-h">${cat.icon} ${cat.name}</div>
         <p class="asset-cat-b">${cat.blurb}</p>${rows}</div>`;
+    }).join('');
+  },
+
+  /* ---------- the pardon power ---------- */
+  renderPardons (result) {
+    const run = AD.Engine.run;
+    run.pardoned = run.pardoned || [];
+    const sum = AD.pardonSummary(run);
+    this.el('pardon-count').textContent = sum.done;
+    this.el('pardon-crooks').textContent = sum.crooks;
+    this.el('pardon-saints').textContent = sum.saints;
+
+    const note = this.el('pardon-note');
+    if (result && result.pardon) {
+      note.className = 'corr-note bought';
+      note.innerHTML = `<b>${result.pardon.name} — pardoned.</b> ` +
+        AD.clean(result.pardon.blurb, this.settings.clean);
+    } else {
+      note.className = 'corr-note';
+      note.textContent = 'Article Two hands you an eraser with no check on it. Most of these people should ' +
+        'never touch it — and several are grateful in cash. A few are genuinely innocent: freeing them pleases ' +
+        'the institutions and annoys a base that wanted a scalp.';
+    }
+
+    const fmt = eff => {
+      const L = { base: 'Base', congress: 'Congress', courts: 'Courts', press: 'Press', street: 'Street', auth: 'Authority' };
+      const parts = [];
+      Object.keys(L).forEach(k => { if (eff[k]) parts.push(L[k] + ' ' + (eff[k] > 0 ? '+' : '−') + Math.abs(eff[k])); });
+      if (eff.cash) parts.push((eff.cash > 0 ? '+' : '−') + '$' + Math.abs(eff.cash).toFixed(1) + 'B');
+      return parts.join(' · ');
+    };
+
+    this.el('pardon-list').innerHTML = AD.PARDONS.map(p => {
+      const done = AD.isPardoned(run, p.id);
+      const cls = done ? 'owned' : p.saint ? 'buyable pardon-saint' : 'buyable pardon-crook';
+      return `<div class="asset ${cls}">
+        <div class="asset-top"><b>${p.name}</b>
+          <span class="asset-cost">${done ? 'PARDONED' : p.saint ? 'INNOCENT' : 'GUILTY'}</span></div>
+        <i class="asset-blurb">${p.crime}</i>
+        <div class="asset-effect">${fmt(p.eff)}</div>
+        <div class="pardon-desc">${AD.clean(p.blurb, this.settings.clean)}</div>
+        ${done ? '' : `<button class="btn asset-buy" data-pardon="${p.id}">Sign the Pardon</button>`}
+      </div>`;
     }).join('');
   },
 

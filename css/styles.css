@@ -1053,3 +1053,11 @@ html[data-cb="on"] .fac.danger .fac-val{color:#93c5fd}
 .const-chip:hover{transform:translateY(-1px);filter:brightness(1.1)}
 .fac.has-screen:hover .fac-fig{transform:translateY(-2px) scale(1.06);filter:grayscale(0)}
 .fac.has-screen{cursor:pointer}
+
+/* ---------- the pardon power ---------- */
+.pardon-desc{font-size:11.5px;line-height:1.5;color:var(--muted);font-style:italic;margin:6px 0 8px}
+.asset.pardon-saint{border-left:3px solid var(--green)}
+.asset.pardon-crook{border-left:3px solid #7a1620}
+.asset.pardon-saint .asset-cost{color:#8fd6a0}
+.asset.pardon-crook .asset-cost{color:#f0a8ae}
+#pardon-chip .chip-ico{color:#e6cf7a}

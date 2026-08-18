@@ -114,6 +114,45 @@ AD.Audio = {
       case 'tick':                                     // timer running out
         this.tone({ freq: 1400, dur: 0.04, type: 'square', gain: 0.05 });
         break;
+      case 'war':                                      // the drums — declaring war
+        [70, 62, 70, 52].forEach((f, i) =>
+          this.tone({ freq: f, dur: 0.30, type: 'square', gain: 0.15, delay: i * 0.17 }));
+        this.noise({ dur: 0.5, gain: 0.08, hp: 120, delay: 0.05 });
+        break;
+      case 'betray':                                   // a cold, dissonant sting
+        this.tone({ freq: 330, dur: 0.5, type: 'sawtooth', gain: 0.10, slideTo: 220 });
+        this.tone({ freq: 311, dur: 0.55, type: 'sine', gain: 0.08, delay: 0.02 });
+        break;
+      case 'jackpot':                                  // casino win — brighter than 'money'
+        [784, 988, 1319, 1568, 2093].forEach((f, i) =>
+          this.tone({ freq: f, dur: 0.17, type: 'sine', gain: 0.08, delay: i * 0.06 }));
+        this.noise({ dur: 0.10, gain: 0.05, hp: 3000, delay: 0.30 });
+        break;
+      case 'rally':                                    // the crowd swells
+        this.noise({ dur: 0.6, gain: 0.09, hp: 500 });
+        this.tone({ freq: 262, dur: 0.5, type: 'triangle', gain: 0.09, slideTo: 392 });
+        this.tone({ freq: 392, dur: 0.4, type: 'triangle', gain: 0.06, delay: 0.18 });
+        break;
+      case 'gavel':                                    // two sharp knocks
+        [0, 0.15].forEach(d => {
+          this.tone({ freq: 150, dur: 0.06, type: 'square', gain: 0.14, delay: d });
+          this.noise({ dur: 0.05, gain: 0.09, hp: 1200, delay: d });
+        });
+        break;
+      case 'alarm':                                    // a meter goes critical
+        this.tone({ freq: 880, dur: 0.12, type: 'square', gain: 0.08 });
+        this.tone({ freq: 660, dur: 0.14, type: 'square', gain: 0.08, delay: 0.15 });
+        break;
+      case 'phone':                                    // the line rings
+        for (let k = 0; k < 2; k++) {
+          this.tone({ freq: 1000, dur: 0.1, type: 'sine', gain: 0.06, delay: k * 0.42 });
+          this.tone({ freq: 820, dur: 0.1, type: 'sine', gain: 0.06, delay: k * 0.42 + 0.1 });
+        }
+        break;
+      case 'summit':                                   // a diplomatic chime
+        this.tone({ freq: 523, dur: 0.4, type: 'sine', gain: 0.09 });
+        this.tone({ freq: 784, dur: 0.45, type: 'sine', gain: 0.07, delay: 0.05 });
+        break;
     }
   }
 };

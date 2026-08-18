@@ -21,6 +21,7 @@ AD.Engine = {
       run.rawAuth = run.authority || 0;
       run.pillarAuth = 0;
     }
+    if (run.vpAmbition === undefined) run.vpAmbition = 0;
     // Migrate saves written before second terms existed.
     if (run.term === undefined) {
       run.term = 1;
@@ -38,6 +39,7 @@ AD.Engine = {
     if (!run.judges || !run.judges.length) run.judges = AD.makeCourts(); // pre-courts saves
     if (!run.tariffs) run.tariffs = [];      // pre-economy saves
     if (!run.relations) run.relations = {};
+    if (!run.pardoned) run.pardoned = [];    // pre-pardon saves
 
     this.run = run;
     this.card = null;
@@ -118,6 +120,7 @@ AD.Engine = {
     if (!run || run.over || !card) return out;
     const choice = card.choices[index];
     if (!choice) return out;
+    if (card.sfx) out.sfx = card.sfx;        // a card can name its own sound
 
     /* --- Dynamic events (midterms, election) compute their own outcome --- */
     let eff;
@@ -403,6 +406,17 @@ AD.Engine = {
       run.meters.base = AD.clamp(b, 0, 100);
     }
 
+    // VP AMBITION — the non-fatal replacement for the old max-base death. A
+    // movement running hot lets the Vice President's stock rise; a cooler base,
+    // or humbling him via the rivalry event, brings it back down. It never ends
+    // the game on its own — it surfaces as a manageable crisis (see reactive.js).
+    if (!run.locked.base) {
+      const b = run.meters.base;
+      let a = run.vpAmbition || 0;
+      if (b >= 85) a += 5; else if (b >= 72) a += 2; else a -= 3;
+      run.vpAmbition = AD.clamp(a, 0, 100);
+    }
+
     /* Historic difficulty: everything sags on its own. */
     const drift = this.diff().drift;
     if (drift) {
@@ -546,6 +560,10 @@ AD.Engine = {
       out.push({ level: 'good', text: 'Training term: the guardrails are on for ' +
         (run.graceUntil - run.month + 1) + ' more month' + (run.graceUntil - run.month === 0 ? '' : 's') +
         '. Nothing can end your presidency yet.' });
+    }
+
+    if ((run.vpAmbition || 0) >= 60 && !run.locked.base) {
+      out.push({ level: 'warn', text: 'The Vice President is polling above you inside the base.' });
     }
 
     AD.FACTIONS.forEach(f => {

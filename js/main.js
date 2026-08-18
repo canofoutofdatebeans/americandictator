@@ -189,6 +189,7 @@ AD.Game = {
     const A = AD.Audio;
     this.haptic(out.pillar ? [0, 40, 30, 70] : 12);
     if (out.pillar)        { A.play('pillar'); AD.UI.captureFlash(out.pillar); }
+    else if (out.sfx)      A.play(out.sfx);
     else if (out.breach)   A.play('clause');
     else if (out.doctrine) A.play('doctrine');
     else if (out.deltas.cash > 0) A.play('money');
@@ -374,7 +375,7 @@ AD.Game = {
     const r = AD.doCourtAction(run, judgeId, actionId);
     if (!r.ok) return;
     AD.saveRun(run);
-    AD.Audio.play(actionId === 'sack' ? 'stamp' : actionId === 'buy' ? 'money' : 'bad');
+    AD.Audio.play(actionId === 'sack' ? 'gavel' : actionId === 'buy' ? 'money' : 'bad');
     AD.UI.renderCourts(r); AD.UI.renderHUD();
     const collapse = AD.Engine.checkCollapse();
     if (collapse.ending) { AD.Engine.finish(collapse.ending); this.pending = []; setTimeout(() => this.showEnding(AD.Engine.lastScore), 900); }
@@ -412,7 +413,7 @@ AD.Game = {
     const r = AD.doSummit(run, nationId, index);
     if (!r || !r.ok) return;
     AD.saveRun(run);
-    AD.Audio.play(r.approach.normal ? 'good' : 'stamp');
+    AD.Audio.play(r.approach.normal ? 'summit' : 'stamp');
     const line = '<b>' + r.nation.leader + ':</b> ' + AD.clean(r.approach.res, AD.UI.settings.clean);
     AD.UI.renderEconomy({ line });
     AD.UI.renderHUD();
@@ -426,7 +427,7 @@ AD.Game = {
     const r = AD.doRally(run, stuntId);
     if (!r.ok) return;
     AD.saveRun(run);
-    AD.Audio.play('good');
+    AD.Audio.play('rally');
     AD.UI.renderBasepop(r); AD.UI.renderHUD();
     const collapse = AD.Engine.checkCollapse();
     if (collapse.ending) { AD.Engine.finish(collapse.ending); this.pending = []; setTimeout(() => this.showEnding(AD.Engine.lastScore), 900); }
@@ -438,7 +439,7 @@ AD.Game = {
     const r = AD.declareWar(run, targetId, pretextId);
     if (!r.ok) return;
     AD.saveRun(run);
-    AD.Audio.play('tabloid');
+    AD.Audio.play('war');
     AD.UI.renderWar(r); AD.UI.renderHUD();
     const collapse = AD.Engine.checkCollapse();
     if (collapse.ending) { AD.Engine.finish(collapse.ending); this.pending = []; setTimeout(() => this.showEnding(AD.Engine.lastScore), 900); }
@@ -468,6 +469,19 @@ AD.Game = {
     if (collapse.ending) { AD.Engine.finish(collapse.ending); this.pending = []; setTimeout(() => this.showEnding(AD.Engine.lastScore), 900); }
   },
 
+  pardonAction (id) {
+    const run = AD.Engine.run;
+    if (!run || run.over) return;
+    const r = AD.doPardon(run, id);
+    if (!r.ok) return;
+    AD.saveRun(run);
+    AD.Audio.play(r.pardon.saint ? 'good' : (r.pardon.eff.cash ? 'money' : 'stamp'));
+    this.haptic(12);
+    AD.UI.renderPardons(r); AD.UI.renderHUD();
+    const collapse = AD.Engine.checkCollapse();
+    if (collapse.ending) { AD.Engine.finish(collapse.ending); this.pending = []; setTimeout(() => this.showEnding(AD.Engine.lastScore), 900); }
+  },
+
   streetAction (cityId, actionId) {
     const run = AD.Engine.run;
     if (!run || run.over) return;
@@ -486,7 +500,7 @@ AD.Game = {
     const r = AD.doSenateAction(run, senId, actionId);
     if (!r.ok) return;
     AD.saveRun(run);
-    AD.Audio.play(actionId === 'sack' ? 'stamp' : actionId === 'humiliate' ? 'bad' : 'good');
+    AD.Audio.play(actionId === 'sack' ? 'gavel' : actionId === 'humiliate' ? 'betray' : 'good');
     AD.UI.renderSenate(r);
     AD.UI.renderHUD();
     // an action can starve a meter to death like anything else
@@ -572,6 +586,9 @@ AD.Game = {
 
       const build = e.target.closest('[data-build]');
       if (build && !build.disabled) { this.buildReno(build.dataset.build); return; }
+
+      const pardon = e.target.closest('[data-pardon]');
+      if (pardon && !pardon.disabled) { this.pardonAction(pardon.dataset.pardon); return; }
 
       // Clicking a power-centre tile opens its management screen.
       const manage = e.target.closest('[data-manage]');
@@ -756,6 +773,14 @@ AD.Game = {
         U.pauseTimer(); U.renderEconomy(); U.overlay('economy', true); break;
       case 'economy-close':
         U.overlay('economy', false);
+        if (AD.Engine.card && !U.el('card').hidden) U.resumeTimer();
+        break;
+
+      case 'pardon':
+        if (U.current !== 'game' || !AD.Engine.run || AD.Engine.run.over) break;
+        U.pauseTimer(); U.renderPardons(); U.overlay('pardon', true); break;
+      case 'pardon-close':
+        U.overlay('pardon', false);
         if (AD.Engine.card && !U.el('card').hidden) U.resumeTimer();
         break;
 
