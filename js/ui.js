@@ -85,15 +85,17 @@ AD.UI = {
     this.el('auth-fill').style.width = run.authority + '%';
     this.el('auth-cap').style.left = AD.SOFT_CAP + '%';
 
+    const pico = this.el('ico-phone'); if (pico && !pico.innerHTML) pico.innerHTML = AD.icon('phone');
+    const wico = this.el('ico-war');   if (wico && !wico.innerHTML) wico.innerHTML = AD.icon('war');
     const chip = this.el('const-chip');
     const cn = AD.clauseCount(run);
-    chip.innerHTML = 'THE CONSTITUTION <b>' + cn + '/' + AD.CLAUSES.length + '</b>';
+    chip.innerHTML = '<span class="chip-ico">' + AD.icon('constitution') + '</span>THE CONSTITUTION <b>' + cn + '/' + AD.CLAUSES.length + '</b>';
     chip.classList.toggle('full', AD.allClausesBroken(run));
     chip.classList.toggle('started', cn > 0);
 
     const rchip = this.el('reno-chip');
     const rn = (run.renos || []).length;
-    rchip.innerHTML = 'THE RESIDENCE <b>' + rn + '/' + AD.RENOS.length + '</b>';
+    rchip.innerHTML = '<span class="chip-ico">' + AD.icon('residence') + '</span>THE RESIDENCE <b>' + rn + '/' + AD.RENOS.length + '</b>';
     rchip.classList.toggle('started', rn > 0);
     rchip.classList.toggle('full', rn === AD.RENOS.length);
     rchip.title = rn
@@ -122,7 +124,7 @@ AD.UI = {
         `<div class="fac" data-fk="${f.key}" role="meter" tabindex="0" aria-valuemin="0" aria-valuemax="100">
           <span class="lock" aria-hidden="true">🔒</span>
           <span class="fac-cog" aria-hidden="true">⚙</span>
-          <div class="fac-fig" aria-hidden="true">${f.icon}</div>
+          <div class="fac-fig" aria-hidden="true">${AD.icon(f.key)}</div>
           <div class="fac-bar" aria-hidden="true"><div class="fac-fill"></div></div>
           <div class="fac-val" aria-hidden="true">0</div>
           <div class="fac-name" aria-hidden="true">${f.short}</div>
@@ -180,7 +182,7 @@ AD.UI = {
     void c.offsetWidth;                       // restart the deal-in animation
     c.style.animation = 'none'; void c.offsetWidth; c.style.animation = '';
 
-    this.el('card-sil').textContent = (card.who && card.who.sil) || '🏛';
+    this.el('card-sil').innerHTML = card.who ? AD.charPortrait(card.who) : '';
     this.el('card-name').textContent = (card.who && card.who.name) || '—';
     this.el('card-role').textContent = (card.who && card.who.role) || '';
 
@@ -202,8 +204,9 @@ AD.UI = {
       if (ch.needsAuth && run.authority < ch.needsAuth) {
         tag += `<span class="cost-tag">requires Authority ${ch.needsAuth}</span>`;
       }
-      return `<button class="choice" data-choice="${i}" ${afford ? '' : 'disabled'}
-        aria-keyshortcuts="${i + 1}">${cln(ch.label)}${tag}</button>`;
+      const wild = ch.wild ? ' wild' : '';
+      return `<button class="choice${wild}" data-choice="${i}" ${afford ? '' : 'disabled'}
+        aria-keyshortcuts="${i + 1}"><span class="ch-num" aria-hidden="true">${i + 1}</span><span class="ch-label">${cln(ch.label)}${tag}</span></button>`;
     }).join('');
 
     this.startTimer(card);

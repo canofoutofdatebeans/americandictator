@@ -832,3 +832,82 @@ html[data-cb="on"] .delta.neg::before{content:"\25BC "}
 html[data-cb="on"] .warn-row.crit{color:#93c5fd;border-color:#1e3a5f;background:#0d1a2e}
 html[data-cb="on"] .warn-row.good{color:#fcd34d}
 html[data-cb="on"] .fac.danger .fac-val{color:#93c5fd}
+
+/* ═══════════════ DESIGN REFINEMENT ═══════════════ */
+
+/* bespoke icons replace the emoji */
+.fac-fig svg{width:25px;height:25px;color:var(--gold-soft);filter:drop-shadow(0 1px 1px rgba(0,0,0,.5))}
+.fac.danger .fac-fig svg{color:#e0837a}
+.fac.locked .fac-fig svg{color:#f2dd8a}
+.chip-ico{display:inline-flex;align-items:center;vertical-align:-2px;margin-right:5px}
+.chip-ico svg{width:13px;height:13px;color:currentColor;opacity:.9}
+
+/* subtle film grain over everything — the "expensive" finish */
+#app::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:40;opacity:.04;
+  mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+/* deepen the facade into a proper card with an inner light */
+.facade{border-radius:12px;overflow:hidden;
+  box-shadow:0 10px 30px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.05)}
+.factions{
+  background:linear-gradient(180deg,#141d33,#0e1526);
+  padding:12px 8px 10px;border-color:#2a3a5c;
+}
+.fac{padding:4px 2px 2px;border-radius:9px;transition:background .2s,transform .12s}
+.fac.has-screen:hover{background:rgba(47,93,168,.14);transform:translateY(-1px)}
+.fac-fig{height:32px}
+.fac-val{font-weight:700;font-size:16px;color:var(--paper);letter-spacing:.3px}
+.fac-name{font-size:8.5px;letter-spacing:1.6px;color:#6c7a94}
+.fac-bar{height:4px;border-radius:3px;background:#0a1120;margin:5px 3px 4px;overflow:hidden}
+
+/* refined chips — quieter, more premium */
+.const-chip{
+  background:linear-gradient(180deg,#16203a,#0f1728);
+  border:1px solid #26324e;letter-spacing:2px;padding:7px 8px;
+  transition:border-color .2s,background .2s;
+}
+.const-chip:hover{background:linear-gradient(180deg,#1b2748,#121b30)}
+.const-chip b{letter-spacing:.5px}
+
+/* HUD chrome */
+.hud{padding-bottom:2px}
+.month-line{color:var(--paper);font-weight:600}
+.rank-line{color:var(--gold-soft);opacity:.9}
+.authority-label{letter-spacing:3.5px;font-size:9.5px}
+.authority-bar{height:9px;border-radius:5px;box-shadow:inset 0 1px 3px rgba(0,0,0,.6)}
+.authority-fill{border-radius:5px}
+
+/* ---------- character portraits in the speaker avatar ---------- */
+.sil{width:46px;height:46px;padding:0;overflow:hidden;
+  background:radial-gradient(circle at 40% 30%,#2a2118,#100c08);
+  border:1.5px solid #3a3020;box-shadow:0 2px 6px rgba(0,0,0,.5),inset 0 0 0 1px rgba(201,162,39,.12)}
+.sil svg{width:100%;height:auto;display:block;margin-top:1px}
+
+/* ---------- the crisis card as a hero ---------- */
+.card{
+  background:linear-gradient(180deg,#182137,#0d1322);
+  border:1px solid #2a3958;border-radius:14px;padding:16px 16px 15px;
+  box-shadow:0 18px 44px rgba(0,0,0,.62),0 0 0 1px rgba(201,162,39,.06),inset 0 1px 0 rgba(255,255,255,.05);
+}
+.card-speaker{padding-bottom:11px;margin-bottom:12px;border-bottom:1px solid rgba(201,162,39,.14)}
+.who b{font-size:15px;letter-spacing:.2px}
+.who em{color:var(--gold);opacity:.75;font-size:10px;letter-spacing:1.4px}
+.card-title{font-size:22px;font-weight:700;
+  background:linear-gradient(180deg,#f2dd8a,#c9a227);-webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent}
+
+/* ---------- refined choices with number badges ---------- */
+.choice{display:flex;align-items:center;gap:10px;padding:11px 12px;
+  background:linear-gradient(180deg,#141d33,#0f1626);border:1px solid #26324e;border-radius:11px;
+  overflow:hidden}
+.choice::before{content:'';position:absolute;left:0;top:0;bottom:0;width:0;
+  background:linear-gradient(var(--gold-soft),var(--gold));transition:width .16s}
+.choice:hover:not(:disabled){border-color:#3d5488;background:linear-gradient(180deg,#1a2848,#121b30);transform:translateX(2px)}
+.choice:hover:not(:disabled)::before{width:3px}
+.ch-num{flex:0 0 auto;width:21px;height:21px;border-radius:6px;display:flex;align-items:center;
+  justify-content:center;font-size:11px;font-weight:700;color:var(--gold-soft);
+  background:rgba(201,162,39,.1);border:1px solid rgba(201,162,39,.25)}
+.choice.wild .ch-num{color:#c9a9e0;background:rgba(122,63,176,.14);border-color:rgba(122,63,176,.4)}
+.ch-label{flex:1;min-width:0}
+.choice:disabled{opacity:.4}
