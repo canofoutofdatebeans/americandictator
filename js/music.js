@@ -74,18 +74,28 @@ AD.Music = {
 
   next () { this.idx++; this.play(); },
 
-  /* Called from the first user gesture. */
+  /* Called from the FIRST user gesture (see main.js wire()). This is the only
+     place `started` is set: browsers reject play() until a real gesture, so if
+     anything flips `started` earlier the blocked attempt swallows the flag and
+     the genuine tap never starts the music. Safe to call on every click. */
   start () {
-    if (this.started || !this.on || !this.el) return;
+    if (!this.on || !this.el) return;
     this.started = true;
-    this.play();
+    if (this.el.paused) this.play();
   },
 
   stop () { if (this.el) { try { this.el.pause(); } catch (e) {} } },
 
+  /* Honour the Music setting. Before the first gesture this only records intent;
+     it must NOT try to play (autoplay is blocked) nor set `started`, or it eats
+     the first tap. After the gesture it resumes a paused track. */
   setOn (on) {
     this.on = !!on;
-    if (this.on) { if (!this.started) this.start(); else { const p = this.el && this.el.play(); if (p && p.catch) p.catch(() => {}); } }
-    else this.stop();
+    if (!this.el) return;
+    if (this.on) {
+      if (this.started && this.el.paused) { const p = this.el.play(); if (p && p.catch) p.catch(() => {}); }
+    } else {
+      this.stop();
+    }
   }
 };

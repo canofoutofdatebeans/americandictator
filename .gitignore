@@ -26,3 +26,6 @@ Trump stories.md
 www/
 ios/
 android/
+
+# Generated store screenshots (run: npm run shots)
+screenshots/

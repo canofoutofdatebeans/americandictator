@@ -289,6 +289,7 @@ AD.UI = {
     // Inaugural) don't get "SECURED" bolted onto the end of them.
     titleEl.innerHTML = (card.pillarBanner
         ? `<span class="card-banner">${card.pillarBanner}</span><br>` : '') + cln(card.title);
+    c.classList.toggle('has-banner', !!card.pillarBanner);   // pop-ups read as interruptions
     this.el('card-text').textContent = cln(card.text);
 
     /* NO IMPACT PREVIEW. The score behind a choice is deliberately hidden, 

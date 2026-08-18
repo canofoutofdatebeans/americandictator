@@ -41,7 +41,10 @@ AD.Game = {
   applyMute () {
     const s = AD.UI.settings;
     AD.Audio.muted = !!s.muted;
-    if (AD.Music) { if (s.muted) AD.Music.stop(); else AD.Music.setOn(!!s.music); }
+    // One source of truth for whether music should be audible: on only when the
+    // master mute is off AND the music setting is on. setOn(false) also flips the
+    // internal flag, so a later tap can't quietly resume a muted term.
+    if (AD.Music) AD.Music.setOn(!s.muted && !!s.music);
     const btn = AD.UI.el('mute-btn');
     if (btn) { btn.textContent = s.muted ? '🔇' : '🔊'; btn.classList.toggle('muted', !!s.muted); }
   },
@@ -696,8 +699,7 @@ AD.Game = {
       el.addEventListener('change', () => {
         U.settings[k] = el.checked;
         AD.saveSettings(U.settings);
-        if (k === 'music') AD.Music.setOn(el.checked);
-        this.applySettings();
+        this.applySettings();   // applyMute() is the single owner of Music.setOn
         if (k === 'pack' && U.current === 'game' && AD.Engine.card) U.renderCard(AD.Engine.card);
       });
     });

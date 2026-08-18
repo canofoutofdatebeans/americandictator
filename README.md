@@ -75,10 +75,23 @@ npx @capacitor/assets generate --iconBackgroundColor '#070b14' --splashBackgroun
 That writes the full iOS/Android icon and splash sets from the two SVGs. Run it after
 `cap add` and before `cap sync`.
 
-### Remaining manual store steps
+### Store screenshots
 
-- **Screenshots.** App Store / Play Store listings need device-frame screenshots
-  (6.7", 6.5", and a tablet size). Capture from the running app or the browser preview.
+Pixel-exact 6.7" screenshots (1290 x 2796) are scripted with Playwright:
+
+```bash
+npm i -D playwright
+npx playwright install chromium
+npm run shots                 # captures the live site into screenshots/
+npm run shots http://localhost:8412   # or a local dev server
+```
+
+It walks the title, character creation, core gameplay, a pop-up bulletin, the
+Constitution, the Pardons, and the PRESIDENT-FOR-LIFE win front page. Output lands
+in `screenshots/` (gitignored). For the 6.5" and tablet slots, change `VIEWPORT`
+in `scripts/screenshots.mjs`.
+
+### Remaining manual store steps
 - **Store listing.** Title, subtitle, description, keywords, age rating (this is satire
   with mild language — expect a 12+/Teen rating), and the privacy questionnaire
   (the game collects nothing; it is fully offline).
