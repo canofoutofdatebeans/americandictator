@@ -78,6 +78,10 @@ AD.Engine = {
     const scripted = AD.scriptedFor(run);
     if (scripted) { this.card = scripted; return this.card; }
 
+    // A subsystem in an extreme state generates its own bespoke crisis.
+    const reactive = AD.reactiveFor(run);
+    if (reactive) { this.card = reactive; return this.card; }
+
     let card = AD.pickCard(run);
 
     // Deck exhausted late in a long term — recycle everything except the
@@ -213,6 +217,9 @@ AD.Engine = {
     /* --- Story flags & forced follow-ups --- */
     if (choice.flag) run.flags[choice.flag] = true;
     if (card.flag)   run.flags[card.flag] = true;
+    // Reactive/system cards can carry a side effect that mutates a subsystem
+    // directly (purge the named rebel senator, start the deflection war, etc.).
+    if (typeof choice.act === 'function') { try { choice.act(run); } catch (e) {} }
     if (choice.queue) choice.queue.forEach(id => {
       const c = AD.CARDS.find(x => x.id === id);
       if (c) run.queue.push(c);
