@@ -50,7 +50,7 @@ safe-area padding in place. To wrap it:
 
 ```bash
 npm install
-npm run build            # copies index.html/css/js into www/, strips ?v= cache-busting
+npm run build            # copies index.html/css/js/Music + manifest.json + icon.svg into www/, strips ?v= cache-busting
 npm run cap:add:ios      # or cap:add:android
 npm run cap:ios          # sync + open Xcode
 ```
@@ -59,8 +59,32 @@ npm run cap:ios          # sync + open Xcode
 `scripts/build-www.mjs` is a dependency-free copy step — it is not a bundler, because
 there is nothing to bundle.
 
-**Not verified on a device.** The config and build step are correct and `npm run build`
-is tested; the native shells have never been compiled or run on hardware.
+### Icons, splash, and the installable web build
+
+- `icon.svg` — the app mark (the title eagle on a navy field). Linked from `index.html`
+  as the favicon and the iOS `apple-touch-icon`.
+- `manifest.json` — PWA manifest, so the web build (GitHub Pages) is installable to a
+  phone home screen as a standalone app with the eagle icon and a navy splash.
+- `assets/icon.svg` and `assets/splash.svg` — 1024/2732 sources for the native icon and
+  launch screen. Generate every platform raster with one command:
+
+```bash
+npx @capacitor/assets generate --iconBackgroundColor '#070b14' --splashBackgroundColor '#070b14'
+```
+
+That writes the full iOS/Android icon and splash sets from the two SVGs. Run it after
+`cap add` and before `cap sync`.
+
+### Remaining manual store steps
+
+- **Screenshots.** App Store / Play Store listings need device-frame screenshots
+  (6.7", 6.5", and a tablet size). Capture from the running app or the browser preview.
+- **Store listing.** Title, subtitle, description, keywords, age rating (this is satire
+  with mild language — expect a 12+/Teen rating), and the privacy questionnaire
+  (the game collects nothing; it is fully offline).
+
+**Not verified on a device.** The config, icons, manifest, and build step are correct and
+`npm run build` is tested; the native shells have never been compiled or run on hardware.
 
 ## Files
 

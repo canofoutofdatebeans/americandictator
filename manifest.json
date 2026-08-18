@@ -1,0 +1,16 @@
+{
+  "name": "American Dictator",
+  "short_name": "Am. Dictator",
+  "description": "Four years, one country. A satirical political-survival game where every decision drags America a little closer to one-man rule.",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#070b14",
+  "theme_color": "#070b14",
+  "categories": ["games", "entertainment"],
+  "icons": [
+    { "src": "icon.svg", "type": "image/svg+xml", "sizes": "any", "purpose": "any" },
+    { "src": "icon.svg", "type": "image/svg+xml", "sizes": "any", "purpose": "maskable" }
+  ]
+}

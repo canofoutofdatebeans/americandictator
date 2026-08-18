@@ -12,7 +12,7 @@ import path from 'node:path';
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const WWW  = path.join(ROOT, 'www');
 
-const COPY = ['index.html', 'css', 'js'];
+const COPY = ['index.html', 'css', 'js', 'manifest.json', 'icon.svg', 'Music'];
 
 async function main () {
   await rm(WWW, { recursive: true, force: true });

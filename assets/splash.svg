@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2732 2732" width="2732" height="2732">
+  <!-- Native launch splash. Navy field with the eagle seal centred, sized for the
+       square canvas @capacitor/assets crops per device. -->
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="46%" r="70%">
+      <stop offset="0%" stop-color="#16233f"/>
+      <stop offset="60%" stop-color="#0b1220"/>
+      <stop offset="100%" stop-color="#05080f"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="2732" height="2732" fill="url(#bg)"/>
+  <circle cx="1366" cy="1300" r="620" fill="#c9a227" opacity="0.05"/>
+
+  <g transform="translate(866,946) scale(5)">
+    <circle cx="100" cy="70" r="52" fill="#1c3a6e" opacity="0.55"/>
+    <circle cx="100" cy="70" r="52" fill="none" stroke="#c9a227" stroke-width="2.2" opacity="0.9"/>
+    <circle cx="100" cy="70" r="45" fill="none" stroke="#c9a227" stroke-width="0.7" opacity="0.4"/>
+    <g fill="#eef2f8" stroke="#070b14" stroke-width="1.1" stroke-linejoin="round">
+      <path d="M94 56 L58 28 L52 37 L94 62 Z"/>
+      <path d="M94 62 L42 40 L38 50 L94 69 Z"/>
+      <path d="M94 69 L32 55 L32 66 L94 76 Z"/>
+      <path d="M94 76 L34 72 L40 84 L94 83 Z"/>
+      <path d="M106 56 L142 28 L148 37 L106 62 Z"/>
+      <path d="M106 62 L158 40 L162 50 L106 69 Z"/>
+      <path d="M106 69 L168 55 L168 66 L106 76 Z"/>
+      <path d="M106 76 L166 72 L160 84 L106 83 Z"/>
+    </g>
+    <path d="M92 90 L100 118 L108 90 Z" fill="#eef2f8" stroke="#070b14" stroke-width="1.1" stroke-linejoin="round"/>
+    <path d="M100 92 L100 116" fill="none" stroke="#070b14" stroke-width="1"/>
+    <path d="M92 54 L108 54 L107 88 L93 88 Z" fill="#eef2f8" stroke="#070b14" stroke-width="1.1" stroke-linejoin="round"/>
+    <path d="M89 60 L111 60 L111 76 Q100 88 89 76 Z" fill="#f6f9ff" stroke="#070b14" stroke-width="1.1"/>
+    <g fill="#b3202b">
+      <path d="M93 64 h2 v18 h-2z"/><path d="M98 64 h2 v21 h-2z"/>
+      <path d="M103 64 h2 v18 h-2z"/><path d="M108 64 h2 v13 h-2z"/>
+    </g>
+    <path d="M89 60 h22 v5 h-22z" fill="#16305e"/>
+    <path d="M99 32 C107 32 113 37 113 44 C113 49 109 53 102 54 L96 54 C91 52 88 48 88 43 C88 36 92 32 99 32 Z" fill="#fbfdff" stroke="#070b14" stroke-width="1.1"/>
+    <path d="M112 40 L127 44 L118 47 L112 47 Z" fill="#c9a227" stroke="#070b14" stroke-width="0.9" stroke-linejoin="round"/>
+    <circle cx="105" cy="41" r="2" fill="#070b14"/>
+    <g fill="#c9a227" opacity="0.95">
+      <path d="M70 104 h22 v2.6 h-22z"/><path d="M70 109 h22 v2.6 h-22z"/>
+      <path d="M66 101 l7 6.5 -7 6.5 -2.5-6.5z"/>
+    </g>
+    <path d="M108 103 q16 1 24 9 q-14 3-24-5z M108 110 q15 2 21 10 q-13 1-21-5z" fill="#c9a227" opacity="0.8"/>
+    <rect x="20" y="126" width="160" height="8" fill="#b3202b"/>
+    <rect x="20" y="137" width="160" height="2.5" fill="#c9a227" opacity="0.85"/>
+  </g>
+</svg>
