@@ -18,7 +18,17 @@ AD.UI = {
 
   overlay (id, on) {
     const o = this.el('ov-' + id);
-    if (o) o.hidden = !on;
+    if (!o) return;
+    o.hidden = !on;
+    // Move focus into the dialog on open so screen-reader and keyboard users
+    // land on its title rather than being stranded behind it.
+    if (on) {
+      const h = o.querySelector('.panel-h, .dos-head, h2');
+      if (h) {
+        if (!h.hasAttribute('tabindex')) h.setAttribute('tabindex', '-1');
+        setTimeout(() => { try { h.focus(); } catch (e) {} }, 40);
+      }
+    }
   },
 
   /* ---------- portrait ---------- */

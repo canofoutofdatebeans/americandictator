@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no">
 <meta name="theme-color" content="#0d0b09">
 <title>American Dictator</title>
-<link rel="stylesheet" href="css/styles.css?v=56">
+<link rel="stylesheet" href="css/styles.css?v=57">
 </head>
 <body>
 
@@ -214,11 +214,11 @@
   <div class="capture-fx" id="capture-fx" aria-hidden="true"></div>
 
   <!-- ══════════════════ OVERLAYS ══════════════════ -->
-  <div class="overlay" id="ov-dossier" hidden>
+  <div class="overlay" id="ov-dossier" hidden role="dialog" aria-modal="true">
     <div class="dossier" id="dossier-body"></div>
   </div>
 
-  <div class="overlay" id="ov-tabloid" hidden>
+  <div class="overlay" id="ov-tabloid" hidden role="dialog" aria-modal="true">
     <div class="tabloid">
       <div class="tab-masthead">THE NATIONAL SCREAM</div>
       <div class="tab-strap"><span id="tab-date">—</span><span>50¢ · FINAL EDITION</span></div>
@@ -229,7 +229,7 @@
     </div>
   </div>
 
-  <div class="overlay" id="ov-doctrine" hidden>
+  <div class="overlay" id="ov-doctrine" hidden role="dialog" aria-modal="true">
     <div class="doctrine-card">
       <div class="doc-kicker">DOCTRINE UNLOCKED</div>
       <div class="doc-glyph" id="doc-glyph">§</div>
@@ -240,7 +240,7 @@
     </div>
   </div>
 
-  <div class="overlay" id="ov-corruption" hidden>
+  <div class="overlay" id="ov-corruption" hidden role="dialog" aria-modal="true">
     <div class="panel narrow scroll">
       <h2 class="panel-h">Private Interests</h2>
       <div class="corr-head">
@@ -255,7 +255,7 @@
     </div>
   </div>
 
-  <div class="overlay" id="ov-press" hidden>
+  <div class="overlay" id="ov-press" hidden role="dialog" aria-modal="true">
     <div class="panel narrow scroll">
       <h2 class="panel-h">The Press Room</h2>
       <div class="corr-head sen-head">
@@ -270,7 +270,7 @@
     </div>
   </div>
 
-  <div class="overlay" id="ov-street" hidden>
+  <div class="overlay" id="ov-street" hidden role="dialog" aria-modal="true">
     <div class="panel narrow scroll">
       <h2 class="panel-h">Public Order</h2>
       <div class="corr-head sen-head">
@@ -285,7 +285,7 @@
     </div>
   </div>
 
-  <div class="overlay" id="ov-courts" hidden>
+  <div class="overlay" id="ov-courts" hidden role="dialog" aria-modal="true">
     <div class="panel narrow scroll">
       <h2 class="panel-h">The Bench</h2>
       <div class="corr-head sen-head">
@@ -300,7 +300,7 @@
     </div>
   </div>
 
-  <div class="overlay" id="ov-basepop" hidden>
+  <div class="overlay" id="ov-basepop" hidden role="dialog" aria-modal="true">
     <div class="panel narrow scroll">
       <h2 class="panel-h">The Rally</h2>
       <div class="corr-head sen-head">
@@ -314,7 +314,7 @@
     </div>
   </div>
 
-  <div class="overlay" id="ov-war" hidden>
+  <div class="overlay" id="ov-war" hidden role="dialog" aria-modal="true">
     <div class="panel narrow scroll">
       <h2 class="panel-h">The War Room</h2>
       <div class="corr-head sen-head">
@@ -329,7 +329,7 @@
     </div>
   </div>
 
-  <div class="overlay" id="ov-call" hidden>
+  <div class="overlay" id="ov-call" hidden role="dialog" aria-modal="true">
     <div class="panel narrow scroll">
       <h2 class="panel-h">The Phone</h2>
       <div class="corr-head sen-head">
@@ -344,7 +344,7 @@
     </div>
   </div>
 
-  <div class="overlay" id="ov-senate" hidden>
+  <div class="overlay" id="ov-senate" hidden role="dialog" aria-modal="true">
     <div class="panel narrow scroll">
       <h2 class="panel-h">The Caucus</h2>
       <div class="corr-head sen-head">
@@ -361,7 +361,7 @@
     </div>
   </div>
 
-  <div class="overlay" id="ov-renovations" hidden>
+  <div class="overlay" id="ov-renovations" hidden role="dialog" aria-modal="true">
     <div class="panel narrow scroll">
       <h2 class="panel-h">The Residence</h2>
       <div class="reno-view" id="reno-view"></div>
@@ -391,7 +391,7 @@
     </div>
   </div>
 
-  <div class="overlay" id="ov-constitution" hidden>
+  <div class="overlay" id="ov-constitution" hidden role="dialog" aria-modal="true">
     <div class="panel narrow scroll">
       <h2 class="panel-h">The Constitution</h2>
       <div class="const-head">
@@ -404,7 +404,7 @@
     </div>
   </div>
 
-  <div class="overlay" id="ov-pause" hidden>
+  <div class="overlay" id="ov-pause" hidden role="dialog" aria-modal="true">
     <div class="panel narrow">
       <h2 class="panel-h">The Situation Room</h2>
       <div class="menu">
@@ -416,7 +416,7 @@
     </div>
   </div>
 
-  <div class="overlay" id="ov-log" hidden>
+  <div class="overlay" id="ov-log" hidden role="dialog" aria-modal="true">
     <div class="panel narrow">
       <h2 class="panel-h">Crisis Log</h2>
       <div class="locked-note" id="log-locked" hidden>
@@ -427,7 +427,7 @@
     </div>
   </div>
 
-  <div class="overlay" id="ov-settings" hidden>
+  <div class="overlay" id="ov-settings" hidden role="dialog" aria-modal="true">
     <div class="panel narrow">
       <h2 class="panel-h">Settings</h2>
       <div class="opt"><label><input type="checkbox" id="opt-timer"> Decision timer</label><em>Pressure. Realism. Regret.</em></div>
@@ -446,7 +446,7 @@
     </div>
   </div>
 
-  <div class="overlay" id="ov-howto" hidden>
+  <div class="overlay" id="ov-howto" hidden role="dialog" aria-modal="true">
     <div class="panel narrow scroll">
       <h2 class="panel-h">How to Seize Power</h2>
       <div class="howto" id="howto-body"></div>
@@ -479,41 +479,41 @@
 </div>
 
 <!-- state.js creates the AD namespace, so it must load first. -->
-<script src="js/state.js?v=56"></script>
-<script src="js/seed.js?v=56"></script>
-<script src="js/audio.js?v=56"></script>
-<script src="js/doctrines.js?v=56"></script>
-<script src="js/corruption.js?v=56"></script>
-<script src="js/renovations.js?v=56"></script>
-<script src="js/senate.js?v=56"></script>
-<script src="js/press.js?v=56"></script>
-<script src="js/street.js?v=56"></script>
-<script src="js/call.js?v=56"></script>
-<script src="js/war.js?v=56"></script>
-<script src="js/courts.js?v=56"></script>
-<script src="js/basepop.js?v=56"></script>
-<script src="js/dossier.js?v=56"></script>
-<script src="js/constitution.js?v=56"></script>
-<script src="js/tutorial.js?v=56"></script>
-<script src="js/achievements.js?v=56"></script>
-<script src="js/briefings.js?v=56"></script>
-<script src="js/cards.js?v=56"></script>
+<script src="js/state.js?v=57"></script>
+<script src="js/seed.js?v=57"></script>
+<script src="js/audio.js?v=57"></script>
+<script src="js/doctrines.js?v=57"></script>
+<script src="js/corruption.js?v=57"></script>
+<script src="js/renovations.js?v=57"></script>
+<script src="js/senate.js?v=57"></script>
+<script src="js/press.js?v=57"></script>
+<script src="js/street.js?v=57"></script>
+<script src="js/call.js?v=57"></script>
+<script src="js/war.js?v=57"></script>
+<script src="js/courts.js?v=57"></script>
+<script src="js/basepop.js?v=57"></script>
+<script src="js/dossier.js?v=57"></script>
+<script src="js/constitution.js?v=57"></script>
+<script src="js/tutorial.js?v=57"></script>
+<script src="js/achievements.js?v=57"></script>
+<script src="js/briefings.js?v=57"></script>
+<script src="js/cards.js?v=57"></script>
 <!-- Content packs. Each pushes onto AD.CARDS, so adding a deck is adding a
      file — no engine changes. Order does not matter. -->
-<script src="js/packs/pack-a-honeymoon.js?v=56"></script>
-<script src="js/packs/pack-b-machinery.js?v=56"></script>
-<script src="js/packs/pack-c-consolidation.js?v=56"></script>
-<script src="js/packs/pack-d-evergreen.js?v=56"></script>
-<script src="js/packs/pack-e-secondterm.js?v=56"></script>
-<script src="js/packs/pack-f-record.js?v=56"></script>
-<script src="js/packs/pack-g-record.js?v=56"></script>
+<script src="js/packs/pack-a-honeymoon.js?v=57"></script>
+<script src="js/packs/pack-b-machinery.js?v=57"></script>
+<script src="js/packs/pack-c-consolidation.js?v=57"></script>
+<script src="js/packs/pack-d-evergreen.js?v=57"></script>
+<script src="js/packs/pack-e-secondterm.js?v=57"></script>
+<script src="js/packs/pack-f-record.js?v=57"></script>
+<script src="js/packs/pack-g-record.js?v=57"></script>
 <!-- cay.js reads AD.CAST, so it must load after cards.js -->
-<script src="js/cay.js?v=56"></script>
-<script src="js/reactive.js?v=56"></script>
-<script src="js/events.js?v=56"></script>
-<script src="js/endings.js?v=56"></script>
-<script src="js/engine.js?v=56"></script>
-<script src="js/ui.js?v=56"></script>
-<script src="js/main.js?v=56"></script>
+<script src="js/cay.js?v=57"></script>
+<script src="js/reactive.js?v=57"></script>
+<script src="js/events.js?v=57"></script>
+<script src="js/endings.js?v=57"></script>
+<script src="js/engine.js?v=57"></script>
+<script src="js/ui.js?v=57"></script>
+<script src="js/main.js?v=57"></script>
 </body>
 </html>
