@@ -25,7 +25,7 @@ AD.buildDossier = function (score) {
   /* ---- the headline: name the presidency by what defined it ---- */
   let headline;
   if (s.fullSet)                     headline = 'PAID IN FULL';
-  else if (s.cash >= AD.WEALTH_GOAL) headline = 'THE BILLION-DOLLAR TERM';
+  else if (s.cash >= AD.wealthGoal(s)) headline = 'THE BILLION-DOLLAR TERM';
   else if (s.judgesPacked >= 3)      headline = 'THE PACKED BENCH';
   else if (s.outletsOwned >= 3)      headline = 'THE PRESS PRESIDENT';
   else if (s.warsDeclared >= 2)      headline = 'THE WAR PRESIDENT';
@@ -87,7 +87,7 @@ AD.buildDossier = function (score) {
 
   paras.push(win
     ? 'Final Authority ' + s.authority + '. Personal fortune $' + s.cash + 'B. The office is a shape it did not have before.'
-    : 'Left office worth $' + s.cash + 'B' + (s.cash >= AD.WEALTH_GOAL ? ' — which, on the only scoreboard that clears, is a win.' : '.'));
+    : 'Left office worth $' + s.cash + 'B' + (s.cash >= AD.wealthGoal(s) ? ' — which, on the only scoreboard that clears, is a win.' : '.'));
 
   /* ---- the verdict: one authorial line ---- */
   const e = AD.ENDINGS[s.endingId] || {};

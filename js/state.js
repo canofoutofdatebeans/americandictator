@@ -9,8 +9,8 @@ window.AD = window.AD || {};
 /* ---------- Factions ------------------------------------------------------
    Five power centres. Four of them are CAPTURABLE: drive one to 100 and it
    stops being a threat and becomes a Pillar of the regime (+25 Authority).
-   THE BASE is not capturable — it is fuel. It kills you at 0 (you get
-   primaried) AND at 100 (the movement decides it doesn't need you).
+   THE BASE is not capturable — it is fuel. It is fatal only at 0 (you get
+   primaried out); a roaring base powers your transgressions and Authority.
 -------------------------------------------------------------------------- */
 AD.FACTIONS = [
   {
@@ -81,9 +81,6 @@ AD.recomputeAuthority = function (run) {
    begin() flow for a first-ever run — bots and normal runs never have it. */
 AD.inGrace = run => !!(run.graceUntil && run.month <= run.graceUntil);
 
-/* The Base is fatal at the top as well as the bottom, but not instantly:
-   it takes BASE_FUSE consecutive months above BASE_DANGER for the movement
-   to finish choosing somebody else. That runway is your warning. */
 /* Institutional resistance thresholds. Gains on a capturable branch are cut to
    70% above RESIST_SOFT and 40% above RESIST_HARD — the last quarter of taking
    an institution is where the people who will actually refuse are. */
@@ -104,6 +101,13 @@ AD.AUTH_PRESSURE_DIV = 50;
    neglect bite harder; 3 keeps the screens as opt-in leverage, not a tax. */
 AD.MGMT_LOSS_CAP = 3;
 
+/* The same principle for CARD DECISIONS: no single choice may be the killing
+   blow. A healthy meter (>= the floor) can't be pushed below the floor by one
+   decision, and no decision ever zeroes a live meter outright. You always get a
+   turn to react — death comes from sustained neglect (decay + ticks bleeding a
+   meter to zero over several months), never one surprise card. */
+AD.DECISION_FLOOR = 8;
+
 /* ---------- The second objective ------------------------------------------
    There are two ways to win. Take the country (Authority 100), or take the
    money ($10B). Reaching the fortune does not end the run — it is banked, and
@@ -112,10 +116,10 @@ AD.MGMT_LOSS_CAP = 3;
      loss + fortune -> 'the-fortune'    (you lost the country and kept the money)
    Which is, on the evidence, the more historically common outcome.
 -------------------------------------------------------------------------- */
-AD.WEALTH_GOAL = 10;
+AD.WEALTH_GOAL = 15;   // fallback; the live target is per-run, see AD.wealthGoal
+/* The fortune target scales with difficulty: rookie 12, standard 15, historic 20. */
+AD.wealthGoal = run => (run && run.wealthGoal) || AD.WEALTH_GOAL;
 
-AD.BASE_DANGER = 95;
-AD.BASE_FUSE = 3;
 AD.BASE_DECAY = -3;      // a movement that isn't fed every month cools off
 
 /* ---------- The Base's appetite ------------------------------------------
@@ -165,21 +169,21 @@ AD.rankFor = a => AD.RANKS.filter(r => a >= r.at).pop().name;
    historic 2 but on a 40-month clock with every meter sagging underneath you. */
 AD.DIFFS = {
   rookie: {
-    id: 'rookie', label: 'Rookie', months: 48, capture: 90, pillarValue: 26, timer: 40,
-    startCash: 4, drift: 0,
+    id: 'rookie', label: 'Rookie', months: 48, capture: 90, pillarValue: 26, timer: 120,
+    startCash: 4, drift: 0, wealthGoal: 12, inheritMult: 0.5,
     hint: 'Ninety is a capture, and two of them is enough. The institutions are tired.'
   },
   standard: {
-    id: 'standard', label: 'Standard', months: 48, capture: 100, pillarValue: 22, timer: 28,
-    startCash: 3, drift: 0,
+    id: 'standard', label: 'Standard', months: 48, capture: 100, pillarValue: 22, timer: 60,
+    startCash: 3, drift: 0, wealthGoal: 15, inheritMult: 1,
     hint: 'One term, and a dictatorship costs three of the four branches. The intended experience.'
   },
   historic: {
     // pillarValue 23 puts two pillars at 46, so a win needs rawAuth 54 of a
     // possible 55 — effectively "max out everything AND take two branches, or
     // take three." 22 makes it impossible; 25 makes it easy. It is a cliff.
-    id: 'historic', label: 'Historic', months: 40, capture: 100, pillarValue: 23, timer: 20,
-    startCash: 2, drift: 0, pressureMult: 2,
+    id: 'historic', label: 'Historic', months: 40, capture: 100, pillarValue: 23, timer: 30,
+    startCash: 2, drift: 0, pressureMult: 2, wealthGoal: 20, inheritMult: 1.6,
     hint: 'Forty months, three branches, twenty seconds a decision — and every institution you take ' +
           'makes the next one fight twice as hard.'
   }
@@ -190,7 +194,9 @@ AD.PORTRAIT = {
   hair: ['#e8c766', '#d9d3c4', '#8a6a3c', '#3c3128', '#b5442e', '#f2ead6'],
   skin: ['#e8a86b', '#f0c9a0', '#c98650', '#8d5a34', '#5e3a22', '#ffbd63'],
   tie:  ['#c8342f', '#2d5fa8', '#e0b33a', '#2f7a52', '#6b3f8f', '#1b1b1b'],
-  suit: ['#1c2230', '#2b2b2b', '#31384a', '#43301f', '#0f2a24', '#4a1f27']
+  suit: ['#1c2230', '#2b2b2b', '#31384a', '#43301f', '#0f2a24', '#4a1f27'],
+  build: [0.82, 0.91, 1.0, 1.13, 1.28],   // horizontal body scale: slim -> large (default idx 2)
+  sex:  ['male', 'female']                 // female = longer hair, open collar, no tie
 };
 AD.PARTY_COLORS = ['#c8342f', '#2d5fa8', '#e0b33a', '#2f7a52', '#6b3f8f', '#e07a2d'];
 
@@ -207,7 +213,7 @@ AD.newRun = function (opts) {
     president: opts.name || 'Ronald J. Trumbull',
     party: opts.party || 'The Patriot Party',
     color: opts.color || AD.PARTY_COLORS[0],
-    portrait: opts.portrait || { hair: 0, skin: 0, tie: 0, suit: 0 },
+    portrait: opts.portrait || { hair: 0, skin: 0, tie: 0, suit: 0, build: 2, sex: 0 },
     difficulty: d.id,
 
     /* ---- the clock -----------------------------------------------------
@@ -227,10 +233,10 @@ AD.newRun = function (opts) {
     meters: { base: 62, congress: 55, courts: 52, press: 52, street: 56 },
     locked: {},                 // key -> true once captured
     cash: d.startCash,
+    wealthGoal: d.wealthGoal || AD.WEALTH_GOAL,   // fortune target for this run
     authority: 0,
     rawAuth: 0,                 // earned by decisions — capped at AD.SOFT_CAP
     pillarAuth: 0,              // earned only by capturing power centres
-    baseHigh: 0,                // consecutive months the Base has been too hot
     doctrines: [],              // ids of unlocked doctrines
     shieldUsed: false,          // Immunity Shield consumed?
     seen: [],                   // card ids already played
@@ -265,7 +271,6 @@ AD.SCARS = {
   'zero-congress':{ congress: -15,note: 'The chamber that removed your predecessor is in no mood to be charmed.' },
   'zero-street':  { street: -15, note: 'The general strike ended eleven weeks ago. Nobody has quite gone back to normal.' },
   'zero-base':    { base: -12,   note: 'The movement has been burned once and it is watching you for the same tells.' },
-  'max-base':     { base: -8, congress: -6, note: 'Your Vice President is now a private citizen with 91% approval and a podcast.' },
   'peaceful-transfer': { base: -6, note: 'Your party lost. Twice, if you count the mood.' },
   'merely-president':  { press: -5, street: -5, note: 'Four years of norm-breaking with nothing to show for it has left everyone tired and nobody afraid.' },
   'the-count':    { courts: -10, street: -8, note: 'The last administration tried to have the count set aside. The clerks remember which ones held.' },
@@ -290,25 +295,30 @@ AD.CHAOS_DRAG = 2;   // points per chaos level, institutions only
 
 /* Builds the inheritance for a new run from the previous administration.
    Returns null on a clean slate. */
-AD.inheritance = function () {
+AD.inheritance = function (difficulty) {
   const lib = AD.loadLibrary();
   if (!lib.length) return null;
   const last = lib[0];
   const scar = AD.SCARS[last.endingId] || {};
   const chaos = AD.clamp(AD.store.read(AD.CHAOS_KEY, 0), 0, AD.CHAOS_CAP);
+  // The country you inherit is worse on harder settings and gentler on easier
+  // ones: Rookie halves the wreckage, Standard leaves it, Historic deepens it.
+  const d = AD.DIFFS[difficulty] || AD.DIFFS.standard;
+  const mult = d.inheritMult == null ? 1 : d.inheritMult;
 
   const mods = {};
   AD.FKEYS.forEach(k => {
     // The scar from the last term, plus a general drag for every consecutive
-    // term the country has spent being governed badly.
+    // term the country has spent being governed badly, all scaled by difficulty.
     // The drag spares THE BASE: institutions inherit the mess, but your
     // movement is yours and starts fresh. Dragging it too made every long
     // save-file spiral into unwinnable and zero-base swallowed the endings.
-    const v = (scar[k] || 0) - (k === 'base' ? 0 : chaos * AD.CHAOS_DRAG);
+    const raw = (scar[k] || 0) - (k === 'base' ? 0 : chaos * AD.CHAOS_DRAG);
+    const v = Math.round(raw * mult);
     if (v) mods[k] = v;
   });
   return {
-    from: last.president, endingId: last.endingId,
+    from: last.president, endingId: last.endingId, difficulty: d.id,
     note: scar.note || 'The country you inherit has been governed recently, and it shows.',
     chaos, mods
   };

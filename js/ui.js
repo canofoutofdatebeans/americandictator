@@ -39,21 +39,39 @@ AD.UI = {
     const tie  = P.tie[p.tie % P.tie.length];
     const suit = P.suit[p.suit % P.suit.length];
     const shade = this.darken(skin, .18);
+    // Body size (build) scales the torso horizontally around the centre line, so
+    // the president reads fatter or thinner while the head stays put. Sex swaps
+    // the hair and the neckline (a tie for one, an open collar for the other).
+    const build = P.build[(p.build == null ? 2 : p.build) % P.build.length];
+    const female = ((p.sex || 0) % 2) === 1;
+    const bodyT = `translate(${(50 - 50 * build).toFixed(2)} 0) scale(${build} 1)`;
+
+    const neckline = female
+      ? `<path d="M43 79 Q50 91 57 79 Z" fill="${skin}"/>
+         <circle cx="50" cy="86" r="1.5" fill="#efe9dc"/>`
+      : `<path d="M41 79 L50 97 L59 79 Z" fill="#efe9dc"/>
+         <path d="M50 89 L45.5 97 L50 116 L54.5 97 Z" fill="${tie}"/>`;
+
+    const hairShape = female
+      ? `<path d="M24 50 C22 30 40 16 55 21 C70 25 78 37 76 52 C74 45 71 41 69 40 C71 55 70 67 67 76 L61 74 C65 61 64 48 61 43 C53 37 41 38 35 43 C33 50 34 63 38 76 L32 76 C29 65 27 54 29 43 C27 46 25 52 24 50 Z" fill="${hair}"/>`
+      : `<path d="M26 41 C29 25 46 18 60 23 C69 26 74 33 74 42 C67 32 52 31 42 37 C36 40 29 45 26 41 Z" fill="${hair}"/>
+         <path d="M28 34 C36 24 54 21 66 27 C60 24 44 25 34 33 Z" fill="${this.darken(hair, .12)}"/>`;
+
     return `<svg viewBox="0 0 100 118" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Presidential portrait">
       <rect width="100" height="118" fill="#0f0c09"/>
-      <path d="M6 118 C9 92 27 83 40 79 L60 79 C73 83 91 92 94 118 Z" fill="${suit}"/>
-      <path d="M41 79 L50 97 L59 79 Z" fill="#efe9dc"/>
-      <path d="M50 89 L45.5 97 L50 116 L54.5 97 Z" fill="${tie}"/>
-      <rect x="43" y="61" width="14" height="21" rx="6" fill="${shade}"/>
+      <g transform="${bodyT}">
+        <path d="M6 118 C9 92 27 83 40 79 L60 79 C73 83 91 92 94 118 Z" fill="${suit}"/>
+        ${neckline}
+        <rect x="43" y="61" width="14" height="21" rx="6" fill="${shade}"/>
+        <circle cx="33" cy="95" r="3.2" fill="${party}"/>
+      </g>
       <ellipse cx="27.5" cy="47" rx="4" ry="6" fill="${shade}"/>
       <ellipse cx="72.5" cy="47" rx="4" ry="6" fill="${shade}"/>
       <ellipse cx="50" cy="45" rx="21" ry="25" fill="${skin}"/>
-      <path d="M26 41 C29 25 46 18 60 23 C69 26 74 33 74 42 C67 32 52 31 42 37 C36 40 29 45 26 41 Z" fill="${hair}"/>
-      <path d="M28 34 C36 24 54 21 66 27 C60 24 44 25 34 33 Z" fill="${this.darken(hair,.12)}"/>
+      ${hairShape}
       <ellipse cx="42.5" cy="45" rx="2.2" ry="1.7" fill="#1a1512"/>
       <ellipse cx="57.5" cy="45" rx="2.2" ry="1.7" fill="#1a1512"/>
       <path d="M43 57 Q50 61.5 57 57" stroke="${this.darken(skin,.45)}" stroke-width="1.7" fill="none" stroke-linecap="round"/>
-      <circle cx="33" cy="95" r="3.2" fill="${party}"/>
     </svg>`;
   },
 
@@ -98,10 +116,10 @@ AD.UI = {
       (inc ? '<em>+' + Math.round(inc * 1000) + 'M</em>' : '');
     if (prevCash != null && prevCash !== run.cash)
       this.rollNum(cashEl.querySelector('.hud-cash-n'), prevCash, run.cash, v => v.toFixed(1));
-    cashEl.classList.toggle('rich', run.cash >= AD.WEALTH_GOAL);
-    cashEl.title = run.cash >= AD.WEALTH_GOAL
+    cashEl.classList.toggle('rich', run.cash >= AD.wealthGoal(run));
+    cashEl.title = run.cash >= AD.wealthGoal(run)
       ? 'The fortune is secured. Private Interests.'
-      : `Private Interests — $${(AD.WEALTH_GOAL - run.cash).toFixed(1)}B short of the fortune`;
+      : `Private Interests — $${(AD.wealthGoal(run) - run.cash).toFixed(1)}B short of the fortune`;
     document.documentElement.style.setProperty('--party', run.color);
 
     const prevAuth = this._hudAuth; this._hudAuth = run.authority;
@@ -160,7 +178,7 @@ AD.UI = {
       if (!tile) return;
       const v = run.meters[f.key];
       const locked = !!run.locked[f.key];
-      const danger = !locked && (v <= 18 || (f.key === 'base' && v >= 88));
+      const danger = !locked && v <= 18;
       const cb = this.settings && this.settings.cb;
       const col = locked ? (cb ? 'linear-gradient(90deg,#f59e0b,#fcd34d)' : 'linear-gradient(90deg,#c9a227,#f2dd8a)')
                 : v <= 22 ? (cb ? '#1d4ed8' : '#c0392b')
@@ -254,33 +272,54 @@ AD.UI = {
     this.startTimer(card);
   },
 
-  /* ---------- timer ---------- */
+  /* ---------- timer ----------
+     The decision clock supports freeze/resume: opening a management area
+     (base, congress, the phone, …) PAUSES it at its current value and closing
+     resumes from exactly there, so browsing your levers never costs you the
+     decision. startTimer resets to full for a NEW card; pause/resume keep it. */
   startTimer (card) {
     this.stopTimer();
     const box = this.el('timer');
     if (!this.settings.timer || card.final) { box.hidden = true; return; }
+    this._timerBase = AD.Engine.diff().timer + (this.settings.pack ? 8 : 0);
+    this._timerLeft = this._timerBase;
+    this._runTimer();
+  },
 
-    const base = AD.Engine.diff().timer + (this.settings.pack ? 8 : 0);
-    let left = base;
+  _runTimer () {
+    const box = this.el('timer');
+    if (!this.settings.timer || !this._timerBase) { box.hidden = true; return; }
     box.hidden = false;
     box.classList.remove('low');
     const ring = this.el('t-fg'), num = this.el('t-num');
     const C = 100.5;
     const paint = () => {
-      num.textContent = left;
-      ring.style.strokeDashoffset = C * (1 - left / base);
-      box.classList.toggle('low', left <= 4);
+      num.textContent = this._timerLeft;
+      ring.style.strokeDashoffset = C * (1 - this._timerLeft / this._timerBase);
+      box.classList.toggle('low', this._timerLeft <= 5);
     };
     paint();
+    if (this._t) clearInterval(this._t);
     this._t = setInterval(() => {
-      left -= 1;
-      if (left <= 0) { this.stopTimer(); AD.Game.timeout(); return; }
+      this._timerLeft -= 1;
+      if (this._timerLeft <= 0) { this.stopTimer(); AD.Game.timeout(); return; }
       paint();
     }, 1000);
   },
 
+  /* Freeze the clock without hiding or resetting it (an overlay is about to
+     cover it anyway). Resume picks up from the frozen value. */
+  pauseTimer () {
+    if (this._t) { clearInterval(this._t); this._t = null; }
+  },
+  resumeTimer () {
+    if (this._timerLeft > 0 && this._timerBase &&
+        AD.Engine.card && !this.el('card').hidden) this._runTimer();
+  },
+
   stopTimer () {
     if (this._t) { clearInterval(this._t); this._t = null; }
+    this._timerLeft = 0;
     this.el('timer').hidden = true;
   },
 
@@ -493,6 +532,7 @@ AD.UI = {
     const stoneD = gold ? '#a9862b' : '#b5b0a1';
     const stoneS = gold ? '#7d6119' : '#8d8879';
     const surname = (run.president || '').trim().split(/\s+/).pop().toUpperCase() || 'THE';
+    const nameSafe = surname.replace(/[<>&"']/g, '').slice(0, 12) || 'THE';
 
     const win = (x, y, w, h) =>
       `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="1" fill="#1b2740"/>`;
@@ -592,6 +632,23 @@ AD.UI = {
         <rect x="226" y="112" width="7" height="64"/><rect x="241" y="112" width="7" height="64"/>
       </g>
       <rect x="214" y="152" width="13" height="24" fill="#1b2740"/>
+
+      ${has('casino') ? `<g${on('casino')}>
+        <rect x="164" y="30" width="112" height="78" fill="#241a2e"/>
+        <rect x="164" y="30" width="112" height="78" fill="none" stroke="#e0bc55" stroke-width="1.5"/>
+        <g fill="#ffd24a">${
+          [40, 56, 72, 88].map(y =>
+            [172, 184, 196, 208, 220, 232, 244, 256].map(x =>
+              `<rect x="${x}" y="${y}" width="6" height="9" rx="1"/>`).join('')).join('')
+        }</g>
+        <rect x="150" y="6" width="140" height="22" rx="4" fill="#12060f" stroke="#ff3b6b" stroke-width="1.8"/>
+        <text x="220" y="21" text-anchor="middle" fill="#ffe36b" font-family="ui-serif, Georgia, serif"
+              font-size="12" font-weight="700" letter-spacing="1.4" stroke="#ff3b6b" stroke-width="0.4"
+              style="paint-order:stroke">${nameSafe}</text>
+        <text x="220" y="102" text-anchor="middle" fill="#ff6fa0" font-family="ui-serif, Georgia, serif"
+              font-size="7" letter-spacing="3">CASINO &amp; RESORT</text>
+        <g stroke="#ff3b6b" stroke-width="1" opacity=".65"><path d="M164 108 L276 108"/></g>
+      </g>` : ''}
 
       ${has('flame') ? `<g${on('flame')}>
         <rect x="286" y="90" width="10" height="8" fill="${stoneS}"/>

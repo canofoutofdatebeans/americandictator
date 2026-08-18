@@ -20,7 +20,6 @@ AD.Engine = {
     if (run.rawAuth === undefined) {
       run.rawAuth = run.authority || 0;
       run.pillarAuth = 0;
-      run.baseHigh = 0;
     }
     // Migrate saves written before second terms existed.
     if (run.term === undefined) {
@@ -184,6 +183,16 @@ AD.Engine = {
 
       let after = AD.clamp(before + delta, 0, 100);
       if (k === 'base' && AD.hasDoctrine(run, 'cult')) after = Math.max(34, after);
+
+      /* GUARDRAIL — no single decision is the killing blow (see AD.DECISION_FLOOR).
+         A meter that was healthy can't be shoved below the survival floor by one
+         choice, and no choice ever zeroes a live meter. A surprising −14 leaves
+         you critical with a turn to recover, not dead on the spot. */
+      if (delta < 0 && before > 0) {
+        if (before >= AD.DECISION_FLOOR && after < AD.DECISION_FLOOR) { after = AD.DECISION_FLOOR; out.closeCall = k; }
+        if (after <= 0) { after = 1; out.closeCall = k; }
+      }
+
       run.meters[k] = after;
       if (after !== before) out.deltas[k] = after - before;
     });
@@ -341,7 +350,6 @@ AD.Engine = {
     // First-run training wheels: floor the dying meter, don't end the term.
     if (AD.inGrace(run)) {
       run.meters[dead.key] = 20;
-      if (dead.key === 'base') run.baseHigh = 0;
       return {
         saved: dead.key,
         tabloid: {
@@ -358,7 +366,6 @@ AD.Engine = {
     if (AD.hasDoctrine(run, 'immunity') && !run.shieldUsed) {
       run.shieldUsed = true;
       run.meters[dead.key] = 22;
-      if (dead.key === 'base') run.baseHigh = 0;
       return {
         saved: dead.key,
         tabloid: {
@@ -478,23 +485,17 @@ AD.Engine = {
     // Crossing the fortune line is announced once, and does not end the run —
     // it is banked and cashed in at whatever ending you eventually reach.
     this.pendingFortune = null;
-    if (!run.flags.fortune && run.cash >= AD.WEALTH_GOAL) {
+    if (!run.flags.fortune && run.cash >= AD.wealthGoal(run)) {
       run.flags.fortune = true;
       this.pendingFortune = {
-        head: 'TEN FIGURES',
-        sub: 'Personal fortune passes $10bn while in office; disclosure filed on a Friday',
+        head: 'THE FORTUNE SECURED',
+        sub: 'Personal fortune passes $' + AD.wealthGoal(run) + 'bn while in office; disclosure filed on a Friday',
         body: 'The figure is not disputed, concealed or even especially hidden. It is on a form, ' +
               'signed, in a public archive, and it is larger than the annual budget of eleven ' +
               'federal agencies. Whatever else happens now — removal, defeat, a third term — ' +
               'it happens to a man who has already won the other game entirely.'
       };
     }
-
-    // The Understudy fuse: three consecutive months of a movement that has
-    // outgrown you and the Vice President accepts the nomination.
-    if (run.meters.base >= AD.BASE_DANGER && !AD.inGrace(run)) run.baseHigh = (run.baseHigh || 0) + 1;
-    else run.baseHigh = 0;
-    if (run.baseHigh >= AD.BASE_FUSE) { this.finish('max-base'); return 'max-base'; }
 
     // The clock can starve a meter to death without you choosing anything.
     const collapse = this.checkCollapse();
@@ -514,7 +515,7 @@ AD.Engine = {
        reached: it upgrades a win to 'the-full-set' and converts a loss into
        'the-fortune'. Ten billion dollars is a parachute, and it should be —
        that is the whole joke. */
-    if (run.cash >= AD.WEALTH_GOAL && endingId !== 'the-fortune' && endingId !== 'the-full-set') {
+    if (run.cash >= AD.wealthGoal(run) && endingId !== 'the-fortune' && endingId !== 'the-full-set') {
       const e = AD.ENDINGS[endingId];
       endingId = (e && e.win) ? 'the-full-set' : 'the-fortune';
     }
@@ -547,17 +548,10 @@ AD.Engine = {
         '. Nothing can end your presidency yet.' });
     }
 
-    if (run.baseHigh > 0) {
-      const left = AD.BASE_FUSE - run.baseHigh;
-      out.push({ level: 'crit', text: 'The crowd is chanting a name that is not quite yours. ' +
-        left + ' month' + (left === 1 ? '' : 's') + ' before the Vice President accepts.' });
-    }
-
     AD.FACTIONS.forEach(f => {
       if (run.locked[f.key]) return;
       const v = run.meters[f.key];
       if (v <= 16 && f.lowWarn) out.push({ key: f.key, level: 'crit', text: f.lowWarn });
-      else if (f.key === 'base' && v >= 88 && !run.baseHigh) out.push({ key: f.key, level: 'warn', text: f.highWarn });
       else if (f.capturable && v >= 85) out.push({ key: f.key, level: 'good', text: f.pillar + ' is within reach.' });
     });
 

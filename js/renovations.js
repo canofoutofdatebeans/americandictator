@@ -14,7 +14,7 @@
    Three rules make it a real decision rather than a shop:
 
    1. UPKEEP. Every structure bills you every month, permanently.
-      The fortune goal ($10B) and the monument goal are therefore in
+      The fortune goal and the monument goal are therefore in
       direct competition. A fully renovated residence burns roughly
       $270M a month, which is a quarter of a billion dollars a year
       you are not banking.
@@ -49,7 +49,7 @@ AD.RENOS = [
 
   /* ---------------- LEISURE & SPECTACLE ---------------- */
   {
-    id: 'ballroom', cat: 'leisure', name: 'The People\'s Ballroom', cost: 1.60, upkeep: 0.020,
+    id: 'ballroom', cat: 'leisure', name: 'The People\'s Ballroom', cost: 0.64, upkeep: 0.020,
     blurb: 'Demolish the East Wing. Put a 4,000-capacity disco in the hole.',
     effect: '+6 Authority · Base +9 · Base gains +10%',
     flavour: '"The wing was 122 years old and structurally sound. It is now a cloakroom. ' +
@@ -59,7 +59,7 @@ AD.RENOS = [
     passive: { baseGain: 0.10 }
   },
   {
-    id: 'coaster', cat: 'leisure', name: 'The Liberty Coaster', cost: 2.40, upkeep: 0.035,
+    id: 'coaster', cat: 'leisure', name: 'The Liberty Coaster', cost: 0.96, upkeep: 0.035,
     blurb: 'A steel rollercoaster that circles the residence and crosses the roof twice.',
     effect: '+5 Authority · Base +10 · Street +6 · Street gains +12%',
     flavour: '"It passes eleven metres from the Situation Room window at 78 miles an hour. ' +
@@ -69,7 +69,7 @@ AD.RENOS = [
     passive: { streetGain: 0.12 }
   },
   {
-    id: 'octagon', cat: 'leisure', name: 'The Rose Garden Octagon', cost: 0.90, upkeep: 0.012,
+    id: 'octagon', cat: 'leisure', name: 'The Rose Garden Octagon', cost: 0.36, upkeep: 0.012,
     blurb: 'Pave the Rose Garden. Install a regulation cage.',
     effect: '+4 Authority · Base +10 · Street +8 · Base gains +8%',
     flavour: '"The roses were planted in 1913 and had names. The cage seats four hundred and ' +
@@ -78,7 +78,7 @@ AD.RENOS = [
     passive: { baseGain: 0.08 }
   },
   {
-    id: 'menagerie', cat: 'leisure', name: 'The Presidential Menagerie', cost: 1.35, upkeep: 0.028,
+    id: 'menagerie', cat: 'leisure', name: 'The Presidential Menagerie', cost: 0.54, upkeep: 0.028,
     blurb: 'A private zoo on the South Lawn. Predators only. No signage.',
     effect: '+7 Authority · Base +6 · Congress gains +10%',
     flavour: '"Two tigers, a bear, and something the paperwork describes only as ' +
@@ -90,7 +90,7 @@ AD.RENOS = [
 
   /* ---------------- FORTIFICATION ---------------- */
   {
-    id: 'moat', cat: 'fortify', name: 'The Moat', cost: 1.25, upkeep: 0.018,
+    id: 'moat', cat: 'fortify', name: 'The Moat', cost: 0.50, upkeep: 0.018,
     blurb: 'A genuine working moat. Twelve metres wide. Stocked.',
     effect: '+7 Authority · Base +5 · Street −18% damage',
     flavour: '"It is a public building with a drawbridge. The Interior Department fought it ' +
@@ -100,7 +100,7 @@ AD.RENOS = [
     passive: { streetShield: 0.18 }
   },
   {
-    id: 'annexe', cat: 'fortify', name: 'The Press Annexe', cost: 0.45, upkeep: 0.006,
+    id: 'annexe', cat: 'fortify', name: 'The Press Annexe', cost: 0.18, upkeep: 0.006,
     blurb: 'Relocate the briefing room to a demountable cabin in a Maryland car park.',
     effect: '+8 Authority · Base +6 · Press −16% damage',
     flavour: '"Forty miles, no parking validation, and the shuttle runs twice a day. ' +
@@ -109,7 +109,7 @@ AD.RENOS = [
     passive: { pressShield: 0.16 }
   },
   {
-    id: 'deep-residence', cat: 'fortify', name: 'The Deep Residence', cost: 2.90, upkeep: 0.030,
+    id: 'deep-residence', cat: 'fortify', name: 'The Deep Residence', cost: 1.16, upkeep: 0.030,
     blurb: 'Forty storeys of command bunker directly beneath the lawn.',
     effect: '+11 Authority · Congress −12% damage · Courts −12% damage',
     flavour: '"It has a swimming pool on level 31. When asked what it was for, the ' +
@@ -122,7 +122,7 @@ AD.RENOS = [
 
   /* ---------------- GLORY ---------------- */
   {
-    id: 'colossus', cat: 'glory', name: 'The Colossus', cost: 3.80, upkeep: 0.045,
+    id: 'colossus', cat: 'glory', name: 'The Colossus', cost: 1.52, upkeep: 0.045,
     blurb: 'A 190-metre gilded statue of the President, on the lawn, facing the Capitol.',
     effect: '+12 Authority · Base +12 · Base gains +12%',
     flavour: '"It is visible from orbit, which was the specification, and from four ' +
@@ -133,7 +133,7 @@ AD.RENOS = [
     req: r => (r.renos || []).length >= 2
   },
   {
-    id: 'ancestors', cat: 'glory', name: 'The Hall of Ancestors', cost: 1.10, upkeep: 0.014,
+    id: 'ancestors', cat: 'glory', name: 'The Hall of Ancestors', cost: 0.44, upkeep: 0.014,
     blurb: 'Replace every past president\'s portrait with an animatronic that applauds you.',
     effect: '+5 Authority · Base +8 · Base gains +9%',
     flavour: '"Forty-five figures, motion-triggered, standing ovation, eleven seconds. ' +
@@ -142,7 +142,7 @@ AD.RENOS = [
     passive: { baseGain: 0.09 }
   },
   {
-    id: 'revisionism', cat: 'glory', name: 'The Corrected Record', cost: 1.45, upkeep: 0.020,
+    id: 'revisionism', cat: 'glory', name: 'The Corrected Record', cost: 0.58, upkeep: 0.020,
     blurb: 'Rewrite the history on every wall to favour you and discredit the others.',
     effect: '+7 Authority · Base +9 · Base gains +11%',
     flavour: '"Every portrait now carries a corrected caption. Two predecessors are labelled ' +
@@ -154,7 +154,7 @@ AD.RENOS = [
     req: r => (r.renos || []).length >= 1
   },
   {
-    id: 'flame', cat: 'glory', name: 'The Eternal Flame', cost: 0.75, upkeep: 0.022,
+    id: 'flame', cat: 'glory', name: 'The Eternal Flame', cost: 0.30, upkeep: 0.022,
     blurb: 'A permanent gas flame on the roof, burning in the shape of your monogram.',
     effect: '+6 Authority · Base +6 · +1 Base every month',
     flavour: '"The gas bill is the single largest line item in the residence budget and ' +
@@ -164,7 +164,7 @@ AD.RENOS = [
     passive: { basePerMonth: 1 }
   },
   {
-    id: 'mint', cat: 'glory', name: 'The Basement Mint', cost: 2.10, upkeep: 0.015,
+    id: 'mint', cat: 'glory', name: 'The Basement Mint', cost: 0.84, upkeep: 0.015,
     blurb: 'A working currency press, in the sub-basement, on a private circuit.',
     effect: '+6 Authority · +$115M every month',
     flavour: '"It is not counterfeiting. The plates are genuine, the paper is genuine, the ' +
@@ -175,9 +175,19 @@ AD.RENOS = [
     req: r => (r.renos || []).length >= 1
   },
 
+  {
+    id: 'casino', cat: 'glory', name: 'The Casino', cost: 1.30, upkeep: 0.030,
+    blurb: 'Convert the whole residence into a multi-storey casino — your name, in neon, on the front.',
+    effect: '+10 Authority · Base +8 · +$70M every month',
+    flavour: '"Twelve floors of slot machines where the state rooms used to be, and a name in lights ' +
+             'you can read from the far bank of the river. The house always wins, and now you are the house."',
+    auth: 10, buy: { base: 8, congress: -12, courts: -10, press: -11, street: -6 },
+    passive: { income: 0.07 }
+  },
+
   /* ---------------- CAPSTONE ---------------- */
   {
-    id: 'palace', cat: 'glory', name: 'The Renaming', cost: 5.50, upkeep: 0.060,
+    id: 'palace', cat: 'glory', name: 'The Renaming', cost: 2.20, upkeep: 0.060,
     blurb: 'Gild the entire elevation and take the old name off the building.',
     effect: '+18 Authority · Base +7 · Base gains +10% · +$50M every month',
     flavour: '"Every letter of the new name is two metres tall and lit from beneath. The ' +

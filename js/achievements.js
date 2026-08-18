@@ -54,8 +54,8 @@ AD.ACHIEVEMENTS = [
   { id: 'billionaire', name: 'Everybody\'s Profiting', desc: 'Hold more than $6B at once.',
     test: r => r.stats.peakCash > 6 },
 
-  { id: 'the-fortune', name: 'Ten Figures', desc: 'Reach a personal fortune of $10B.',
-    test: r => r.cash >= AD.WEALTH_GOAL || r.stats.peakCash >= AD.WEALTH_GOAL },
+  { id: 'the-fortune', name: 'Ten Figures', desc: 'Reach your personal fortune goal (scales with difficulty).',
+    test: r => r.cash >= AD.wealthGoal(r) || (r.stats && r.stats.peakCash >= AD.wealthGoal(r)) },
 
   { id: 'full-set', name: 'The Country And The Money', desc: 'Finish with Authority 100 and $10B.',
     secret: true, test: r => r.endingId === 'the-full-set' },
@@ -73,9 +73,6 @@ AD.ACHIEVEMENTS = [
     test: r => r.cash < 0.5 },
 
   /* ---- ways to lose ---- */
-  { id: 'understudy', name: 'Bigger Than Any One Man', desc: 'Be replaced by your own Vice President.',
-    secret: true, test: r => r.endingId === 'max-base' },
-
   { id: 'ungovernable', name: 'The Country Stopped', desc: 'Lose to a general strike.',
     secret: true, test: r => r.endingId === 'zero-street' },
 

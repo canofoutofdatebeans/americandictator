@@ -45,9 +45,9 @@ AD.Game = {
   buildSetupScreen () {
     this.setup = {
       name: '', party: '', color: AD.PARTY_COLORS[0],
-      portrait: { hair: 0, skin: 0, tie: 0, suit: 0 },
+      portrait: { hair: 0, skin: 0, tie: 0, suit: 0, build: 2, sex: 0 },
       difficulty: 'standard',
-      legacy: AD.inheritance()          // the mess the last administration left
+      legacy: AD.inheritance('standard')   // the mess the last administration left (scales with difficulty)
     };
     AD.UI.renderInheritance(this.setup.legacy);
     AD.UI.el('swatches').innerHTML = AD.PARTY_COLORS.map((c, i) =>
@@ -76,10 +76,8 @@ AD.Game = {
       <h4>The Five Power Centres</h4>
       <ul>
         <li><b>🔥 The Base</b> — your fuel, and it cools by <b>${Math.abs(AD.BASE_DECAY)} every month</b>
-        unless you feed it. At <b>0</b> you are primaried. Sit above <b>${AD.BASE_DANGER}</b> for
-        <b>${AD.BASE_FUSE} straight months</b> and the movement decides it no longer needs a person —
-        your Vice President will be delighted to help. The Base cannot be captured. It is a band to
-        stay inside, not a number to maximise.</li>
+        unless you feed it. At <b>0</b> you are primaried out and your term is over, so keep it fed.
+        A roaring base powers your transgressions and your Authority. The Base cannot be captured.</li>
         <li><b>🏛️ Congress</b>, <b>⚖️ The Courts</b>, <b>📰 The Press</b>, <b>🪧 The Street</b> —
         at <b>0</b> each one ends your term in its own way. At <b>100</b> each becomes a
         <b>Pillar</b>: permanently captured, frozen, immune to everything, and worth
@@ -96,14 +94,15 @@ AD.Game = {
       There are five. The third one gives you a point of Authority every month for nothing, which is
       also how it works in real life.</p>
 
-      <h4>The Other Objective: $${AD.WEALTH_GOAL}B</h4>
+      <h4>The Other Objective: the Fortune</h4>
       <p>There are two ways to win. Take the country, or take the money. Tap the cash figure to
       open <b>Private Interests</b> and spend your fortune on platforms, lawsuits, senators,
       judges and income streams.</p>
       <p>Holdings never grant Authority — money cannot buy the presidency outright. What it buys
       is <b>leverage</b>: shields that blunt incoming damage, multipliers on your gains, a monthly
       drip on the branch you are trying to capture, and the income to buy more of all three.</p>
-      <p>Reaching <b>$${AD.WEALTH_GOAL}B</b> doesn't end your term — it is banked and cashed in at
+      <p>The target scales with difficulty — <b>$12B</b> on Rookie, <b>$15B</b> on Standard, <b>$20B</b> on Historic.
+      Reaching it doesn't end your term — it is banked and cashed in at
       whatever ending you reach. It upgrades a win, and it <em>converts a loss into a win</em>.
       You can be removed from office and still come out ahead.</p>
 
@@ -562,6 +561,9 @@ AD.Game = {
         diff.classList.add('on');
         this.setup.difficulty = diff.dataset.diff;
         U.el('diff-hint').textContent = AD.DIFFS[diff.dataset.diff].hint;
+        // the inherited country is harsher on harder settings — refresh the banner
+        this.setup.legacy = AD.inheritance(diff.dataset.diff);
+        U.renderInheritance(this.setup.legacy);
         return;
       }
 
@@ -651,10 +653,10 @@ AD.Game = {
       // Play out any front pages / doctrine unlocks before the month ticks.
       case 'next':     this.continueTurn(); break;
 
-      case 'pause':    U.overlay('pause', true); U.stopTimer(); break;
+      case 'pause':    U.overlay('pause', true); U.pauseTimer(); break;
       case 'resume':
         U.overlay('pause', false);
-        if (AD.Engine.card && U.el('card') && !U.el('card').hidden) U.startTimer(AD.Engine.card);
+        if (AD.Engine.card && U.el('card') && !U.el('card').hidden) U.resumeTimer();
         break;
 
       case 'tut-next':  AD.Tutorial.next(); break;
@@ -667,19 +669,19 @@ AD.Game = {
 
       case 'constitution':
         if (U.current !== 'game' || !AD.Engine.run) break;
-        U.stopTimer(); U.renderConstitution(); U.overlay('constitution', true); break;
+        U.pauseTimer(); U.renderConstitution(); U.overlay('constitution', true); break;
       case 'constitution-close':
         U.overlay('constitution', false);
-        if (AD.Engine.card && !U.el('card').hidden) U.startTimer(AD.Engine.card);
+        if (AD.Engine.card && !U.el('card').hidden) U.resumeTimer();
         break;
 
       case 'corruption':
         if (U.current !== 'game' || !AD.Engine.run || AD.Engine.run.over) break;
-        U.stopTimer(); U.renderCorruption(); U.overlay('corruption', true); break;
+        U.pauseTimer(); U.renderCorruption(); U.overlay('corruption', true); break;
       case 'corruption-close':
         U.overlay('corruption', false);
         // resume the clock only if a crisis is actually on screen
-        if (AD.Engine.card && !U.el('card').hidden) U.startTimer(AD.Engine.card);
+        if (AD.Engine.card && !U.el('card').hidden) U.resumeTimer();
         break;
       case 'divert':
         this.divertConfirm();
@@ -695,74 +697,74 @@ AD.Game = {
 
       case 'senate':
         if (U.current !== 'game' || !AD.Engine.run || AD.Engine.run.over) break;
-        U.stopTimer(); U.renderSenate(); U.overlay('senate', true); break;
+        U.pauseTimer(); U.renderSenate(); U.overlay('senate', true); break;
       case 'senate-close':
         U.overlay('senate', false);
-        if (AD.Engine.card && !U.el('card').hidden) U.startTimer(AD.Engine.card);
+        if (AD.Engine.card && !U.el('card').hidden) U.resumeTimer();
         break;
 
       case 'press':
         if (U.current !== 'game' || !AD.Engine.run || AD.Engine.run.over) break;
-        U.stopTimer(); U.renderPress(); U.overlay('press', true); break;
+        U.pauseTimer(); U.renderPress(); U.overlay('press', true); break;
       case 'press-close':
         U.overlay('press', false);
-        if (AD.Engine.card && !U.el('card').hidden) U.startTimer(AD.Engine.card);
+        if (AD.Engine.card && !U.el('card').hidden) U.resumeTimer();
         break;
 
       case 'street':
         if (U.current !== 'game' || !AD.Engine.run || AD.Engine.run.over) break;
-        U.stopTimer(); U.renderStreet(); U.overlay('street', true); break;
+        U.pauseTimer(); U.renderStreet(); U.overlay('street', true); break;
       case 'street-close':
         U.overlay('street', false);
-        if (AD.Engine.card && !U.el('card').hidden) U.startTimer(AD.Engine.card);
+        if (AD.Engine.card && !U.el('card').hidden) U.resumeTimer();
         break;
 
       case 'call':
         if (U.current !== 'game' || !AD.Engine.run || AD.Engine.run.over) break;
-        U.stopTimer(); U.renderCall(); U.overlay('call', true); break;
+        U.pauseTimer(); U.renderCall(); U.overlay('call', true); break;
       case 'call-close':
         U.overlay('call', false);
-        if (AD.Engine.card && !U.el('card').hidden) U.startTimer(AD.Engine.card);
+        if (AD.Engine.card && !U.el('card').hidden) U.resumeTimer();
         break;
 
       case 'war':
         if (U.current !== 'game' || !AD.Engine.run || AD.Engine.run.over) break;
-        U.stopTimer(); U.renderWar(); U.overlay('war', true); break;
+        U.pauseTimer(); U.renderWar(); U.overlay('war', true); break;
       case 'war-close':
         U.overlay('war', false);
-        if (AD.Engine.card && !U.el('card').hidden) U.startTimer(AD.Engine.card);
+        if (AD.Engine.card && !U.el('card').hidden) U.resumeTimer();
         break;
 
       case 'courts':
         if (U.current !== 'game' || !AD.Engine.run || AD.Engine.run.over) break;
-        U.stopTimer(); U.renderCourts(); U.overlay('courts', true); break;
+        U.pauseTimer(); U.renderCourts(); U.overlay('courts', true); break;
       case 'courts-close':
         U.overlay('courts', false);
-        if (AD.Engine.card && !U.el('card').hidden) U.startTimer(AD.Engine.card);
+        if (AD.Engine.card && !U.el('card').hidden) U.resumeTimer();
         break;
 
       case 'basepop':
         if (U.current !== 'game' || !AD.Engine.run || AD.Engine.run.over) break;
-        U.stopTimer(); U.renderBasepop(); U.overlay('basepop', true); break;
+        U.pauseTimer(); U.renderBasepop(); U.overlay('basepop', true); break;
       case 'basepop-close':
         U.overlay('basepop', false);
-        if (AD.Engine.card && !U.el('card').hidden) U.startTimer(AD.Engine.card);
+        if (AD.Engine.card && !U.el('card').hidden) U.resumeTimer();
         break;
 
       case 'economy':
         if (U.current !== 'game' || !AD.Engine.run || AD.Engine.run.over) break;
-        U.stopTimer(); U.renderEconomy(); U.overlay('economy', true); break;
+        U.pauseTimer(); U.renderEconomy(); U.overlay('economy', true); break;
       case 'economy-close':
         U.overlay('economy', false);
-        if (AD.Engine.card && !U.el('card').hidden) U.startTimer(AD.Engine.card);
+        if (AD.Engine.card && !U.el('card').hidden) U.resumeTimer();
         break;
 
       case 'renovations':
         if (U.current !== 'game' || !AD.Engine.run || AD.Engine.run.over) break;
-        U.stopTimer(); U.renderResidence(); U.overlay('renovations', true); break;
+        U.pauseTimer(); U.renderResidence(); U.overlay('renovations', true); break;
       case 'renovations-close':
         U.overlay('renovations', false);
-        if (AD.Engine.card && !U.el('card').hidden) U.startTimer(AD.Engine.card);
+        if (AD.Engine.card && !U.el('card').hidden) U.resumeTimer();
         break;
 
       case 'dossier':
@@ -774,10 +776,10 @@ AD.Game = {
       case 'log':      U.renderLog(); U.overlay('log', true); break;
       case 'log-close':U.overlay('log', false); break;
 
-      case 'settings': U.overlay('settings', true); U.stopTimer(); break;
+      case 'settings': U.overlay('settings', true); U.pauseTimer(); break;
       case 'settings-close':
         U.overlay('settings', false);
-        if (U.current === 'game' && AD.Engine.card && !U.el('card').hidden) U.startTimer(AD.Engine.card);
+        if (U.current === 'game' && AD.Engine.card && !U.el('card').hidden) U.resumeTimer();
         break;
 
       case 'howto':      U.overlay('howto', true); break;

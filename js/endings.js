@@ -20,17 +20,6 @@ AD.ENDINGS = {
     epitaph: 'You built a fire and then stood too close to it.'
   },
 
-  'max-base': {
-    win: false, title: 'THE UNDERSTUDY', kicker: 'The Base Reached One Hundred',
-    head: 'BIGGER THAN ANY ONE MAN',
-    sub: 'Vice President accepts nomination "with a heavy heart" as movement completes succession',
-    body: 'It was never a coup. Nobody voted him in and nobody voted the President out. The crowd simply began saying ' +
-          'a different name, at first alongside the old one, then instead of it. By the time the President noticed, ' +
-          'the switch had already happened in ninety million heads. He smiled through the whole convention. ' +
-          'He is very good at smiling. He learned it from the man he replaced.',
-    epitaph: 'A cult of personality only needs one personality. It does not have to be yours.'
-  },
-
   'zero-congress': {
     win: false, title: 'REMOVED', kicker: 'Congress Reached Zero',
     head: 'SIXTY-SEVEN',
@@ -190,7 +179,7 @@ AD.ENDINGS = {
     sub: 'Administration ends without a dictatorship and with a personal fortune of $10bn',
     body: 'Every institution he attacked is still standing. Every power he reached for is back ' +
           'in the drawer he found it in. The republic held, and it held while a man converted ' +
-          'four years of proximity to it into ten billion dollars, entirely lawfully, in public, ' +
+          'four years of proximity to it into a personal fortune of billions, entirely lawfully, in public, ' +
           'on filings anybody could read. Nothing has to be undone because nothing was formally done. ' +
           'He simply left richer than any private citizen in American history.',
     epitaph: 'You lost the country and kept the money. Historically, that is the more common ending.'

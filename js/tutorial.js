@@ -20,7 +20,8 @@ AD.Tutorial = {
     { target: null, title: 'You have four years.',
       body: 'You are the President. The objective is not to govern well — it is to still be ' +
             'holding the country when the term ends, and to have taken as much of it as you can.<br><br>' +
-            '<b>There are two ways to win.</b> Take the country (Authority 100), or take the money ($10B). ' +
+            '<b>There are two ways to win.</b> Take the country (Authority 100), or take the money — a personal ' +
+            'fortune whose target scales with difficulty ($12B / $15B / $20B). ' +
             'Doing both is the best ending in the game.' },
 
     { target: '#card', title: 'A crisis a month.',
@@ -42,11 +43,11 @@ AD.Tutorial = {
             'The Press breaks every story at once. The Street stops going to work.<br><br>' +
             'Watch the red ones. The game will warn you before they kill you.' },
 
-    { target: '#factions', title: 'The Base is the trap.',
-      body: '🔥 <b>The Base is fatal at BOTH ends.</b><br><br>' +
-            'At <b>0</b> you are primaried out. But sit above <b>95</b> for three straight months and the ' +
-            'movement decides it no longer needs a person — and your Vice President will be delighted to help.<br><br>' +
-            'It also cools by 3 every month on its own. It is a band to stay inside, not a number to maximise.' },
+    { target: '#factions', title: 'The Base is your fuel.',
+      body: '🔥 <b>The Base powers everything you do.</b><br><br>' +
+            'A roaring base rewards your most transgressive choices and feeds your Authority. Keep it hot.<br><br>' +
+            'The only danger is at <b>0</b> — let it collapse and you are primaried out. It also cools by ' +
+            '<b>3 every month</b> on its own, so it needs feeding. Fuel, not a trap.' },
 
     { target: '.authority-wrap', title: 'Authority is how you win.',
       body: 'Reach <b>100</b> and the republic is yours.<br><br>' +
@@ -69,7 +70,7 @@ AD.Tutorial = {
       body: 'Tap your fortune to open <b>Private Interests</b>: buy platforms, sue critics into bankruptcy, ' +
             'fund the judicial pipeline, run a foundation.<br><br>' +
             'Holdings never grant Authority — money cannot buy the presidency. It buys <b>leverage</b>: ' +
-            'shields, multipliers and income. Reach <b>$10B</b> and even losing the country counts as a win.' },
+            'shields, multipliers and income. Reach the fortune target and even losing the country counts as a win.' },
 
     { target: '#reno-chip', title: 'And the building itself.',
       body: 'The other place to spend it. <b>The Residence</b> — a ballroom where the East Wing was, ' +
@@ -79,7 +80,7 @@ AD.Tutorial = {
             'Glory is the most expensive thing on the menu.' },
 
     { target: '#choices', title: 'That is everything.',
-      body: 'Keep five meters alive. Take three branches. Do not let the movement outgrow you.<br><br>' +
+      body: 'Keep five meters alive. Take three branches. Keep the base fed.<br><br>' +
             'Your first crisis is waiting. <b>Good luck, Mr President.</b>' }
   ],
 

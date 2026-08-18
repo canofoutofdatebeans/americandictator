@@ -61,9 +61,7 @@ AD.briefing = function (run, out) {
   /* --- the base band --- */
   if (!run.locked.base) {
     const b = run.meters.base;
-    if (run.baseHigh > 0) {
-      lines.push(`The base is at ${b} and has been too hot for ${run.baseHigh} month${run.baseHigh === 1 ? '' : 's'}. Cool it down or the Vice President will do it for you.`);
-    } else if (b <= 30) {
+    if (b <= 30) {
       lines.push(`The base is at ${b} and it drops ${Math.abs(AD.BASE_DECAY)} a month on its own. Feed it or it will find someone who does.`);
     }
   }
