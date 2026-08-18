@@ -113,3 +113,21 @@ AD.recordBreach = function (run, ids) {
 /* Score contribution, folded into AD.scoreRun. */
 AD.clauseScore = run => AD.clauseCount(run) * AD.CLAUSE_SCORE +
   (AD.allClausesBroken(run) ? 1200 : 0);
+
+/* DELIBERATE BREACH. The deck offers breaches inside crises, but a player
+   chasing the full set should never be locked out by an unlucky draw: from the
+   Constitution ledger you can break any remaining clause ON ANY TURN. It is not
+   free. Each deliberate breach hammers the institutions (which now also drags
+   your Authority down with them) and thrills the base, so breaking all sixteen
+   is a genuine scorched-earth strategy, not a free win. */
+AD.CLAUSE_BREAK_EFF = { courts: -6, press: -5, congress: -4, base: 4 };
+
+AD.breakClause = function (run, id) {
+  const c = AD.clauseById(id);
+  if (!c) return { ok: false, reason: 'No such clause.' };
+  if (AD.brokeClause(run, id)) return { ok: false, reason: 'Already broken.' };
+  const deltas = AD.applySenateEffect(run, AD.CLAUSE_BREAK_EFF);
+  const breach = AD.recordBreach(run, id);       // records it and pays out on the full set
+  run.stats = run.stats || {}; run.stats.breaches = (run.stats.breaches || 0) + 1;
+  return { ok: true, clause: c, breach, deltas };
+};

@@ -428,31 +428,41 @@ AD.UI = {
   },
 
   /* ---------- the constitution ledger ---------- */
-  renderConstitution () {
+  renderConstitution (result) {
     const run = AD.Engine.run;
     const n = AD.clauseCount(run), total = AD.CLAUSES.length;
     this.el('const-count').textContent = n + ' / ' + total;
     this.el('const-score').textContent = AD.clauseScore(run).toLocaleString();
 
     const note = this.el('const-note');
-    if (AD.allClausesBroken(run)) {
+    if (result && result.clause) {
+      note.className = 'const-note bought';
+      note.innerHTML = `<b>${result.clause.name} broken.</b> ` +
+        AD.clean(result.clause.broke, this.settings.clean);
+    } else if (AD.allClausesBroken(run)) {
       note.className = 'const-note complete';
       note.innerHTML = '<b>The full set.</b> Russia has settled up, ' +
         '$' + (total * AD.CLAUSE_BOUNTY).toFixed(2) + 'B, itemised by clause, ' +
         'through four intermediary banks. Nobody asked them to.';
     } else {
       note.className = 'const-note';
-      note.textContent = `Each clause broken is worth ${AD.CLAUSE_SCORE} score. ` +
-        `Break all ${total} and an unbidden payment arrives from Russia, ` +
-        `$${AD.CLAUSE_BOUNTY.toFixed(2)}B for every one of them.`;
+      note.textContent = `Break a clause yourself, any turn, or wait for a crisis to offer one. ` +
+        `Each is worth ${AD.CLAUSE_SCORE} score and hammers the institutions. Break all ${total} ` +
+        `and an unbidden payment arrives from Russia, $${AD.CLAUSE_BOUNTY.toFixed(2)}B for every one.`;
     }
+
+    const eff = AD.CLAUSE_BREAK_EFF;
+    const effLine = ['courts', 'press', 'congress', 'base'].filter(k => eff[k]).map(k => {
+      const f = AD.faction(k); return `${f.short} ${eff[k] > 0 ? '+' : ''}${eff[k]}`;
+    }).join(' · ');
 
     this.el('const-list').innerHTML = AD.CLAUSES.map(c => {
       const broke = AD.brokeClause(run, c.id);
       return `<div class="clause ${broke ? 'broke' : ''}">
         <div class="clause-top"><b>${c.name}</b><span>${c.ref}</span></div>
         <i class="clause-line">${c.line}</i>
-        ${broke ? `<div class="clause-broke">${AD.clean(c.broke, this.settings.clean)}</div>` : ''}
+        ${broke ? `<div class="clause-broke">${AD.clean(c.broke, this.settings.clean)}</div>`
+                : `<button class="btn clause-break" data-breakclause="${c.id}">Break it <em>${effLine}</em></button>`}
       </div>`;
     }).join('');
   },

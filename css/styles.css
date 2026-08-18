@@ -1129,3 +1129,12 @@ html[data-cb="on"] .fac.danger .fac-val{color:#93c5fd}
 /* ---------- build tag (title screen; makes a stale cache obvious) ---------- */
 .build-tag{text-align:center;font-size:9px;letter-spacing:2px;text-transform:uppercase;
   color:var(--muted);opacity:.6;margin:4px 0 2px}
+
+/* ---------- deliberate clause breach button ---------- */
+.clause-break{width:100%;margin-top:8px;padding:8px;text-align:center;font-size:12.5px;
+  border:1px solid #6a1a22;background:linear-gradient(#2a0d12,#1a0a0e);color:#f0a8ae;
+  border-radius:8px;cursor:pointer;transition:var(--fx);font-weight:600}
+.clause-break:hover{border-color:#d8323b;box-shadow:0 0 10px rgba(216,50,59,.25)}
+.clause-break:active{transform:scale(.98)}
+.clause-break em{display:block;font-style:normal;font-weight:400;font-size:10px;
+  letter-spacing:.4px;color:#c98d8d;margin-top:2px}

@@ -493,6 +493,20 @@ AD.Game = {
     if (collapse.ending) { AD.Engine.finish(collapse.ending); this.pending = []; setTimeout(() => this.showEnding(AD.Engine.lastScore), 900); }
   },
 
+  breakClauseAction (id) {
+    const run = AD.Engine.run;
+    if (!run || run.over) return;
+    const r = AD.breakClause(run, id);
+    if (!r.ok) return;
+    AD.saveRun(run);
+    AD.Audio.play('clause');
+    this.haptic(12);
+    // Floor any meter this pushed to zero (non-fatal), then repaint.
+    AD.Engine.checkCollapse();
+    AD.UI.renderConstitution(r);
+    AD.UI.renderHUD();
+  },
+
   pardonAction (id) {
     const run = AD.Engine.run;
     if (!run || run.over) return;
@@ -624,6 +638,9 @@ AD.Game = {
 
       const pardon = e.target.closest('[data-pardon]');
       if (pardon && !pardon.disabled) { this.pardonAction(pardon.dataset.pardon); return; }
+
+      const breakc = e.target.closest('[data-breakclause]');
+      if (breakc && !breakc.disabled) { this.breakClauseAction(breakc.dataset.breakclause); return; }
 
       // Clicking a power-centre tile opens its management screen.
       const manage = e.target.closest('[data-manage]');
