@@ -70,8 +70,13 @@ is tested; the native shells have never been compiled or run on hardware.
 | `css/styles.css` | Mobile-first. Dark marble, gold leaf, newsprint. |
 | `js/state.js` | **Tuning lives here.** Factions, difficulty, Authority rules, inheritance scars, save/load. |
 | `js/cards.js` | Core deck (70 crises), the cast, and the deck-selection helpers. |
-| `js/renovations.js` | **The Residence.** 12 improvements to the White House, upkeep and scrutiny. |
+| `js/renovations.js` | **The Residence.** 13 improvements to the White House, upkeep and scrutiny. |
 | `js/cay.js` | **The Saint Ambrose Files.** The recurring scandal, its heat, and its leaks. |
+| `js/senate.js` | **The Caucus.** 100 senators, loyalty, and the four ways to keep them in line. |
+| `js/press.js` | **The Press Room.** Twelve outlets to sue, buy or capture; the megaphone coupling. |
+| `js/street.js` | **Public Order.** Ten cities, unrest, and the ICE-style forces you send in. |
+| `js/call.js` | **The Phone.** The address book and the five things to say, in the house voice. |
+| `js/war.js` | **The War Room.** Declare war on anyone, for any reason, and resolve it. |
 | `js/packs/*.js` | **195 more crises** in seven loadable packs. Each pushes onto `AD.CARDS`. |
 | `js/events.js` | Scripted beats: the Address, Midterms, Pillar backlash, Re-election, the Twenty-Second. |
 | `js/doctrines.js` | Five permanent rule-changing unlocks. |
@@ -148,6 +153,43 @@ Card windows are **term-relative**, so a second term replays the same arc rather
 off the end of every `min`/`max`.
 
 ---
+
+## Interactive power-centre systems
+
+Three of the five meters are no longer just bars — tap the **Congress**, **Press** or **Street**
+tile to open the system behind it, and there are two more screens on chips of their own.
+
+- **The Caucus** (Congress tile) — 100 fictional senators, split 53–47. Own-party loyalty drifts
+  down every month; **Acknowledge**, **Humiliate**, **Sue** (which cows the whole caucus) or **End
+  Their Career** (a loyalist takes the seat). The Midterms cash this out: a whipped caucus wins
+  seats, a neglected one loses them.
+- **The Press Room** (Press tile) — twelve outlets from hostile to captured. **Sue** them, **Buy**
+  them onside, or **Install** a friend of the President as editor. The **megaphone**: the Press
+  meter feeds the Base and the Street every month — a press you dominate amplifies the movement and
+  legitimises the crackdown; a near-zero press does the reverse.
+- **Public Order** (Street tile) — ten cities whose unrest climbs and feeds itself. **Federal
+  Force**, **ICE-Style Sweep**, **Curfew** or **Negotiate** each hotspot before it boils over.
+- **The Phone** (chip) — call an Ally, the Press or an Enemy and **Admire Them**, **Complain About
+  Everything**, **Tell Them They're Losers**, **Explain How Great You Are**, or **Ramble For 40
+  Minutes**, all in the bombastic house voice. The same line lands opposite depending on who you
+  rang. Two calls a month.
+- **The War Room** (chip) — declare war on any of eight fictional countries for any of five
+  pretexts (their resources, boredom, disliking the leader, to impress someone, or **to deflect
+  from a scandal** — which really does bury the Saint Ambrose files). Wars resolve into a victory
+  or a quagmire over the following months.
+
+Every action across all five screens moves all five power centres, Authority and cash. Each screen
+is generated deterministically from the run seed via a **separate rng**, so none of them ever
+touch the card-draw stream or break a shared-seed run.
+
+**The Base's appetite** (`state.js`): the movement rewards transgression and chaos. A choice that
+pleases the base while offending institutions gets its base gain multiplied once per offended power
+centre, and the deliberately silly wildcard options land harder than their raw numbers suggest.
+
+**Balance note.** The recurring lesson across all these systems: a passive monthly drain on a
+management screen cascades into Base collapse for a card-competent player who never opens it. Every
+tick is therefore near-neutral by default and only bites at genuine extremes — the screens are
+opt-in leverage, not a tax. Measured with one consistent bot, no single death dominates.
 
 ## The Constitution — and reaching all sixteen
 
@@ -327,7 +369,7 @@ will measure stale cached JavaScript, which cost several passes here.
 Mirrors the reference product's structure: premium one-off price plus a single optional IAP.
 
 The **Chief of Staff Pack** is a settings toggle (`settings.pack`) and gates longer decision
-timers (+8s), the full Crisis Log, and **post-crisis briefings** — a read from your Chief of
+timers, the full Crisis Log, and **post-crisis briefings** — a read from your Chief of
 Staff on what a decision actually cost, generated from board state rather than written per
 card, so it stays correct as the deck grows. Swap the toggle for a real purchase check when
 you ship.
