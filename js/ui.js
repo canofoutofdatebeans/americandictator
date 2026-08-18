@@ -66,6 +66,26 @@ AD.UI = {
   },
 
   /* ---------- HUD + meters ---------- */
+  /* Animate a number element from one value to another (easeOutCubic). Falls
+     back to an instant set when reduce-motion is on or nothing changed. The
+     `fmt` maps the running float to display text. */
+  rollNum (el, from, to, fmt, dur) {
+    if (!el) return;
+    fmt = fmt || (v => String(Math.round(v)));
+    if ((this.settings && this.settings.motion) || from == null || from === to) {
+      el.textContent = fmt(to); return;
+    }
+    const start = performance.now(), D = dur || 460;
+    const step = now => {
+      const p = Math.min(1, (now - start) / D);
+      const e = 1 - Math.pow(1 - p, 3);
+      el.textContent = fmt(from + (to - from) * e);
+      if (p < 1) requestAnimationFrame(step);
+      else el.textContent = fmt(to);
+    };
+    requestAnimationFrame(step);
+  },
+
   renderHUD () {
     const run = AD.Engine.run;
     this.el('hud-date').textContent = AD.dateLabel(run.month) +
@@ -73,15 +93,19 @@ AD.UI = {
     this.el('hud-rank').textContent = AD.rankFor(run.authority);
     const inc = AD.passives(run).income || 0;
     const cashEl = this.el('hud-cash');
-    cashEl.innerHTML = '$<span>' + run.cash.toFixed(1) + '</span>B' +
+    const prevCash = this._hudCash; this._hudCash = run.cash;
+    cashEl.innerHTML = '$<span class="hud-cash-n">' + run.cash.toFixed(1) + '</span>B' +
       (inc ? '<em>+' + Math.round(inc * 1000) + 'M</em>' : '');
+    if (prevCash != null && prevCash !== run.cash)
+      this.rollNum(cashEl.querySelector('.hud-cash-n'), prevCash, run.cash, v => v.toFixed(1));
     cashEl.classList.toggle('rich', run.cash >= AD.WEALTH_GOAL);
     cashEl.title = run.cash >= AD.WEALTH_GOAL
       ? 'The fortune is secured. Private Interests.'
       : `Private Interests — $${(AD.WEALTH_GOAL - run.cash).toFixed(1)}B short of the fortune`;
     document.documentElement.style.setProperty('--party', run.color);
 
-    this.el('auth-num').textContent = run.authority;
+    const prevAuth = this._hudAuth; this._hudAuth = run.authority;
+    this.rollNum(this.el('auth-num'), prevAuth, run.authority);
     this.el('auth-fill').style.width = run.authority + '%';
     this.el('auth-cap').style.left = AD.SOFT_CAP + '%';
 
@@ -151,7 +175,24 @@ AD.UI = {
       if (manage) tile.setAttribute('data-manage', f.key); else tile.removeAttribute('data-manage');
       const fill = tile.querySelector('.fac-fill');
       fill.style.width = v + '%'; fill.style.background = col;
-      tile.querySelector('.fac-val').textContent = v;
+      // Meter juice: on a real change, pulse the tile, roll the number, and
+      // float a coloured delta up off it. Skipped under reduce-motion.
+      const valEl = tile.querySelector('.fac-val');
+      const prevV = tile.dataset.v === undefined ? v : parseFloat(tile.dataset.v);
+      tile.dataset.v = v;
+      const still = this.settings && this.settings.motion;
+      if (prevV !== v && !still) {
+        const d = v - prevV;
+        this.rollNum(valEl, prevV, v);
+        tile.classList.remove('bumped'); void tile.offsetWidth; tile.classList.add('bumped');
+        const fd = document.createElement('span');
+        fd.className = 'fac-delta ' + (d > 0 ? 'up' : 'down');
+        fd.textContent = (d > 0 ? '+' : '') + d;
+        tile.appendChild(fd);
+        setTimeout(() => fd.remove(), 950);
+      } else {
+        valEl.textContent = v;
+      }
       tile.querySelector('.lock').style.display = locked ? '' : 'none';
       tile.querySelector('.fac-cog').style.display = manage ? '' : 'none';
       tile.setAttribute('aria-valuenow', v);
