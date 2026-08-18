@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no">
 <meta name="theme-color" content="#0d0b09">
 <title>American Dictator</title>
-<link rel="stylesheet" href="css/styles.css?v=46">
+<link rel="stylesheet" href="css/styles.css?v=47">
 </head>
 <body>
 
@@ -171,6 +171,8 @@
                 title="The Residence — improvements to the White House">THE RESIDENCE <b>0/13</b></button>
         <button class="const-chip call-chip" id="call-chip" data-act="call"
                 title="The Phone — executive time">THE PHONE <b>&#9742;</b></button>
+        <button class="const-chip war-chip" id="war-chip" data-act="war"
+                title="The War Room — declare war on anyone">THE WAR ROOM <b>&#9876;</b></button>
       </div>
     </div>
 
@@ -274,6 +276,21 @@
         Send in the force before a hotspot gets out of hand — or let the base watch you concede.</p>
       <div class="sen-list corr-list" id="street-list"></div>
       <button class="btn wide" data-act="street-close">Back to Governing</button>
+    </div>
+  </div>
+
+  <div class="overlay" id="ov-war" hidden>
+    <div class="panel narrow scroll">
+      <h2 class="panel-h">The War Room</h2>
+      <div class="corr-head sen-head">
+        <div class="corr-cash">Wars Ongoing <b id="war-active">0</b></div>
+        <div>This Month <b id="war-note-h">Declare one</b></div>
+      </div>
+      <p class="corr-note" id="war-note">Declare war on anyone you like, for any reason at all. The base rallies
+        to the flag; the institutions you did not ask do not. Wars resolve over the following months into a
+        victory or a quagmire. "Deflect from a scandal" really does bury the Saint Ambrose files.</p>
+      <div class="sen-list corr-list" id="war-list"></div>
+      <button class="btn wide" data-act="war-close">Stand Down</button>
     </div>
   </div>
 
@@ -425,36 +442,37 @@
 </div>
 
 <!-- state.js creates the AD namespace, so it must load first. -->
-<script src="js/state.js?v=46"></script>
-<script src="js/seed.js?v=46"></script>
-<script src="js/audio.js?v=46"></script>
-<script src="js/doctrines.js?v=46"></script>
-<script src="js/corruption.js?v=46"></script>
-<script src="js/renovations.js?v=46"></script>
-<script src="js/senate.js?v=46"></script>
-<script src="js/press.js?v=46"></script>
-<script src="js/street.js?v=46"></script>
-<script src="js/call.js?v=46"></script>
-<script src="js/constitution.js?v=46"></script>
-<script src="js/tutorial.js?v=46"></script>
-<script src="js/achievements.js?v=46"></script>
-<script src="js/briefings.js?v=46"></script>
-<script src="js/cards.js?v=46"></script>
+<script src="js/state.js?v=47"></script>
+<script src="js/seed.js?v=47"></script>
+<script src="js/audio.js?v=47"></script>
+<script src="js/doctrines.js?v=47"></script>
+<script src="js/corruption.js?v=47"></script>
+<script src="js/renovations.js?v=47"></script>
+<script src="js/senate.js?v=47"></script>
+<script src="js/press.js?v=47"></script>
+<script src="js/street.js?v=47"></script>
+<script src="js/call.js?v=47"></script>
+<script src="js/war.js?v=47"></script>
+<script src="js/constitution.js?v=47"></script>
+<script src="js/tutorial.js?v=47"></script>
+<script src="js/achievements.js?v=47"></script>
+<script src="js/briefings.js?v=47"></script>
+<script src="js/cards.js?v=47"></script>
 <!-- Content packs. Each pushes onto AD.CARDS, so adding a deck is adding a
      file — no engine changes. Order does not matter. -->
-<script src="js/packs/pack-a-honeymoon.js?v=46"></script>
-<script src="js/packs/pack-b-machinery.js?v=46"></script>
-<script src="js/packs/pack-c-consolidation.js?v=46"></script>
-<script src="js/packs/pack-d-evergreen.js?v=46"></script>
-<script src="js/packs/pack-e-secondterm.js?v=46"></script>
-<script src="js/packs/pack-f-record.js?v=46"></script>
-<script src="js/packs/pack-g-record.js?v=46"></script>
+<script src="js/packs/pack-a-honeymoon.js?v=47"></script>
+<script src="js/packs/pack-b-machinery.js?v=47"></script>
+<script src="js/packs/pack-c-consolidation.js?v=47"></script>
+<script src="js/packs/pack-d-evergreen.js?v=47"></script>
+<script src="js/packs/pack-e-secondterm.js?v=47"></script>
+<script src="js/packs/pack-f-record.js?v=47"></script>
+<script src="js/packs/pack-g-record.js?v=47"></script>
 <!-- cay.js reads AD.CAST, so it must load after cards.js -->
-<script src="js/cay.js?v=46"></script>
-<script src="js/events.js?v=46"></script>
-<script src="js/endings.js?v=46"></script>
-<script src="js/engine.js?v=46"></script>
-<script src="js/ui.js?v=46"></script>
-<script src="js/main.js?v=46"></script>
+<script src="js/cay.js?v=47"></script>
+<script src="js/events.js?v=47"></script>
+<script src="js/endings.js?v=47"></script>
+<script src="js/engine.js?v=47"></script>
+<script src="js/ui.js?v=47"></script>
+<script src="js/main.js?v=47"></script>
 </body>
 </html>

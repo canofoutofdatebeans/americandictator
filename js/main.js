@@ -240,6 +240,13 @@ AD.Game = {
     } else if (AD.Engine.pendingShield) {     // the shield fired on the monthly tick
       AD.UI.showTabloid(AD.Engine.pendingShield);
       AD.Engine.pendingShield = null;
+    } else if (AD.Engine.lastWar && AD.Engine.lastWar.resolved.length) {
+      // a war resolved this month — front-page it
+      const w = AD.Engine.lastWar.resolved[0];
+      AD.UI.showTabloid(w.won
+        ? { head: 'VICTORY', sub: 'The war in ' + w.target.name + ' is declared won; a parade is announced', body: w.res }
+        : { head: 'QUAGMIRE', sub: 'The war in ' + w.target.name + ' turns; the street turns with it', body: w.res });
+      AD.Engine.lastWar = null;
     }
     const leak = AD.Engine.lastLeak;
     AD.UI.showLeak(leak && leak.leak);
@@ -290,6 +297,18 @@ AD.Game = {
   },
 
   /* ---------- the residence ---------- */
+  declareWar (targetId, pretextId) {
+    const run = AD.Engine.run;
+    if (!run || run.over) return;
+    const r = AD.declareWar(run, targetId, pretextId);
+    if (!r.ok) return;
+    AD.saveRun(run);
+    AD.Audio.play('tabloid');
+    AD.UI.renderWar(r); AD.UI.renderHUD();
+    const collapse = AD.Engine.checkCollapse();
+    if (collapse.ending) { AD.Engine.finish(collapse.ending); this.pending = []; setTimeout(() => this.showEnding(AD.Engine.lastScore), 900); }
+  },
+
   makeCall (targetId, actionId) {
     const run = AD.Engine.run;
     if (!run || run.over) return;
@@ -428,6 +447,9 @@ AD.Game = {
       const callsay = e.target.closest('[data-callsay]');
       if (callsay && !callsay.disabled) { this.makeCall(callsay.dataset.callwho, callsay.dataset.callsay); return; }
 
+      const warbtn = e.target.closest('[data-warwhy]');
+      if (warbtn && !warbtn.disabled) { this.declareWar(warbtn.dataset.wartarget, warbtn.dataset.warwhy); return; }
+
       const act = e.target.closest('[data-act]');
       if (act) this.act(act.dataset.act);
     });
@@ -528,6 +550,14 @@ AD.Game = {
         U.stopTimer(); U.renderCall(); U.overlay('call', true); break;
       case 'call-close':
         U.overlay('call', false);
+        if (AD.Engine.card && !U.el('card').hidden) U.startTimer(AD.Engine.card);
+        break;
+
+      case 'war':
+        if (U.current !== 'game' || !AD.Engine.run || AD.Engine.run.over) break;
+        U.stopTimer(); U.renderWar(); U.overlay('war', true); break;
+      case 'war-close':
+        U.overlay('war', false);
         if (AD.Engine.card && !U.el('card').hidden) U.startTimer(AD.Engine.card);
         break;
 

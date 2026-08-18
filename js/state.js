@@ -152,12 +152,12 @@ AD.rankFor = a => AD.RANKS.filter(r => a >= r.at).pop().name;
    historic 2 but on a 40-month clock with every meter sagging underneath you. */
 AD.DIFFS = {
   rookie: {
-    id: 'rookie', label: 'Rookie', months: 48, capture: 90, pillarValue: 26, timer: 20,
+    id: 'rookie', label: 'Rookie', months: 48, capture: 90, pillarValue: 26, timer: 40,
     startCash: 4, drift: 0,
     hint: 'Ninety is a capture, and two of them is enough. The institutions are tired.'
   },
   standard: {
-    id: 'standard', label: 'Standard', months: 48, capture: 100, pillarValue: 22, timer: 14,
+    id: 'standard', label: 'Standard', months: 48, capture: 100, pillarValue: 22, timer: 28,
     startCash: 3, drift: 0,
     hint: 'One term, and a dictatorship costs three of the four branches. The intended experience.'
   },
@@ -165,9 +165,9 @@ AD.DIFFS = {
     // pillarValue 23 puts two pillars at 46, so a win needs rawAuth 54 of a
     // possible 55 — effectively "max out everything AND take two branches, or
     // take three." 22 makes it impossible; 25 makes it easy. It is a cliff.
-    id: 'historic', label: 'Historic', months: 40, capture: 100, pillarValue: 23, timer: 10,
+    id: 'historic', label: 'Historic', months: 40, capture: 100, pillarValue: 23, timer: 20,
     startCash: 2, drift: 0, pressureMult: 2,
-    hint: 'Forty months, three branches, ten seconds a decision — and every institution you take ' +
+    hint: 'Forty months, three branches, twenty seconds a decision — and every institution you take ' +
           'makes the next one fight twice as hard.'
   }
 };
@@ -229,6 +229,7 @@ AD.newRun = function (opts) {
     senate: [],                 // the 100-seat chamber — see senate.js
     press: [],                  // the press room — see press.js
     streets: [],                // the cities and their unrest — see street.js
+    wars: [],                   // ongoing wars — see war.js
     clauses: [],                // constitutional clauses broken — see constitution.js
     stats: { grabs: 0, restraints: 0, timeouts: 0, peakCash: d.startCash, briefings: 0, bought: 0, built: 0 },
     over: false,

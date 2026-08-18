@@ -816,6 +816,56 @@ AD.UI = {
     }).join('');
   },
 
+  /* ---------- the war room ---------- */
+  renderWar (result) {
+    const run = AD.Engine.run;
+    AD.ensureWars(run);
+    const st = AD.warStatus(run);
+    const activeEl = this.el('war-active');
+    activeEl.textContent = st.active;
+    activeEl.className = st.active > 0 ? 'hot' : '';
+
+    const note = this.el('war-note');
+    if (result && result.line) {
+      note.className = 'corr-note bought';
+      note.innerHTML = `<b>War declared on ${result.target.name}.</b> ` +
+        `&ldquo;${AD.clean(result.line, this.settings.clean)}&rdquo;` +
+        (result.heat !== null && result.heat !== undefined ? ' <i>Saint Ambrose cools.</i>' : '');
+    } else {
+      note.className = 'corr-note';
+      note.textContent = 'Declare war on anyone you like, for any reason at all. The base rallies to the flag; ' +
+        'the institutions you did not ask do not. "Deflect from a scandal" really does bury the Saint Ambrose files.';
+    }
+
+    const strengthLabel = t => t.strength === 0 ? 'undefended'
+      : t.strength === 1 ? 'weak' : t.strength === 2 ? 'a real army' : 'a great power';
+
+    const ongoing = st.list.map(w => {
+      const t = AD.warTargetById(w.target);
+      return `<div class="sen-row war-ongoing">
+        <div class="sen-top"><span class="sen-dot"></span>
+          <b>War: ${t.name}</b><i>month ${w.months + 1} · ${AD.warPretextById(w.pretext).label.toLowerCase()}</i>
+          <span class="sen-mood">Ongoing</span></div></div>`;
+    }).join('');
+
+    const targets = AD.WAR_TARGETS.map(t => {
+      const atWar = AD.atWarWith(run, t.id);
+      const buttons = AD.WAR_PRETEXTS.map(p => {
+        const dis = atWar || run.cash < 0.4 ? 'disabled' : '';
+        return `<button class="sen-act war-${p.id}" data-wartarget="${t.id}" data-warwhy="${p.id}" ${dis} title="${p.label}">${p.icon} ${p.label}</button>`;
+      }).join('');
+      return `<div class="sen-row war-target ${atWar ? 'mood-gone' : ''}">
+        <div class="sen-top"><span class="sen-dot"></span>
+          <b>${t.name}</b><i>${t.leader} · ${strengthLabel(t)}${t.loot >= 1 ? ' · rich' : ''}</i>
+          ${atWar ? '<span class="sen-mood">At war</span>' : ''}</div>
+        <div class="sen-gripe">${t.blurb}</div>
+        <div class="sen-acts war-acts">${buttons}</div>
+      </div>`;
+    }).join('');
+
+    this.el('war-list').innerHTML = (ongoing ? ongoing + '<div class="war-sep">Declare a new war</div>' : '') + targets;
+  },
+
   /* ---------- crisis log ---------- */
   renderLog () {
     const run = AD.Engine.run;

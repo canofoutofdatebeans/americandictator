@@ -35,6 +35,7 @@ AD.Engine = {
     if (!run.senate || !run.senate.length) run.senate = AD.makeSenate(run); // pre-senate saves
     if (!run.press || !run.press.length) run.press = AD.makePress();       // pre-press saves
     if (!run.streets || !run.streets.length) run.streets = AD.makeStreet(); // pre-street saves
+    if (!run.wars) run.wars = [];           // pre-war saves
 
     this.run = run;
     this.card = null;
@@ -421,6 +422,7 @@ AD.Engine = {
     this.lastPress = AD.pressTick(run);
     this.lastStreet = AD.streetTick(run);
     AD.callTick(run);   // refill the monthly phone allowance
+    this.lastWar = AD.warTick(run);   // ongoing wars resolve into victory or quagmire
     // A story hot enough to leak does damage without needing a card.
     this.lastLeak = AD.cayTick(run);
 
