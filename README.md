@@ -77,6 +77,9 @@ is tested; the native shells have never been compiled or run on hardware.
 | `js/street.js` | **Public Order.** Ten cities, unrest, and the ICE-style forces you send in. |
 | `js/call.js` | **The Phone.** The address book and the five things to say, in the house voice. |
 | `js/war.js` | **The War Room.** Declare war on anyone, for any reason, and resolve it. |
+| `js/courts.js` | **The Bench.** Ten judges to pressure, buy, or sack & pack. |
+| `js/basepop.js` | **The Rally.** Silly all-American stunts to feed the base. |
+| `js/dossier.js` | **The Dossier.** A generated end-of-term front page that narrates your run. |
 | `js/packs/*.js` | **195 more crises** in seven loadable packs. Each pushes onto `AD.CARDS`. |
 | `js/events.js` | Scripted beats: the Address, Midterms, Pillar backlash, Re-election, the Twenty-Second. |
 | `js/doctrines.js` | Five permanent rule-changing unlocks. |
@@ -177,10 +180,29 @@ tile to open the system behind it, and there are two more screens on chips of th
   pretexts (their resources, boredom, disliking the leader, to impress someone, or **to deflect
   from a scandal** — which really does bury the Saint Ambrose files). Wars resolve into a victory
   or a quagmire over the following months.
+- **The Bench** (Courts tile) — ten named judges from hostile to captured. **Pressure** them (free
+  intimidation), **Buy** the affordable ones, or **Sack & Pack** a hostile judge with a hand-picked
+  loyalist. A favourable bench pushes the Courts meter up each month.
+- **The Rally** (Base tile) — the base finally has controls of its own: a menu of gloriously stupid
+  all-American stunts (monster trucks on the South Lawn, deep-frying the national turkey live,
+  tax-free ammo week, adding yourself to the mountain). Each runs through the base appetite so the
+  silliest, most offensive spectacle lands hardest. Two a month — and over-feeding the base is its
+  own way to lose it.
 
 Every action across all five screens moves all five power centres, Authority and cash. Each screen
 is generated deterministically from the run seed via a **separate rng**, so none of them ever
 touch the card-draw stream or break a shared-seed run.
+
+**The Dossier** (`dossier.js`): the twenty fixed endings tell you *how* a term ended; the Dossier
+tells you what you *did*. At the end of every run a generated front page names the actual senators
+you purged, judges you packed, outlets you captured, wars you declared (and why), clauses you
+broke and the fortune you kept — with a headline chosen from your dominant strategy and a
+one-line shareable summary carrying the seed. Two runs never produce the same dossier.
+
+**The systemic guardrail** (`engine.advance`): every management screen's monthly tick is capped so
+their *combined* loss to any one meter can never exceed `AD.MGMT_LOSS_CAP`. Background systems
+create pressure; only a decision lands the killing blow. This replaced three per-screen tuning
+patches with one documented invariant.
 
 **The Base's appetite** (`state.js`): the movement rewards transgression and chaos. A choice that
 pleases the base while offending institutions gets its base gain multiplied once per offended power
