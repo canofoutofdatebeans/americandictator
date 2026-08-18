@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no">
 <meta name="theme-color" content="#0d0b09">
 <title>American Dictator</title>
-<link rel="stylesheet" href="css/styles.css?v=32">
+<link rel="stylesheet" href="css/styles.css?v=41">
 </head>
 <body>
 
@@ -164,14 +164,21 @@
         <i class="tick cap" id="auth-cap" title="Decisions alone stop here. Pillars go past it."></i>
       </div>
       <div class="pillar-row" id="pillar-row"></div>
-      <button class="const-chip" id="const-chip" data-act="constitution"
-              title="The Ledger of Broken Clauses">THE CONSTITUTION <b>0/16</b></button>
+      <div class="chip-row">
+        <button class="const-chip" id="const-chip" data-act="constitution"
+                title="The Ledger of Broken Clauses">THE CONSTITUTION <b>0/16</b></button>
+        <button class="const-chip reno-chip" id="reno-chip" data-act="renovations"
+                title="The Residence — improvements to the White House">THE RESIDENCE <b>0/12</b></button>
+      </div>
     </div>
 
     <div class="facade">
       <div class="facade-roof" aria-hidden="true"></div>
       <div class="factions" id="factions" role="group" aria-label="Power centres"></div>
       <div class="warnings" id="warnings" role="status" aria-live="polite"></div>
+      <div class="ticker" id="ticker" role="status" hidden>
+        <span class="ticker-tag">SAINT AMBROSE</span><span id="ticker-text"></span>
+      </div>
     </div>
 
     <div class="stage" role="region" aria-live="polite" aria-atomic="false" aria-label="Current crisis">
@@ -238,6 +245,23 @@
     </div>
   </div>
 
+  <div class="overlay" id="ov-renovations" hidden>
+    <div class="panel narrow scroll">
+      <h2 class="panel-h">The Residence</h2>
+      <div class="reno-view" id="reno-view"></div>
+      <div class="corr-head">
+        <div class="corr-cash">Available <b id="reno-cash">$3.0B</b></div>
+        <div>Standing <b id="reno-built">0 / 12</b></div>
+        <div>Upkeep <b id="reno-upkeep">none</b></div>
+        <div>Scrutiny <b id="reno-scrutiny">none</b></div>
+      </div>
+      <p class="corr-note" id="reno-note">Every structure grants Authority the moment it is finished —
+        and bills you for the rest of your term.</p>
+      <div class="corr-list" id="reno-list"></div>
+      <button class="btn wide" data-act="renovations-close">Back to Governing</button>
+    </div>
+  </div>
+
   <div class="tut-overlay" id="ov-tutorial" hidden>
     <div class="tut-spot" id="tut-spot" hidden></div>
     <div class="tut-box" id="tut-box">
@@ -296,7 +320,7 @@
       <hr class="rule">
       <div class="iap">
         <div class="iap-h">CHIEF OF STAFF PACK</div>
-        <p class="iap-p">Longer decision timers · impact previews before you choose · the full Crisis Log · post-crisis briefings from your Chief of Staff.
+        <p class="iap-p">Longer decision timers · the full Crisis Log · post-crisis briefings from your Chief of Staff.
           In the shipping build this is the single optional in-app purchase. Here it's a switch.</p>
         <div class="opt"><label><input type="checkbox" id="opt-pack"> Hire a Chief of Staff</label><em>Simulated purchase.</em></div>
       </div>
@@ -337,29 +361,32 @@
 </div>
 
 <!-- state.js creates the AD namespace, so it must load first. -->
-<script src="js/state.js?v=32"></script>
-<script src="js/seed.js?v=32"></script>
-<script src="js/audio.js?v=32"></script>
-<script src="js/doctrines.js?v=32"></script>
-<script src="js/corruption.js?v=32"></script>
-<script src="js/constitution.js?v=32"></script>
-<script src="js/tutorial.js?v=32"></script>
-<script src="js/achievements.js?v=32"></script>
-<script src="js/briefings.js?v=32"></script>
-<script src="js/cards.js?v=32"></script>
+<script src="js/state.js?v=41"></script>
+<script src="js/seed.js?v=41"></script>
+<script src="js/audio.js?v=41"></script>
+<script src="js/doctrines.js?v=41"></script>
+<script src="js/corruption.js?v=41"></script>
+<script src="js/renovations.js?v=41"></script>
+<script src="js/constitution.js?v=41"></script>
+<script src="js/tutorial.js?v=41"></script>
+<script src="js/achievements.js?v=41"></script>
+<script src="js/briefings.js?v=41"></script>
+<script src="js/cards.js?v=41"></script>
 <!-- Content packs. Each pushes onto AD.CARDS, so adding a deck is adding a
      file — no engine changes. Order does not matter. -->
-<script src="js/packs/pack-a-honeymoon.js?v=32"></script>
-<script src="js/packs/pack-b-machinery.js?v=32"></script>
-<script src="js/packs/pack-c-consolidation.js?v=32"></script>
-<script src="js/packs/pack-d-evergreen.js?v=32"></script>
-<script src="js/packs/pack-e-secondterm.js?v=32"></script>
-<script src="js/packs/pack-f-record.js?v=32"></script>
-<script src="js/packs/pack-g-record.js?v=32"></script>
-<script src="js/events.js?v=32"></script>
-<script src="js/endings.js?v=32"></script>
-<script src="js/engine.js?v=32"></script>
-<script src="js/ui.js?v=32"></script>
-<script src="js/main.js?v=32"></script>
+<script src="js/packs/pack-a-honeymoon.js?v=41"></script>
+<script src="js/packs/pack-b-machinery.js?v=41"></script>
+<script src="js/packs/pack-c-consolidation.js?v=41"></script>
+<script src="js/packs/pack-d-evergreen.js?v=41"></script>
+<script src="js/packs/pack-e-secondterm.js?v=41"></script>
+<script src="js/packs/pack-f-record.js?v=41"></script>
+<script src="js/packs/pack-g-record.js?v=41"></script>
+<!-- cay.js reads AD.CAST, so it must load after cards.js -->
+<script src="js/cay.js?v=41"></script>
+<script src="js/events.js?v=41"></script>
+<script src="js/endings.js?v=41"></script>
+<script src="js/engine.js?v=41"></script>
+<script src="js/ui.js?v=41"></script>
+<script src="js/main.js?v=41"></script>
 </body>
 </html>

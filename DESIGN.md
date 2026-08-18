@@ -291,6 +291,64 @@ common.
 
 ---
 
+## 7b. The Residence (renovations.js)
+
+The third spend track, and deliberately the worst one on a spreadsheet. Twelve structures
+across Leisure & Spectacle, Fortification and Glory, rendered as a layered SVG elevation that
+gains a piece for every build.
+
+| Rule | Why |
+|---|---|
+| **Authority granted is `rawAuth`** | So `SOFT_CAP` (55) still binds. Gilding gets you to the cap faster and not one point past it — three Pillars remain the only route to 100. |
+| **Upkeep, monthly, forever** | Puts the monument goal in direct competition with the $10B goal. Full build ≈ $305M/mo. Arrears charge Base and Press instead of cash. |
+| **Scrutiny: `floor(built / 3)` to Congress and Courts, half to Press, monthly, unshielded** | The one that actually matters. See below. |
+
+Passives merge into the **same pool as corruption.js** (`AD.passives`), so the 0.40 shield and
+0.30 gain caps apply across both tracks and no combined build becomes immune.
+
+**Why Scrutiny exists.** Upkeep alone was not a real price: a player on the Pillar route does
+not need cash, so a $305M monthly bill was free and the shields, Base lumps and raw Authority
+were pure upside. Measured on a fixed bot, the Residence without Scrutiny took survival from
+**56 to 86 months** and two-pillar runs from **18 to 143**. With Scrutiny at `/3` and Base
+lumps trimmed ~25%, the same bot lands at 73 months and two-pillar 24 vs a baseline of 23 —
+*longer runs, no extra wins*, which is the intended shape.
+
+## 7c. The Saint Ambrose Files (cay.js)
+
+A seven-part recurring arc, scheduled from `AD.scriptedFor` so it yields to the Address, the
+Midterms and every November. Fictional throughout: a longevity clinic on a private island, a
+flight manifest, a guest book, a death in custody, and a two-year fight about whether a
+document can be read.
+
+The mechanic is **heat**, 0–10, carried on `run.cay` and charged by a `cayHeat` field on each
+choice *separately from its meter effects* — so a choice can be cheap tonight and expensive for
+two years.
+
+- Suppress raises heat, transparency lowers it.
+- Above `CAY_LEAK_AT` (4) the story **leaks between instalments** with no card at all: flat
+  damage to Press, Street and Base at `1 + floor(heat/4)`, on a `(heat-3) × 4.5%` monthly roll.
+  This is what makes suppression expensive rather than merely dishonest.
+- Heat shortens the gap: `max(4, CAY_GAP - floor(heat/2))`, so 10 months becomes 5.
+- Stage and heat **carry across terms**; only the schedule resets. A one-term president never
+  finds out how it ends.
+- The finale resolves against heat and grip. Bury at heat ≥ 7 with
+  `courts×0.5 + congress×0.3 + press×0.2 < 52` and the run ends on **`the-cay`**.
+
+**Tuning history.** First pass cost Rookie 83% → 56% — the arc was eating ~15% of all crisis
+slots with mostly meter-negative options, and the transparency options were gutting the Base
+(−6 to −16 each, five to seven times a term). Fixed by halving those Base costs, softening the
+worst suppression, and widening the gap from 6 to 10 months. Rookie now 84% → 69%, Standard
+neutral within noise.
+
+## 7d. No impact previews
+
+The score behind a choice is never displayed, at any tier — the paid pack does not unlock it
+either. You decide on the words and find out afterwards. Showing the numbers turned every
+crisis into arithmetic. The only figures on a choice are the two *gates* (a cash price, an
+Authority requirement), because a locked door has to say why it is locked.
+
+---
+
 ## 8. Architecture
 
 ```

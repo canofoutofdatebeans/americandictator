@@ -31,6 +31,7 @@ AD.Engine = {
     if (!run.stats) run.stats = { grabs: 0, restraints: 0, timeouts: 0, peakCash: run.cash, briefings: 0, bought: 0 };
     if (!run.assets) run.assets = [];      // saves written before the corruption track
     if (!run.clauses) run.clauses = [];    // saves written before the constitution ledger
+    if (!run.renos) run.renos = [];        // saves written before the residence track
 
     this.run = run;
     this.card = null;
@@ -132,6 +133,13 @@ AD.Engine = {
 
     /* --- Cost --- */
     if (choice.cost) run.cash -= choice.cost;
+
+    /* --- The Saint Ambrose arc. Heat is charged separately from the meters,
+           so a choice can be cheap tonight and expensive for two years. --- */
+    if (choice.cayHeat) {
+      out.cayHeat = AD.bumpHeat(run, choice.cayHeat);
+      out.cayDelta = choice.cayHeat;
+    }
 
     /* --- Doctrines, then owned holdings, reshape the effect before it lands.
            Order matters: doctrines are constitutional theory, corruption is
@@ -394,8 +402,13 @@ AD.Engine = {
       }
     } else run.pressureOn = null;
 
-    // Holdings pay out, drip and settle before the survival checks.
+    // Holdings pay out, drip and settle before the survival checks — then the
+    // residence sends its bill, which is charged AFTER income so a mint can
+    // pay for the ballroom in the same month it earns.
     this.lastTick = AD.corruptionTick(run);
+    this.lastUpkeep = AD.renovationTick(run);
+    // A story hot enough to leak does damage without needing a card.
+    this.lastLeak = AD.cayTick(run);
 
     // Crossing the fortune line is announced once, and does not end the run —
     // it is banked and cashed in at whatever ending you eventually reach.
@@ -476,6 +489,14 @@ AD.Engine = {
       else if (f.key === 'base' && v >= 88 && !run.baseHigh) out.push({ key: f.key, level: 'warn', text: f.highWarn });
       else if (f.capturable && v >= 85) out.push({ key: f.key, level: 'good', text: f.pillar + ' is within reach.' });
     });
+
+    // The Cay only speaks up once it is genuinely running, so it reads as a
+    // story that grew rather than a permanent piece of furniture.
+    const heat = AD.cayHeat(run);
+    if (heat >= AD.CAY_LEAK_AT) {
+      out.push({ level: heat >= 7 ? 'crit' : 'warn',
+        text: 'Saint Ambrose is ' + AD.cayLabel(run).toLowerCase() + '. It leads again tonight.' });
+    }
 
     if (run.rawAuth > AD.SOFT_CAP && Object.keys(run.locked).length < 2) {
       out.push({ level: 'warn', text: 'Decisions alone cannot carry you past ' + AD.SOFT_CAP +

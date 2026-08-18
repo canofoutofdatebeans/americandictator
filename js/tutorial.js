@@ -71,6 +71,13 @@ AD.Tutorial = {
             'Holdings never grant Authority — money cannot buy the presidency. It buys <b>leverage</b>: ' +
             'shields, multipliers and income. Reach <b>$10B</b> and even losing the country counts as a win.' },
 
+    { target: '#reno-chip', title: 'And the building itself.',
+      body: 'The other place to spend it. <b>The Residence</b> — a ballroom where the East Wing was, ' +
+            'a rollercoaster over the roof, a statue of you visible from orbit.<br><br>' +
+            'Every structure pays <b>Authority the moment it tops out</b> — but it bills you every ' +
+            'month forever, and the more of it stands, the harder Congress and the Courts come at you. ' +
+            'Glory is the most expensive thing on the menu.' },
+
     { target: '#choices', title: 'That is everything.',
       body: 'Keep five meters alive. Take three branches. Do not let the movement outgrow you.<br><br>' +
             'Your first crisis is waiting. <b>Good luck, Mr President.</b>' }

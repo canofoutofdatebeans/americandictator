@@ -1502,6 +1502,31 @@ AD.eligible = function (run) {
   });
 };
 
+/* ---------- clause surfacing ------------------------------------------------
+   See the long note inside pickCard. CLAUSE_WEIGHT is the gentle nudge while
+   you are merely breaking things; CLAUSE_WEIGHT_MAX is what the deck does once
+   it is convinced you are going for all sixteen. */
+AD.CLAUSE_WEIGHT     = 14;   // base weight is 10, so this is a ~2.4x nudge
+AD.CLAUSE_WEIGHT_MAX = 110;  // scarcity-scaled ceiling, for a 3-route clause
+AD.CLAUSE_RAMP_AT    = 3;    // clauses broken before the deck starts helping
+
+/* How many choices in the whole deck break each clause. Computed once, lazily,
+   because the content packs are still loading when this file is evaluated. */
+AD._routes = null;
+AD.clauseRoutes = function () {
+  if (AD._routes) return AD._routes;
+  const r = {};
+  AD.CLAUSES.forEach(c => { r[c.id] = 0; });
+  AD.CARDS.forEach(card => (card.choices || []).forEach(ch => {
+    if (!ch.breaks) return;
+    (Array.isArray(ch.breaks) ? ch.breaks : [ch.breaks]).forEach(id => {
+      r[id] = (r[id] || 0) + 1;
+    });
+  }));
+  AD._routes = r;
+  return r;
+};
+
 /* Weighted pick: prefer cards whose tags touch whichever meters are volatile,
    so the deck feels responsive rather than random. */
 AD.pickCard = function (run) {
@@ -1526,15 +1551,41 @@ AD.pickCard = function (run) {
     });
     /* Once the player has started breaking clauses, surface the cards that
        offer one they have not broken yet. Without this the full set is
-       statistically unreachable: 53 tagged choices spread over 342 cards means
-       a dedicated hunter averages 6 of 16 and completes the set ~0% of runs. */
+       statistically unreachable: tagged choices spread over 370 cards mean a
+       dedicated hunter averages 6 of 16 and completes the set ~0% of runs.
+
+       Two refinements on top of the flat +14, both measured:
+
+       1. IT RAMPS. Below CLAUSE_RAMP_AT broken clauses the bonus stays at the
+          old flat value, so ordinary play is untouched. At or above it the
+          deck concludes you are collecting and starts actively feeding you.
+          A flat strong bonus from the first clause cost Rookie 8 points of
+          win rate — the clause cards are aggressive, and pushing them at a
+          player who is not hunting just damages their institutions.
+
+       2. IT SCALES WITH SCARCITY. A clause with three routes in the whole
+          deck needs far more help than one with five, so the bonus is
+          divided by the route count. This also self-corrects: add routes for
+          a starved clause later and its bonus drops automatically.
+
+       Hunter bot, 200 runs: 7.5 -> 10.6 clauses average, full set 0% -> 3.5%,
+       best run 15 -> 16. Ordinary play unchanged (Rookie 68.5% -> 71.0%). */
     if (run.clauses && run.clauses.length) {
-      const opens = c.choices.some(ch => {
-        if (!ch.breaks) return false;
+      const strong = run.clauses.length >= AD.CLAUSE_RAMP_AT;
+      let bonus = 0;
+      c.choices.forEach(ch => {
+        if (!ch.breaks) return;
         const ids = Array.isArray(ch.breaks) ? ch.breaks : [ch.breaks];
-        return ids.some(id => run.clauses.indexOf(id) === -1);
+        ids.forEach(id => {
+          if (run.clauses.indexOf(id) !== -1) return;
+          const b = strong
+            ? Math.min(AD.CLAUSE_WEIGHT_MAX,
+                       Math.round(AD.CLAUSE_WEIGHT_MAX * 3 / (AD.clauseRoutes()[id] || 1)))
+            : AD.CLAUSE_WEIGHT;
+          if (b > bonus) bonus = b;
+        });
       });
-      if (opens) w += 14;
+      w += bonus;
     }
 
     if ((c.tags || []).indexOf('power') !== -1 && run.authority > 40) w += 6;

@@ -35,6 +35,12 @@ html[data-motion="off"] *{animation:none!important;transition:none!important}
 
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 
+/* The HTML `hidden` attribute must always win. Author rules that set `display`
+   silently beat the UA `[hidden]` rule, and several components do set it — that
+   is how an always-visible "Resume Term" button and an empty news ticker both
+   shipped. Guard it once, globally, rather than per component. */
+[hidden]{display:none!important}
+
 /* Visible keyboard focus everywhere. Screen-reader users and keyboard players
    need to see where they are; the reference product's reviews single this out. */
 :focus-visible{outline:2px solid var(--gold-soft);outline-offset:2px;border-radius:6px}
@@ -333,7 +339,10 @@ body::before{
 .fac .lock{position:absolute;top:-2px;right:2px;font-size:9px;color:var(--gold)}
 
 /* ---------- stage / card ---------- */
-.stage{flex:1;display:flex;flex-direction:column;justify-content:center;min-height:0;padding:6px 0 2px;position:relative}
+.stage{flex:1;display:flex;flex-direction:column;min-height:0;padding:6px 0 2px;position:relative;overflow-y:auto}
+/* margin:auto centres a card that fits and collapses to 0 on one that does not,
+   so a tall crisis scrolls instead of overflowing up over the meters. */
+.stage>.card{margin:auto 0;flex:0 0 auto}
 .card{
   background:linear-gradient(var(--ink2),var(--ink));
   border:1px solid var(--edge);border-radius:var(--radius);
@@ -384,11 +393,6 @@ body::before{
 }
 .choice:hover{border-color:var(--gold);background:var(--ink3);transform:translateX(2px)}
 .choice:disabled{opacity:.4;cursor:not-allowed}
-.choice .peek{
-  display:flex;gap:7px;flex-wrap:wrap;margin-top:7px;padding-top:7px;
-  border-top:1px dashed var(--edge);font-size:11px;letter-spacing:.4px;
-}
-.peek b{font-weight:700}
 .up{color:#7fc08d}.down{color:#e0837a}.auth{color:var(--gold-soft)}
 .cost-tag{font-size:11px;color:#9ec9a5;margin-left:6px}
 
@@ -592,3 +596,48 @@ body::before{
 .end-seed em{font-size:10.5px;letter-spacing:.3px;font-style:italic;color:var(--muted)}
 .field>span em{font-style:normal;text-transform:none;letter-spacing:0;color:#5b6880;font-size:10px}
 .end-actions{display:flex;flex-direction:column;gap:8px;max-width:400px;margin:0 auto}
+
+/* ---------- the residence (renovations) ---------- */
+.chip-row{display:flex;gap:6px;margin-top:6px}
+.chip-row .const-chip{margin-top:0}
+.reno-chip:hover{border-color:var(--gold)}
+.reno-chip.started{color:#d8c58a;border-color:#4a3c14}
+.reno-chip.started b{color:var(--gold-soft)}
+.reno-chip.full{background:linear-gradient(90deg,#8d6c14,var(--gold));
+  color:#1a1305;border-color:var(--gold-soft)}
+.reno-chip.full b{color:#1a1305}
+
+.reno-view{
+  border:1px solid var(--edge);border-radius:11px;overflow:hidden;
+  margin-bottom:10px;background:#0c1830;box-shadow:inset 0 0 30px rgba(0,0,0,.5);
+}
+.reno-view svg{width:100%;height:auto;display:block}
+.reno-focus{animation:renoPop .9s ease both}
+@keyframes renoPop{
+  0%{opacity:0;transform:translateY(8px)}
+  40%{opacity:1;transform:translateY(0)}
+  55%{filter:drop-shadow(0 0 10px var(--gold-soft))}
+  100%{filter:none}
+}
+#reno-upkeep{color:#c98d92}
+#reno-upkeep.exposed{color:var(--red-hot)}
+.asset-upkeep{font-size:10.5px;color:#c98d92;letter-spacing:.2px;margin-top:3px;font-style:italic}
+.reno-buy{background:linear-gradient(#33280f,#241c09);border-color:#5c4a15;color:#e6cf7a}
+.reno-buy:hover:not(:disabled){border-color:var(--gold)}
+#reno-scrutiny{color:#c98d92}
+#reno-scrutiny.exposed{color:var(--red-hot)}
+.corr-head{flex-wrap:wrap}
+.corr-head>div{min-width:calc(50% - 4px)}
+
+/* ---------- Saint Ambrose ticker ---------- */
+.ticker{
+  display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;
+  margin:5px 0 0;padding:7px 10px;border-radius:9px;
+  background:#1a1013;border:1px solid #4a2030;
+  font-size:11.5px;line-height:1.45;color:#e0b0b4;font-style:italic;
+}
+.ticker.in{animation:slam .35s ease both}
+.ticker-tag{
+  font-size:9px;letter-spacing:2px;font-style:normal;text-transform:uppercase;
+  color:#fff;background:var(--red);padding:2px 6px;border-radius:5px;flex:0 0 auto;
+}

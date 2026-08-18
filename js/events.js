@@ -272,5 +272,8 @@ AD.scriptedFor = function (run) {
     run.flags.lastAddress = run.month;
     return AD.EVENTS.address;
   }
-  return null;
+
+  // The Saint Ambrose arc. It yields to every other scripted beat above,
+  // because a scandal always waits for the State of the Union.
+  return AD.cayFor(run);
 };

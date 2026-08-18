@@ -194,8 +194,9 @@ AD.newRun = function (opts) {
     queue: [],                  // forced next cards (scripted beats)
     log: [],                    // {month, title, choice, deltas}
     assets: [],                 // owned corruption holdings — see corruption.js
+    renos: [],                  // structures built on the residence — see renovations.js
     clauses: [],                // constitutional clauses broken — see constitution.js
-    stats: { grabs: 0, restraints: 0, timeouts: 0, peakCash: d.startCash, briefings: 0, bought: 0 },
+    stats: { grabs: 0, restraints: 0, timeouts: 0, peakCash: d.startCash, briefings: 0, bought: 0, built: 0 },
     over: false,
     legacy: opts.legacy || null // inherited wreckage — see AD.inheritance()
   };
@@ -227,7 +228,9 @@ AD.SCARS = {
   'third-term':   { congress: -14, courts: -14, press: -12, street: -12, base: -6,
                     note: 'The Twenty-Second Amendment is still in the Constitution. It is simply no longer load-bearing.' },
   'two-terms':    { note: 'Your predecessor served eight years and left on time. The bar is, annoyingly, quite high.' },
-  'the-succession': { base: -10, note: 'The movement already has a President it likes. You are the sequel nobody asked for.' }
+  'the-succession': { base: -10, note: 'The movement already has a President it likes. You are the sequel nobody asked for.' },
+  'the-cay':      { press: -12, street: -10, congress: -8,
+                    note: 'Nobody in this country has stopped asking about an island, and they have had four years of practice.' }
 };
 
 AD.CHAOS_KEY = 'americandictator.chaos.v1';

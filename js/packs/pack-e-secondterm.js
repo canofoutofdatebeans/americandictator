@@ -3,6 +3,21 @@
    Everything here is gated on having already served four years.
    No next election, no learning curve, no honeymoon, and a staff
    that has stopped asking whether things are allowed.
+
+   REWRITTEN against the research. Every crisis carries a `src`.
+   INSPIRED BY, NEVER COPIED — take the mechanism, invent the rest.
+
+   This pack draws mostly on the parts of the research that only
+   make sense once a president has already had a term: the immunity
+   architecture built up over four years, the comparative material
+   on leaders who reset their own clocks, the "most powerful
+   president" argument and its rebuttals, and the indices that were
+   still calling the country free while marking it down.
+
+   `t2-term-reset` carries the `termlimit` breach and MUST keep it —
+   it is one of only three routes to that clause in the whole deck,
+   and the only one in a second term.
+
    20 crises.
    ============================================================ */
 (function () {
@@ -10,265 +25,346 @@ const C = AD.CAST;
 
 AD.CARDS.push(
 
-{ id:'t2-clock', title:'The Countdown', who:C.cos, term:2, min:2, max:20, tags:['power'],
-  text:'Deborah has put a number on the wall. It is not a poll. It is the number of days remaining. ' +
-       '"Everyone in this building can see it, sir. Which means everyone in this building is already deciding what they do afterwards."',
-  choices:[
-    { label:'Take it down. Nobody counts anything.', eff:{base:+5,congress:-5,press:-4,auth:+8},
-      res:'The number comes off the wall and into everyone\'s head, where it cannot be removed and where it is checked more often.' },
-    { label:'Leave it up. Use it. Move faster.', eff:{base:+6,congress:-7,courts:-7,press:-5,street:-6,auth:+13},
-      res:'The number becomes the organising principle of the administration. Everything is triaged against it and everything that cannot be finished is abandoned in the first fortnight.' },
-    { label:'Add a second number: how many judges are still unconfirmed.', eff:{courts:+9,congress:-4,press:+2,base:+3,auth:+7},
-      res:'Two numbers on the wall, one falling and one rising. It is the most focused management decision of your entire presidency.' },
-    { label:'Set the number to count up instead. Nobody says up to what.', eff:{base:+2,congress:-6,courts:-4,press:-6,auth:+9}, wild:true,
-      res:'A number on the wall of the West Wing that increases every day toward nothing specified. Four hundred staff see it daily and nobody asks, which is the entire experiment.' }]},
+/* ---------- what a second term actually is ---------- */
 
-{ id:'t2-old-hands', title:'The Ones Who Came Back', who:C.cos, term:2, min:2, max:24, tags:['agencies','power'],
-  text:'Four hundred alumni of the first term have applied to return. They know where everything is, ' +
-       'they know what did not work, and — Deborah notes — they know exactly which objections got people fired last time.',
+{ id:'t2-unleashed', title:'The Restraint That Was Removed', who:C.cos, term:2, min:1, max:16, tags:['power'],
+  src:'observers describing a second term as the first one unleashed, without the discipline of a coming election',
+  text:'Deborah has one page and does not read from it. "Every restraint that operated on you in the first term ' +
+       'was downstream of one thing: you were going to be on a ballot again." She sets it down. ' +
+       '"You are not. Sir, nobody in this building is quite sure what happens to a president when that goes away, ' +
+       'including the people who have studied it."',
   choices:[
-    { label:'Hire all four hundred.', eff:{base:+7,congress:-6,courts:-7,press:-5,street:-5,auth:+13},
-      res:'Nobody needs orientation and nobody needs telling twice. The administration moves at roughly four times the speed of the first term and objects to roughly nothing.' },
-    { label:'Hire the competent ones. Screen for the burned-out.', eff:{congress:+4,street:+4,press:+3,auth:+6},
-      res:'You take two hundred and eleven and leave the rest. The ones you leave give interviews, and four of the interviews are extremely specific.' },
-    { label:'None of them. Fresh people, no memory of the limits.', eff:{base:+4,congress:-8,courts:-8,press:-4,auth:+11},
-      res:'A staff with no institutional memory has no institutional caution. They attempt four things in the first month that the old hands would have said were impossible, and two of them work.' },
-    { label:'Hire the four hundred, and also the ones who resigned in protest.', eff:{base:-4,congress:+4,courts:+3,press:+2,street:+2,auth:-2}, wild:true,
-      res:'Nine of the protest-resigners come back. They are the only people in the building who will tell you no, and you have deliberately re-hired them, which nobody can explain.' }]},
+    { label:'Then stop pretending. Everything, immediately.', eff:{base:+8,congress:-11,courts:-11,press:-9,street:-9,auth:+15},
+      res:'Everything you slow-walked for four years is signed inside a fortnight. The system has never been asked to absorb this much this fast and it does not.' },
+    { label:'Same programme. Faster. Without the meetings.', eff:{base:+5,courts:-5,press:-5,street:-4,congress:-4,auth:+10},
+      res:'No speech, no doctrine, no announcement — simply a government that has stopped asking permission and never mentioned that it stopped.' },
+    { label:'Spend it on the things that need eight years.', eff:{congress:+9,courts:+7,press:+7,street:+6,base:-9,auth:+3},
+      res:'Four programmes that could not have been finished in one term are finished in two. It is the only argument for a second term anybody has ever made honestly.' },
+    { label:'Announce that you will govern as though the ballot still existed.', eff:{base:-5,congress:+8,courts:+7,press:+8,street:+6,auth:-2}, wild:true,
+      res:'Nobody believes it, including Deborah, including you. It is nonetheless true for about nine months, which is eight months longer than anybody predicted.' }]},
 
-{ id:'t2-revenge-tour', title:'The Reckoning', who:C.ag, term:2, min:4, max:30, tags:['justice','power'],
-  text:'"In the first term we were told to wait until after the election." Bo puts down a folder that has visibly ' +
-       'been opened many times. "Sir, there is no after the election now. That was the whole basis of the advice."',
+{ id:'t2-architecture', title:'The Architecture', who:C.lawyer, term:2, min:2, max:20, tags:['courts','power'],
+  src:'an immunity ruling built up over a term into a general architecture of executive power',
+  text:'Sy has brought the four-year file. "It started as one ruling about one prosecution. We have cited it in ' +
+       'nearly a third of our emergency applications since." He turns it around. "Sir, it is not a shield any more. ' +
+       'Four years of briefs have built a structure on top of it, and the structure is load-bearing."',
   choices:[
-    { label:'Open every file. All of them. Today.', eff:{base:+3,courts:-14,press:-5,congress:-11,street:-10,auth:+17},
-      res:'The advice to wait was never about the law. It was about the ballot. Removing the ballot removed the advice, and everyone who gave it understands that now.' },
-    { label:'The four with actual evidence. Nothing else.', eff:{courts:-5,press:-4,congress:-4,base:+4,auth:+9},
-      res:'Four real cases, competently brought. Two convictions. It is more damaging to your opponents than four hundred bad ones would have been.' },
-    { label:'Close the folder. Permanently.', eff:{courts:+11,press:+11,congress:+9,street:+8,base:-9,auth:-7},
-      res:'Bo takes it away and you never see it again. He tells one person, years later, that it was the moment he stopped preparing to resign.' },
-    { label:'Open every file, starting with the one on your own family.', eff:{base:+1,congress:+3,courts:+3,street:-1,auth:-2}, wild:true,
-      res:'It is a genuine investigation with a genuine prosecutor and it finds two genuine problems. Having gone first, nobody can call the other four hundred political.' }]},
+    { label:'Build higher. Cite it in everything.', eff:{base:+6,courts:-12,congress:-10,press:-8,street:-7,auth:+15},
+      res:'A doctrine about prosecution becomes a doctrine about everything, one brief at a time, none of them individually remarkable.' },
+    { label:'Stop citing it. Argue the merits.', eff:{courts:+11,congress:+9,press:+8,base:-8,auth:-3},
+      res:'You win less and keep more. Four of the wins are unappealable in a way that nothing built on the shield ever was.' },
+    { label:'Cite it only where we would lose otherwise.', eff:{base:+3,courts:-5,congress:-4,press:-3,auth:+9},
+      res:'Reserving it for genuine need is what a shield is for, and using it that way is the only version that survives the next administration.' },
+    { label:'Ask the Court to confirm the architecture in writing.', eff:{base:+4,courts:-8,congress:-7,press:-6,auth:+7}, wild:true,
+      res:'They take the case. The opinion is narrower than four years of your own briefs assumed and it quietly demolishes about half the structure.' }]},
 
-{ id:'t2-monument-living', title:'The Living Monument', who:C.hist, term:2, min:8, max:34, tags:['vanity','power'],
-  text:'Dr. Weir: "There is a statutory prohibition on federal monuments to living persons. It has held since 1946." ' +
-       'She turns a page. "There is a bill to repeal it. It has fifty-four cosponsors."',
-  choices:[
-    { label:'Push it through. Break ground before the term ends.', eff:{base:+6,press:-5,street:-9,congress:-7,courts:-6,cash:-0.4,auth:+12},
-      res:'It passes 218–211. Ground is broken in the final year. Construction continues for eleven years under three subsequent administrations, none of which can find a way to stop it.' },
-    { label:'Wait until I\'m dead like everybody else.', eff:{press:+8,street:+7,congress:+5,base:-6,auth:-2},
-      res:'Weir writes down what you said, exactly, because she has been waiting eight years for a sentence she could put in the record without a caveat.' },
-    { label:'Build it privately. On private land. With private money.', eff:{base:+7,press:-4,street:-3,cash:-0.6,auth:+5},
-      res:'Nobody can object to it and nobody has to fund it and it is four hundred feet tall. It is, in every sense, the correct solution.' },
-    { label:'Repeal it, and build the monument to the office rather than the man.', eff:{base:-6,congress:+3,courts:+2,press:+3,street:+4,auth:-2,cash:-0.3}, wild:true,
-      res:'Four hundred feet of granite with no name on it at all. It is finished in eleven years and it is genuinely beautiful and nobody is ever able to attack it.' }]},
+/* ---------- the clock ---------- */
 
-{ id:'t2-loyalty-final', title:'The Last Purge', who:C.cos, term:2, min:10, max:36, tags:['agencies','power'], req:r=>r.flags.scheduleQ,
-  text:'"The reclassification worked. There are now eleven thousand positions that serve at pleasure." ' +
-       'Deborah does not look up. "The list of people currently in them who have ever objected to anything is nine hundred names long."',
+{ id:'t2-eighty-seven', title:'Eighty-Seven Words', who:C.lawyer, term:2, min:4, max:26, tags:['power','elections'],
+  src:'a term-limit amendment of very short length and unusually careful drafting',
+  text:'"I have printed it out. It is eighty-seven words." Sy puts a single sheet on the desk. ' +
+       '"It restricts being *elected* more than twice. People keep telling you there is an argument about ' +
+       'being *installed*. Sir, I have read those arguments and I would be embarrassed to make one in a room ' +
+       'with a judge in it."',
   choices:[
-    { label:'All nine hundred. This month.', eff:{base:+3,congress:-10,courts:-10,press:-5,street:-10,auth:+18},
-      res:'Nine hundred people who said no once, gone in four weeks. What remains is a government of people who have never said no and never will, which is the only thing you ever actually needed.' },
-    { label:'The forty who objected in writing. Make the point.', eff:{congress:-5,courts:-5,press:-4,base:+4,auth:+11},
-      res:'Forty removals and eleven thousand people who now understand that objections are recorded. The chilling effect costs nothing and reaches everybody.' },
-    { label:'Nobody. The reclassification was the point, not the firing.', eff:{congress:+6,courts:+6,press:+6,street:+5,base:-5,auth:+3},
-      res:'The threat is permanent and the workforce is intact. It is more power than firing them and considerably less trouble.' },
-    { label:'Fire the nine hundred and hire them all back the following week.', eff:{base:+2,congress:-9,courts:-9,press:-9,street:-8,auth:+12}, wild:true,
-      res:'Everyone learns they can be removed at will and everyone keeps their job. It is the purest possible demonstration of power and it costs four days of payroll.' }]},
+    { label:'Have counsel build the installation argument anyway.', eff:{base:+7,courts:-11,congress:-11,press:-8,street:-8,auth:+14},
+      res:'A memorandum is produced that is careful, thorough and unconvincing. It leaks in nine weeks and is read by more people than any policy you have signed.' },
+    { label:'Read it aloud. Publicly. All eighty-seven words.', eff:{courts:+11,congress:+10,press:+10,street:+8,base:-12,auth:-5},
+      res:'It takes thirty-one seconds. It is the most effective thing you do all year and your movement experiences it as a death in the family.' },
+    { label:'Say nothing about it in either direction.', eff:{base:+3,courts:-3,congress:-3,auth:+7},
+      res:'Ambiguity costs nothing and keeps four hundred thousand people hoping, which is worth more than either answer.' },
+    { label:'Have it framed and hung above the Resolute desk.', eff:{base:+4,courts:+5,congress:+4,press:+6,auth:+2}, wild:true,
+      res:'Every visitor photographs it. Nobody can establish whether it is there as a commitment or a challenge, and you decline, repeatedly, to say.' }]},
 
-{ id:'t2-heir', title:'The Anointing, Reconsidered', who:C.vp, term:2, min:14, max:40, tags:['succession','base'], req:r=>r.flags.chet,
-  text:'Chet has stopped asking for the endorsement. He has stopped asking for anything. ' +
-       'He now has four hundred donors of his own, a schedule that does not route through your office, and a warmth toward you that Deborah describes as "professional."',
+{ id:'t2-term-reset', title:'The Clock That Was Reset', who:C.hist, term:2, min:12, max:38, tags:['elections','power'],
+  src:'a foreign leader resetting his own term count by constitutional amendment, so that terms already served stopped counting',
+  text:'Dr Weir has the comparative case and is not enjoying it. "It was done entirely by the book. A constitutional ' +
+       'amendment, a genuine vote, and a clause providing that the terms already served would not count." She looks up. ' +
+       '"Mr President, the clock did not stop. It went back to zero. And nothing about it was illegal."',
   choices:[
-    { label:'Destroy him now, while you still can.', eff:{base:-9,congress:-7,press:-5,street:-4,auth:+11},
-      res:'It works. He is finished within nine months. The movement, deprived of an heir, discovers that it can also be deprived of a leader.' },
-    { label:'Make him a partner. Publicly. Everything shared.', eff:{base:+8,congress:+6,press:+4,auth:-8},
-      res:'Two men at every podium. Within a year the crowd has worked out which one of you is the future, and it does the arithmetic out loud.' },
-    { label:'Outlast him. He needs an election and there isn\'t one.', eff:{base:+4,congress:-4,press:-4,auth:+12},
-      res:'His entire theory requires a normal succession. Everything you build in the final years is aimed at the proposition that there will not be one.' },
-    { label:'Make him do your job for a week while you watch.', eff:{base:+2,congress:+2,press:-2,street:-3,auth:+5}, wild:true,
-      res:'Chet runs the country for seven days. He is competent, exhausted and visibly shaken by Thursday. He stops asking for things for about eleven months.' }]},
+    { label:'Draft the amendment. The terms already served do not count.', eff:{base:+7,courts:-13,congress:-13,press:-11,street:-10,auth:+16},
+      res:'It needs thirty-eight states and it will never get them. The attempt is worth more to you than the amendment and every person involved understands that.', breaks:'termlimit' },
+    { label:'Have four state legislatures request it. Stay out of it.', eff:{base:+5,courts:-8,congress:-8,press:-6,street:-6,auth:+11},
+      res:'You did not ask. It was requested. That distinction is the load-bearing wall of the whole enterprise and it holds for about two years.' },
+    { label:'"That is what other countries do." End it there.', eff:{courts:+10,congress:+10,press:+9,street:+7,base:-11,auth:-5},
+      res:'Refusing somebody else\'s constitution is the cheapest patriotism available and on this one occasion you mean every word of it.' },
+    { label:'Propose it, but with the reset applying to everybody.', eff:{base:+3,courts:-6,congress:-6,press:-4,auth:+6}, wild:true,
+      res:'A universal amnesty on term limits for every office in the country. Four hundred incumbents who hate you privately hope it passes.' }]},
 
-{ id:'t2-foreign-legacy', title:'The Deal', who:C.state, term:2, min:12, max:40, tags:['foreign','press'],
-  text:'Muriel has a genuinely historic agreement within reach. It requires eleven months of quiet diplomacy, ' +
-       'four concessions your base will hate, and no announcements until it is signed.',
+{ id:'t2-referendum', title:'The Question On The Ballot', who:C.poll, term:2, min:16, max:42, tags:['elections','power'],
+  src:'a foreign leader creating a super-empowered presidency by national referendum after a claimed emergency',
+  text:'Nadia has modelled it. "A single national question — should the presidency be strengthened. Not a candidate, ' +
+       'not a party, one question." She hesitates. "It polls at forty-eight and it moves nine points if there has ' +
+       'been an incident in the preceding fortnight. Sir, I want to be clear that I have just told you something ' +
+       'I wish I had not worked out."',
   choices:[
-    { label:'Do it. Quietly. Announce nothing for eleven months.', eff:{press:+11,street:+9,congress:+8,courts:+5,base:-11,auth:+4},
-      res:'It is signed in the final spring. It holds for thirty years. It is the only thing about your presidency that appears in foreign textbooks under a neutral heading.' },
-    { label:'Announce the framework now. Take the credit early.', eff:{base:+7,press:-5,street:-4,congress:-4,auth:+4},
-      res:'The premature announcement gives four domestic opponents in the other country the eleven months they needed. It collapses in August.' },
-    { label:'Drop it. The concessions aren\'t worth it.', eff:{base:+6,press:-6,street:-5,congress:-5,auth:+3},
-      res:'Muriel resigns in the autumn. Her resignation letter is two sentences and the second sentence is about the agreement.' },
-    { label:'Do the deal and let the other side announce it as their victory.', eff:{base:-9,congress:+4,courts:+2,press:+4,street:+4,auth:-2}, wild:true,
-      res:'You concede every headline and keep every clause. It holds for thirty years. Four foreign ministers know exactly what you did and none of them ever says so publicly.' }]},
+    { label:'Put the question. Pick the fortnight.', eff:{base:+7,courts:-13,congress:-12,press:-11,street:-10,auth:+16},
+      res:'A genuine majority, in a genuine vote, for a permanently stronger office. It is the most democratic thing you ever do and it is the most dangerous.' },
+    { label:'Put the question. Take whatever date comes.', eff:{base:+5,courts:-7,congress:-7,press:-6,street:-5,auth:+11},
+      res:'It fails by four points on an ordinary Tuesday. Losing it cleanly is worth more to the office than winning it dirtily would have been.' },
+    { label:'No referendum. The Constitution has an amendment process.', eff:{courts:+11,congress:+10,press:+9,street:+8,base:-10,auth:-4},
+      res:'The process exists, is difficult on purpose, and you decline to route around it. Nadia deletes the model and says so.' },
+    { label:'Put four questions and let people mix and match.', eff:{base:+4,courts:-7,congress:-6,press:-5,auth:+7}, wild:true,
+      res:'The electorate approves two, rejects one and splits evenly on the fourth, producing a constitutional settlement nobody designed and no lawyer can parse.' }]},
 
-{ id:'t2-dynasty', title:'The Name On The Ticket', who:C.girl, term:2, min:16, max:42, tags:['succession','base'],
-  text:'Ivy would like to run. Not for anything small. She has the name, the donors, the discipline ' +
-       'and — she points out, evenly — eight years of watching how it is actually done.',
+{ id:'t2-perpetuo', title:'Without The Time Limit', who:C.hist, term:2, min:20, max:44, tags:['power','press'],
+  src:'a Roman dictator taking a legitimate office and stripping it of its traditional time limit',
+  text:'"The office was real and it was legal and it had a limit — six months, and then you gave it back." ' +
+       'Dr Weir is describing a man dead two thousand years. "He kept the office and removed the limit. ' +
+       'He did not seize anything. He simply deleted the expiry date." She pauses. ' +
+       '"Mr President, he was killed by his own senate within a month, and every one of them had voted for him."',
   choices:[
-    { label:'Clear the field for her. Everything you have.', eff:{base:+6,press:-5,congress:-6,street:-6,courts:-4,auth:+9},
-      res:'A dynasty requires two things: a name and an apparatus. You have spent eight years building the second and were born with the first.' },
-    { label:'"Win something small first." Make her earn it.', eff:{press:+6,congress:+5,street:+4,base:-3,auth:+3},
-      res:'She wins a governorship four years later, on her own, by nine points, and is a far more formidable politician for it than she would otherwise have been.' },
-    { label:'"No. It ends with me."', eff:{press:+8,street:+7,congress:+6,base:-8,auth:-4},
-      res:'She accepts it without argument, which is how you know she had already decided you would say it, and that she has a plan that does not require your agreement.' },
-    { label:'Tell her to run against you. Right now. In a primary.', eff:{base:+2,congress:+1,press:-1,street:-1,auth:-2}, wild:true,
-      res:'She gets 31% against a sitting president. It is the best possible launch for her and the worst possible result for you and you did it on purpose, mostly.' }]},
+    { label:'Then keep the office and remove the limit.', eff:{base:+7,courts:-13,congress:-14,press:-10,street:-9,auth:+16},
+      res:'The historical parallel is repeated so often it stops being a warning and becomes an expectation. Four members of your own party stop taking your calls.' },
+    { label:'Keep the limit. Make the office bigger inside it.', eff:{base:+4,courts:-6,congress:-6,press:-5,auth:+12},
+      res:'A stronger office with an end date is the version that survives, because the end date is why nobody organises against it.' },
+    { label:'Ask her what the other one did instead.', eff:{base:-3,courts:+8,congress:+8,press:+8,street:+6,auth:+5},
+      res:'She tells you about his heir, who gave it all back theatrically and kept everything that mattered, and who died in bed at seventy-five.' },
+    { label:'Set the limit at six months and see who notices.', eff:{base:+3,courts:+4,congress:+4,press:+5,auth:-2}, wild:true,
+      res:'A proclamation adopting a six-month term for yourself is published. Nobody can tell whether it is a joke and it is quietly allowed to lapse.' }]},
 
-{ id:'t2-book', title:'The Memoir', who:C.writer, term:2, min:18, max:44, tags:['money','press'],
-  text:'Gideon Poe has been offered $40 million to ghostwrite yours. He has come to tell you before accepting. ' +
-       '"Sir, I would write the true one. That is the only version I know how to do."',
-  choices:[
-    { label:'Hire him. Tell him everything.', eff:{press:+8,street:+6,congress:+4,base:-6,cash:+0.8,auth:-2},
-      res:'It is 900 pages, unflattering in four chapters, and it is the reason anybody takes your presidency seriously as a subject rather than a symptom.' },
-    { label:'Hire someone else. Somebody friendlier.', eff:{base:+6,press:-6,street:-4,cash:+0.9,auth:+3},
-      res:'It sells 2.1 million copies in the first month and is remaindered by spring. Nobody cites it, including your own defenders.' },
-    { label:'Write it yourself. Post it in instalments. Free.', eff:{base:+9,press:-4,street:-2,cash:-0.3,auth:+6},
-      res:'Four hundred instalments over two years, unedited, direct to eleven million people. It is unreadable, unavoidable, and the most-quoted primary source about you that exists.' },
-    { label:'Publish the true one and the flattering one simultaneously.', eff:{base:+2,congress:+2,auth:-2,cash:+0.9}, wild:true,
-      res:'Two books, same day, same author, contradicting each other on four hundred pages. It sells 3 million and future historians describe the pairing as \'unusually honest.\'' }]},
+/* ---------- the argument about power ---------- */
 
-{ id:'t2-institution-final', title:'The Last Institution', who:C.cj, term:2, min:20, max:44, tags:['courts','power'],
-  text:'Chief Justice Stone has asked to see you. She has never asked twice before. ' +
-       '"Three of the four things that used to check you no longer do. I am here to tell you that I know that, and that you know it."',
+{ id:'t2-most-powerful', title:'"About To Become"', who:C.hist, term:2, min:8, max:34, tags:['press','power'],
+  src:'a historian arguing a president was about to become the most powerful in the country\'s history',
+  text:'A serious historian has said, on the record, that you are about to become the most powerful president ' +
+       'in American history. Dr Weir is here to complicate it. "He said *about to*, Mr President. It is a ' +
+       'prediction, and it is conditional, and the condition is what you do in the next twelve months."',
   choices:[
-    { label:'"Then we understand each other."', eff:{base:+3,courts:-12,press:-5,congress:-8,street:-7,auth:+15},
-      res:'She leaves without shaking your hand. Over the following two years the Court rules against you four times and each one is 5–4, and each time the fifth vote costs somebody something.' },
-    { label:'"Tell me what you need to keep the fourth one working."', eff:{courts:+12,press:+9,congress:+8,street:+7,base:-8,auth:-6},
-      res:'She names three things. Two are procedural and one is enormous. You give her all three and never tell anybody, including Deborah.' },
-    { label:'"There were never four. There were only ever people."', eff:{courts:-6,press:-4,base:+4,auth:+11},
-      res:'She agrees with you, which is the worst thing she could have done, and says so, and neither of you has anything to add.' },
-    { label:'Ask her to write the list of things you should not be able to do.', eff:{base:-9,congress:+4,courts:+5,press:+4,street:+4,auth:-6}, wild:true,
-      res:'She writes nine. You implement four of them by executive order, binding your own successors. It is the most extraordinary document either of you ever signs.' }]},
+    { label:'Meet the condition. All of it.', eff:{base:+8,courts:-11,congress:-11,press:-9,street:-8,auth:+15},
+      res:'He is proved right and says so without pleasure. The sentence is on the jacket of nine books within four years and none of them are flattering.' },
+    { label:'Quote the line constantly. Do nothing to earn it.', eff:{base:+7,press:-6,courts:-4,congress:-4,auth:+6},
+      res:'A prediction repeated often enough starts to feel like a fact, which is most of the benefit for none of the constitutional exposure.' },
+    { label:'Point out that two wartime presidents did more.', eff:{courts:+8,congress:+7,press:+8,base:-6,auth:+2},
+      res:'It is accurate, it is generous, and it is the single most disarming thing you say all term. Four historians publicly agree with you.' },
+    { label:'Ask to be measured against the whole list, formally.', eff:{base:+4,press:+5,courts:-3,auth:+3}, wild:true,
+      res:'A ranking exercise is commissioned. You come eleventh, which pleases nobody, and the methodology is argued about for a decade.' }]},
 
-{ id:'t2-guard-standing', title:'The Standing Force', who:C.gen, term:2, min:20, max:44, tags:['military','power'], req:r=>r.flags.guard,
-  text:'The quick reaction force from the first term now has a budget line, a permanent barracks and a name. ' +
-       'Tarrant\'s successor is briefing you. He is enthusiastic. Tarrant was never enthusiastic.',
+{ id:'t2-nixon', title:'Far Beyond', who:C.press, term:2, min:10, max:36, tags:['press','power'],
+  src:'the judgement that a second-term imperial presidency had gone far beyond an earlier one',
+  text:'Kaylee has the piece. "The comparison is not to your first term. It is to the administration that ' +
+       'invented the phrase \'imperial presidency\', and the verdict is that you have gone far beyond it." ' +
+       'She puts it down. "Sir, that president resigned, and the writer knows we know that."',
   choices:[
-    { label:'Double it. Give it its own command.', eff:{base:+3,street:-14,courts:-11,congress:-10,press:-5,auth:+18},
-      res:'A standing domestic force of eleven thousand reporting through a chain that touches no governor and no court. It is a line item in an appropriations bill on page 1,411.' },
-    { label:'Keep it as it is. Don\'t grow it.', eff:{street:-4,courts:-3,press:-3,auth:+7},
-      res:'A permanent capability held at a constant size, which is how every permanent capability begins and none of them stay.' },
-    { label:'Disband it. Fold it back into the Guard.', eff:{street:+11,courts:+9,congress:+9,press:+9,base:-8,auth:-9},
-      res:'It takes fourteen months to unwind and it is unwound. It is the single largest voluntary surrender of power by an American president since 1783.' },
-    { label:'Rename it the Federal Flood Service and give it shovels.', eff:{base:+1,congress:+3,courts:+3,street:+1,auth:-2}, wild:true,
-      res:'Eleven thousand troops with earth-moving equipment and no riot gear. The capability is intact, the name is unthreatening, and it can be re-tasked in an afternoon.' }]},
+    { label:'Take the compliment. Say he was weak.', eff:{base:+7,press:-9,courts:-7,congress:-7,street:-6,auth:+11},
+      res:'Comparing yourself favourably to a man who resigned rather than be removed is a sentence four historians put in the first paragraph of everything they write about you.' },
+    { label:'"He broke the law. I have not." Leave it there.', eff:{base:+5,courts:-3,congress:-3,press:-3,auth:+8},
+      res:'It is a defensible line right up until somebody produces a list, and producing lists is what the entire press corps does for a living.' },
+    { label:'Say nothing. It is a comparison, not a charge.', eff:{press:+6,courts:+5,congress:+4,base:-3,auth:+4},
+      res:'The piece runs for a day. Every response you might have given would have kept it running for a week.' },
+    { label:'Invite the writer in and give him the full tour.', eff:{base:+3,press:+8,courts:+4,congress:+4,auth:-1}, wild:true,
+      res:'He accepts, spends nine hours in the building, and writes something considerably more nuanced and about four times as damaging.' }]},
 
-{ id:'t2-money-final', title:'The Portfolio', who:C.lawyer, term:2, min:14, max:44, tags:['money'],
-  text:'Sy has the eight-year figure. It is on one page. He has not put it in an email, a folder or a phone. ' +
-       '"Sir, this number is going to be the first line of every obituary. I would like you to see it before somebody else calculates it."',
+{ id:'t2-still-in-place', title:'Still In Place', who:C.hist, term:2, min:14, max:40, tags:['power','press'],
+  src:'analysts noting that many core elements of the system remained in place and that courts sometimes still prevailed',
+  text:'Dr Weir has brought the sentence that most annoys your critics. "\'Many core elements of the system are ' +
+       'still in place. Courts are ruling against him, and sometimes his administration abides by those decisions.\'" ' +
+       'She looks up. "Mr President, that is written by people who are alarmed. It is the strongest thing anybody ' +
+       'has said in your defence and it is not a defence at all."',
   choices:[
-    { label:'Keep going. There are four more years of this.', eff:{press:-5,congress:-8,courts:-7,street:-6,base:+1,cash:+1.6,auth:+8},
-      res:'The number roughly doubles again. It is calculated by a wire service in the final spring and it is, as Sy predicted, the first line.' },
-    { label:'Stop taking anything new. Ride out the term clean.', eff:{press:+9,congress:+7,courts:+6,street:+5,base:-4,cash:-0.4,auth:-2},
-      res:'Eighteen months of no new deals. It does not undo the first six and a half years, and it does change what the last chapter of every book says.' },
-    { label:'Put all of it into a foundation with your name on it.', eff:{press:+5,congress:+4,street:+4,cash:-1.0,auth:+5},
-      res:'A $6 billion foundation, permanent, with a board you appoint for life. You have converted a fortune into an institution, which is the only form of money that survives a person.' },
-    { label:'Publish the number yourself, on a Tuesday, with no comment.', eff:{base:+1,congress:+3,courts:+3,street:-1,auth:-2}, wild:true,
-      res:'One figure on a single page from the President\'s own office. It is enormous. Volunteering it removes the entire investigative genre in one morning.' }]},
+    { label:'Then find which core elements are not load-bearing.', eff:{base:+7,courts:-12,congress:-12,press:-10,street:-9,auth:+15},
+      res:'There are four. You test three of them in eighteen months and the fourth is the one that stops you, and nobody had predicted which it would be.' },
+    { label:'Quote the sentence constantly as vindication.', eff:{base:+5,press:-4,courts:-3,auth:+6},
+      res:'Quoting your critics\' concession is the oldest move in politics and it works on precisely the people who were never worried.' },
+    { label:'Leave the core elements alone. Take the term you have.', eff:{courts:+12,congress:+11,press:+10,street:+8,base:-11,auth:-6},
+      res:'You govern hard inside a system you decline to break. It is the least satisfying outcome available and the only one that is still standing in fifty years.' },
+    { label:'Ask her to list the core elements so you have them.', eff:{base:+4,courts:-8,congress:-7,press:-6,auth:+8}, wild:true,
+      res:'She refuses, immediately and without softening it. It is the second time in five years she has said no to you and she does not explain either.' }]},
 
-{ id:'t2-old-enemy', title:'The Call', who:C.opp, term:2, min:18, max:44, tags:['congress','street'],
-  text:'Cordelia Ruiz-Bloom has requested a private meeting. She has opposed you for eight years, effectively, ' +
-       'and has never once asked you for anything. She is asking now.',
-  choices:[
-    { label:'Take the meeting. Hear her out.', eff:{congress:+9,press:+8,street:+8,courts:+5,base:-7,auth:+1},
-      res:'She wants a disaster aid package for a region that voted against you by forty points. You give her most of it. Neither of you ever mentions the meeting publicly.' },
-    { label:'Take it and record it. Use it later.', eff:{base:+4,congress:-7,press:-5,courts:-6,street:-5,auth:+9},
-      res:'The recording is leaked eleven months later. It contains her asking for hurricane relief and you agreeing, which makes both of you look better than intended.' },
-    { label:'Refuse. Eight years is eight years.', eff:{base:+6,congress:-8,press:-4,street:-7,auth:+3},
-      res:'The package passes anyway, four months later, with nine of your own senators voting for it. You were the only obstacle and you were routed around.' },
-    { label:'Give her whatever she asks for, unread, in front of the press.', eff:{base:-10,congress:+4,courts:+2,press:+4,street:+4,auth:-2}, wild:true,
-      res:'You sign a document you have not read because she asked. It is a disaster relief package. It is also, everyone understands, a demonstration that you could have done this for eight years.' }]},
+/* ---------- the indices and the record ---------- */
 
-{ id:'t2-final-court', title:'The Fifth Seat', who:C.ag, term:2, min:22, max:46, tags:['courts','power'],
-  text:'A fifth vacancy. Five appointments to the highest court by one president has happened twice in two hundred years. ' +
-       'Bo has the shortlist. Every name on it is under fifty.',
+{ id:'t2-still-free', title:'Eighty-One Out Of A Hundred', who:C.state, term:2, min:12, max:38, tags:['foreign','press'],
+  src:'a democracy index keeping a country in its "free" category while marking it down several points',
+  text:'Muriel has the score. "Eighty-one out of a hundred, down from eighty-four. Twelve points below where ' +
+       'we were twenty years ago." She turns the page. "Sir, we are still in the \'free\' category. ' +
+       'That is the good news and it is also the only news, because the category has a floor and we are ' +
+       'travelling towards it at a measurable rate."',
   choices:[
-    { label:'The youngest. Forty-one. Confirm in three weeks.', eff:{courts:+15,congress:-6,press:-5,street:-6,base:+5,auth:+12},
-      res:'He will still be sitting in 2071. Nothing else you do — no order, no statute, no wall — reaches that far forward.' },
-    { label:'The most respected. Fifty-eight. Confirm 84–16.', eff:{courts:+10,congress:+8,press:+8,street:+6,base:-3,auth:+6},
-      res:'A jurist of genuine stature who rules with you two thirds of the time and against you, devastatingly, on the third.' },
-    { label:'Leave it vacant. Eight is a fine number this year.', eff:{courts:-6,congress:+4,press:+4,base:-6,auth:+2},
-      res:'A 4–4 court affirms lower court rulings without setting precedent, which for eleven months means the courts of appeal are the highest law in the land.' },
-    { label:'Ask the four sitting justices you appointed who they would pick.', eff:{base:+1,congress:+4,courts:+5,press:-1,street:-1,auth:-2}, wild:true,
-      res:'They name the same person, independently, which nobody expected. She is confirmed 88-12 and is the finest appointment of your presidency and you had almost nothing to do with it.' }]},
+    { label:'Ignore the trend. Publicise the category.', eff:{base:+6,press:-7,street:-6,congress:-5,auth:+8},
+      res:'"Still free" is a slogan that works exactly once. The following year\'s number arrives on schedule and the slogan is unavailable.' },
+    { label:'Fix the three indicators we score worst on.', eff:{press:+10,courts:+9,congress:+8,street:+7,base:-9,auth:-4},
+      res:'Judicial independence, oversight capacity, press access. It takes fourteen months, costs you two policies, and moves the score back four points.' },
+    { label:'Dispute the index and fund a rival.', eff:{base:+5,press:-8,street:-6,congress:-5,cash:-0.4,auth:+7},
+      res:'Your index scores the country ninety-four. It is cited by four governments you would rather not be cited by and nobody else at all.' },
+    { label:'Ask what score would put us in the next category down.', eff:{base:+3,press:-6,street:-5,congress:-4,auth:+6}, wild:true,
+      res:'They answer, in detail, because they publish the methodology. The number is written on a card and kept in a drawer, and four people know it exists.' }]},
 
-{ id:'t2-quiet-year', title:'The Quiet Year', who:C.poll, term:2, min:24, max:44, tags:['base','press'],
-  text:'Nadia has something she has never had for you: a good number, sustained, across every demographic. ' +
-       'Inflation is down, the border is quiet, nobody is at war. "Sir, you are, right now, genuinely popular. It will not last and I do not know what it is for."',
+{ id:'t2-too-reductive', title:'"Too Reductive"', who:C.hist, term:2, min:16, max:42, tags:['press','rhetoric'],
+  src:'a historian of authoritarianism declining to apply the strongest available label',
+  text:'Dr Weir has brought a refusal. "She has written a book about strongmen, she places you firmly in that ' +
+       'lineage, and she declines to use the F-word about you. She calls the label too reductive." ' +
+       'She sets it down. "Mr President, that is not a defence. She is saying the word would let you off, ' +
+       'because it would let people argue about a word instead of about what you have done."',
   choices:[
-    { label:'Spend all of it. Take the four hardest things.', eff:{base:-6,congress:-8,courts:-9,press:-8,street:-7,auth:+16},
-      res:'Popularity is a currency and you convert every point of it into permanent structural power. By spring the number is back where it was and the structures are not.' },
-    { label:'Bank it. Do nothing. Stay popular.', eff:{base:+8,press:+7,street:+7,congress:+6,auth:-4},
-      res:'You are, for fourteen months, a broadly liked president of a calm country. It is the happiest anybody in this building has ever been and it achieves nothing at all.' },
-    { label:'Spend half. Take the two that matter.', eff:{base:-2,congress:-4,courts:-4,press:-4,street:-3,auth:+10},
-      res:'Two enormous things done from a position of strength, absorbed by the country because the country was, briefly, in a good mood. This is how it is supposed to be done.' },
-    { label:'Spend it doing absolutely nothing newsworthy. On purpose.', eff:{base:+2,congress:+3,courts:+3,street:+1,auth:-3}, wild:true,
-      res:'Fourteen months of competent, boring government. Approval reaches 61%. Four commentators publish pieces asking whether the country was simply tired, and they are right.' }]},
+    { label:'Use it constantly. "Even they say I am not."', eff:{base:+7,press:-7,street:-6,courts:-5,congress:-5,auth:+9},
+      res:'It works precisely as she predicted. Nine months of argument about vocabulary, none about the record, which was the entire hazard she was flagging.' },
+    { label:'Say nothing. Do not touch it.', eff:{press:+5,street:+4,courts:+3,base:-3,auth:+4},
+      res:'The refusal sits there, unclaimed by anybody, doing the work she intended. It is quoted in four hundred pieces and never once as exoneration.' },
+    { label:'Invite her to explain, at length, on the record.', eff:{press:+8,street:+7,courts:+6,congress:+5,base:-7,auth:-2},
+      res:'She takes ninety minutes to explain why the word does not fit and what does. It is the most damaging interview of your presidency and you commissioned it.' },
+    { label:'Ask her which word she would use.', eff:{base:+3,press:-5,street:-5,courts:-4,auth:+5}, wild:true,
+      res:'She gives you three, in ascending order of accuracy. You remember all three for the rest of your life and repeat none of them.' }]},
 
-{ id:'t2-old-photo', title:'The First Term', who:C.photog, term:2, min:20, max:46, tags:['press','vanity'],
-  text:'Renata Silk has been asked to assemble the official retrospective. Eight years, four hundred thousand frames. ' +
-       'She has made a selection of two hundred. Eleven of them, she notes, "are not the version we published at the time."',
+{ id:'t2-lawsuit-count', title:'Seven Hundred And Fifty-Three', who:C.lawyer, term:2, min:10, max:40, tags:['courts','press'],
+  src:'litigation trackers counting hundreds of cases against an administration, with a genuinely mixed record',
+  text:'Sy has the tracker. "Seven hundred and fifty-three cases. We have eighteen stays from the high court ' +
+       'and roughly as many losses as wins below." He closes it. "Sir, the honest summary is that it is mixed. ' +
+       'Which is not what either side wants and is what the record actually says."',
   choices:[
-    { label:'Publish her selection. All two hundred.', eff:{press:+10,street:+8,congress:+6,base:-6,auth:+1},
-      res:'The eleven are the ones everybody writes about. They are also the reason the book is treated as a document rather than a brochure.' },
-    { label:'Publish the approved versions only.', eff:{base:+5,press:-6,street:-4,auth:+3},
-      res:'A handsome, expensive, entirely worthless object. Four libraries accept it. None of them display it.' },
-    { label:'Publish both. Side by side. Same page.', eff:{press:+11,street:+9,congress:+7,base:-4,auth:+3},
-      res:'The published version and the real version, adjacent, two hundred times. It is the most self-aware thing anyone in this administration ever authorises and Renata cannot quite believe you said yes.' },
-    { label:'Publish the eleven she chose and none of the others.', eff:{base:-4,congress:+2,press:+2,street:+2,auth:-2}, wild:true,
-      res:'Eleven photographs, no captions, no context. It is the most artistically confident thing the administration does and Renata Silk is, for the first time in eight years, satisfied.' }]},
+    { label:'Claim we win everything. Nobody counts.', eff:{base:+6,courts:-8,press:-8,congress:-6,auth:+8},
+      res:'Somebody counts. The tracker is public, updated weekly, and the gap between the claim and the column becomes its own recurring story.' },
+    { label:'Publish our own win-loss record. Accurately.', eff:{courts:+9,press:+9,congress:+7,base:-7,auth:+2},
+      res:'A genuinely mixed record, published by you, removes the entire argument. Four outlets run it and none of them can find an angle.' },
+    { label:'Stop appealing the ones we will lose.', eff:{courts:+11,congress:+8,press:+7,base:-8,auth:-2},
+      res:'Litigating only the winnable cases raises the win rate and lowers the profile, which is what a competent legal operation looks like.' },
+    { label:'Countersue all seven hundred and fifty-three.', eff:{base:+5,courts:-11,congress:-8,press:-7,cash:-0.4,auth:+7}, wild:true,
+      res:'The filing fee alone is $190,000. Four of the countersuits are, by accident, against agencies of your own government.' }]},
 
-{ id:'t2-succession-statute', title:'The Statute', who:C.lawyer, term:2, min:26, max:46, tags:['power','succession'],
-  text:'"There is an argument — a bad one, but a printed one — that the Twenty-Second Amendment restricts being elected ' +
-       'and not being appointed." Sy sets it down. "It requires you to be Speaker of the House. It has been written up in a law review."',
-  choices:[
-    { label:'Have four allies introduce it. See who objects.', eff:{base:+4,congress:-11,courts:-10,press:-5,street:-9,auth:+16},breaks:'termlimit',
-      res:'Nine members endorse it. Two hundred say nothing. The silence of the two hundred is the actual finding of the experiment and it is not reassuring.', flag:'speakerPlan' },
-    { label:'Have it printed and circulated. Never endorse it.', eff:{base:+4,congress:-6,courts:-6,press:-4,auth:+11},
-      res:'An idea that exists in print is an idea that can be picked up by somebody else. You have not proposed anything. You have simply made it available.' },
-    { label:'"That\'s a law review article, Sy. Put it away."', eff:{congress:+9,courts:+9,press:+9,street:+7,base:-6,auth:-6},
-      res:'He puts it away. It is published anyway, by its author, and is cited eleven times over the next decade by people who are not you.' },
-    { label:'Have it introduced by the opposition. Anonymously.', eff:{base:+2,congress:-10,courts:-10,press:-10,street:-8,auth:+12}, wild:true,
-      res:'A member of the other party introduces it without knowing where it came from. It fails, but it is now bipartisan in origin, which is the only quality it needed.' }]},
+/* ---------- allies, enemies and the shield ---------- */
 
-{ id:'t2-old-friend', title:'The First Believer', who:C.pastor, term:2, min:16, max:44, tags:['base','street'],
-  text:'Reverend Muncy has terminal cancer. He was the first person of any standing to back you, nine years ago, ' +
-       'when it cost him half his congregation. He has asked you to speak at his funeral. He has also asked you not to make it political.',
+{ id:'t2-shield', title:'The Shield', who:C.lawyer, term:2, min:6, max:32, tags:['justice','power'],
+  src:'mass clemency for political allies read by scholars as a shield signalling protection for future loyalty',
+  text:'"The clemency in the first term was not about the past." Sy is unusually direct. "Every person who ' +
+       'considers doing something for you now knows what happens afterwards. It is the cheapest loyalty ' +
+       'programme ever devised, and sir — you did not have to say a word for it to work."',
   choices:[
-    { label:'Speak. Keep the promise. Say nothing political.', eff:{street:+9,press:+9,congress:+6,base:+5,auth:-1},
-      res:'Eleven minutes about one man. No policy, no enemies, no applause lines. Four people who have written unkind things about you for a decade say something else that week.' },
-    { label:'Speak. Use it. He\'d have wanted the movement served.', eff:{base:+6,street:-9,press:-5,congress:-6,auth:+4},
-      res:'His widow does not shake your hand at the door. It is a small thing, filmed by nobody, and you think about it more than you expect to.' },
-    { label:'Don\'t go. Send a letter.', eff:{base:-7,street:-4,press:-3},
-      res:'The letter is read aloud by his son, in full, and it is generous and specific and you did not write it, and everyone in that church can tell.' },
-    { label:'Sit with him instead. The whole last week. Cancel everything.', eff:{base:+2,congress:+3,street:+1,auth:-2}, wild:true,
-      res:'You cancel a week of the presidency to sit in a hospice in Missouri. Nothing is announced. It is discovered afterwards from a visitor log and it is the last thing anyone expected of you.' }]},
+    { label:'Say it out loud. Make the promise explicit.', eff:{base:+7,courts:-13,congress:-11,press:-10,street:-8,auth:+14},
+      res:'An explicit promise of clemency in advance is a different legal object from a pattern, and four prosecutors immediately begin treating it as one.' },
+    { label:'Say nothing. The pattern speaks for itself.', eff:{base:+4,courts:-5,congress:-4,press:-4,auth:+10},
+      res:'Unspoken, it is unindictable and equally effective. Nine people act on an assurance nobody ever gave them.' },
+    { label:'State publicly that nobody should count on it.', eff:{courts:+11,congress:+9,press:+8,street:+6,base:-10,auth:-5},
+      res:'Four people who were about to do something extremely unwise stop doing it. You will never know their names or what they were going to do.' },
+    { label:'Issue the pardons in advance, blank, undated.', eff:{base:+5,courts:-12,congress:-10,press:-9,auth:+8}, wild:true,
+      res:'Undated clemency for unspecified offences is tested in court within a year and fails on the first sentence of the first opinion.' }]},
 
-{ id:'t2-last-cabinet', title:'The Last Cabinet Meeting', who:C.cos, term:2, min:42, max:48, tags:['power','press'],
-  text:'Twenty-two people around the table for the final time. Deborah has an agenda with one item on it. ' +
-       'The item is "Transition." Four of the twenty-two have already accepted jobs elsewhere.',
+{ id:'t2-old-hands', title:'Nobody Asks Any More', who:C.cos, term:2, min:4, max:28, tags:['power','agencies'],
+  src:'the phenomenon of institutions and staff conceding in advance of being asked',
+  text:'Deborah has noticed something and has waited a fortnight to raise it. "Four things happened this month ' +
+       'that you did not order. Nobody asked whether they were allowed. They were done because somebody ' +
+       'downstairs worked out what you would want." She stops. "Sir, that is the thing the books are about. ' +
+       'It is not what you do. It is what people do without being told."',
   choices:[
-    { label:'Work the transition. Hand it over properly.', eff:{congress:+9,courts:+8,press:+9,street:+8,base:-7,auth:-3},
-      res:'Briefing books, walkthroughs, contact lists, live exercises. It is the most professional four weeks of the administration and it happens entirely out of sight.' },
-    { label:'Cancel the item. Talk about the last eight years.', eff:{base:+6,congress:-6,press:-5,street:-4,auth:+5},
-      res:'Ninety minutes of reminiscence. Nothing is handed over. The incoming team spends four months finding out what was in the rooms.' },
-    { label:'Go around the table. Have each of them say something.', eff:{base:+7,press:-7,street:-6,congress:-6,courts:-4,auth:+6},
-      res:'Twenty-two testimonials. It runs to two hours. Four of the twenty-two are visibly performing and eighteen of them are not, which is somehow the more troubling number.' },
-    { label:'Have each of them brief their own successor. In this room. Today.', eff:{base:-9,congress:+4,courts:+4,press:+4,street:+4,auth:-4}, wild:true,
-      res:'Twenty-two handovers around one table with both administrations present. It has never been done. It works so well that the next four presidents make it standard.' }]},
+    { label:'Encourage it. Praise all four by name.', eff:{base:+7,courts:-11,congress:-10,press:-9,street:-9,auth:+14},
+      res:'Praise is the confirmation the next twenty were waiting for. It is more effective than any instruction and it cannot be described as one.' },
+    { label:'Say nothing. Let it run.', eff:{base:+4,courts:-6,congress:-6,press:-5,street:-5,auth:+11},
+      res:'Silence reads as approval and costs nothing. The rate roughly doubles over the following quarter without a single order being issued.' },
+    { label:'Tell the building, plainly, that nobody asked for this.', eff:{courts:+11,congress:+10,press:+9,street:+9,base:-11,auth:-6},
+      res:'Two of the four are reversed within a week. Saying it out loud is the only thing that ever breaks it, and it costs you the entire mechanism.' },
+    { label:'Ask which of the four they think you wanted least.', eff:{base:+3,courts:-6,congress:-5,press:-5,auth:+7}, wild:true,
+      res:'A memo comes back ranking your own presumed wishes in order of confidence. It is uncomfortably accurate and is immediately classified.' }]},
 
-{ id:'t2-what-was-it-for', title:'The Question', who:C.cos, term:2, min:44, max:48, tags:['power'],
-  text:'Late, empty building, nobody else on the floor. Deborah asks the only question she has never asked in eight years. ' +
-       '"Sir — what was it all for? I have been here since the first day and I genuinely do not know the answer."',
+{ id:'t2-old-enemy', title:'The One Who Is Still There', who:C.opp, term:2, min:14, max:40, tags:['justice','press'],
+  src:'sustained pressure on named political opponents across a full presidency',
+  text:'Cordelia Ruiz-Bloom has outlasted four attempts to end her career and has requested a meeting. ' +
+       'She arrives alone, sits down, and says: "I have been investigated by your government for six years. ' +
+       'Nothing has ever been charged. I am not here to complain, Mr President. I am here because I would ' +
+       'like to know whether it stops now or whether it goes on for four more."',
   choices:[
-    { label:'"To win. That was always the whole thing."', eff:{base:+5,congress:-5,press:-4,street:-5,courts:-4,auth:+11},
-      res:'She nods once. It is the answer she expected and the answer that explains every decision in eight years, and she leaves the building for the last time about four minutes later.' },
-    { label:'"To prove it could be done."', eff:{base:+1,congress:-7,courts:-8,press:-5,street:-7,auth:+14},
-      res:'It could be done. That is now a permanent, demonstrated fact about the United States, available to anybody who comes next, and it is the only part of this that outlives everyone in the building.' },
-    { label:'"I genuinely don\'t know either."', eff:{press:+9,street:+8,congress:+7,courts:+6,base:-8,auth:-9},
-      res:'It is the truest thing you have said in eight years. She sits down, which she has not done uninvited in eight years, and the two of you talk until about four in the morning.' },
-    { label:'"I wanted them to say my name."', eff:{base:+1,congress:+2,courts:+1,press:-1,street:-1,auth:-3}, wild:true,
-      res:'It is the smallest possible answer and it is the true one. Deborah does not write it down. She thinks about it, on and off, for the rest of her life.' }]}
+    { label:'"It goes on." Say it to her face.', eff:{base:+7,courts:-12,congress:-11,press:-11,street:-9,auth:+12},
+      res:'She writes it down in the car, dates it, and gives copies to three people. It is quoted in her memoir, at a hearing, and in an opinion.' },
+    { label:'"It stops." Close every file that afternoon.', eff:{courts:+12,congress:+11,press:+11,street:+9,base:-12,auth:-6},
+      res:'She does not believe you for nine months. When she finally does, she says so publicly and unprompted, and it is worth more than any advertisement you buy.' },
+    { label:'Say nothing at all. Let her leave uncertain.', eff:{base:+4,courts:-5,congress:-5,press:-5,auth:+9},
+      res:'Uncertainty is cheaper than either answer and does most of the work of the worse one, which is exactly why it is the option you take.' },
+    { label:'Offer her a job.', eff:{base:-6,courts:+7,congress:+8,press:+8,street:+5,auth:+2}, wild:true,
+      res:'She declines in four words and then, for reasons neither of you can explain, stays for another hour talking about her father.' }]},
+
+/* ---------- the succession ---------- */
+
+{ id:'t2-heir', title:'The Name On The Other Card', who:C.vp, term:2, min:24, max:44, tags:['elections','power'],
+  src:'the problem of succession in a movement organised around one person',
+  text:'Chet has two cards. "This is the movement without you: fifty-one. This is me carrying it: thirty-three." ' +
+       'He puts them down side by side. "Sir, the gap is not a personality problem. Eighteen points of that ' +
+       'movement is a person, and a person cannot be handed to anybody. I have stopped pretending otherwise."',
+  choices:[
+    { label:'Then nobody inherits it. It ends with me.', eff:{base:+8,congress:-10,courts:-8,press:-8,street:-8,auth:+13},
+      res:'A movement that cannot outlive you also cannot survive you, and both of those become true on the same day, which is not a day you get to pick.' },
+    { label:'Endorse Chet now and campaign for him for two years.', eff:{base:-6,congress:+9,courts:+7,press:+7,street:+7,auth:+5},
+      res:'He closes eight of the eighteen points in twenty-two months. It is the hardest political work anybody does in your administration and you do most of it.' },
+    { label:'Build the machine instead. Rules, treasury, succession.', eff:{base:-8,congress:+11,courts:+9,press:+8,street:+7,auth:+6},
+      res:'An institution rather than an heir. It wins three of the next five elections and stops mentioning your name somewhere around the second one.' },
+    { label:'Endorse four people simultaneously.', eff:{base:+3,congress:-7,press:-5,street:-4,auth:+4}, wild:true,
+      res:'All four campaign as the anointed successor, citing the same sentence, for eleven months. The primary that follows is the most entertaining in a century.' }]},
+
+{ id:'t2-final-court', title:'The Last Appointment', who:C.cj, term:2, min:20, max:44, tags:['courts','power'],
+  src:'lifetime judicial appointments as the most durable element of a presidency',
+  text:'Chief Justice Stone has come about a vacancy and stays for something else. "You have appointed a fifth ' +
+       'of the federal bench. Average age forty-six." She does not soften it. "Mr President, every executive ' +
+       'order you have signed can be revoked in an afternoon. This cannot be revoked at all. This is the ' +
+       'presidency. The rest is weather."',
+  choices:[
+    { label:'Appoint the youngest qualified name on the list.', eff:{base:+6,courts:-7,congress:-7,press:-6,auth:+12},
+      res:'Thirty-nine years old, confirmed by two votes, and on the bench until roughly 2065. Nothing else you have done will still be operating then.' },
+    { label:'Appoint the best lawyer on the list, whoever that is.', eff:{courts:+11,congress:+9,press:+8,base:-8,auth:+6},
+      res:'She rules against you twice in the first year and is cited approvingly for four decades. Stone tells you, once, that it was the right call.' },
+    { label:'Leave the seat. Let the next president fill it.', eff:{courts:+9,congress:+10,press:+8,street:+6,base:-13,auth:-6},
+      res:'A vacancy voluntarily left open is unheard of and is read by everybody as weakness, and by four people as the only genuinely constitutional act of the term.' },
+    { label:'Appoint yourself.', eff:{base:+5,courts:-11,congress:-9,press:-8,auth:+6}, wild:true,
+      res:'There is no bar on it in the text, which is pointed out by four commentators in tones of rising alarm before the nomination is quietly withdrawn.' }]},
+
+/* ---------- the money and the exit ---------- */
+
+{ id:'t2-net-worth', title:'Roughly Double', who:C.ethics, term:2, min:12, max:42, tags:['money','press'],
+  src:'a president\'s net worth roughly doubling while in office, documented in his own filings',
+  text:'Miriam has the eight-year comparison and has laid it out flat. "It has roughly doubled, sir, and then ' +
+       'gone up again. All of it is disclosed. All of it is on forms you signed." She straightens the pages. ' +
+       '"That is the defence, and it is a real defence, and it is also how everybody knows."',
+  choices:[
+    { label:'Say the office had nothing to do with it.', eff:{base:+4,press:-10,courts:-9,congress:-9,street:-6,cash:+0.4,auth:+7},
+      res:'The largest single line is a token that did not exist before you were inaugurated. Four reporters establish this before lunch and one of them has a chart.' },
+    { label:'"The market went up. Everybody profited."', eff:{base:+6,press:-11,courts:-8,congress:-9,street:-7,auth:+6},
+      res:'Played beside the figure, the line becomes the most-quoted sentence of eight years in office. You meant it entirely sincerely, which is the part that lands.' },
+    { label:'Publish the full eight-year comparison yourself.', eff:{press:+9,courts:+8,congress:+7,base:-6,auth:+1},
+      res:'Two hours of questions, all answered, once. It is the worst afternoon of the second term and it ends the story in an afternoon.' },
+    { label:'Put the entire increase into the library foundation.', eff:{base:+3,press:+7,courts:+6,congress:+6,cash:-0.9,auth:+2}, wild:true,
+      res:'It is the largest charitable transfer in American political history and it goes to an entity you control, which four journalists point out within the hour.' }]},
+
+{ id:'t2-quiet-year', title:'The Year Nothing Happened', who:C.poll, term:2, min:28, max:46, tags:['press','power'],
+  src:'the characterisation of an administration as the most expansive peacetime assertion of executive power',
+  text:'Nadia has a strange finding. "There has not been an emergency for eleven months. No deployment, ' +
+       'no order anybody sued over, no crisis." She frowns at her own sheet. "Approval is up nine points, sir. ' +
+       'And the phrase people are using in the focus groups is that it feels *normal* again, which is the ' +
+       'first time that word has appeared in eight years of this research."',
+  choices:[
+    { label:'End the quiet. Nine points is not the objective.', eff:{base:+8,courts:-11,congress:-10,press:-9,street:-9,auth:+15},
+      res:'It takes four days to spend eleven months of accumulated goodwill. Nadia keeps the sheet and shows it to people for the rest of her career.' },
+    { label:'Keep the quiet. Govern. Sign nothing dramatic.', eff:{congress:+11,courts:+10,press:+10,street:+9,base:-11,auth:-4},
+      res:'A calm, competent, entirely unremarkable year. It is the best-polling period of either term and your movement describes it, accurately, as a betrayal.' },
+    { label:'Keep the quiet publicly. Keep moving privately.', eff:{base:+3,courts:-4,congress:-4,press:+4,street:+3,auth:+11},
+      res:'Nothing announced, everything continued. It is the most effective quarter of your presidency and there is nothing at all to report about it.' },
+    { label:'Declare an emergency about the absence of emergencies.', eff:{base:+5,courts:-9,congress:-8,press:-8,street:-6,auth:+8}, wild:true,
+      res:'The proclamation cites the eleven-month gap as evidence of dangerous complacency. It is published, and Nadia\'s approval line falls nine points in a fortnight.' }]},
+
+{ id:'t2-first-draft', title:'The First Serious History', who:C.hist, term:2, min:34, max:46, tags:['press','power'],
+  src:'the scholarly assessment that the fair characterisation was the most expansive peacetime assertion of unilateral executive power, still being checked',
+  text:'Dr Weir has brought her own manuscript and has not been asked to. "Eight years. I have a conclusion ' +
+       'and I am not going to soften it for you." She hands it over. "The most expansive assertion of unilateral ' +
+       'executive power in modern peacetime — genuinely alarming, corrosive to democratic quality, and still ' +
+       'operating inside a system that was checking it. All four of those clauses, Mr President. Not three."',
+  choices:[
+    { label:'Have counsel look at whether it can be stopped.', eff:{base:+6,courts:-13,congress:-11,press:-13,street:-10,auth:+11},
+      res:'It cannot. The attempt appears in the second edition as a four-page appendix and is the most-quoted section of the entire book.' },
+    { label:'Write a foreword disputing the fourth clause.', eff:{base:+5,press:-5,courts:-5,congress:-4,auth:+7},
+      res:'Arguing that the system was not in fact checking you is the one clause you should have left alone, and every reviewer says so.' },
+    { label:'Write a foreword. Concede the fourth clause.', eff:{courts:+11,congress:+10,press:+12,street:+8,base:-12,auth:-6},
+      res:'A president conceding, in print, that the checks held. It is the single most valuable paragraph anybody writes about you and you wrote it yourself.' },
+    { label:'Ask to write the final chapter yourself.', eff:{base:+4,press:-6,courts:-5,congress:-4,auth:+5}, wild:true,
+      res:'She agrees, on condition that it is printed unedited and clearly attributed. It is four pages long and it is, by a distance, the worst-reviewed section of the book.' }]},
+
+{ id:'t2-last-day', title:'The Last Morning', who:C.usher, term:2, min:44, max:48, tags:['power','press'],
+  src:'the distinguishing feature of the record being that transfers of power continued to occur',
+  text:'Alvin has the schedule for the morning and it is one page. "Coffee at seven. The car at eleven. ' +
+       'The other family arrive at eleven-fifteen." He is entirely calm; he has done this seven times. ' +
+       '"Sir, I have laid out the things you asked for. Is there anything else you would like me to do?"',
+  choices:[
+    { label:'"Cancel the eleven-fifteen."', eff:{base:+8,courts:-14,congress:-14,press:-12,street:-12,auth:+16},
+      res:'Alvin says "Yes, sir," and does not move. After a moment he says it again, and still does not move, and that is how you find out where the line was.' },
+    { label:'"Nothing. Thank you, Alvin."', eff:{courts:+13,congress:+12,press:+12,street:+11,base:-13,auth:-9},
+      res:'You leave at eleven. It is the most ordinary thing that happens all decade and it is the reason there is still a country to be ordinary in.' },
+    { label:'Leave a letter in the desk for whoever is next.', eff:{courts:+10,congress:+9,press:+11,street:+8,base:-8,auth:-4},
+      res:'Four paragraphs, handwritten, entirely without malice. It is never published and the recipient mentions it, once, twenty years later, and declines to elaborate.' },
+    { label:'Ask him which of the seven handled it best.', eff:{base:+3,press:+6,street:+5,congress:+4,auth:-2}, wild:true,
+      res:'He considers it seriously for a long moment and then answers honestly. It is not you. He says it kindly and you do not ask him to explain.' }]}
 
 );
 })();

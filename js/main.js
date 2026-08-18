@@ -241,6 +241,9 @@ AD.Game = {
       AD.UI.showTabloid(AD.Engine.pendingShield);
       AD.Engine.pendingShield = null;
     }
+    const leak = AD.Engine.lastLeak;
+    AD.UI.showLeak(leak && leak.leak);
+    if (leak && leak.leak) AD.Audio.play('bad');
     this.nextCard();
   },
 
@@ -278,6 +281,27 @@ AD.Game = {
     AD.UI.renderCorruption(r.asset);
     AD.UI.renderHUD();
     // buying can starve a meter to death like anything else
+    const collapse = AD.Engine.checkCollapse();
+    if (collapse.ending) {
+      AD.Engine.finish(collapse.ending);
+      this.pending = [];
+      setTimeout(() => this.showEnding(AD.Engine.lastScore), 900);
+    }
+  },
+
+  /* ---------- the residence ---------- */
+  buildReno (id) {
+    const run = AD.Engine.run;
+    if (!run || run.over) return;
+    const r = AD.buildReno(run, id);
+    if (!r.ok) return;
+    run.stats.built = (run.stats.built || 0) + 1;
+    AD.saveRun(run);
+    AD.Audio.play('build');
+    // Same rule as buyAsset: inline feedback only. Stacking a tabloid overlay
+    // on top of this panel would let its close handler advance the turn.
+    AD.UI.renderResidence(r.reno);
+    AD.UI.renderHUD();
     const collapse = AD.Engine.checkCollapse();
     if (collapse.ending) {
       AD.Engine.finish(collapse.ending);
@@ -324,6 +348,9 @@ AD.Game = {
 
       const buy = e.target.closest('[data-buy]');
       if (buy && !buy.disabled) { this.buyAsset(buy.dataset.buy); return; }
+
+      const build = e.target.closest('[data-build]');
+      if (build && !build.disabled) { this.buildReno(build.dataset.build); return; }
 
       const act = e.target.closest('[data-act]');
       if (act) this.act(act.dataset.act);
@@ -393,6 +420,14 @@ AD.Game = {
       case 'corruption-close':
         U.overlay('corruption', false);
         // resume the clock only if a crisis is actually on screen
+        if (AD.Engine.card && !U.el('card').hidden) U.startTimer(AD.Engine.card);
+        break;
+
+      case 'renovations':
+        if (U.current !== 'game' || !AD.Engine.run || AD.Engine.run.over) break;
+        U.stopTimer(); U.renderResidence(); U.overlay('renovations', true); break;
+      case 'renovations-close':
+        U.overlay('renovations', false);
         if (AD.Engine.card && !U.el('card').hidden) U.startTimer(AD.Engine.card);
         break;
 

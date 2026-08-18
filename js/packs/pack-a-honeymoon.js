@@ -1,533 +1,573 @@
 /* ============================================================
    PACK A — THE HONEYMOON  (term months 1–14)
-   Transition, confirmations, the first hundred days, and the
-   dawning realisation that the building is full of people.
-   40 crises. See WRITING-GUIDE.md before editing.
+   REWRITTEN against the research. Every crisis carries a `src`
+   naming the documented item or sub-item it riffs on.
+
+   Same rule as packs F and G: INSPIRED BY, NEVER COPIED. The
+   mechanism is taken; names, numbers, countries and outcomes are
+   invented. Contested [CONTEXT FLAG] items are excluded, or played
+   as a joke about the dispute itself.
+
+   Where a `src` cites a sub-item, it draws on one discrete element
+   of a larger research entry — a practice the research file's own
+   Caveats section explicitly invites.
+
+   32 crises.
    ============================================================ */
 (function () {
 const C = AD.CAST;
 
 AD.CARDS.push(
 
-{ id:'a-transition', title:'The Transition', who:C.cos, min:1, max:5, tags:['power','agencies'],
-  text:'Four thousand political appointments. Deborah has a spreadsheet with two columns: "competent" and "loyal." ' +
-       'The overlap column exists. It contains eleven names.',
-  choices:[
-    { label:'Loyal. All four thousand. Competence is teachable.', eff:{base:+8,congress:-6,street:-6,press:-5,auth:+9},
-      res:'By March the Department of Agriculture is being run by a man who ran a podcast about it. Nothing he does can be overruled by anyone who knows better, because there is nobody left who knows better.' },
-    { label:'Competent. They can be made loyal later.', eff:{congress:+6,street:+6,press:+5,base:-7,auth:-2},
-      res:'The government functions. Eleven months later four of them testify against you, which is the exact risk Deborah priced in and you declined to pay.' },
-    { label:'Loyal at the top, competent underneath. Let them fight.', eff:{base:+4,congress:+2,courts:-3,auth:+5},
-      res:'Every agency now has a chain of command and a shadow chain of command. Nothing moves fast, but nothing moves without you either.' },
-    { label:'Fill all four thousand posts by lottery from the applicant pile.', eff:{base:+2,congress:-4,courts:-4,press:+1,auth:+2}, wild:true,
-      res:'A retired dentist runs the Federal Aviation Administration for nine months and is, by every internal measure, the best administrator it has had in twenty years.' }]},
+/* ---------- the opening orders ---------- */
 
-{ id:'a-confirmation', title:'The Confirmation', who:C.speaker, min:2, max:10, tags:['congress'],
-  text:'Your nominee for Attorney General cannot name the three branches of government. He got two. ' +
-       'He has been extremely loyal for eleven years and the hearing is on Thursday.',
+{ id:'a-not-a-ban', title:'The Word For It', who:C.press, min:1, max:10, tags:['immigration','press'],
+  src:'defending an entry restriction against the charge that it targets a religion',
+  text:'The order names six countries. Every one is majority-Muslim. Kaylee has the question she will be asked ' +
+       'forty times today and would like the answer before she is asked it once.',
   choices:[
-    { label:'Push him through. Whip every vote personally.', eff:{base:+7,congress:-9,press:-5,auth:+6},
-      res:'Confirmed 51–50 on the Vice President\'s tie-break. Four of your own senators voted yes while telling reporters, on background, that it was a mistake.' },
-    { label:'Pull him. Nominate someone with a law degree.', eff:{congress:+8,courts:+6,press:+5,base:-6},
-      res:'The replacement is confirmed 82–18 and spends the next three years telling you what you cannot do.' },
-    { label:'Install him as "acting" and never send a nomination.', eff:{congress:-6,courts:-7,base:+5,auth:+11},breaks:'consent',
-      res:'Acting officials require no confirmation and can serve, with the right paperwork, indefinitely. You have discovered that the Senate\'s advice-and-consent role is optional if nobody insists.', flag:'acting' },
-    { label:'Have him confirmed as something else. Anything else.', eff:{base:+1,congress:+2,press:-3,street:-3,auth:+3}, wild:true,
-      res:'He is confirmed 71-29 as Deputy Secretary of Commerce, a post with no duties, and holds it happily for four years without incident.' }]},
+    { label:'"This is not a religious ban." Say nothing further.', eff:{base:+6,courts:-6,street:-6,press:-5,auth:+6},
+      res:'The sentence is repeated so often it becomes its own evidence. Four campaign clips are played beside it within a day and all four are on the record.' },
+    { label:'Name the security rationale. Publish the threat assessment.', eff:{courts:+7,street:+6,press:+6,congress:+4,base:-6,auth:+2},
+      res:'The assessment supports two of the six countries and undercuts the other four. Publishing it is the honest move and it costs you two-thirds of the order.' },
+    { label:'Say it is exactly what it looks like.', eff:{base:+9,courts:-9,street:-9,press:-5,congress:-6,auth:+7}, breaks:'religion',
+      res:'Candour is disarming right up until it is entered into evidence, at which point it is the case against you, quoted verbatim, in the first paragraph.' },
+    { label:'Add a majority-Christian country to the list for balance.', eff:{base:+3,street:-5,press:-5,courts:-4,auth:+3}, wild:true,
+      res:'Liechtenstein. It has never sent an asylum seeker. Its foreign ministry issues a statement of bemused solidarity that is quoted for years.' }]},
 
-{ id:'a-hundred-days', title:'The Hundred Days', who:C.press, min:3, max:8, tags:['press'],
-  text:'The hundred-day mark is Friday. Every outlet is preparing a scorecard. ' +
-       'Kaylee has counted the accomplishments and would like to discuss the definition of the word.',
+{ id:'a-second-draft', title:'The Third Draft', who:C.ag, min:2, max:14, tags:['courts','immigration'],
+  src:'issuing revised versions of a blocked order until one survives review',
+  text:'"Two versions struck down. This is the third." Bo lays it out. "The countries are the same. What is different ' +
+       'is four paragraphs about process at the front. That is what will save it, and it is the only thing that will."',
   choices:[
-    { label:'Count every executive order as an accomplishment.', eff:{base:+6,press:-6,auth:+2},
-      res:'"One hundred and forty-three historic actions." Eleven of them are proclamations about awareness months. The number is repeated for four years.' },
-    { label:'Admit it\'s been slow. Blame the opposition.', eff:{base:+5,press:-2,congress:-4,auth:+1},
-      res:'A grievance framing that lands with everyone who already agreed and nobody who did not.' },
-    { label:'Do something enormous by Thursday.', eff:{base:+8,courts:-8,congress:-5,street:-5,auth:+8},
-      res:'A sweeping order is drafted in nine hours by people who have not slept. Three of its provisions contradict each other. All of them take effect.' },
-    { label:'Declare the first hundred days a rounding error and start again.', eff:{base:+3,congress:-4,street:-1,auth:+2}, wild:true,
-      res:'You hold a second inauguration on day 101. It is not legally anything. Four thousand people attend and it is, everyone agrees, a better party than the first.' }]},
+    { label:'Sign the third draft. Let the paragraphs do the work.', eff:{base:+7,courts:-5,street:-6,press:-4,auth:+8},
+      res:'It survives. Nobody outside four law schools ever reads the paragraphs, and the paragraphs are the only reason the policy exists.' },
+    { label:'Sign it and say publicly it is the same order.', eff:{base:+8,courts:-10,street:-7,press:-5,auth:+5}, breaks:'religion',
+      res:'You undo the paragraphs with one sentence at a rally. It is struck down a fourth time and your sentence is quoted in the opinion.' },
+    { label:'Abandon it. Two courts is two courts.', eff:{courts:+9,street:+8,press:+7,congress:+5,base:-9,auth:-4},
+      res:'Nothing is signed. The policy dies quietly and your base learns that a court can end something, which is a lesson you did not want taught.' },
+    { label:'Sign all three versions simultaneously.', eff:{base:+3,courts:-6,press:-5,street:-4,auth:+4}, wild:true,
+      res:'Three contradictory orders in force at once. Customs requests clarification four times and receives, each time, a copy of all three.' }]},
 
-{ id:'a-residence', title:'The Residence', who:C.usher, min:1, max:12, tags:['levity','vanity'],
-  text:'Alvin would like to know your preferences for the private residence. ' +
-       'He has served four presidents. He is holding a small notebook and radiating the calm of a man who has seen things.',
+{ id:'a-language-denial', title:'The Language Used', who:C.cos, min:2, max:16, tags:['press','rhetoric'],
+  src:'denying the specific wording of a remark without denying the meeting',
+  text:'Two people in the room have described what you said about certain countries. ' +
+       'Deborah has a draft denial. "It says the language was tough but not that language. Sir, that is a very narrow door."',
   choices:[
-    { label:'Gold. All of it. Bring in my own decorator.', eff:{base:+5,press:-4,cash:-0.2,auth:+2},
-      res:'The Blue Room is now a different colour, which required a written finding that the Blue Room\'s name is descriptive rather than binding.' },
-    { label:'Change nothing. It\'s a museum, not a house.', eff:{press:+6,street:+4,base:-3},
-      res:'Alvin says "very good, sir" in a tone that a historian would later describe as audible relief.' },
-    { label:'Install a television in every room. Every room.', eff:{base:+4,press:-3,street:-2,auth:+1},
-      res:'Forty-one screens. Aides learn to time bad news to the commercial breaks, which becomes an actual, documented feature of how the government now operates.' },
-    { label:'Ask Alvin to decide. Give him a budget and leave.', eff:{base:-3,congress:+1,press:+1}, wild:true,
-      res:'Alvin, who has served four presidents and never been asked anything, redecorates with total confidence. It is the most tasteful the residence has looked since 1962.' }]},
+    { label:'Post the narrow denial. Do not elaborate.', eff:{base:+6,press:-5,street:-6,congress:-4,auth:+5},
+      res:'Four people present decline to corroborate it. Years later you confirm the phrase yourself, on camera, apparently having forgotten the denial entirely.' },
+    { label:'Deny nothing. Say the meeting was private.', eff:{base:+5,press:-3,congress:-3,auth:+6},
+      res:'Refusing to engage with the content is stronger than a denial that can be checked. It holds for the full four years.' },
+    { label:'Confirm it and defend the underlying point.', eff:{base:+8,street:-10,press:-5,congress:-7,courts:-4,auth:+6},
+      res:'Ambassadors from nine countries request meetings. The State Department schedules all nine and briefs each one differently.' },
+    { label:'Blame a translation error. There was no translator.', eff:{base:+3,press:-5,street:-4,congress:-3,auth:+2}, wild:true,
+      res:'Everybody in the room spoke English. It is pointed out. You say the error was conceptual, which nobody can disprove because nobody can parse it.' }]},
 
-{ id:'a-briefing-book', title:'The Briefing Book', who:C.spy, min:2, max:14, tags:['security'],
-  text:'"The Presidential Daily Brief. Fourteen pages, classified, prepared overnight by nine hundred people." ' +
-       'Errol Hance sets it down. "You have not opened one in six weeks. I am required to tell you that."',
+{ id:'a-wall-emergency', title:'The Emergency For The Wall', who:C.cos, min:6, max:16, tags:['power','congress'],
+  src:'declaring a national emergency to redirect funds Congress had declined to appropriate',
+  text:'Congress voted you $1.4 billion and refused the rest. ' +
+       '"An emergency declaration unlocks military construction money. Congress said no to this, in a vote, four days ago."',
   choices:[
-    { label:'"Give it to me in one page. With pictures."', eff:{base:+3,street:-4,press:-4,auth:+2},
-      res:'It becomes one page with pictures. Nine hundred analysts now compete for four bullet points, and the ones who learn to flatter get more of them.' },
-    { label:'Read it. Every morning. Actually read it.', eff:{street:+6,press:+5,congress:+4,base:-2,auth:+1},
-      res:'You become the best-informed person in the building, which is a genuine and unglamorous advantage that pays off twice over the next four years.' },
-    { label:'Cancel it. Watch television instead.', eff:{base:+4,street:-8,congress:-6,press:-5,auth:+3},
-      res:'For eleven months the foreign policy of the United States is downstream of a morning show, and three allied intelligence services adjust their sharing arrangements accordingly.' },
-    { label:'Have it read to you as a podcast by a professional voice actor.', eff:{base:+1,congress:+1,press:-3,street:-1,auth:+2}, wild:true,
-      res:'You listen to all fourteen pages every morning while exercising. Comprehension is measurably higher than any president in a decade. Nobody can decide whether to be impressed.' }]},
+    { label:'Declare it. Take the construction money.', eff:{base:+9,congress:-12,courts:-8,press:-5,street:-5,auth:+12}, breaks:'presentment',
+      res:'You have converted a lost vote into a won one by declaring the loss an emergency. Both chambers pass a resolution terminating it and you veto that too.' },
+    { label:'Declare it but spend only the counter-narcotics line.', eff:{base:+5,congress:-6,courts:-4,press:-3,auth:+8},
+      res:'Less photogenic, less litigated, same amount of concrete. Nobody protests a counter-narcotics reallocation.' },
+    { label:'Build what $1.4 billion buys. Say it was always the plan.', eff:{congress:+8,courts:+6,press:+5,base:-7,auth:+2},
+      res:'Ninety miles, on budget, finished early, in the places engineers actually recommended. It is mentioned by nobody.' },
+    { label:'Declare an emergency about the shortage of emergencies.', eff:{base:+3,congress:-6,courts:-5,press:-4,auth:+5}, wild:true,
+      res:'The Federal Register publishes it, because the Federal Register publishes what it is sent. Four agencies request implementing guidance and none is ever written.' }]},
 
-{ id:'a-first-trip', title:'The First Trip', who:C.state, min:4, max:16, tags:['foreign'],
-  text:'Tradition says the first foreign visit goes to your closest ally. ' +
-       'Muriel has the itinerary. You have been looking at a different itinerary, from a country with better hotels.',
+{ id:'a-blood', title:'The Line About Blood', who:C.writer, min:8, max:20, tags:['rhetoric','street'],
+  src:'rhetoric describing immigration as contaminating the nation',
+  text:'Gideon has flagged a line in tomorrow\'s draft. It is about what immigration does to the country, ' +
+       'and the verb is a medical one. "Sir, two historians will have columns filed before you finish the sentence."',
   choices:[
-    { label:'Break tradition. Go where they roll out the gold carpet.', eff:{base:+6,press:-4,street:-3,cash:+0.3,auth:+3},
-      res:'A sword dance, an orb, and $110 billion in announced deals of which $14 billion is real. The ally you skipped notices, and remembers, for eleven years.' },
-    { label:'The ally. It\'s tradition for a reason.', eff:{press:+6,congress:+5,street:+4,base:-4},
-      res:'A dull, warm, useful visit. The joint statement contains the word "enduring" four times and is entirely accurate.' },
-    { label:'Go to a summit and lecture everyone.', eff:{base:+7,press:-5,street:-4,congress:-4,auth:+4},
-      res:'You are filmed pushing past a prime minister to reach the front of a group photograph. The clip is nine seconds and outlives every policy discussed at the summit.' },
-    { label:'Go to a diner in Ohio and call it a foreign trip.', eff:{base:+3,congress:-4,street:+1,auth:+1}, wild:true,
-      res:'Four networks cover it live because they have nothing else. A waitress asks you a question about her insurance that nobody in your administration can answer.' }]},
+    { label:'Keep it. Deliver it twice.', eff:{base:+9,street:-12,press:-5,congress:-8,courts:-4,auth:+7},
+      res:'The columns run within the hour and both quote the same 1920s speeches. Your team says the critics are the ones obsessed with history, which is true and is not a defence.' },
+    { label:'Change the verb. Keep the argument.', eff:{base:+6,street:-4,press:-3,congress:-3,auth:+5},
+      res:'Same policy, same crowd reaction, no archive footage. Gideon calls it the cheapest edit he has ever made.' },
+    { label:'Cut it. Talk about wage competition instead.', eff:{street:+7,press:+7,congress:+6,courts:+4,base:-7,auth:+1},
+      res:'An economic argument that is arguable, defensible and dull. It persuades four hundred thousand more people than the other version and thrills nobody.' },
+    { label:'Deliver it, but about the water supply.', eff:{base:+4,street:-6,press:-5,congress:-4,auth:+3}, wild:true,
+      res:'Eleven minutes on municipal fluoridation, delivered with total conviction. Four state health departments issue clarifications nobody requested.' }]},
 
-{ id:'a-portrait', title:'The Portrait', who:C.photog, min:1, max:14, tags:['vanity','levity'],
-  text:'Renata Silk needs the official portrait for every federal building in the country. ' +
-       'She has taken four hundred frames. You have looked at all four hundred. You have concerns about three hundred and ninety-eight.',
-  choices:[
-    { label:'Reshoot. Different light. I know what I look like.', eff:{base:+4,press:-3,cash:-0.1,auth:+1},
-      res:'Eleven more sessions. The final image is retouched to a degree that a wire service describes, in a caption, as "provided by the White House."' },
-    { label:'Pick one. It\'s a wall in a post office.', eff:{press:+4,street:+3,base:-2},
-      res:'Renata exhales. The portrait is good. Nobody ever mentions it again, which is what a portrait is for.' },
-    { label:'Use a photo of the crowd instead. Of my crowd.', eff:{base:+7,press:-5,auth:+2},
-      res:'Federal buildings now display a photograph of a rally where a portrait should be. It is technically compliant with the regulation, which specifies "a likeness."' },
-    { label:'Use a child\'s crayon drawing of you. Have it framed.', eff:{base:+2,press:-1,auth:-2}, wild:true,
-      res:'It hangs in nine thousand federal buildings. The child is eleven. It is the single most liked decision of your first year and it cost forty dollars.' }]},
+/* ---------- energy & the environment ---------- */
 
-{ id:'a-oath-cards', title:'The Cards', who:C.gen, min:3, max:20, tags:['military','security'],
-  text:'A military aide hands you the card and explains the authentication codes. ' +
-       'The briefing takes four minutes. There is no second person in the chain. There has never been a second person in the chain.',
+{ id:'a-energy-emergency', title:'The Energy Emergency', who:C.energy, min:1, max:12, tags:['economy','power'],
+  src:'declaring a national energy emergency on day one and revoking predecessor climate orders',
+  text:'Cassandra Doyle has the day-one package: an energy emergency declaration and the revocation of eleven ' +
+       'predecessor orders. "Production is at a record high, sir. That is the number the declaration has to survive."',
   choices:[
-    { label:'"Four minutes? That\'s it?" Ask for more briefings.', eff:{street:+6,press:+5,congress:+4,base:-2,auth:+1},
-      res:'You spend a day at a facility underground learning exactly what the number means. You are quieter for about a week afterwards.' },
-    { label:'Take the card. Mention it at a rally.', eff:{base:+5,street:-9,press:-5,congress:-6,auth:+4},
-      res:'You describe the briefing in general terms to a crowd of eleven thousand. Two allied governments issue statements. One adversary does not, which is worse.' },
-    { label:'"Who else can stop this?" Ask the actual question.', eff:{street:+4,congress:+3,courts:+2,auth:+6},
-      res:'The honest answer is: procedurally, nobody. You now know that and so does everyone who watched you ask.' },
-    { label:'Ask if the card can have a picture of the dog on it.', eff:{base:+2,press:-3,street:-1,auth:-1}, wild:true,
-      res:'The request goes up four levels of the Pentagon and comes back approved, because nobody at any level was willing to be the person who said no to it.' }]},
+    { label:'Declare it anyway. Record output, still an emergency.', eff:{base:+8,street:-7,courts:-7,press:-5,congress:-5,cash:+0.3,auth:+10},
+      res:'The emergency unlocks permitting powers with nothing to do with scarcity. The scarcity was never the point, and the production figures are published monthly.' },
+    { label:'Revoke the orders. Skip the emergency.', eff:{base:+5,street:-4,courts:-3,press:-3,auth:+6},
+      res:'Same effect, no declaration to litigate. Four environmental groups sue over the revocations instead and lose on standing.' },
+    { label:'Keep the orders. Claim the record output as yours.', eff:{street:+7,press:+7,congress:+5,base:-8,auth:+1},
+      res:'The output is genuinely a record and predates you by two years. You take the credit anyway and nobody can be bothered to correct it.' },
+    { label:'Declare an energy emergency and a surplus, same morning.', eff:{base:+3,street:-5,press:-5,courts:-4,auth:+4}, wild:true,
+      res:'Two proclamations twenty minutes apart in direct contradiction. Both remain in force. A trade journal writes 4,000 words trying to reconcile them.' }]},
 
-{ id:'a-ethics-briefing', title:'The Ethics Briefing', who:C.ethics, min:2, max:16, tags:['money'],
-  text:'Miriam Applewhite has a slide deck about divestment, blind trusts and the emoluments clause. ' +
-       'She has given this briefing to six presidents. "Sir, the previous five signed at the first slide."',
+{ id:'a-wind', title:'The Moratorium', who:C.energy, min:2, max:16, tags:['economy','street'],
+  src:'a moratorium on new wind projects on federal land',
+  text:'"A halt on new wind leasing on federal land. Eleven projects at final permit stage, four thousand jobs, ' +
+       'and most of them are in states you won by double digits." Cassandra waits.',
   choices:[
-    { label:'Sign nothing. The president cannot have a conflict of interest.', eff:{base:+3,press:-5,courts:-6,congress:-5,cash:+0.6,auth:+7},
-      res:'It is a legal position with actual support in the statutes and no support at all in the last fifty years of practice. She resigns in March.', flag:'noDivest' },
-    { label:'Blind trust. Run by your children.', eff:{base:+3,press:-4,courts:-2,cash:+0.3,auth:+3},
-      res:'The trust is blind in the sense that you are not permitted to see it, and sighted in the sense that you are told about it at dinner.' },
-    { label:'Full divestment. Do it properly.', eff:{press:+9,courts:+7,congress:+6,base:-4,cash:-0.9},
-      res:'It costs you a fortune and buys you something you will not appreciate until the second year, when there is simply no story.' },
-    { label:'Sign everything, then ask her to audit you quarterly. Publicly.', eff:{base:-8,congress:+3,courts:+3,press:+4,auth:-2,cash:-0.6}, wild:true,
-      res:'Miriam Applewhite does not resign in March. She stays six years and her quarterly reports are the most boring documents in Washington, which is precisely their value.' }]},
+    { label:'Halt all of it. Immediately.', eff:{base:+7,street:-8,courts:-6,press:-5,congress:-5,auth:+8},
+      res:'Four thousand jobs pause in five states you carried. Two governors from your own party object publicly and one of them is on your shortlist for everything.' },
+    { label:'Halt new leases. Let the eleven finish.', eff:{base:+5,street:-3,courts:-2,press:-2,auth:+6},
+      res:'The gesture without the casualties. Your base hears "halt" and the eleven projects hear nothing at all.' },
+    { label:'No moratorium. Approve them and cut the ribbon.', eff:{street:+8,press:+7,congress:+5,base:-9,auth:+1},
+      res:'You stand in front of a turbine in a hard hat. The photograph is used against you by your own side for four years.' },
+    { label:'Ban wind on federal land, then buy the turbines yourself.', eff:{base:+4,street:-5,press:-4,cash:-0.4,auth:+3}, wild:true,
+      res:'You acquire eleven half-built wind farms at a discount created by your own order. Four ethics offices open files and none can name the violation.' }]},
 
-{ id:'a-nickname', title:'The Nickname', who:C.social, min:2, max:20, tags:['levity','base'],
-  text:'Brayden has workshopped seven nicknames for the opposition leader. ' +
-       'Four are libellous, two are incomprehensible, and one is genuinely, disgracefully funny.',
+{ id:'a-pipelines', title:'The Two Pipelines', who:C.energy, min:2, max:14, tags:['economy','street'],
+  src:'reviving two contested pipeline projects by executive action',
+  text:'Two pipelines, both halted by the last administration, both revivable by memorandum. ' +
+       '"One crosses a river four hundred metres upstream of a reservation\'s water intake. That is the entire dispute."',
   choices:[
-    { label:'The funny one. Use it in every speech from now on.', eff:{base:+8,press:-5,street:-4,auth:+2},
-      res:'It sticks so thoroughly that news anchors start using it by accident. She is still being introduced with it at events nine years later.' },
-    { label:'Use her actual name. It\'s more insulting somehow.', eff:{press:+5,congress:+4,base:-3,auth:+1},
-      res:'Treating an opponent as a person is now such an unusual tactic that it is covered as a strategy.' },
-    { label:'Nickname the entire opposition party instead.', eff:{base:+6,press:-4,congress:-5,street:-3,auth:+3},
-      res:'You have converted forty million individuals into a single object with a stupid name. This is more efficient and considerably worse.' },
-    { label:'Nickname yourself first. Get ahead of it.', eff:{base:+3,press:-2,street:-2,auth:+1}, wild:true,
-      res:'You workshop it live at a rally and the crowd rejects three before landing on one. It sticks, it is affectionate, and no opponent can now use it against you.' }]},
+    { label:'Approve both. Memorandum, today.', eff:{base:+8,street:-9,courts:-8,press:-5,cash:+0.4,auth:+9},
+      res:'Construction begins in nine weeks. The camp that forms upstream lasts eleven months and produces the defining protest imagery of your first year.' },
+    { label:'Approve one. Re-route the other.', eff:{base:+5,street:-3,courts:-3,press:-2,cash:+0.3,auth:+6},
+      res:'The re-route costs $400 million, takes two extra years, and is never challenged once. Both pipelines are operating in 2031.' },
+    { label:'Approve both, and fund the reservation\'s new intake.', eff:{base:+3,street:+6,courts:+5,press:+5,cash:+0.2,auth:+4},
+      res:'$90 million for a water plant removes the entire basis of the objection. Four tribal chairs say so publicly, which nobody expected including them.' },
+    { label:'Approve a third pipeline nobody has proposed.', eff:{base:+4,street:-4,press:-4,courts:-3,auth:+3}, wild:true,
+      res:'It has no route, no operator and no application. It is announced at a rally and enters four state energy plans before anybody establishes it does not exist.' }]},
 
-{ id:'a-cabinet-first', title:'The First Cabinet Meeting', who:C.cos, min:2, max:12, tags:['power'],
-  text:'Twenty-two people around a table, all confirmed, all yours. ' +
-       'Deborah has an agenda with eleven items. The first item is "Introductions." The meeting is scheduled for ninety minutes.',
+{ id:'a-climate-money', title:'The Pledges', who:C.state, min:6, max:20, tags:['foreign','money'],
+  src:'withdrawing multi-billion climate-finance pledges to developing economies',
+  text:'Three countries were promised transition financing on the strength of an American signature. ' +
+       'Muriel: "We can withdraw it. It was pledged, not appropriated. They have already started building."',
   choices:[
-    { label:'Skip the agenda. Talk for ninety minutes.', eff:{base:+4,congress:-4,street:-3,press:-4,auth:+3},
-      res:'Nothing is decided. Twenty-two department heads leave having learned only what pleases you, which they will use as a decision-making framework for four years.' },
-    { label:'Work the agenda. All eleven items.', eff:{congress:+6,street:+5,press:+4,base:-3,auth:+2},
-      res:'It runs four hours and produces nine actual decisions. It is the most productive meeting of the administration and it is never repeated.' },
-    { label:'Ask each of them what they will do if a court blocks them.', eff:{courts:-6,congress:-4,base:+4,auth:+9},
-      res:'Nineteen give lawyerly answers. Three give the answer you were listening for. Those three get everything they ask for from now on.' },
-    { label:'Hold it in a diner. All twenty-two of you. One booth at a time.', eff:{base:+2,congress:+2,press:-1,street:-1,auth:-2}, wild:true,
-      res:'Twenty-two cabinet officials in a roadside diner for four hours. It is chaotic, it is photographed constantly, and nine actual decisions get made.' }]},
+    { label:'Withdraw all three pledges.', eff:{base:+6,street:-6,press:-6,congress:-5,cash:+0.4,auth:+7},
+      res:'Two of the three projects continue on other financing within eighteen months. You have not saved the money; you have transferred the relationship.' },
+    { label:'Withdraw two. Honour the one under construction.', eff:{base:+4,press:-3,congress:-2,cash:+0.3,auth:+5},
+      res:'A distinction nobody asked for that preserves one relationship for $600 million. Muriel calls it the best afternoon of her year.' },
+    { label:'Honour all three. Rename the programme after yourself.', eff:{street:+7,press:+8,congress:+6,base:-6,cash:-0.5,auth:+2},
+      res:'The projects are built, the plaques say what you asked, and three governments owe you a favour you never call in.' },
+    { label:'Withdraw the money and offer coal instead.', eff:{base:+5,street:-6,press:-6,congress:-4,cash:+0.2,auth:+3}, wild:true,
+      res:'All three decline. One does so in a letter so exquisitely polite that it is framed and hung in their embassy in Washington.' }]},
 
-{ id:'a-family-office', title:'The West Wing Office', who:C.girl, min:3, max:20, tags:['money','vanity'],
-  text:'Ivy would like a West Wing office, a security clearance, and an unpaid title. ' +
-       'She is genuinely capable, which makes this harder rather than easier.',
-  choices:[
-    { label:'Give her all three. Nepotism is just trust with paperwork.', eff:{base:+3,press:-5,congress:-5,courts:-4,auth:+5},
-      res:'She is good at the job. That the job could not have been obtained by anyone who is not your daughter remains true regardless, and everyone in the building knows it.', flag:'family' },
-    { label:'Advisory role. No clearance, no office.', eff:{press:+3,congress:+2,base:-2,auth:+1},
-      res:'She takes the meeting anyway, from a chair by the door, and is more effective than several confirmed officials.' },
-    { label:'"Not in this building." Keep the family out.', eff:{press:+8,congress:+6,courts:+5,base:-6},
-      res:'It is the correct decision and it costs you the only person in the world who would have told you the truth in a small room.' },
-    { label:'Give her a real job in a department, at the bottom, under a fake name.', eff:{base:+1,congress:+2,courts:+1,press:-2,street:-3,auth:+2}, wild:true,
-      res:'She spends fourteen months as a GS-9 analyst under the name \'Iris Vance\' and produces a memo on procurement fraud that saves the government $2 billion.' }]},
+/* ---------- the Bureau and the investigation ---------- */
 
-{ id:'a-first-veto', title:'The First Veto', who:C.speaker, min:6, max:24, tags:['congress'],
-  text:'A bipartisan bill has passed both chambers with 71 votes. It is popular, sensible, and contains one paragraph ' +
-       'that limits something you would like to do. Hal has counted: they have the votes to override.',
+{ id:'a-tapes-post', title:'The Tapes', who:C.lawyer, min:4, max:18, tags:['justice','press'],
+  src:'a public warning to a dismissed official about possible recordings',
+  text:'You have drafted a post suggesting the man you just fired had better hope there are no recordings of your conversations. ' +
+       'Sy: "Sir. There are two readings. One is a bluff. The other is that there is something on a tape."',
   choices:[
-    { label:'Veto it anyway. Make them override you.', eff:{base:+6,congress:-9,press:-4,auth:+4},
-      res:'They override, 74–26. You have established that your veto is not a real constraint, which is a fact about you they now all know.' },
-    { label:'Sign it. Issue a signing statement voiding that paragraph.', eff:{congress:-5,courts:-8,press:-5,base:+4,auth:+11},breaks:'takecare',
-      res:'You signed a law and announced you would not follow part of it. No court will hear it for two years. In the meantime the paragraph does not exist.', flag:'signingStatement' },
-    { label:'Sign it clean. Bank the goodwill.', eff:{congress:+9,press:+6,street:+5,base:-5,auth:-2},
-      res:'You get a genuinely bipartisan photograph and a favour you can call in exactly once.' },
-    { label:'Veto it in person, in the chamber, with a speech.', eff:{base:+3,congress:-6,press:+1,street:+1,auth:+3}, wild:true,
-      res:'No president has vetoed a bill from the floor of the House. There is no procedure for it and no procedure preventing it. The override vote is delayed nine days by sheer confusion.' }]},
+    { label:'Post it. Let him wonder.', eff:{base:+6,courts:-9,congress:-8,press:-5,auth:+6},
+      res:'He tells a committee the post is precisely why he released his memos. You caused the disclosure you were trying to prevent, in one sentence, for free.' },
+    { label:'Post it, then confirm there are no tapes a month later.', eff:{base:+4,courts:-5,congress:-4,press:-4,auth:+4},
+      res:'A month of national speculation about a recording system that does not exist, ended by you, at no cost to anybody except the month.' },
+    { label:'Say nothing. He is fired and it is over.', eff:{courts:+8,congress:+7,press:+6,base:-5,auth:+1},
+      res:'It is, in fact, over. Sy describes this as the single best decision of the first year and is not being sarcastic.' },
+    { label:'Install a recording system, then post it.', eff:{base:+3,courts:-8,congress:-7,press:-6,auth:+5}, wild:true,
+      res:'You create the evidence in order to threaten somebody with it. Four lawyers explain the problem in sequence and each explanation is worse than the last.' }]},
 
-{ id:'a-vetting', title:'The Vetting', who:C.fbi, min:4, max:20, tags:['security','press'],
-  text:'Marla Quist has background files on eleven senior appointees. Four cannot hold a clearance. ' +
-       'One of the four already has one, granted over the Bureau\'s written objection, by you.',
+{ id:'a-let-this-go', title:'"I Hope You Can"', who:C.fbi, min:3, max:16, tags:['justice','courts'],
+  src:'an alleged private request to a bureau director to drop an investigation into an aide',
+  text:'You have asked everybody else to leave the room. Director Quist is still here. ' +
+       'The investigation into your national security adviser is nine weeks old and you are about to say something about it.',
   choices:[
-    { label:'Override all four. The president grants clearances.', eff:{base:+5,press:-8,congress:-7,street:-5,auth:+8},
-      res:'Constitutionally you are correct. Eighteen months later one of them leaves a folder in an unlocked drawer at a private club, and it is discovered by a member.' },
-    { label:'Drop the four. Quietly, on a Friday.', eff:{press:+5,congress:+5,base:-4,auth:+1},
-      res:'They resign to "spend time with family." Two of them are back in the building by autumn on contracts that require no clearance at all.' },
-    { label:'Override them and investigate the Bureau for leaking.', eff:{base:+7,press:-9,courts:-7,congress:-6,auth:+11},
-      res:'The leak inquiry finds nothing and terrifies everyone, which was the deliverable. Quist begins writing everything down in a way she did not previously.' },
-    { label:'Grant clearances to all eleven and to the janitor, for fairness.', eff:{base:+2,congress:-6,press:-6,street:-4,auth:+3}, wild:true,
-      res:'The janitor holds a Top Secret clearance for four years, uses it never, and is the only one of the twelve who is never the subject of an inquiry.' }]},
+    { label:'"I hope you can see your way to letting this go."', eff:{base:+4,courts:-11,congress:-10,press:-5,auth:+8}, breaks:'takecare',
+      res:'She writes it down in her car within twenty minutes, dates it, and gives copies to three people. The word "hope" is litigated for two years.' },
+    { label:'Say nothing about the case. Talk about anything else.', eff:{courts:+9,congress:+8,press:+6,base:-4,auth:+2},
+      res:'Eleven minutes on hostage policy. She leaves puzzled and writes nothing down, which is the only outcome that helps you.' },
+    { label:'Ask her, on the record, with counsel present.', eff:{courts:+5,congress:+4,press:+4,base:-2,auth:+3},
+      res:'Asking improperly with a witness present converts a deniable conversation into a documented one — but it is at least a conversation you can defend.' },
+    { label:'Ask her to investigate you instead, as a distraction.', eff:{base:+3,courts:-4,congress:-4,press:-4,auth:+4}, wild:true,
+      res:'She opens the file. It is a real file with a real number. It is still open in 2029 and nobody involved intended any of it.' }]},
 
-{ id:'a-tour', title:'The Tour', who:C.hist, min:2, max:22, tags:['levity','vanity'],
-  text:'Dr. Weir is walking you through the building\'s history. She stops at a desk. ' +
-       '"Six presidents used this. Two of them wrote resignation letters at it." She waits. She is clearly not finished.',
+{ id:'a-no-quid', title:'The Three Words', who:C.press, min:10, max:22, tags:['press','congress'],
+  src:'the repeated public formulation denying a conditional exchange',
+  text:'Kaylee has counted: you have used the same three-word Latin phrase eleven times in four days. ' +
+       '"Sir, nobody had used that phrase in public life for a decade. It is now on a coffee mug."',
   choices:[
-    { label:'"Which two?" Actually ask.', eff:{press:+4,street:+4,congress:+3,auth:+1},
-      res:'She tells you, at length, with dates. You listen for forty minutes. She will later be one of the few people who says something kind about you on the record.' },
-    { label:'Replace the desk. Bring in something bigger.', eff:{base:+5,press:-4,auth:+2},
-      res:'The new desk is eleven inches wider and has your name inlaid on the front, facing outward, so that visitors can read it while seated opposite you.' },
-    { label:'Have her removed from the tour rotation.', eff:{base:+2,press:-5,street:-4,auth:+3},
-      res:'The White House Historian is not, it turns out, a political appointment. She continues working there for eleven years and writes the definitive account of your presidency.', flag:'weirAngry' },
-    { label:'Ask her to keep going. Cancel the afternoon.', eff:{base:-3,congress:+2,press:+1,street:+1,auth:-2}, wild:true,
-      res:'Four hours with the White House Historian. You learn what happened to the two who wrote resignation letters at that desk. It changes, very slightly, how you sit at it.' }]},
+    { label:'Use it again. Louder. It is a good phrase.', eff:{base:+6,congress:-7,press:-5,street:-4,auth:+5},
+      res:'Repeating a denial nobody asked for establishes the question. By week three the phrase is shorthand for the thing it denies.' },
+    { label:'Stop saying it entirely. Never again.', eff:{congress:+6,press:+6,street:+4,base:-3,auth:+3},
+      res:'Silence starves it in nine days. It is the correct handling and it feels, from inside, exactly like losing.' },
+    { label:'Release the call record and let people read it.', eff:{congress:+7,courts:+6,press:+8,base:-6,auth:-2},
+      res:'It is worse than the summary and better than the speculation. Publishing it ends four competing versions and starts one accurate one.' },
+    { label:'Sell the coffee mug.', eff:{base:+7,congress:-5,press:-4,street:-3,cash:+0.2,auth:+2}, wild:true,
+      res:'Four hundred thousand units at $28. The second best-selling item the movement ever produces, and it says the Latin for "not a bribe" on it.' }]},
 
-{ id:'a-speechwriter', title:'The Draft', who:C.writer, min:3, max:24, tags:['press','base'],
-  text:'Gideon Poe has written you a genuinely great speech — historical, generous, quotable, the kind that gets carved into things. ' +
-       'It is also, he concedes, "not really in your voice."',
+{ id:'a-withheld-aid', title:'The Hold', who:C.treas, min:12, max:24, tags:['foreign','congress'],
+  src:'placing an unexplained hold on appropriated military aid to a foreign partner',
+  text:'"Four hundred million dollars, appropriated, obligated, and now sitting on a hold that came from this building." ' +
+       'Lyle looks up. "Nobody in the department can tell me who placed it or why."',
   choices:[
-    { label:'Deliver it word for word.', eff:{press:+9,street:+7,congress:+6,base:-8,auth:-2},
-      res:'It is the best-reviewed forty minutes of your presidency. Your base watches it in silence and concludes, correctly, that you did not write it.' },
-    { label:'Deliver it, then go off-script for twenty minutes.', eff:{base:+7,press:-5,street:-3,auth:+3},
-      res:'The carved-in-stone paragraph and the improvised riff about a television host appear in the same transcript. Historians will use both.' },
-    { label:'Bin it. "Give me a list of enemies and I\'ll do the rest."', eff:{base:+9,press:-7,street:-6,congress:-4,auth:+4},
-      res:'Poe writes lists for another eleven months and then leaves to write a book. The book is very good and you are in all of it.' },
-    { label:'Have Gideon deliver it himself. You sit in the audience.', eff:{base:-4,congress:+2,press:+2,street:+2,auth:-2}, wild:true,
-      res:'The Chief Speechwriter delivers the address from the podium while the President watches from row four. Nobody has ever done this. It is electrifying and it is never repeated.' }]},
+    { label:'Keep the hold. Give no reason.', eff:{base:+4,congress:-11,courts:-8,street:-6,press:-5,auth:+10}, breaks:'purse',
+      res:'An unexplained hold on appropriated funds generates four separate inquiries, two of them statutory, and you cannot decline either.' },
+    { label:'Release it. Say it was a review.', eff:{congress:+8,courts:+6,press:+5,base:-4,auth:+3},
+      res:'Released 55 days late with a two-line explanation. The delay is noted by an auditor and by nobody else.' },
+    { label:'Keep it and tie it to a stated policy condition.', eff:{congress:-5,courts:-4,press:-4,base:+5,auth:+7},
+      res:'A written condition is a policy instrument; an unwritten one is a favour. Putting it in writing is the safer of two bad options.' },
+    { label:'Release it in a currency they cannot spend.', eff:{base:+2,congress:-6,courts:-4,press:-4,auth:+4}, wild:true,
+      res:'The transfer is denominated in a unit last used in 1971. Their finance ministry spends four months converting it and sends a thank-you note anyway.' }]},
 
-{ id:'a-inaugural-gift', title:'The Gift Log', who:C.ethics, min:4, max:22, tags:['money','levity'],
-  text:'Foreign governments have sent 1,100 inaugural gifts. Anything over $480 belongs to the American people. ' +
-       'Item 402 is a solid gold horse. Item 403 is a second, larger, solid gold horse.',
-  choices:[
-    { label:'Log them all. Buy the horses back at valuation.', eff:{press:+6,congress:+4,cash:-0.4,auth:+1},
-      res:'Entirely legal, fully documented, and it costs you $600,000 for two gold horses you did not want and cannot display anywhere.' },
-    { label:'Keep them. Log them as "displayed at a residence."', eff:{base:+3,press:-5,courts:-4,cash:+0.5,auth:+4},
-      res:'The residence is yours. The display is a corridor. The horses are, by any ordinary use of the word, kept.' },
-    { label:'Auction them. Donate it. Make a whole event of it.', eff:{press:+7,base:+5,street:+4,cash:+0.1,auth:+2},
-      res:'The horses raise $2.1 million for veterans and you get to stand next to a gold horse on television. Everybody wins, including, unusually, everybody.' },
-    { label:'Keep the two gold horses. Give everything else to a school raffle.', eff:{base:+2,press:-2,street:-1,auth:+1,cash:+0.2}, wild:true,
-      res:'Eleven hundred diplomatic gifts raffled off in a school gymnasium. A ceremonial dagger from a Gulf state is won by a twelve-year-old and there is a brief international incident.' }]},
+/* ---------- the courts ---------- */
 
-{ id:'a-golf', title:'The Course', who:C.sched, min:3, max:30, tags:['levity','money'],
-  text:'Boyd has the weekend schedule. Eleven of your last fourteen weekends have been at a property you own, ' +
-       'billed to the government at the going rate, paid to you.',
+{ id:'a-fifty-forty-eight', title:'Fifty–Forty-Eight', who:C.speaker, min:8, max:22, tags:['courts','congress'],
+  src:'a Supreme Court confirmation completed by a two-vote margin amid contested allegations',
+  text:'Hal has the count: fifty for, forty-eight against, and two members who will decide in the last hour. ' +
+       'The hearing has been extraordinary in a way nobody in the room will forget.',
   choices:[
-    { label:'Keep going. It\'s a secure site I already understand.', eff:{base:+2,press:-5,street:-4,cash:+0.4,auth:+3},
-      res:'The Secret Service pays you rent to protect you at your own hotel. This is legal, documented, and appears in a GAO report as a line item.' },
-    { label:'Charge the government one dollar a year.', eff:{press:+7,congress:+5,base:+3,cash:-0.2},
-      res:'A cheap, showy, effective gesture that removes the entire story for the price of a sandwich.' },
-    { label:'Go somewhere you don\'t own. Anywhere.', eff:{press:+5,street:+4,base:-3,cash:-0.1},
-      res:'Camp David is described by three separate aides as "fine, actually." You do not go back.' },
-    { label:'Take the press pool with you. Every weekend. Make them play.', eff:{base:+2,street:-1,auth:-2,cash:+0.1}, wild:true,
-      res:'Nine correspondents play eighteen holes with the President every Saturday for four years. Coverage improves markedly and none of them can adequately explain why.' }]},
+    { label:'Whip it to the floor tonight. Two votes is a majority.', eff:{base:+8,courts:+10,congress:-8,street:-8,press:-6,auth:+9}, breaks:'consent',
+      res:'Confirmed by two. He serves thirty years, and the hearing is replayed at every subsequent confirmation, by both parties, for opposite reasons.' },
+    { label:'Pause for a one-week supplementary inquiry.', eff:{courts:+7,congress:+5,street:+6,press:+6,base:-5,auth:+4},
+      res:'The inquiry is inconclusive in both directions. He is confirmed 53-45 nine days later; the extra week costs you nothing and buys four senators cover.' },
+    { label:'Withdraw him. Nominate the next name.', eff:{courts:+5,congress:+7,street:+7,press:+7,base:-11,auth:-2},
+      res:'The replacement is confirmed 61-39 and is more reliably aligned with you by every measure. Your base experiences the withdrawal as total defeat.' },
+    { label:'Nominate both of them. Two seats, one vote.', eff:{base:+3,courts:-5,congress:-6,press:-4,auth:+4}, wild:true,
+      res:'There is one vacancy. The second nomination is transmitted anyway and sits on the Senate calendar for four years, technically pending.' }]},
 
-{ id:'a-first-lawsuit', title:'The First Injunction', who:C.ag, min:3, max:18, tags:['courts'],
-  text:'A district judge in a state you lost by thirty points has blocked your signature order nationwide. ' +
-       '"One judge, sir. Out of six hundred and seventy-seven. And it applies everywhere."',
+{ id:'a-eight-days', title:'Eight Days Out', who:C.ag, min:10, max:24, tags:['courts','elections'],
+  src:'filling a Supreme Court vacancy in the days immediately before a national election',
+  text:'A justice has died with the election eight days away. Bo: "There is no rule against it. ' +
+       'There is a thing four senators said in 2016 that they will now have to eat, on camera, in sequence."',
   choices:[
-    { label:'Attack the judge personally. Name him. Repeatedly.', eff:{base:+8,courts:-11,press:-5,auth:+4},
-      res:'He receives protection detail within a week. Eleven other judges read the coverage and each of them privately decides what kind of judge they intend to be.' },
-    { label:'Appeal it properly and shut up about it.', eff:{courts:+8,press:+6,congress:+4,base:-5},
-      res:'You win at the circuit in eleven months. Nobody covers the win because nobody remembers the loss.' },
-    { label:'Comply nationally, then re-issue it state by state.', eff:{courts:+3,press:-3,base:+4,auth:+8},
-      res:'Forty-one separate orders instead of one. Forty-one separate lawsuits, none nationwide, none newsworthy, most of which you win.' },
-    { label:'Send the judge a handwritten note saying you disagree, respectfully.', eff:{base:-4,congress:+2,courts:+4,press:+1,street:-1,auth:-2}, wild:true,
-      res:'It is four sentences long, entirely civil, and utterly baffling to everyone. He files it with the court as a matter of record because he cannot think what else to do with it.' }]},
+    { label:'Confirm before the election. Eight days is eight days.', eff:{base:+9,courts:+11,congress:-9,street:-8,press:-6,auth:+10}, breaks:'consent',
+      res:'Sworn in with six days to spare. The four senators eat it on camera, in sequence, and every one of them is re-elected.' },
+    { label:'Nominate now, confirm after. Same outcome, less heat.', eff:{base:+6,courts:+9,congress:-4,street:-4,press:-4,auth:+8},
+      res:'Identical result a fortnight later with a third of the coverage. Timing is the only variable and it is worth more than the argument.' },
+    { label:'Leave it to whoever wins.', eff:{congress:+9,courts:+7,street:+8,press:+8,base:-12,auth:-6},
+      res:'You lose the election and the seat. It is the most principled thing you ever do and it ends four relationships inside your own party.' },
+    { label:'Confirm them to a seat that is not vacant.', eff:{base:+3,courts:-6,congress:-5,press:-4,auth:+4}, wild:true,
+      res:'A tenth justice is confirmed to a Court that has nine. She turns up, is given an office, and quietly does research for four years.' }]},
 
-{ id:'a-swamp', title:'The Swamp', who:C.lawyer, min:5, max:24, tags:['money','base'],
-  text:'You campaigned on draining it. Sy has the list of people who have joined the administration from the industries ' +
-       'they now regulate. "Sir, it is a long list. It is, in fairness, an extremely qualified list."',
+{ id:'a-order-struck', title:'Permanently Struck', who:C.lawyer, min:10, max:26, tags:['courts','power'],
+  src:'a court permanently striking down an executive order targeting a law firm',
+  text:'A judge has struck your order against the firm — permanently — in an opinion using the word "unconstitutional" ' +
+       'nine times. Sy: "She did not enjoin it. She voided it. There is nothing left to appeal about."',
   choices:[
-    { label:'Hire them all. Who else knows how it works?', eff:{base:-6,press:-5,street:-6,congress:+4,cash:+0.5,auth:+4},
-      res:'Eleven regulators are now former lobbyists for the regulated. Four of them are genuinely excellent at the job, which is somehow the most damning part.' },
-    { label:'Impose a five-year lobbying ban on the way out.', eff:{base:+8,press:+6,street:+5,congress:-4,auth:+2},
-      res:'It is announced with enormous fanfare and quietly waived, individually, eleven times over four years.' },
-    { label:'Hire them and say you drained it anyway.', eff:{base:+4,press:-4,street:-5,cash:+0.4,auth:+5},
-      res:'The claim and the staff list are both published, on the same website, on the same day. Nobody who supports you reads the second one.' },
-    { label:'Hire only people who have never worked in Washington. Nobody.', eff:{base:+3,congress:-9,courts:-6,street:+1,auth:+2}, wild:true,
-      res:'Eleven hundred appointees with no federal experience whatsoever. Four of them are visionary. The rest cannot find the building and the government slows to a walk for a year.' }]},
+    { label:'Attack the ruling. Sign a near-identical order.', eff:{base:+7,courts:-11,press:-6,congress:-6,street:-5,auth:+8},
+      res:'The second order is voided in eleven days by the same judge, who quotes her own opinion at length and appends the first order as an exhibit.' },
+    { label:'Comply. Restore the clearances. Say nothing.', eff:{courts:+9,congress:+6,press:+7,base:-7,auth:-1},
+      res:'The firm is made whole in a fortnight. Four other firms that had already conceded quietly reverse their concessions, which is the actual cost.' },
+    { label:'Comply, and target the firm through procurement instead.', eff:{base:+5,courts:-4,press:-5,congress:-4,auth:+9},
+      res:'No order, no ruling, no headline — just contracts that stop being renewed. It works and there is nothing for a judge to void.' },
+    { label:'Hire the judge.', eff:{base:+3,courts:-7,congress:-5,press:-5,auth:+4}, wild:true,
+      res:'She declines by letter in four sentences. The letter is entered on the docket, becomes public, and is the funniest document of the year.' }]},
 
-{ id:'a-pet-rock', title:'The Bill Nobody Read', who:C.speaker, min:6, max:26, tags:['congress','levity'],
-  text:'A 2,200-page appropriations bill lands on the desk at 4am with the shutdown at midnight. ' +
-       'Page 1,904 contains a provision nobody will admit to writing. It is about ferrets.',
+{ id:'a-accountability-order', title:'The Accountability Order', who:C.ag, min:6, max:22, tags:['justice','power'],
+  src:'an order directing reviews of former officials over claimed election interference',
+  text:'"An order directing agencies to review the conduct of named former officials." Bo turns the page. ' +
+       '"Sir, four of the names investigated you. One of them is 81 and retired."',
   choices:[
-    { label:'Sign it. Ferrets are not the hill.', eff:{congress:+7,street:+5,base:-3,auth:+1},
-      res:'The government stays open. The ferret provision costs $40 million and creates an office that still exists.' },
-    { label:'Veto over the ferrets. On principle. Loudly.', eff:{base:+7,congress:-8,street:-7,press:-3,auth:+3},
-      res:'You shut down the federal government over ferrets. It is, briefly, the only thing anyone in the country is talking about, and you are not entirely wrong.' },
-    { label:'Sign it and line-item strike the ferrets anyway.', eff:{congress:-7,courts:-8,base:+5,auth:+10},breaks:'presentment',
-      res:'Presidents do not have a line-item veto. You have now used one. The case takes three years and by then the office has been quietly funded twice more.' },
-    { label:'Sign it, but read all 2,200 pages aloud on television first.', eff:{base:+3,congress:+2,press:-1,street:-1,auth:-2}, wild:true,
-      res:'Thirty-one hours of live broadcast. Ratings climb steadily. Eleven provisions are removed by embarrassed authors before you reach them, including the ferrets.' }]},
+    { label:'Sign it. All the names.', eff:{base:+8,courts:-10,congress:-8,press:-6,street:-6,auth:+11}, breaks:'dueprocess',
+      res:'Clearances first, then details, then pension reviews. Nothing is charged. Everything is done, and none of it required a charge.' },
+    { label:'Sign it with the retired ones removed.', eff:{base:+5,courts:-6,press:-4,congress:-4,auth:+8},
+      res:'Removing the 81-year-old is the difference between a policy and a vendetta in coverage terms, and in no other terms at all.' },
+    { label:'Do not sign. Order a review of the reviews instead.', eff:{courts:+7,congress:+6,press:+6,base:-6,auth:+2},
+      res:'A meta-review reporting in fourteen months, finding procedural irregularities on all sides and satisfying nobody, which is what reviews are for.' },
+    { label:'Sign it and add your own name to the list.', eff:{base:+4,courts:+5,press:+6,congress:+4,auth:+3}, wild:true,
+      res:'You are reviewed by your own department under your own order. It clears you in nine weeks and the clearance is worth precisely what it cost.' }]},
 
-{ id:'a-doctor-first', title:'The Physical', who:C.doc, min:4, max:26, tags:['press','levity'],
-  text:'Admiral Prine has your annual results. They are, he says, "consistent with a man of your age and habits." ' +
-       'He would like to know how much of that sentence you would like released.',
-  choices:[
-    { label:'Release a statement saying I\'m in astonishing health.', eff:{base:+6,press:-6,auth:+2},
-      res:'The phrase "astonishing health" is used four times in a one-page letter that Prine signs and immediately regrets.' },
-    { label:'Release the actual numbers. All of them.', eff:{press:+8,street:+5,base:-4},
-      res:'They are unremarkable. The story dies in one cycle because there is nothing in it, which is what happens when there is nothing in it.' },
-    { label:'Release nothing. It\'s private.', eff:{press:-6,street:-3,base:+3,auth:+2},
-      res:'Four outlets begin tracking your gait, your handshake and the width of your ties. This continues for the rest of your life.' },
-    { label:'Release the results as a rap song.', eff:{base:+3,press:-2,street:-1}, wild:true,
-      res:'Rear Admiral Prine raps your cholesterol on camera. He is not good at it. It has ninety million views and he is recognised in airports for the rest of his life.' }]},
+/* ---------- money, ethics and the family ---------- */
 
-{ id:'a-crowd-again', title:'The Empty Seats', who:C.sched, min:5, max:26, tags:['base','press'],
-  text:'The arena holds nineteen thousand. Boyd\'s count is eleven. ' +
-       'There is a camera position that makes it look full and a camera position that does not, and both press pools have credentials.',
+{ id:'a-ethics-divest', title:'The Divestment Briefing', who:C.ethics, min:1, max:12, tags:['money','press'],
+  src:'declining full divestment in favour of a trust administered by family',
+  text:'Miriam Applewhite has the standard package: sell the assets, or a genuine blind trust run by a stranger. ' +
+       '"There is a third thing people call a blind trust and hand to their children. It is not blind, sir. It is just a trust."',
   choices:[
-    { label:'Move the stage forward. Curtain off the back.', eff:{base:+5,press:-4,auth:+2},
-      res:'Standard practice at every event of every kind. It works. A drone shot from a local affiliate ruins it by Tuesday.' },
-    { label:'Book smaller rooms from now on.', eff:{base:+6,press:+4,street:+2,auth:+1},
-      res:'Every room is now overflowing, which is the same as every room being full, which is much better television than a big room being empty.' },
-    { label:'Claim twenty-five thousand and revoke the affiliate\'s credentials.', eff:{base:+7,press:-9,street:-4,auth:+5},
-      res:'A local news station in a mid-sized market becomes a national free-press story for eleven days over a photograph of some chairs.' },
-    { label:'Fill the empty seats with cardboard cutouts of yourself.', eff:{base:+2,press:-8,street:-4,auth:+1}, wild:true,
-      res:'Eight thousand cutouts. From the correct angle it works perfectly. From every other angle it is the single most unsettling image of the year.' }]},
+    { label:'The trust. Run by the family. Call it blind.', eff:{base:+4,press:-9,courts:-7,congress:-6,cash:+0.7,auth:+8},
+      res:'You are briefed on its performance at dinner. Every filing describes it as blind and every filing is accurate about the paperwork.' },
+    { label:'Full divestment. Sell everything.', eff:{press:+10,congress:+8,courts:+7,street:+5,base:-4,cash:-1.0,auth:-2},
+      res:'It costs an enormous amount and removes an entire category of story permanently. You will not appreciate this for three years.' },
+    { label:'Keep everything. The President cannot have a conflict.', eff:{base:+6,press:-11,courts:-9,congress:-8,cash:+0.9,auth:+9},
+      res:'A legal position with genuine statutory support and none at all in fifty years of practice. Miriam resigns in March and testifies in June.' },
+    { label:'Put it in a trust run by a stranger you then hire.', eff:{base:+3,press:-6,courts:-5,congress:-4,cash:+0.5,auth:+6}, wild:true,
+      res:'He is appointed to a federal advisory board eleven weeks later. Four journalists notice on the same afternoon and none can prove the connection.' }]},
 
-{ id:'a-sanctuary', title:'The Mayor', who:C.mayor, min:6, max:28, tags:['street','power'],
-  text:'Desmond Faulk has announced his city will not assist federal immigration enforcement. ' +
-       'He is on television saying so. He is enjoying himself enormously.',
+{ id:'a-gift-log', title:'The Gift Log', who:C.ethics, min:4, max:20, tags:['money','foreign'],
+  src:'foreign-state gifts and the threshold above which they belong to the public',
+  text:'Eleven hundred inaugural gifts from foreign governments. Anything above the threshold belongs to the country, not you. ' +
+       'Item 402 is a solid gold horse. Item 403 is a larger one.',
   choices:[
-    { label:'Cut every federal dollar to the city. Today.', eff:{base:+8,courts:-9,street:-8,press:-5,auth:+9},
-      res:'A court blocks it in five weeks under a doctrine about coercing the states that most people had never heard of and now have.' },
-    { label:'Send federal agents in without local coordination.', eff:{base:+6,street:-11,press:-4,courts:-6,auth:+8},
-      res:'Arrests happen outside a school. The footage is on every screen in the country by lunchtime and the mayor\'s approval goes up eleven points.' },
-    { label:'Ignore him. He wants the fight more than you do.', eff:{street:+6,press:+5,congress:+3,base:-6,auth:-1},
-      res:'Denied an antagonist, he is back to arguing about bin collection within a month. It is the cheapest win available and it looks exactly like losing.' },
-    { label:'Move the federal government\'s regional office to his city. Double the staff.', eff:{base:-6,congress:+3,press:+2,street:+4,auth:-2,cash:-0.3}, wild:true,
-      res:'You reward the defiant mayor with four thousand federal jobs. He cannot attack you for it. He tries for a fortnight and then simply stops talking about you.' }]},
+    { label:'Log them. Buy the horses back at valuation.', eff:{press:+7,congress:+5,courts:+4,cash:-0.4,auth:+2},
+      res:'Entirely legal, fully documented, and it costs $600,000 for two gold horses you did not want and cannot display anywhere.' },
+    { label:'Log them as displayed at a residence. Keep them.', eff:{base:+3,press:-7,courts:-6,congress:-5,cash:+0.5,auth:+6},
+      res:'The residence is yours. The display is a corridor. The horses are, on any ordinary use of the word, kept.' },
+    { label:'Auction the lot for veterans. Publicly.', eff:{base:+5,press:+8,street:+8,congress:+5,cash:+0.1,auth:+2},
+      res:'$2.1 million in an afternoon. A ceremonial dagger is won by a twelve-year-old and there is a brief, delightful international incident.' },
+    { label:'Melt the horses. Mint coins with your face on them.', eff:{base:+6,press:-6,courts:-5,congress:-4,cash:+0.3,auth:+4}, wild:true,
+      res:'The gifting government requests a photograph of the horses for its own archive. You send a photograph of the coins.' }]},
 
-{ id:'a-fed-chair', title:'The Independent Man', who:C.fed, min:8, max:30, tags:['economy','power'],
-  text:'Arthur Lindqvist has raised rates a quarter point. He is legally independent, appointed by you, ' +
-       'and cannot be removed for policy disagreements. He mentions none of this, which is somehow worse.',
+{ id:'a-property-billing', title:'The Rate Card', who:C.home, min:6, max:24, tags:['money','press'],
+  src:'government protective and staff costs billed at president-owned properties',
+  text:'Duane has the invoices. The protective detail has paid your own resort $1.1 million in room rates in four months. ' +
+       '"Sir, we have to stay where you stay. You set the rate."',
   choices:[
-    { label:'Attack him publicly. Demand cuts. Every week.', eff:{base:+5,street:-7,press:-4,congress:-5,auth:+5},
-      res:'Markets now price in political pressure on the central bank as a permanent feature. The premium is small, real, and never goes away.' },
-    { label:'Try to fire him and see what happens.', eff:{base:+4,courts:-11,congress:-9,street:-10,press:-5,auth:+13},
-      res:'He does not leave. Nobody makes him. The question of whether you could is now live and unanswered, which markets hate more than either answer.' },
-    { label:'Say nothing. Central bank independence is worth more than a quarter point.', eff:{street:+8,press:+7,congress:+6,base:-6,auth:-3},
-      res:'A genuinely sophisticated decision that no voter will ever hear about and that saves the economy roughly $200 billion.' },
-    { label:'Ask him to explain interest rates. Actually listen. On camera.', eff:{base:-3,congress:+3,courts:+1,press:+2,street:+2,auth:-2}, wild:true,
-      res:'Forty minutes of a central banker explaining monetary policy to the President on live television. Four million people watch it. It is the best economics lesson the country ever gets.' }]},
+    { label:'Keep the rate. It is the market rate.', eff:{base:+3,press:-8,courts:-6,congress:-6,cash:+0.5,auth:+6}, breaks:'emoluments',
+      res:'The taxpayer pays the President to protect the President at the President\'s hotel. It is disclosed, itemised and entirely lawful, which is the whole problem.' },
+    { label:'Charge them one dollar a year.', eff:{press:+8,congress:+7,street:+5,base:+3,cash:-0.3,auth:+2},
+      res:'A cheap, showy, devastatingly effective gesture that removes the story for the price of a sandwich.' },
+    { label:'Stay somewhere you do not own.', eff:{press:+6,congress:+5,street:+4,base:-3,cash:-0.2},
+      res:'Camp David is described by three separate aides as "fine, actually." You do not go back after the second visit.' },
+    { label:'Charge them, then bill yourself for the inconvenience.', eff:{base:+3,press:-6,courts:-5,congress:-4,cash:+0.4,auth:+4}, wild:true,
+      res:'An invoice from you to you, paid by the government, for the disruption caused by your own protection. It clears. Nobody can identify who approved it.' }]},
 
-{ id:'a-nasa', title:'The Flag', who:C.nasa, min:6, max:32, tags:['vanity','levity'],
-  text:'Dr. Brennan has the crewed lunar timeline. It lands two years after you leave office. ' +
-       'She has brought the engineering. You have brought a question about the timeline.',
+{ id:'a-family-desk', title:'The Desk In The West Wing', who:C.girl, min:2, max:18, tags:['money','power'],
+  src:'family members appointed as senior advisers with security clearances',
+  text:'Ivy would like a West Wing office, a clearance and an unpaid senior title. ' +
+       'The clearance is the part career security staff have flagged. Twice. In writing.',
   choices:[
-    { label:'Move it up. Whatever it costs.', eff:{base:+7,street:-4,congress:-6,cash:-0.5,auth:+4},
-      res:'Three safety reviews are compressed into one. Brennan writes a memo objecting, files it, and keeps a copy, which is what engineers do when they have read the previous reports.' },
-    { label:'Fund it properly on her timeline. Take no credit.', eff:{street:+7,press:+7,congress:+5,base:-4,auth:+1},
-      res:'It launches four years after you leave. Your name is on a plaque nobody photographs and the mission works.' },
-    { label:'"Can the flag be bigger?"', eff:{base:+4,press:+3,street:+2,auth:+1},
-      res:'Dr. Brennan says yes. It is the only request you make that she can fully deliver and she does so with real enthusiasm.' },
-    { label:'Fund it properly and ask to go up yourself.', eff:{base:+3,congress:-6,press:+2,street:+2,auth:-2,cash:-0.4}, wild:true,
-      res:'You pass none of the physicals. Dr. Brennan lets you sit in the simulator for an hour. It is, you tell four separate people afterwards, the best hour of the job.' }]},
+    { label:'All three. Override the flags.', eff:{base:+4,press:-8,courts:-6,congress:-6,street:-4,auth:+7},
+      res:'She is genuinely capable, and the job could not have been obtained by anybody who is not your daughter. Both are true; only one is reported.', flag:'family' },
+    { label:'Title and office. No clearance.', eff:{base:+3,press:-3,congress:-2,auth:+4},
+      res:'She takes the meetings anyway, from a chair by the door, and is more effective than four confirmed officials.' },
+    { label:'No family in the building.', eff:{press:+9,congress:+7,courts:+6,street:+5,base:-6},
+      res:'The correct decision. It also removes the only person alive who would have told you the truth in a small room.' },
+    { label:'Give her the clearance, and give the flags a clearance too.', eff:{base:+3,press:-5,courts:-5,congress:-4,auth:+5}, wild:true,
+      res:'The two career officers who objected are read into the programme they objected about. Both promptly object again, now with considerably more detail.' }]},
 
-{ id:'a-labor-first', title:'The Handshake', who:C.labor, min:6, max:30, tags:['street','economy'],
-  text:'Tony Marchetti has the leaders of four unions in the anteroom. They endorsed the other side. ' +
-       'They are here anyway, which means they want something, which means they can be bought.',
+{ id:'a-columbia', title:'The Second University', who:C.edu, min:10, max:26, tags:['culture','power'],
+  src:'cutting federal funding to a university over its handling of campus protests',
+  text:'Four hundred million dollars, one university, and a list of demands about protest policy and departmental oversight. ' +
+       'Ollis: "The first one folded. This one has a bigger endowment and a worse lawyer."',
   choices:[
-    { label:'Cut them a deal. Tariffs for endorsements.', eff:{street:+9,base:+6,press:+2,congress:-4,auth:+3},
-      res:'Two of the four break with their own federation to stand behind you. The photograph is worth more than the policy and the policy is not nothing.', flag:'unions' },
-    { label:'Lecture them about loyalty and send them home.', eff:{base:+5,street:-8,congress:-4,press:-3,auth:+2},
-      res:'They leave in eleven minutes. The federation spends $90 million against you over the next three years, which is roughly what the deal would have cost.' },
-    { label:'Take the meeting, promise everything, deliver nothing.', eff:{street:+5,base:+3,press:-4,auth:+4},
-      res:'It buys you fourteen months. When it comes due, it comes due all at once, at a port, in October.' },
-    { label:'Give them the deal and join the union yourself.', eff:{base:+2,congress:-8,press:+3,street:+4,auth:-2}, wild:true,
-      res:'The President of the United States holds a card in the sheet metal workers. It is honorary, it is meaningless, and it is on the wall of nine hundred union halls within a month.' }]},
+    { label:'Cut it. All four hundred million.', eff:{base:+8,street:-9,courts:-8,press:-7,congress:-5,auth:+11},
+      res:'They fold in nine weeks and accept an outside monitor over one department. Eleven other universities read the settlement and never need to be contacted.' },
+    { label:'Cut half. Leave the medical research alone.', eff:{base:+5,street:-4,courts:-4,press:-4,auth:+8},
+      res:'Sparing the cancer labs removes the only argument that was cutting through. Same leverage, no photograph of a shuttered trial.' },
+    { label:'Fund it fully. Attack them rhetorically instead.', eff:{street:+6,courts:+6,press:+6,congress:+4,base:-5,auth:+2},
+      res:'Words cost nothing and change nothing. The university ignores you completely and its applications rise 14%.' },
+    { label:'Cut the funding and enrol in a seminar there.', eff:{base:+5,street:+4,press:+5,courts:-3,auth:+2}, wild:true,
+      res:'You audit four sessions of a constitutional law course at the institution you are defunding. The transcript is released in 2044 and is genuinely interesting.' }]},
 
-{ id:'a-holiday', title:'The Turkey', who:C.usher, min:8, max:34, tags:['levity'],
-  text:'The annual turkey pardon. Two birds, both named by schoolchildren, both destined for a farm. ' +
-       'Alvin notes that the joke writes itself and that four of your predecessors nonetheless read the prepared remarks.',
-  choices:[
-    { label:'Do the bit. Pardon both. Be charming for six minutes.', eff:{press:+6,street:+5,base:+4},
-      res:'You are funny. Genuinely funny. It is briefly, disorientingly, the most likeable you have ever been on camera.' },
-    { label:'Use it to make a joke about pardoning your friends.', eff:{base:+8,press:-5,courts:-5,street:-4,auth:+3},
-      res:'The laugh in the room is real. The clip is used in an impeachment presentation fourteen months later, without editing, because none was needed.' },
-    { label:'Skip it. It\'s a photo op with poultry.', eff:{press:-4,street:-4,base:-2},
-      res:'A tradition that costs nothing and generates goodwill is discontinued to save eleven minutes.' },
-    { label:'Pardon the turkeys and then hire them.', eff:{base:+3,congress:-3,press:+1,auth:-2}, wild:true,
-      res:'Two turkeys are appointed to a federal advisory board on poultry welfare. The appointments are, on review, entirely lawful. They serve four-year terms.' }]},
+/* ---------- the culture orders ---------- */
 
-{ id:'a-poet', title:'The Inaugural Poet', who:C.writer, min:1, max:6, tags:['culture','levity'],
-  text:'Tradition calls for a poem. Gideon has three names. The first two declined. ' +
-       'The third accepted and has sent a draft that Gideon describes as "about you, but not favourably, and very good."',
+{ id:'a-minors-care', title:'The Age Line', who:C.health, min:6, max:22, tags:['culture','courts'],
+  src:'an order restricting federally supported gender-transition care for minors',
+  text:'Dr. Pike has the draft. "It conditions federal funding on hospitals ceasing a category of care for under-19s. ' +
+       'Four children\'s hospitals in states you won will stop the day it is signed."',
   choices:[
-    { label:'Let her read it. Uncut.', eff:{press:+9,street:+6,congress:+4,base:-7,auth:-1},
-      res:'Eleven million people hear a poem criticising the man who invited her to read it, at his own inauguration. It is the most confident thing you ever do.' },
-    { label:'Cut the second half. Keep the pretty bits.', eff:{press:-4,base:+3,auth:+2},
-      res:'She reads the edited version and then posts the original that afternoon. Both trend. Only one of them has your name on it.' },
-    { label:'No poem. Have a country singer instead.', eff:{base:+6,press:-4,street:-2,auth:+1},
-      res:'The singer is excellent, the crowd is delighted, and eleven newspapers run a piece about the poem that wasn\'t.' },
-    { label:'Read the poem yourself. The unedited version. About you.', eff:{base:+2,congress:+2,auth:-2}, wild:true,
-      res:'You stand at the inaugural podium and read a poem criticising you, in your own voice, without comment. Four historians call it the most extraordinary moment of the day.' }]},
+    { label:'Sign it. Nineteen and under, no exceptions.', eff:{base:+9,street:-9,courts:-8,press:-6,congress:-5,auth:+9}, breaks:'equal',
+      res:'Nine hospitals stop within a fortnight, including for patients mid-course. Two courts partially enjoin it and the hospitals do not restart, because hospitals do not restart.' },
+    { label:'Sign it with an exception for continuing care.', eff:{base:+6,street:-4,courts:-4,press:-3,auth:+7},
+      res:'Nobody is dropped mid-treatment. It achieves the policy without producing the four specific cases that would have defined it.' },
+    { label:'No order. Fund a longitudinal study instead.', eff:{street:+7,press:+7,courts:+6,congress:+4,base:-9,cash:-0.2,auth:+1},
+      res:'It reports in nine years with the largest dataset anybody has. Both sides cite it and neither changes position.' },
+    { label:'Set the age line at 47.', eff:{base:+3,street:-5,courts:-5,press:-4,auth:+3}, wild:true,
+      res:'A drafting instruction taken literally by somebody who did not want to ask. It is caught in review after four days and the story never quite dies.' }]},
 
-{ id:'a-hotline', title:'The Call Sheet', who:C.state, min:5, max:26, tags:['foreign'],
-  text:'Eleven heads of state are waiting for a congratulatory call. Muriel has ordered them by strategic priority. ' +
-       'You have reordered them by who was nicest about you on television.',
+{ id:'a-military-dei', title:'The Fighting Force Order', who:C.gen, min:4, max:20, tags:['culture','military'],
+  src:'an order ending diversity programmes across the armed forces',
+  text:'Tarrant has the order and the retention data side by side. "I will implement whatever you sign. ' +
+       'I am obliged to tell you that recruitment in four of our five hardest-to-fill specialties runs through the offices this closes."',
   choices:[
-    { label:'My order. The nice ones first.', eff:{base:+4,press:-4,street:-3,congress:-3,auth:+3},
-      res:'A NATO ally is called eleventh, after a country with a population of ninety thousand. This is noticed in every foreign ministry on earth within the hour.' },
-    { label:'Her order. She does this for a living.', eff:{press:+5,congress:+5,street:+4,base:-3},
-      res:'Dull, correct, and it buys you an actual favour from an actual ally inside a year.' },
-    { label:'Call the adversary first. Rattle everyone.', eff:{base:+5,press:-5,congress:-6,street:-5,auth:+7},
-      res:'It works exactly as intended: every ally is now uncertain, every adversary is now flattered, and nobody knows what you will do next, including you.' },
-    { label:'Call them all at once on a conference line.', eff:{base:+2,congress:+1,press:-2,street:-2,auth:+2}, wild:true,
-      res:'Eleven heads of state on one call, none of whom were told the others would be there. Two of them are at war. It is the most productive ninety minutes in the history of the State Department.' }]},
+    { label:'Sign it. Close every office.', eff:{base:+8,street:-8,congress:-6,press:-5,courts:-4,auth:+9}, breaks:'equal',
+      res:'Recruitment in those four specialties falls 19% over two years. The report saying so is classified at a level that keeps it out of the budget hearing.' },
+    { label:'Close the offices. Keep the recruitment pipelines.', eff:{base:+5,street:-3,congress:-3,press:-3,auth:+7},
+      res:'The signage goes, the function stays, renamed. Everybody gets what they said they wanted and nothing at all changes.' },
+    { label:'Do not sign. Order a readiness review first.', eff:{street:+7,congress:+7,press:+6,courts:+4,base:-8,auth:+1},
+      res:'The review finds the programmes marginally positive and expensive. You sign a narrower order in nine months that nobody objects to.' },
+    { label:'Sign it and replace the offices with a single sergeant.', eff:{base:+4,street:-5,congress:-4,press:-4,auth:+4}, wild:true,
+      res:'Sergeant Alvarez inherits the responsibilities of four hundred people, does the job better than the four hundred did, and is promoted twice in a year.' }]},
 
-{ id:'a-uniform', title:'The Salute', who:C.gen, min:3, max:28, tags:['military','levity'],
-  text:'You returned a foreign officer\'s salute on a tarmac. Civilians do not salute. ' +
-       'General Tarrant is here to explain, delicately, that the President is a civilian, and that this is the entire point.',
+{ id:'a-passports', title:'The Marker', who:C.state, min:4, max:20, tags:['culture','street'],
+  src:'suspending passport applications that request a change of sex marker',
+  text:'Muriel: "Applications requesting a marker change are being held. Not refused — held. Eleven thousand of them, ' +
+       'and four hundred people have travel booked this month."',
   choices:[
-    { label:'"I\'m Commander-in-Chief. I\'ll salute who I like."', eff:{base:+6,street:-4,press:-3,congress:-3,auth:+4},
-      res:'Every president salutes now; the tradition is only forty years old and nobody remembers it starting. Tarrant\'s objection is narrower and he does not repeat it.' },
-    { label:'Stop doing it. He\'s explaining something real.', eff:{street:+6,congress:+5,press:+4,base:-3},
-      res:'Nobody notices you stopped, which is how you can tell it was never about the salute.' },
-    { label:'Start wearing a military-style jacket at events.', eff:{base:+6,street:-8,press:-5,congress:-6,auth:+6},
-      res:'It has no insignia and no rank and it does not need any. Three historians write the same column in the same week.' },
-    { label:'Salute everyone. The waiters, the press, the dog. All day.', eff:{base:+2,press:-1,street:-1,auth:-1}, wild:true,
-      res:'By evening it has stopped being a story about militarism and become a story about a man saluting a labrador. The original concern is never raised again.' }]},
+    { label:'Hold them indefinitely. Issue no guidance.', eff:{base:+7,street:-9,courts:-8,press:-6,congress:-4,auth:+9}, breaks:'dueprocess',
+      res:'A hold with no decision cannot be appealed, because nothing has been decided. It is the most efficient refusal in the department\'s history.' },
+    { label:'Refuse them formally. Give them something to appeal.', eff:{base:+6,street:-6,courts:-5,press:-4,auth:+6},
+      res:'A formal refusal is litigable and is duly litigated. You lose in fourteen months, which is fourteen months.' },
+    { label:'Process them. Change the policy prospectively.', eff:{street:+8,courts:+7,press:+6,congress:+4,base:-8,auth:+2},
+      res:'Eleven thousand applications clear in six weeks and the new rule applies to everybody after. Nobody misses a flight and nobody notices.' },
+    { label:'Issue every passport with no marker at all.', eff:{base:+3,street:-4,courts:-5,press:-4,auth:+4}, wild:true,
+      res:'Four countries refuse the documents at the border. The department spends nine months negotiating recognitions for a field it deleted on purpose.' }]},
 
-{ id:'a-leak-first', title:'The First Leak', who:C.cos, min:4, max:24, tags:['press','power'],
-  text:'A verbatim transcript of a private call is in print within six hours. ' +
-       'Deborah has the distribution list. It is fourteen people. All fourteen are yours.',
-  choices:[
-    { label:'Polygraph all fourteen. Today.', eff:{base:+5,press:-7,street:-4,congress:-4,auth:+7},
-      res:'Polygraphs are inadmissible and unreliable and everybody knows it, which is why the exercise is about fear rather than truth. The leaks stop for six weeks.' },
-    { label:'Shrink the list to four. Say nothing.', eff:{press:+2,auth:+6},
-      res:'The leaks stop because the leaker is no longer in the room. You never find out who it was and it never matters.' },
-    { label:'Leak something false to all fourteen. Separately. Tagged.', eff:{press:-5,courts:-3,base:+4,auth:+9},
-      res:'A canary trap. It works in nine days and the person it catches is the last person you would have guessed, which is the point of a canary trap.' },
-    { label:'Leak the story yourself, first, and better.', eff:{base:+2,press:-2,street:-3,auth:+5}, wild:true,
-      res:'You call a reporter and give her a fuller, more accurate account than the leaker had. The leak becomes worthless. You have invented a defence that nobody in this building had considered.' }]},
+/* ---------- tariffs & the markets ---------- */
 
-{ id:'a-pastor', title:'The Blessing', who:C.pastor, min:4, max:30, tags:['culture','base'],
-  text:'Reverend Muncy would like to lay hands on you in the Oval Office, on camera, with eleven other pastors. ' +
-       'He has done this before. He has a very good sense of where the light is.',
+{ id:'a-ninety-day', title:'The Ninety-Day Pause', who:C.treas, min:10, max:24, tags:['economy','press'],
+  src:'pausing country-specific tariffs after market turmoil while raising one rate sharply',
+  text:'Four days of losses. Lyle has a plan: pause the country-specific rates for ninety days, ' +
+       'and raise the one on your largest rival to a number nobody has used since the 1930s.',
   choices:[
-    { label:'Do it. Full ceremony. Wide shot.', eff:{base:+9,press:-5,street:-5,auth:+3},breaks:'religion',
-      res:'The photograph runs in every church bulletin in the country for a month. Two of the eleven pastors are, within a year, the subject of federal investigations.' },
-    { label:'A private prayer. No cameras.', eff:{base:+4,press:+3,street:+2},
-      res:'Muncy is briefly, visibly disappointed and then genuinely moved, which he had not expected and neither had you.' },
-    { label:'Decline. Politely. Firmly.', eff:{press:+5,street:+4,base:-8},
-      res:'He tells his broadcast audience of four million that he prays for you daily, which is both gracious and a threat.' },
-    { label:'Ask him to pray for your opponents. By name. On camera.', eff:{base:+1,congress:+2,street:+1,auth:-2}, wild:true,
-      res:'Reverend Muncy hesitates for four full seconds and then does it, properly, at length. Several people in the room are visibly moved, including two who came to mock it.' }]},
+    { label:'Pause everything. Raise the one rate to 125%.', eff:{base:+7,street:+5,congress:+3,press:-4,cash:+0.3,auth:+6}, breaks:'presentment',
+      res:'Markets rip upward 9% in an afternoon. Several people who knew about the pause forty minutes early are considerably richer and four inquiries go nowhere.' },
+    { label:'Pause everything. Raise nothing.', eff:{street:+8,congress:+6,press:+6,base:-6,auth:+2},
+      res:'A clean retreat, correctly read as one. The rally is the same size and your base is furious about a number that no longer exists.' },
+    { label:'Pause nothing. Hold the line.', eff:{base:+8,street:-11,congress:-8,press:-5,cash:-0.4,auth:+5},
+      res:'Another 6% comes off in a week. Retirement accounts absorb it and your approval among the over-60s does something pollsters describe as geological.' },
+    { label:'Pause them, and announce the pause four times.', eff:{base:+4,street:+3,press:-4,auth:+3}, wild:true,
+      res:'Four separate announcements of the same pause over nine days, each moving the market. A trade journal calls it the most profitable stutter in history.' }]},
 
-{ id:'a-shovel', title:'The Groundbreaking', who:C.sched, min:8, max:34, tags:['levity','street'],
-  text:'A factory groundbreaking, eleven hundred jobs, gold-painted shovel, hard hat with your name on it. ' +
-       'Boyd notes the plant was announced under your predecessor and the jobs number is from a press release.',
+{ id:'a-retaliation', title:'The Answer', who:C.state, min:12, max:26, tags:['economy','foreign'],
+  src:'retaliatory tariffs and a consumer backlash from trading partners',
+  text:'Two partners have answered. One has targeted four agricultural states with surgical precision. ' +
+       'The other has done nothing official — its citizens have simply stopped buying American products.',
   choices:[
-    { label:'Take full credit. It\'s a shovel and a camera.', eff:{base:+6,street:+4,press:-4,auth:+2},
-      res:'The plant opens four years later with four hundred jobs, mostly automated, and the ribbon is cut by somebody else who also takes full credit.' },
-    { label:'Credit the workers and the state. Say the number honestly.', eff:{press:+6,street:+6,congress:+4,base:-3},
-      res:'Honest, specific, and repeated by exactly nobody because a correct jobs figure is not a story.' },
-    { label:'Announce a second, larger factory that does not exist.', eff:{base:+5,press:-5,street:-6,congress:-4,auth:+3},
-      res:'You describe it in detail: the acreage, the jobs, the state. None of it exists. A town spends eleven months rezoning for it.' },
-    { label:'Actually work a shift on the site. Eight hours.', eff:{base:+3,congress:+1,press:-1,street:+1,auth:-2}, wild:true,
-      res:'You are extremely bad at it. The foreman is patient. The footage of a President being told off for holding a shovel wrong is the most humanising thing ever filmed of you.' }]},
+    { label:'Escalate against both.', eff:{base:+7,street:-9,congress:-8,press:-5,cash:-0.4,auth:+7},
+      res:'The precision targeting doubles. The boycott, having no official status, cannot be negotiated away and lasts eleven years.' },
+    { label:'Negotiate with the state. Ignore the boycott.', eff:{street:+5,congress:+5,press:+4,base:-4,auth:+4},
+      res:'You settle with the government in four months. Consumer sentiment takes nine years and no agreement ever touches it.' },
+    { label:'Drop the tariffs. Declare the point made.', eff:{street:+8,congress:+7,press:+7,base:-8,auth:+1},
+      res:'Everything unwinds in six weeks. Two minor concessions for eleven months of disruption — a real if unimpressive result.' },
+    { label:'Boycott them back. Personally. On camera.', eff:{base:+6,street:-4,press:-3,congress:-3,auth:+2}, wild:true,
+      res:'You publicly forswear four of their most famous products. Sales of all four rise domestically. One sends you a free case with a very short note.' }]},
 
-{ id:'a-hat', title:'The Hat', who:C.social, min:2, max:36, tags:['base','money','levity'],
-  text:'The hat has sold four million units. Brayden wants a second product. ' +
-       'He has eleven prototypes on the table, one of which is a commemorative sneaker.',
-  choices:[
-    { label:'All eleven. Sell everything. Sign the sneaker.', eff:{base:+7,press:-5,cash:+0.7,auth:+2},
-      res:'You gross $180 million and turn a political movement into a merchandising business, which turns out to be far more durable than a political movement.' },
-    { label:'Just the hat. Don\'t dilute it.', eff:{base:+5,press:-1,cash:+0.3,auth:+1},
-      res:'Restraint in branding, of all places. The hat becomes iconic precisely because it is the only one.' },
-    { label:'Give the profits to a veterans\' charity.', eff:{base:+8,press:+7,street:+6,congress:+4,cash:-0.3},
-      res:'$40 million reaches an actual charity that does actual work. A reporter checks. It checks out. She writes it up and nobody clicks on it.' },
-    { label:'Make the hat free. Give away four million.', eff:{base:+4,press:-2,street:-1,auth:-2,cash:-0.5}, wild:true,
-      res:'You lose $80 million and gain a country in which one adult in forty owns your hat. It is the best money you ever spend and your accountants never forgive you.' }]},
+/* ---------- the chat and the room ---------- */
 
-{ id:'a-rope-line', title:'The Rope Line', who:C.cos, min:5, max:32, tags:['base','street'],
-  text:'A supporter at a rope line hands you a folded note about her son, who died waiting eleven months for a hospital appointment. ' +
-       'There are four hundred people behind her and a camera eleven feet away.',
+{ id:'a-strike-timing', title:'The Timings', who:C.gen, min:8, max:24, tags:['security','press'],
+  src:'operational strike timings shared in a consumer messaging group',
+  text:'Your defence secretary posted launch windows and target packages into a commercial chat two hours before the aircraft flew. ' +
+       'Tarrant: "If that had reached the wrong person, sir, I would be writing letters this week."',
   choices:[
-    { label:'Stop. Read it. Talk to her for as long as it takes.', eff:{base:+9,press:+8,street:+8,congress:+4,auth:-1},
-      res:'You are twenty-six minutes late to everything for the rest of the day. It is, without any competition, the best thing you do that year.' },
-    { label:'Pocket it, hug her, keep moving. Have staff follow up.', eff:{base:+5,press:+3,street:+3},
-      res:'Staff do follow up, twice, and the case is genuinely fixed. Nobody films any of that part.' },
-    { label:'Hold it up and use it in the speech.', eff:{base:+7,press:-4,street:-3,auth:+2},
-      res:'You use her son as an example for eleven months. She asks you to stop in the fourteenth month, in a letter, which is answered by an autopen.' },
-    { label:'Give her your phone number. Your actual number.', eff:{base:+3,press:-1,street:+1,auth:-2}, wild:true,
-      res:'She calls twice in four years. Both times you answer. Both times you fix the thing. She tells nobody until after you are dead, and then she tells everybody.' }]},
+    { label:'Nobody is disciplined. It worked out.', eff:{base:+6,street:-9,congress:-9,courts:-5,press:-5,auth:+5},
+      res:'It did work out. The lesson every officer takes from it is the one about consequences, not the one about the app.' },
+    { label:'Remove him. Say exactly why.', eff:{street:+8,congress:+9,press:+8,courts:+5,base:-8,auth:-2},
+      res:'Accountability, stated plainly, once. Four allied services quietly restore intelligence sharing they had paused the previous month.' },
+    { label:'Keep him. Ban the app across government.', eff:{street:+4,congress:+4,press:+3,base:+2,auth:+5},
+      res:'A policy fix without a personnel fix. It solves this specific failure and none of the reasons it happened.' },
+    { label:'Add the aircrew to the chat so they get it faster.', eff:{base:+3,street:-6,congress:-5,press:-5,auth:+3}, wild:true,
+      res:'Somebody attempts this before being stopped. The attempt appears in an inspector general report as a numbered finding.' }]},
 
-{ id:'a-son', title:'The Son', who:C.son, min:6, max:36, tags:['money','press'],
-  text:'Trent Jr. has taken a meeting with representatives of a foreign government who offered "material helpful to the family." ' +
-       'He has told you about it because he thinks it went well.',
+{ id:'a-war-plans', title:'"Nobody Was Texting"', who:C.press, min:8, max:26, tags:['press','security'],
+  src:'a public denial that operational plans were shared, followed by publication of the messages',
+  text:'You and the secretary have both said, on camera, that nobody was texting anything of the kind. ' +
+       'Kaylee: "Sir, the magazine has the screenshots. They publish in full at six."',
   choices:[
-    { label:'"Say nothing to anyone. Ever."', eff:{base:+3,press:-8,courts:-7,congress:-6,auth:+5},
-      res:'The email chain exists, has existed since the moment it was sent, and will be published in full, by him, on a Tuesday, as a pre-emptive defence.' },
-    { label:'Report it to the Bureau immediately.', eff:{press:+9,courts:+8,congress:+7,base:-7,auth:-3},
-      res:'The correct move, made once, and it removes an entire eighteen-month investigation from your presidency before it begins.' },
-    { label:'Get him a lawyer and a job overseas.', eff:{press:-4,courts:-3,cash:-0.3,auth:+3},
-      res:'He is out of the country and out of the story within a month, and furious about both for considerably longer.' },
-    { label:'Have Trent Jr. hold a press conference explaining it himself.', eff:{base:+1,congress:+1,courts:+2,press:-2,street:-3,auth:-2}, wild:true,
-      res:'Forty minutes, unprepared, unlawyered. It is a catastrophe in the moment and it removes every subsequent question, because he has already answered all of them badly, in public, voluntarily.' }]},
+    { label:'Hold the line. Repeat the denial after they publish.', eff:{base:+6,press:-11,congress:-9,street:-6,courts:-4,auth:+5},
+      res:'The screenshots contain the words. Repeating a denial after the evidence is public converts a security failure into a credibility one, permanently.' },
+    { label:'Concede the facts. Dispute the significance.', eff:{base:+3,press:+4,congress:+3,street:+3,auth:+4},
+      res:'Arguing about whether it was serious is a fight you can survive. Arguing about whether it happened is not, and you decline the second one.' },
+    { label:'Get ahead of it. Release the messages yourself at four.', eff:{press:+9,congress:+7,street:+6,courts:+4,base:-5,auth:+2},
+      res:'Publishing first removes the scoop and the cover-up in one move. The magazine runs its piece anyway and it is a third as long.' },
+    { label:'Claim the screenshots are of a different chat.', eff:{base:+3,press:-8,congress:-6,street:-5,auth:+3}, wild:true,
+      res:'They contain your own display name and profile photograph. This is pointed out within four minutes, live, by the person holding them.' }]},
 
-{ id:'a-anthem-two', title:'The Anthem Singer', who:C.sched, min:4, max:34, tags:['culture','levity'],
-  text:'The singer booked for a state event has posted eleven times about you, none of it kind. ' +
-       'She has not cancelled. Boyd suspects she intends to make a point mid-performance.',
-  choices:[
-    { label:'Cancel her. Book someone safe.', eff:{base:+5,press:-5,street:-3,auth:+3},
-      res:'The safe choice is fine. The cancelled singer releases a song about it that goes to number two and stays there for eleven weeks.' },
-    { label:'Let her sing. Shake her hand afterwards.', eff:{press:+8,street:+6,base:-5,auth:+1},
-      res:'She sings it straight, beautifully, and shakes your hand. Neither of you says anything. It is the most dignified minute of the year.' },
-    { label:'Sing along. Loudly. On mic.', eff:{base:+7,press:+2,street:+2,auth:+1},
-      res:'You are not a good singer. It is not a good performance. It is, unaccountably, extremely popular.' },
-    { label:'Sing it with her. Badly. Arm around her shoulder.', eff:{base:+3,press:-1,auth:-2}, wild:true,
-      res:'She is a professional and you are not. She carries it. The photograph of the two of you, one furious and one delighted, runs on four hundred front pages.' }]},
+/* ---------- the first-year furniture ---------- */
 
-{ id:'a-first-funeral', title:'The Funeral', who:C.hist, min:8, max:40, tags:['press','street'],
-  text:'A former president has died. You are seated in the second row beside three predecessors who have all, ' +
-       'in print, described you as a threat to the republic. The eulogy is being delivered by the fourth.',
+{ id:'a-cabinet-praise', title:'Around The Table', who:C.vp, min:3, max:18, tags:['vanity','power'],
+  src:'a televised cabinet meeting given over to expressions of gratitude to the president',
+  text:'Chet suggests opening the televised cabinet meeting by going round the table so each secretary can say ' +
+       'what serving you has meant to them. "It humanises the team," he says, looking directly at you.',
   choices:[
-    { label:'Sit still. Say nothing. Shake every hand.', eff:{press:+9,street:+7,congress:+6,base:-5,auth:+1},
-      res:'You behave impeccably for two hours. Four separate columnists write that it proves you can, which is not the compliment they intend.' },
-    { label:'Post about the eulogy from the car afterwards.', eff:{base:+7,press:-9,street:-7,congress:-5,auth:+3},
-      res:'The post goes up eleven minutes after the service ends, before the family has left the building. It is quoted at the next three presidential funerals.' },
-    { label:'Skip it. Send the Vice President.', eff:{base:+3,press:-7,street:-6,congress:-6,auth:+1},
-      res:'Chet delivers a warm, gracious remark on the steps and is photographed with all four living presidents. He keeps the photograph.' },
-    { label:'Deliver a genuinely warm eulogy for a man you disliked.', eff:{base:-8,congress:+3,courts:+2,press:+4,street:+4,auth:-2}, wild:true,
-      res:'Eleven minutes, no notes, one very good joke and one true thing. Two of the living presidents shake your hand afterwards and one of them means it.' }]},
+    { label:'Do it. Go round twice.', eff:{base:+8,press:-9,street:-6,congress:-5,courts:-4,auth:+6},
+      res:'Forty-one minutes of grown adults thanking a man for the privilege of employment, live. A comparative-politics professor pauses the tape and says "there it is" out loud.' },
+    { label:'Do it, but cut it after four.', eff:{base:+5,press:-3,auth:+4},
+      res:'Four is enough to establish the norm without generating the full supercut. Chet notes the number and files it.' },
+    { label:'"We are not doing that. Report on your agencies."', eff:{press:+8,congress:+6,street:+5,courts:+4,base:-5,auth:-2},
+      res:'A productive meeting with nine real decisions in it. Chet spends the whole thing writing in a small notebook.' },
+    { label:'Go round the table thanking each of them instead.', eff:{base:+3,press:+7,street:+6,congress:+6,auth:-1}, wild:true,
+      res:'You name a specific thing each of the twenty-two has done. It takes fifty minutes, four are visibly moved, and Chet cannot work out what has happened.' }]},
 
-{ id:'a-rating', title:'The Ratings', who:C.social, min:3, max:38, tags:['press','levity'],
-  text:'Brayden has the overnight numbers for your address. 32 million. ' +
-       'He also has your predecessor\'s number for the equivalent address. It is 34 million. He has printed only one of these.',
+{ id:'a-crowd-number', title:'The Aerials', who:C.press, min:1, max:6, tags:['press','vanity'],
+  src:'disputing photographic evidence of inauguration attendance',
+  text:'The aerial photographs are out. The crowd is real, enthusiastic, and roughly the size of a regional dog show. ' +
+       'The paper has run both years side by side.',
   choices:[
-    { label:'Announce the biggest audience in television history.', eff:{base:+5,press:-7,auth:+2},
-      res:'The claim is checked within four minutes by an intern at a trade publication and is wrong by fourteen million.' },
-    { label:'Don\'t mention ratings. You\'re the President.', eff:{press:+5,street:+3,base:-2},
-      res:'A remarkable act of self-denial that lasts nine days.' },
-    { label:'Attack the ratings company.', eff:{base:+4,press:-6,street:-3,auth:+3},
-      res:'A measurement firm that nobody outside advertising had heard of receives eleven thousand threatening messages in a weekend.' },
-    { label:'Announce the ratings were terrible and that you are working on it.', eff:{base:+2,auth:-2}, wild:true,
-      res:'Nobody has ever conceded a ratings loss. It defuses four days of coverage in one sentence and Brayden requires a lie-down.' }]}
+    { label:'Send Kaylee out to say it was the largest ever. Period.', eff:{base:+7,press:-9,street:-4,congress:-3,auth:+4},
+      res:'She says it with her whole chest. Nobody believes her, everybody notices she said it anyway, and that was the entire point of sending her.' },
+    { label:'"Crowds are a media obsession." Next question.', eff:{base:-2,press:+5,street:+3,auth:+1},
+      res:'The story dies in forty minutes. Something in you dies with it.' },
+    { label:'Order the Park Service to release corrected figures.', eff:{base:+5,press:-7,courts:-5,street:-4,auth:+6},
+      res:'A career photo archivist is reassigned to a windowless room in Suitland. The number is now 1.9 million, it is written down, and it is official.' },
+    { label:'Count them yourself. On television. Out loud.', eff:{base:+5,press:-4,street:-3,auth:+2}, wild:true,
+      res:'You get to four hundred and eleven before losing your place. It is broadcast in full and is, by some distance, the most watched arithmetic in history.' }]},
+
+{ id:'a-misspellings', title:'The Catalogue', who:C.social, min:4, max:30, tags:['gaffe','press'],
+  src:'a running catalogue of misspellings in presidential posts',
+  text:'A fact-checking desk has been cataloguing your spelling for eleven months. The list is at 340 entries. ' +
+       'Brayden thinks it makes you relatable. Kaylee thinks it makes you look like you post at 4am, which you do.',
+  choices:[
+    { label:'Keep posting unedited. It is authentic.', eff:{base:+7,press:-5,street:-3,auth:+3},
+      res:'The catalogue reaches 900 entries. It is also, genuinely, why four million people believe you write your own posts — which you do.' },
+    { label:'Have somebody proofread before posting.', eff:{press:+6,congress:+4,street:+3,base:-6,auth:+1},
+      res:'Engagement falls 22% within a month. Correct spelling reads as a committee, and a committee reads as everybody else.' },
+    { label:'Misspell one word deliberately every time. Own it.', eff:{base:+8,press:-3,street:-2,auth:+3},
+      res:'It becomes a signature and then a shibboleth. Supporters begin misspelling it back and the fact-checkers quietly stop counting.' },
+    { label:'Announce that the dictionary is wrong.', eff:{base:+5,press:-5,street:-4,congress:-3,auth:+3}, wild:true,
+      res:'Four lexicographers respond with genuine delight and one writes a very good essay about descriptivism that goes unexpectedly viral.' }]},
+
+{ id:'a-khan', title:'The Parents', who:C.gen, min:6, max:26, tags:['military','press'],
+  src:'a public feud with the bereaved parents of a fallen soldier',
+  text:'The father of a soldier killed protecting his unit has criticised you from a stage, holding a pocket Constitution. ' +
+       'Tarrant is here with one sentence: "Sir, there is no version of answering him that ends well."',
+  choices:[
+    { label:'Answer him. Question the mother\'s silence.', eff:{base:+3,street:-13,press:-6,congress:-10,courts:-4,auth:+2},
+      res:'It runs for eleven days. Four members of your own party break by name. Every serving officer hears about it and most say nothing, which is its own message.' },
+    { label:'Say nothing at all. Send a private letter.', eff:{street:+8,press:+7,congress:+6,base:-4,auth:+1},
+      res:'The letter is never published. He mentions years later that it was handwritten and better than he expected, and declines to say more.' },
+    { label:'Praise the son by name at the next event.', eff:{street:+9,press:+8,congress:+7,base:-3,auth:+1},
+      res:'You get the rank and the unit right without notes. It is thirty seconds long and the single most effective thing you do that month.' },
+    { label:'Buy four thousand pocket Constitutions and hand them out.', eff:{base:+4,street:+6,press:+7,congress:+5,cash:-0.1,auth:-1}, wild:true,
+      res:'They sell out nationally within a week. The publisher writes to thank you. Four of your own orders are subsequently quoted back at you from them.' }]},
+
+{ id:'a-deferred-resignation', title:'The Offer', who:C.cos, min:2, max:16, tags:['agencies','power'],
+  src:'a mass deferred-resignation offer made to the federal workforce',
+  text:'"An email to every federal employee. Resign now, keep being paid until September, no questions." ' +
+       'Deborah has the legal note. "Sir, we do not have appropriated funds to pay them through September."',
+  choices:[
+    { label:'Send it to all 2.3 million. Work out the money later.', eff:{base:+7,congress:-9,courts:-8,street:-9,press:-6,auth:+12},
+      res:'Seventy-seven thousand accept. The ones with somewhere else to go leave first — air traffic, nuclear security, disease surveillance — because they always do.' },
+    { label:'Send it only where you actually want reductions.', eff:{base:+4,street:-4,congress:-3,press:-3,auth:+8},
+      res:'Precision instead of a blunderbuss. Same headcount reduction in the places you chose, and the reactor inspectors stay.' },
+    { label:'Do not send it. Reduce by attrition.', eff:{street:+7,congress:+6,courts:+5,press:+5,base:-7,auth:+2},
+      res:'The workforce shrinks 4% a year without a single email. Slower, cheaper, and it produces no litigation whatsoever.' },
+    { label:'Send it, then send a second email retracting it.', eff:{base:+2,street:-6,congress:-5,press:-5,auth:+4}, wild:true,
+      res:'Eleven thousand people have already resigned by the time the retraction lands. Four refuse to un-resign on principle and are, permanently, correct.' }]},
+
+{ id:'a-thirty-days', title:'Thirty Days\' Notice', who:C.lawyer, min:1, max:12, tags:['power','congress'],
+  src:'a statutory notice requirement for removing inspectors general',
+  text:'"The statute requires thirty days\' written notice to Congress before you remove an inspector general. ' +
+       'It is one sentence." Sy shrugs. "There is no penalty section. I have looked four times."',
+  choices:[
+    { label:'Skip the notice. Remove them tonight by email.', eff:{base:+5,congress:-9,courts:-8,press:-6,auth:+11}, breaks:'takecare',
+      res:'A judge rules it unlawful in eight months and declines to reinstate anybody, reasoning you would simply re-fire them correctly. She is right, and says so.', flag:'igPurge' },
+    { label:'Give the thirty days. Then remove them.', eff:{congress:-3,courts:-2,press:-3,base:+4,auth:+9},
+      res:'The paperwork is immaculate and the outcome is identical. Deborah writes "elegant" on a napkin and eats it.', flag:'igPurge' },
+    { label:'Keep them. Cut their budgets instead.', eff:{congress:+3,courts:+3,press:+2,base:-2,auth:+5},
+      res:'Their reports now arrive eleven months late, in black and white, unbound. Nobody reads them, which was the requirement.' },
+    { label:'Give thirty days\' notice for one and fire the rest.', eff:{base:+3,congress:-6,courts:-6,press:-5,auth:+8}, wild:true,
+      res:'The single compliant removal is cited in every filing as evidence of good faith. One out of seventeen is a surprisingly effective ratio.' }]},
+
+{ id:'a-rule-count', title:'Ninety-Eight In A Row', who:C.energy, min:6, max:22, tags:['agencies','street'],
+  src:'the cumulative scale of environmental deregulation across a term',
+  text:'Cassandra has a spreadsheet. "Ninety-eight rules could be revoked. Individually each is a technical amendment ' +
+       'nobody covers. Together it is the largest environmental change since 1970, and nobody will cover that either."',
+  choices:[
+    { label:'All ninety-eight. One a week. Never announce them.', eff:{base:+6,street:-10,courts:-9,press:-5,cash:+0.4,auth:+11},
+      res:'Two years of Federal Register notices. Four are reported. The cumulative effect is measurable from orbit and is never once a front page.' },
+    { label:'The twelve that actually cost jobs. Defend those loudly.', eff:{base:+5,street:-4,courts:-4,press:-3,auth:+7},
+      res:'A defensible position you can win on television, which is nine-tenths of the value of any position.' },
+    { label:'None. Fund the transition in the affected counties.', eff:{street:+9,press:+8,courts:+6,congress:+5,base:-8,cash:-0.4,auth:-2},
+      res:'Eleven thousand retraining places across four states you won. It works, slowly, and your successor cuts the ribbon.' },
+    { label:'Revoke ninety-eight rules and write ninety-nine new ones.', eff:{base:+3,street:-5,courts:-5,press:-4,auth:+5}, wild:true,
+      res:'The replacement set is longer, stricter and drafted by the same career staff. Nobody in the building notices for eleven months.' }]},
+
+{ id:'a-smoot', title:'The Comparison', who:C.treas, min:8, max:22, tags:['economy','press'],
+  src:'the scale of a tariff package invoking historical comparisons',
+  text:'Lyle has one page. "Every economist asked has reached for the same 1930 comparison. Not most of them, sir. ' +
+       'All of them. Including four who work for you."',
+  choices:[
+    { label:'Embrace the comparison. That tariff built the country.', eff:{base:+8,street:-8,congress:-7,press:-5,auth:+7},
+      res:'It did not. It is the most studied policy failure in American economic history and all four of your own economists say so in writing that week.' },
+    { label:'Reject the comparison. Argue the differences.', eff:{street:+5,congress:+5,press:+5,base:-3,auth:+4},
+      res:'There are genuine differences and you make them competently. The most substantive twenty minutes of your presidency, and it rates poorly.' },
+    { label:'Ban the comparison from official communications.', eff:{base:+5,press:-7,street:-5,congress:-4,auth:+5},
+      res:'A word cannot be banned. Its usage rises 400% in a fortnight, entirely because you tried.' },
+    { label:'Name the tariff after the 1930 one, deliberately.', eff:{base:+5,street:-6,press:-5,congress:-5,auth:+4}, wild:true,
+      res:'Claiming the comparison before it can be made is either brilliant or catastrophic, and four separate books reach four separate conclusions about which.' }]},
+
+{ id:'a-first-of-many', title:'"The First, Perhaps, Of Many"', who:C.gen, min:12, max:26, tags:['military','street'],
+  src:'characterising a domestic deployment as the first in a series',
+  text:'Two thousand troops are in one city. A reporter has asked whether there will be others. ' +
+       'Tarrant, quietly: "Sir, the answer to that question is the whole policy. Not the deployment. The answer."',
+  choices:[
+    { label:'"The first, perhaps, of many."', eff:{base:+8,street:-12,courts:-8,congress:-9,press:-6,auth:+10}, breaks:'posse',
+      res:'Four governors pre-emptively activate their own Guards to deny you the pretext. One sentence has changed the posture of a third of the country.' },
+    { label:'"This one. For this. That is all."', eff:{street:+8,congress:+7,courts:+6,press:+6,base:-7,auth:+1},
+      res:'The deployment ends in three weeks and nothing follows it. Limiting language is the cheapest de-escalation available and it costs you a rally line.' },
+    { label:'Refuse to answer. Let them wonder.', eff:{base:+5,street:-7,courts:-5,congress:-5,auth:+8},
+      res:'Deliberate ambiguity does the work of a threat without the accountability of one. Every governor plans for the worst and none can quote you.' },
+    { label:'"The first of exactly three." Name the three.', eff:{base:+4,street:-9,courts:-6,congress:-6,auth:+6}, wild:true,
+      res:'You name three cities off the top of your head. All three sue within a week. One was not on any list anybody had prepared.' }]}
 
 );
 })();

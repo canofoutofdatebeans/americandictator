@@ -70,7 +70,9 @@ is tested; the native shells have never been compiled or run on hardware.
 | `css/styles.css` | Mobile-first. Dark marble, gold leaf, newsprint. |
 | `js/state.js` | **Tuning lives here.** Factions, difficulty, Authority rules, inheritance scars, save/load. |
 | `js/cards.js` | Core deck (70 crises), the cast, and the deck-selection helpers. |
-| `js/packs/*.js` | **232 more crises** in five loadable packs. Each pushes onto `AD.CARDS`. |
+| `js/renovations.js` | **The Residence.** 12 improvements to the White House, upkeep and scrutiny. |
+| `js/cay.js` | **The Saint Ambrose Files.** The recurring scandal, its heat, and its leaks. |
+| `js/packs/*.js` | **195 more crises** in seven loadable packs. Each pushes onto `AD.CARDS`. |
 | `js/events.js` | Scripted beats: the Address, Midterms, Pillar backlash, Re-election, the Twenty-Second. |
 | `js/doctrines.js` | Five permanent rule-changing unlocks. |
 | `js/achievements.js` | 20 achievements, 5 of them secret. |
@@ -89,12 +91,12 @@ layer is portable if you later move to React, Unity, or a native shell.
 
 ## Content
 
-- **372 crises**, **1,488 hand-written choices**, each with its own consequence line
+- **335 crises**, **1,340 hand-written choices**, each with its own consequence line
 - **A wildcard on every card** — a fourth, deliberately absurd option (appoint the dog to the
   Cabinet, tariff only the penguin islands, join the picket line and bring coffee). Every one
   carries a real cost and almost none advance you, so the funny path is a genuine dead end
-- **26 second-term-only crises** that only make sense once you've served four years
-- **69 evergreen crises** for pacing, weighted toward the early game
+- **21 second-term-only crises** that only make sense once you've served four years
+- **47 evergreen crises** for pacing, weighted toward the early game
 - **Scripted beats**: the Address, the Midterms, four Pillar-backlash cards, the Re-election,
   the Second Inaugural, and the Twenty-Second
 - **5 doctrines**, **18 endings**, **20 achievements**, **37 named recurring characters**
@@ -110,11 +112,11 @@ registration step, order irrelevant.
 | Pack | Window | Crises | Research-grounded |
 |---|---|---|---|
 | `js/cards.js` (core) | mixed | 90 | 49 |
-| `pack-a-honeymoon` | term months 1–14 | 40 | — |
-| `pack-b-machinery` | term months 6–34 | 64 | — |
-| `pack-c-consolidation` | term months 22–48 | 39 | — |
-| `pack-d-evergreen` | any | 69 | — |
-| `pack-e-secondterm` | `term: 2` only | 20 | — |
+| `pack-a-honeymoon` | term months 1–14 | 38 | **38** |
+| `pack-b-machinery` | term months 6–34 | 54 | **54** |
+| `pack-c-consolidation` | term months 22–48 | 35 | **35** |
+| `pack-d-evergreen` | any | 47 | **47** |
+| `pack-e-secondterm` | `term: 2` only | 21 | **21** |
 | **`pack-f-record`** | mixed | **40** | **40** |
 | **`pack-g-record`** | mixed | **30** | **30** |
 
@@ -123,18 +125,63 @@ registration step, order irrelevant.
 Crises derived from the research carry a `src` citation naming the documented item they riff on.
 The rule is **inspired by, never copied** — take the mechanism, invent everything else.
 
-**119 of 372 crises (32%)** are grounded this way. Packs A–E are original political-mechanics
-satire with no research derivation; raising the ratio means rewriting them against the unused
-items in `Trump stories.md`. Audit it yourself:
+**314 of 335 crises (94%)** are grounded this way. Every content pack is now fully
+grounded; the remaining 21 ungrounded crises are original political-mechanics satire in the
+core deck. Audit it yourself:
 
 ```js
-AD.CARDS.filter(c => c.src).length
+AD.CARDS.filter(c => c.src).length + ' / ' + AD.CARDS.length
 ```
+
+The packs got **smaller** in the rewrite (A 40→38, B 64→54, C 39→35, D 69→47). That was
+deliberate. The research supports roughly 60 genuinely fresh items plus defensible sub-items;
+padding back to the old counts would have meant ~15 cards per source item and a repetitive
+deck. Card count is not the metric — coverage without repetition is.
+
+**Clause routes are the thing to watch when editing a pack.** `AD.clauseRoutes()` returns how
+many choices in the whole deck break each of the 16 constitutional clauses. The floor is 3.
+Rewriting a pack without carrying its `breaks:` tags forward silently orphans clauses and
+makes the full-set bounty unreachable — this happened once with pack A and took a separate
+session to find and repair.
 
 Card windows are **term-relative**, so a second term replays the same arc rather than falling
 off the end of every `min`/`max`.
 
 ---
+
+## The Constitution — and reaching all sixteen
+
+Sixteen clauses, 150 score each, and a lump sum from Rusalka for every one broken if you get
+the full set. The problem with a 370-card deck is that a clause with three routes in it is
+statistically invisible, so the deck **surfaces the clauses you have not broken yet** — but
+only once you have shown intent:
+
+| Clauses broken | What the deck does |
+|---|---|
+| 0 | Nothing. You are not collecting, and clause cards are aggressive. |
+| 1–2 | A gentle `+14` nudge on cards offering an unbroken clause (base weight is 10). |
+| 3+ | The deck concludes you are going for all sixteen and pushes hard — up to `+110`, **divided by how many routes that clause has**, so a three-route clause gets ten times the help a five-route one does. |
+
+The ramp matters: a strong bonus applied from the first clause cost a fixed bot 8 points of
+Rookie win rate, because it force-feeds institution-damaging cards to a player who was not
+asking for them. Gating it behind three clauses leaves ordinary play untouched.
+
+The scarcity divisor also self-corrects — add routes for a starved clause later and its bonus
+drops automatically, with no constant to retune.
+
+Measured on a clause-hunting bot, 300 runs, Standard:
+
+| | Average clauses | Full set | Best run |
+|---|---|---|---|
+| Flat `+14` only | 7.5 / 16 | **0%** | 15 |
+| Ramped + scarcity-scaled | **10.9 / 16** | **3.7%** | **16** |
+
+Ordinary play is unchanged (it averages 0.2–0.6 clauses and never reaches the ramp).
+
+**Route counts are the health metric.** `AD.clauseRoutes()` returns them; the floor is 3
+(`supremacy`, `citizenship`, `termlimit`, `presentment`) and the ceiling is 5. If a clause
+drops below 3, the full set starts slipping out of reach again — which is exactly what happened
+when pack A was rewritten and its breach tags went with it.
 
 ## Two ways to win
 
@@ -165,6 +212,51 @@ damage, multipliers on your gains, and the income to buy more of both. Corruptio
 game; it buys the machine that wins the game.
 
 Buying in public costs you standing, and a holding never shields its own purchase.
+
+## The Residence — improvements to the White House
+
+Tap **THE RESIDENCE** under the Authority bar. A drawn elevation of the building that gains a
+layer for every structure you finish: a disco ballroom where the East Wing was, a rollercoaster
+over the roof, a wrestling cage in the Rose Garden, a private zoo, a working moat, a
+190-metre gilded statue of you, and eventually the name comes off the building.
+
+Twelve structures across **Leisure & Spectacle**, **Fortification** and **Glory**.
+
+This is the opposite track to Corruption. Holdings buy leverage; structures buy **glory** —
+raw Authority and Base, immediately, in large lumps. Three rules stop it being a shop:
+
+- **Upkeep.** Every structure bills you every month, permanently. A fully built residence burns
+  ~$305M a month, so the monument goal and the $10B goal are in direct competition. Fall behind
+  and it goes into arrears — scaffolding, dark windows, an unlit flame, charged to Base and Press.
+- **The soft cap still applies.** Renovation Authority is *raw* Authority, hard-capped at 55.
+  You can gild your way to the cap faster and not one point past it. A statue is not a branch
+  of government, however visible from orbit.
+- **Scrutiny.** Every structure standing is an appropriation nobody voted for, sitting in
+  public, permanently. Congress and the Courts bill you `floor(built / 3)` every month and the
+  Press bills you half that. It is not shielded — cancelling the shields the structures grant is
+  precisely what it is for. Without it, upkeep was free for anyone on the Pillar route, and a
+  fixed bot went from 56 to 86 months of survival and from 18 two-pillar runs to 143.
+
+## The Saint Ambrose Files — the scandal that will not die
+
+A **recurring seven-part arc** rather than a card. Auberon Vale, "longevity investor", ran the
+Meridian Institute on a private island in the Freedom Ocean — officially a wellness retreat,
+actually an unregistered clinic running unapproved trials, financed through an art fund half of
+Washington was invested in without meaning to be. He kept a **flight manifest** and a
+**guest book**. Everybody powerful is in one or the other and every one of them has a
+completely reasonable explanation.
+
+The mechanic is that **the cover-up is the scandal**. Each instalment carries a hidden `cayHeat`
+alongside its meter effects, so a choice can be cheap tonight and expensive for two years:
+
+- **Heat 0–10.** Suppressing raises it, transparency lowers it.
+- Above heat 4 the story **leaks between instalments** — no card, just damage to Press, Street
+  and Base, so suppression is expensive rather than merely dishonest.
+- Heat also **shortens the gap**: a hot story comes back in 5 months instead of 10.
+- The final instalment resolves against heat. Bury it at heat ≥ 7 without the grip to hold it
+  and the run ends on **`the-cay`** — a President who survived dismantling the judiciary,
+  finished by a guest book.
+- The arc carries its stage across terms, so a one-term president never finds out how it ends.
 
 ## Second terms & the persistent world
 
@@ -198,6 +290,20 @@ should beat these:
 | Historic | 12.5% | 80% | effectively 3, doubled backlash, 10s timer |
 | Random clicking | 2.0% | 4% | — |
 
+> **These figures predate the Residence and the Saint Ambrose arc, and have not been
+> re-established.** The bot that produced them was not kept, so the newer systems were measured
+> with a rebuilt (weaker) bot and are only valid as A/B comparisons under identical logic:
+>
+> | Change | Effect on the same bot |
+> |---|---|
+> | Residence, before Scrutiny | 56 → 86 months survived; 18 → 143 two-pillar runs. Far too strong. |
+> | Residence, after Scrutiny | 58 → 73 months; two-pillar 23 → 24. Longer runs, no extra wins. |
+> | Saint Ambrose, first pass | Rookie 83% → 56%. Far too expensive. |
+> | Saint Ambrose, after tuning | Rookie 84% → 69%; Standard neutral within noise. |
+>
+> So Standard is where it was and **Rookie is genuinely harder than the table says**. Re-run a
+> proper sweep before trusting the absolute numbers again.
+
 Longest administration recorded: **95 months**. Standard's pillar spread (0/1/2/3 =
 66/66/46/122) is the health metric to watch — a genuine curve, where 3 is the win.
 
@@ -220,11 +326,17 @@ will measure stale cached JavaScript, which cost several passes here.
 
 Mirrors the reference product's structure: premium one-off price plus a single optional IAP.
 
-The **Chief of Staff Pack** is a settings toggle (`settings.pack`) and gates all four of the
-reference product's advertised extras: longer decision timers (+8s), impact previews on every
-choice, the full Crisis Log, and **post-crisis briefings** — a read from your Chief of Staff on
-what a decision actually cost, generated from board state rather than written per card, so it
-stays correct as the deck grows. Swap the toggle for a real purchase check when you ship.
+The **Chief of Staff Pack** is a settings toggle (`settings.pack`) and gates longer decision
+timers (+8s), the full Crisis Log, and **post-crisis briefings** — a read from your Chief of
+Staff on what a decision actually cost, generated from board state rather than written per
+card, so it stays correct as the deck grows. Swap the toggle for a real purchase check when
+you ship.
+
+**Impact previews are deliberately not in the game.** The reference product sells them; here
+the score behind a choice is never shown, at any tier. You decide on the words and find out
+afterwards. Showing the numbers turned every crisis into arithmetic and killed the joke. The
+only figures on a choice are the two *gates* — a cash price and an Authority requirement —
+because a locked door has to say why it is locked.
 
 ---
 

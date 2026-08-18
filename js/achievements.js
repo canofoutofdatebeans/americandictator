@@ -99,6 +99,19 @@ AD.ACHIEVEMENTS = [
   { id: 'constitutionalist', name: 'Read It Once', desc: 'Finish a full term without breaking a single clause.',
     secret: true, test: r => (r.clauses || []).length === 0 && r.month >= 40 },
 
+  /* ---- the residence ---- */
+  { id: 'break-ground', name: 'Break Ground', desc: 'Build something on the White House.',
+    test: r => (r.renos || []).length >= 1 },
+
+  { id: 'visible-from-orbit', name: 'Visible From Orbit', desc: 'Erect the Colossus.',
+    test: r => (r.renos || []).indexOf('colossus') !== -1 },
+
+  { id: 'the-palace', name: 'It Has A New Name Now', desc: 'Complete every improvement to the residence.',
+    test: r => (r.renos || []).length >= AD.RENOS.length },
+
+  { id: 'listed-building', name: 'Listed Building', desc: 'Finish a full term without laying a single brick.',
+    secret: true, test: r => (r.renos || []).length === 0 && r.month >= 40 },
+
   /* ---- the persistent world ---- */
   { id: 'dynasty', name: 'A Country With A Reputation', desc: 'Begin a term inheriting a scarred country for the third time running.',
     test: r => r.legacy && r.legacy.chaos >= AD.CHAOS_CAP },

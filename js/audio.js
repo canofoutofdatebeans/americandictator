@@ -93,6 +93,12 @@ AD.Audio = {
         [880, 1175, 1568].forEach((f, i) =>
           this.tone({ freq: f, dur: 0.16, type: 'sine', gain: 0.07, delay: i * 0.05 }));
         break;
+      case 'build':                                    // a structure tops out
+        this.noise({ dur: 0.22, gain: 0.14, hp: 400 });
+        this.tone({ freq: 87, dur: 0.24, type: 'square', gain: 0.13 });
+        [330, 440, 587].forEach((f, i) =>
+          this.tone({ freq: f, dur: 0.30, type: 'triangle', gain: 0.08, delay: 0.10 + i * 0.07 }));
+        break;
       case 'clause':                                   // a clause breaks
         this.tone({ freq: 330, dur: 0.10, type: 'square', gain: 0.09 });
         this.tone({ freq: 155, dur: 0.26, type: 'sawtooth', gain: 0.10, slideTo: 92, delay: 0.06 });

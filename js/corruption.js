@@ -212,17 +212,22 @@ AD.assetAvailable = function (run, a) {
   return true;
 };
 
-/* Merge every owned asset's passives into one object. */
+/* Merge every owned asset's passives into one object.
+   Renovations (renovations.js) speak the same passive vocabulary and merge
+   into the SAME pool deliberately: the shield and gain caps below then apply
+   across both tracks, so stacking corruption and construction cannot produce
+   a build that is immune to anything. */
 AD.passives = function (run) {
   const p = {};
-  (run.assets || []).forEach(id => {
-    const a = AD.assetById(id);
-    if (!a || !a.passive) return;
-    Object.keys(a.passive).forEach(k => {
-      if (k === 'pressFloor') p[k] = Math.max(p[k] || 0, a.passive[k]);
-      else p[k] = (p[k] || 0) + a.passive[k];
+  const add = src => {
+    if (!src) return;
+    Object.keys(src).forEach(k => {
+      if (k === 'pressFloor') p[k] = Math.max(p[k] || 0, src[k]);
+      else p[k] = (p[k] || 0) + src[k];
     });
-  });
+  };
+  (run.assets || []).forEach(id => add((AD.assetById(id) || {}).passive));
+  (run.renos  || []).forEach(id => add((AD.renoById  && (AD.renoById(id) || {}).passive)));
   // the capstone lifts every shield and drip at once
   if (p.allShield) {
     AD.FKEYS.forEach(k => { p[k + 'Shield'] = (p[k + 'Shield'] || 0) + p.allShield; });

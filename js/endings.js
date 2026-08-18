@@ -157,6 +157,19 @@ AD.ENDINGS = {
     epitaph: 'You built a machine that runs without you. It is running without you.'
   },
 
+  'the-cay': {
+    win: false, title: 'THE FILES', kicker: 'Saint Ambrose Outlived You',
+    head: 'PAGE THREE HUNDRED',
+    sub: 'Presidency ends over a guest book after surviving four years of everything else',
+    body: 'He took the judiciary apart on a Tuesday and nobody could stop him. He moved money Congress had ' +
+          'refused him and nobody could stop him. He was finished by a hardback ledger, kept in a wellness ' +
+          'clinic on an island of eleven people, in which somebody had once written a name in blue ink. ' +
+          'The final vote was not close and not, in the end, about the island at all — it was about two years ' +
+          'of a President explaining, in fourteen different ways, why a document could not be read. ' +
+          'The document is now available in nine languages and has an index.',
+    epitaph: 'It was never the flight. It was the two years of saying there was no manifest.'
+  },
+
   'third-term': {
     win: true, title: 'THE THIRD TERM', kicker: 'The Amendment Held. Briefly.',
     head: 'EIGHTY-SEVEN WORDS',
