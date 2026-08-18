@@ -1061,3 +1061,56 @@ html[data-cb="on"] .fac.danger .fac-val{color:#93c5fd}
 .asset.pardon-saint .asset-cost{color:#8fd6a0}
 .asset.pardon-crook .asset-cost{color:#f0a8ae}
 #pardon-chip .chip-ico{color:#e6cf7a}
+
+/* ---------- the monthly brief strip ---------- */
+.monthbrief{display:flex;align-items:center;gap:6px;flex-wrap:wrap;
+  padding:6px 10px;margin:6px 0 0;border-radius:8px;
+  background:linear-gradient(#141d33,#0d1424);border:1px solid var(--edge);
+  font-size:11px;color:var(--paper2)}
+.monthbrief[hidden]{display:none}
+.monthbrief.in{animation:slam .3s ease both}
+.mb-tag{font-size:8.5px;letter-spacing:1.6px;color:var(--muted);text-transform:uppercase;font-weight:700}
+.mb-chip{font-weight:700;letter-spacing:.3px}
+.mb-chip.up{color:#7fe08d}
+.mb-chip.down{color:#ff8f86}
+.mb-why{color:var(--muted);font-style:italic;font-size:10.5px}
+.mb-why::before{content:"·";margin-right:5px;color:var(--edge2)}
+
+/* ---------- the front page (term recap) ---------- */
+.frontpage{background:var(--paper);color:#141210;width:100%;max-width:440px;
+  padding:18px 18px 20px;border-radius:4px;box-shadow:0 24px 60px rgba(0,0,0,.7);
+  max-height:92vh;overflow-y:auto;
+  background-image:repeating-linear-gradient(0deg,rgba(0,0,0,.016) 0 1px,transparent 1px 3px);
+  animation:slam .4s cubic-bezier(.2,1.2,.3,1) both}
+.fp-masthead{font-family:ui-serif,Georgia,serif;font-weight:900;text-align:center;
+  font-size:clamp(24px,8vw,34px);letter-spacing:-.5px;text-transform:uppercase;
+  border-bottom:3px double #141210;padding-bottom:5px}
+.fp-strap{display:flex;justify-content:space-between;font-size:9.5px;letter-spacing:1.4px;
+  text-transform:uppercase;padding:4px 0;border-bottom:1px solid #141210;color:#4a453d}
+.fp-head{font-family:ui-serif,Georgia,serif;font-size:clamp(26px,9vw,38px);line-height:.98;
+  margin:12px 0 6px;text-transform:uppercase;font-weight:900;letter-spacing:-1px;color:#141210}
+.fp-head.win{color:#7c1720}
+.fp-deck{font-size:14px;line-height:1.3;margin:0 0 8px;font-weight:600;font-style:italic;color:#33302a}
+.fp-byline{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:#6a655c;
+  border-bottom:1px solid #cfc6b3;padding-bottom:9px;margin-bottom:10px}
+.fp-boxes{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:#cfc6b3;
+  border:1px solid #cfc6b3;margin-bottom:12px}
+.fp-box{background:var(--paper);text-align:center;padding:8px 4px}
+.fp-box b{display:block;font-family:ui-serif,Georgia,serif;font-size:17px;color:#141210;line-height:1}
+.fp-box i{font-size:9px;letter-spacing:.6px;text-transform:uppercase;color:#6a655c;font-style:normal}
+.fp-story{font-size:12.5px;line-height:1.62;color:#22201c;column-count:2;column-gap:14px;
+  column-rule:1px solid #d8cfbc;text-align:justify;hyphens:auto}
+.fp-story p{margin:0 0 8px}
+.fp-story b{color:#7c1720}
+.fp-verdict{font-family:ui-serif,Georgia,serif;font-style:italic;font-size:13.5px;line-height:1.5;
+  color:#141210;border-top:2px solid #141210;margin-top:6px;padding-top:10px}
+.frontpage .dos-actions{margin-top:14px}
+.frontpage .btn{background:#141210;color:var(--paper);border-color:#141210}
+
+/* ---------- setup: run modifiers ---------- */
+.mutators{display:flex;flex-wrap:wrap;gap:6px}
+.mut{font:inherit;font-size:12px;padding:7px 11px;border-radius:8px;cursor:pointer;
+  border:1px solid var(--edge);background:var(--ink2);color:var(--paper2);transition:var(--fx)}
+.mut:hover{border-color:var(--gold-soft)}
+.mut.on{border-color:var(--gold);background:linear-gradient(#33280f,#241c09);color:var(--gold-soft);font-weight:600}
+.mut:active{transform:scale(.97)}

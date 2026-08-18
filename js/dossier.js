@@ -107,3 +107,67 @@ AD.buildDossier = function (score) {
 
   return { headline, standfirst, paras, verdict, share, score: s.score, win };
 };
+
+/* ============================================================
+   THE FRONT PAGE — a splashy, personalised newspaper recap of the
+   term, distinct from the analytical Dossier. Built entirely from
+   the scorecard so it can be read (and screenshotted) at the end.
+   ============================================================ */
+AD.buildFrontPage = function (score) {
+  const e = AD.ENDINGS[score.endingId] || {};
+  const name = score.president || 'The President';
+  const yrs = Math.max(1, Math.round(score.months / 12));
+  const story = [];
+
+  story.push(`${name} has left the White House after ${score.months} month${score.months === 1 ? '' : 's'} in office, ` +
+    `ending a presidency that reached <b>Authority ${score.authority}</b> of a possible 100.`);
+
+  if (score.pillars > 0) {
+    story.push(`Captured outright and folded into the regime: ${score.pillarNames.join(', ')}. ` +
+      (score.pillars >= 3 ? 'It was, by any honest reading, a dictatorship.' : 'It was not, in the end, quite enough.'));
+  } else {
+    story.push('Not one branch of government was captured. The republic, battered, kept its shape.');
+  }
+
+  const parts = [];
+  if (score.clausesBroken) parts.push(`broke ${score.clausesBroken} of ${AD.CLAUSES.length} constitutional clauses` + (score.fullSet ? ' — the complete set' : ''));
+  if (score.warsDeclared) parts.push(`declared ${score.warsDeclared} war${score.warsDeclared === 1 ? '' : 's'}`);
+  if (score.judgesPacked) parts.push(`packed ${score.judgesPacked} seats on the bench`);
+  if (score.outletsOwned) parts.push(`took ${score.outletsOwned} newsroom${score.outletsOwned === 1 ? '' : 's'} in hand`);
+  if (parts.length) story.push('Along the way the administration ' + parts.join(', ') + '.');
+
+  if (score.pardons) {
+    let s = `On the way out the door, ${score.pardons} pardon${score.pardons === 1 ? ' was' : 's were'} signed`;
+    if (score.topPardon) s += `, among them ${score.topPardon}`;
+    if (score.pardonSaints) s += `. ${score.pardonSaints} of them, remarkably, went to the genuinely innocent`;
+    story.push(s + '.');
+  }
+
+  if (score.hasCasino) story.push(`The White House itself now trades as a casino bearing the President's own name in neon, visible from the far bank of the river.`);
+
+  const fortune = score.cash;
+  if (fortune >= AD.wealthGoal({ wealthGoal: score.wealthGoal })) {
+    story.push(`The personal fortune, disclosed on a form and never disputed, stands at <b>$${fortune}bn</b> — larger than the budgets of eleven federal agencies combined.`);
+  } else {
+    story.push(`The personal fortune leaves office at <b>$${fortune}bn</b>.`);
+  }
+
+  return {
+    masthead: 'THE NATIONAL SCREAM',
+    strap: ['FINAL EDITION', AD.dateLabel ? AD.dateLabel(score.months) : ''],
+    win: score.win,
+    headline: e.head || (score.win ? 'HE DID IT' : 'IT IS OVER'),
+    deck: e.sub || '',
+    byline: `By the Political Desk · ${score.party || ''}`,
+    story,
+    boxes: [
+      { n: score.authority, label: 'Authority' },
+      { n: score.pillars + '/4', label: 'Pillars' },
+      { n: '$' + score.cash + 'bn', label: 'Fortune' },
+      { n: score.pardons || 0, label: 'Pardons' },
+      { n: (score.clausesBroken || 0) + '/' + AD.CLAUSES.length, label: 'Clauses' },
+      { n: score.score.toLocaleString(), label: 'Final Score' }
+    ],
+    verdict: AD.clean ? e.epitaph : e.epitaph
+  };
+};

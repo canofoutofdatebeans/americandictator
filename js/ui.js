@@ -231,6 +231,25 @@ AD.UI = {
     el.classList.remove('go'); void el.offsetWidth; el.classList.add('go');
   },
 
+  /* One-line "what the month did on its own" strip, shown above a fresh card so
+     background drift (base decay, backlash, backfires) is never a silent
+     surprise. Fed by AD.Engine.lastDrift; hides when nothing notable happened. */
+  showBrief (brief) {
+    const el = this.el('monthbrief');
+    if (!el) return;
+    if (!brief) { el.hidden = true; return; }
+    const chips = AD.FKEYS.filter(k => brief.drift[k]).map(k => {
+      const d = brief.drift[k], f = AD.faction(k);
+      return `<span class="mb-chip ${d > 0 ? 'up' : 'down'}">${f.icon} ${d > 0 ? '+' : ''}${d}</span>`;
+    }).join('');
+    const why = brief.causes && brief.causes.length
+      ? `<span class="mb-why">${AD.clean(brief.causes.join(' · '), this.settings.clean)}</span>` : '';
+    if (!chips && !why) { el.hidden = true; return; }
+    el.innerHTML = `<span class="mb-tag">THIS MONTH</span>${chips}${why}`;
+    el.hidden = false;
+    el.classList.remove('in'); void el.offsetWidth; el.classList.add('in');
+  },
+
   /* ---------- the crisis card ---------- */
   renderCard (card) {
     const run = AD.Engine.run;
@@ -1292,6 +1311,25 @@ AD.UI = {
         <button class="btn btn-ghost" data-act="title">Main Menu</button>
       </div>`;
     this.show('ending');
+  },
+
+  /* ---------- the front page (personalised term recap) ---------- */
+  renderFrontPage (score) {
+    const f = AD.buildFrontPage(score);
+    const cln = s => AD.clean(s, this.settings.clean);
+    this.el('paper-body').innerHTML = `
+      <div class="fp-masthead">${f.masthead}</div>
+      <div class="fp-strap"><span>${f.strap[0]}</span><span>${f.strap[1]}</span></div>
+      <h1 class="fp-head ${f.win ? 'win' : ''}">${cln(f.headline)}</h1>
+      ${f.deck ? `<h3 class="fp-deck">${cln(f.deck)}</h3>` : ''}
+      <div class="fp-byline">${f.byline}</div>
+      <div class="fp-boxes">${f.boxes.map(b => `<div class="fp-box"><b>${b.n}</b><i>${b.label}</i></div>`).join('')}</div>
+      <div class="fp-story">${f.story.map(p => `<p>${cln(p)}</p>`).join('')}</div>
+      <div class="fp-verdict">${cln(f.verdict)}</div>
+      <div class="dos-actions">
+        <button class="btn btn-ghost" data-act="paper-close">Close</button>
+      </div>`;
+    this.overlay('paper', true);
   },
 
   /* ---------- the generated dossier ---------- */

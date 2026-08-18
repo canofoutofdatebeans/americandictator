@@ -44,6 +44,7 @@ AD.Engine = {
     this.run = run;
     this.card = null;
     this.lastScore = null;
+    this.lastDrift = null;
     return run;
   },
 
@@ -390,6 +391,12 @@ AD.Engine = {
     if (run.over) return null;
     run.month += 1;
 
+    // Snapshot the meters so we can tell the player what the PASSAGE OF TIME did
+    // to them this month (base decay, backlash, tick drains) as a plain-language
+    // brief — nothing here is the player's choice, so it should never be a
+    // surprise. Filled in at the end of advance() as this.lastDrift.
+    const preTurn = {}; AD.FKEYS.forEach(k => { preTurn[k] = run.meters[k]; });
+
     // Standing Emergency: a point of authority every month, for nothing.
     // Still raw authority, so it grinds against the soft cap like everything else.
     if (AD.hasDoctrine(run, 'emergency')) {
@@ -511,6 +518,10 @@ AD.Engine = {
       };
     }
 
+    // What the month did on its own — net meter drift + the named causes, so the
+    // next card can carry a one-line "since last month" brief.
+    this.lastDrift = AD.monthBrief(run, preTurn, this);
+
     // The clock can starve a meter to death without you choosing anything.
     const collapse = this.checkCollapse();
     if (collapse.ending) { this.finish(collapse.ending); return collapse.ending; }
@@ -587,4 +598,36 @@ AD.Engine = {
     }
     return out.slice(0, 2);
   }
+};
+
+/* ============================================================
+   THE MONTHLY BRIEF — "what changed while you weren't choosing."
+   Turns a month's passive drift (base decay, backlash, tick drains,
+   backfires, war resolutions, holdings) into a short, plain-language
+   line so the passage of time is never a silent surprise. Returns
+   null when nothing noteworthy happened. Consumed by ui.showBrief.
+   ============================================================ */
+AD.monthBrief = function (run, pre, eng) {
+  const drift = {};
+  AD.FKEYS.forEach(k => { const d = run.meters[k] - (pre[k] || 0); if (d) drift[k] = d; });
+  const causes = [];
+  const name = k => AD.faction(k).name.toLowerCase();
+
+  if (drift.base < 0) causes.push('the base cooled');
+  if (run.pressureOn && drift[run.pressureOn] < 0) causes.push('backlash pressed ' + name(run.pressureOn));
+  if (eng.lastEcon && eng.lastEcon.backfires && eng.lastEcon.backfires.length) {
+    causes.push('a tariff on ' + eng.lastEcon.backfires[0].nation.name + ' backfired');
+  }
+  if (eng.lastWar && eng.lastWar.resolved && eng.lastWar.resolved.length) {
+    const w = eng.lastWar.resolved[0];
+    causes.push('the war in ' + w.target.name + (w.won ? ' was won' : ' turned into a quagmire'));
+  }
+  if (eng.lastTick && eng.lastTick.deltas && (eng.lastTick.deltas.press < 0 || eng.lastTick.deltas.courts < 0)) {
+    causes.push('your holdings drew scrutiny');
+  }
+  if (eng.lastUpkeep && eng.lastUpkeep.arrears) causes.push('the Residence bills came due');
+  if (eng.lastTick && eng.lastTick.cash > 0.001) causes.push('holdings paid out');
+
+  if (!Object.keys(drift).length && !causes.length) return null;
+  return { drift, causes: causes.slice(0, 3) };
 };

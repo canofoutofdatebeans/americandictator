@@ -47,9 +47,12 @@ AD.Game = {
       name: '', party: '', color: AD.PARTY_COLORS[0],
       portrait: { hair: 0, skin: 0, tie: 0, suit: 0, build: 2, sex: 0 },
       difficulty: 'standard',
+      mutators: [],
       legacy: AD.inheritance('standard')   // the mess the last administration left (scales with difficulty)
     };
     AD.UI.renderInheritance(this.setup.legacy);
+    AD.UI.el('mutators').innerHTML = AD.MUTATORS.map(m =>
+      `<button type="button" class="mut" data-mut="${m.id}" title="${m.blurb}">${m.glyph} ${m.label}</button>`).join('');
     AD.UI.el('swatches').innerHTML = AD.PARTY_COLORS.map((c, i) =>
       `<div class="sw ${i === 0 ? 'on' : ''}" data-color="${c}" style="background:${c}"></div>`).join('');
     AD.UI.el('diff-hint').textContent = AD.DIFFS.standard.hint;
@@ -122,12 +125,13 @@ AD.Game = {
     const typed = (AD.UI.el('in-seed').value || '').trim();
     const run = AD.newRun({
       name, party, color: s.color, portrait: s.portrait,
-      difficulty: s.difficulty, legacy: s.legacy,
+      difficulty: s.difficulty, legacy: s.legacy, mutators: s.mutators,
       seed: typed || undefined
     });
     AD.Seed.set(run.seed);                 // same seed + same choices = same term
     AD.Engine.start(run);
     AD.Engine.applyInheritance(run);    // start the term in the country you were left
+    AD.applyMutators(run, s.mutators);  // optional modifiers reshape the opening
     // First-ever run on this browser gets a short training grace (see AD.inGrace).
     if (!AD.store.read(AD.PLAYED_KEY, false)) {
       run.graceUntil = run.month + 4;
@@ -159,6 +163,7 @@ AD.Game = {
     const card = AD.Engine.draw();
     if (!card) { this.finishRun('merely-president'); return; }
     AD.UI.renderCard(card);
+    AD.UI.showBrief(AD.Engine.lastDrift);   // what the passing month did on its own
   },
 
   /* ---------- a decision ---------- */
@@ -581,6 +586,16 @@ AD.Game = {
         return;
       }
 
+      const mut = e.target.closest('[data-mut]');
+      if (mut) {
+        const id = mut.dataset.mut;
+        const arr = this.setup.mutators;
+        const i = arr.indexOf(id);
+        if (i === -1) arr.push(id); else arr.splice(i, 1);
+        mut.classList.toggle('on', i === -1);
+        return;
+      }
+
       const buy = e.target.closest('[data-buy]');
       if (buy && !buy.disabled) { this.buyAsset(buy.dataset.buy); return; }
 
@@ -831,11 +846,10 @@ AD.Game = {
       case 'wipe':
         AD.saveLibrary([]); U.renderLibrary(); break;
 
-      case 'read-paper': {
-        const e = AD.ENDINGS[this.lastEnding];
-        if (e) U.showTabloid({ head: e.head, sub: e.sub, body: e.body });
+      case 'read-paper':
+        if (AD.Engine.lastScore) U.renderFrontPage(AD.Engine.lastScore);
         break;
-      }
+      case 'paper-close': U.overlay('paper', false); break;
     }
   }
 };

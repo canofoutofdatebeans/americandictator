@@ -190,6 +190,44 @@ AD.DIFFS = {
 };
 
 /* ---------- Portrait options --------------------------------------------- */
+/* ---------- Run modifiers (mutators) --------------------------------------
+   Optional toggles chosen at setup that reshape the country you start with,
+   for variety without a new difficulty. Applied once, after inheritance, at
+   the very start of a term. `mods` shifts the opening meters; `cash` shifts
+   the opening fortune; `heat` seeds the Saint Ambrose scandal; `flag` marks
+   the run so systems can react. Stackable — pick as many as you like. */
+AD.MUTATORS = [
+  { id: 'landslide', label: 'Landslide', glyph: '🎉',
+    blurb: 'You won by forty points. The whole country starts warmer to you.',
+    mods: { base: 10, congress: 8, courts: 6, street: 6, press: 4 } },
+  { id: 'recession', label: 'Recession', glyph: '📉',
+    blurb: 'The economy is in freefall the day you arrive. Less cash, angrier streets.',
+    mods: { street: -10, congress: -6 }, cash: -1.5, flag: 'mutRecession' },
+  { id: 'wartime', label: 'Wartime', glyph: '💥',
+    blurb: 'You inherit a shooting war. The base rallies; the institutions do not.',
+    mods: { base: 8, street: -6, congress: -8, courts: -4 }, flag: 'mutWartime' },
+  { id: 'scandal', label: 'Scandal-Plagued', glyph: '🗞️',
+    blurb: 'Saint Ambrose is already leaking on day one. The press is hunting from the start.',
+    mods: { press: -8, base: 4 }, heat: 6, flag: 'mutScandal' },
+  { id: 'thinice', label: 'Thin Ice', glyph: '🧊',
+    blurb: 'A hostile establishment and a wary base. Every institution starts against you.',
+    mods: { base: -8, congress: -5, courts: -5, press: -5, street: -5 }, flag: 'mutThinIce' }
+];
+AD.mutatorById = id => AD.MUTATORS.find(m => m.id === id);
+
+/* Apply the chosen mutators to a freshly-started run (after inheritance). */
+AD.applyMutators = function (run, ids) {
+  (ids || []).forEach(id => {
+    const m = AD.mutatorById(id);
+    if (!m) return;
+    if (m.mods) AD.FKEYS.forEach(k => { if (m.mods[k]) run.meters[k] = AD.clamp(run.meters[k] + m.mods[k], 8, 100); });
+    if (m.cash) run.cash = Math.max(0, Math.round((run.cash + m.cash) * 100) / 100);
+    if (m.heat && AD.bumpHeat) AD.bumpHeat(run, m.heat);
+    if (m.flag) { run.flags = run.flags || {}; run.flags[m.flag] = true; }
+  });
+  run.mutators = (ids || []).slice();
+};
+
 AD.PORTRAIT = {
   hair: ['#e8c766', '#d9d3c4', '#8a6a3c', '#3c3128', '#b5442e', '#f2ead6'],
   skin: ['#e8a86b', '#f0c9a0', '#c98650', '#8d5a34', '#5e3a22', '#ffbd63'],
@@ -215,6 +253,7 @@ AD.newRun = function (opts) {
     color: opts.color || AD.PARTY_COLORS[0],
     portrait: opts.portrait || { hair: 0, skin: 0, tie: 0, suit: 0, build: 2, sex: 0 },
     difficulty: d.id,
+    mutators: opts.mutators || [],
 
     /* ---- the clock -----------------------------------------------------
        A term runs `termLength` months. Winning re-election starts a SECOND
