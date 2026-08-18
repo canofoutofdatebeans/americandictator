@@ -33,6 +33,8 @@ AD.Engine = {
     if (!run.clauses) run.clauses = [];    // saves written before the constitution ledger
     if (!run.renos) run.renos = [];        // saves written before the residence track
     if (!run.senate || !run.senate.length) run.senate = AD.makeSenate(run); // pre-senate saves
+    if (!run.press || !run.press.length) run.press = AD.makePress();       // pre-press saves
+    if (!run.streets || !run.streets.length) run.streets = AD.makeStreet(); // pre-street saves
 
     this.run = run;
     this.card = null;
@@ -416,6 +418,8 @@ AD.Engine = {
     this.lastUpkeep = AD.renovationTick(run);
     // The caucus drifts and, if neglected, drags the Congress meter down.
     this.lastSenate = AD.senateTick(run);
+    this.lastPress = AD.pressTick(run);
+    this.lastStreet = AD.streetTick(run);
     // A story hot enough to leak does damage without needing a card.
     this.lastLeak = AD.cayTick(run);
 

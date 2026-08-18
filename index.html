@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no">
 <meta name="theme-color" content="#0d0b09">
 <title>American Dictator</title>
-<link rel="stylesheet" href="css/styles.css?v=42">
+<link rel="stylesheet" href="css/styles.css?v=43">
 </head>
 <body>
 
@@ -245,6 +245,36 @@
     </div>
   </div>
 
+  <div class="overlay" id="ov-press" hidden>
+    <div class="panel narrow scroll">
+      <h2 class="panel-h">The Press Room</h2>
+      <div class="corr-head sen-head">
+        <div class="corr-cash">Friendly <b id="press-friendly">0</b></div>
+        <div>Hostile <b id="press-hostile">0</b></div>
+        <div>Owned <b id="press-owned">0</b></div>
+      </div>
+      <p class="corr-note" id="press-note">Sue them, buy them onside, or install a friend of the President
+        in the editor's chair. Friendly outlets soften the coverage every month; hostile ones dig in.</p>
+      <div class="sen-list corr-list" id="press-list"></div>
+      <button class="btn wide" data-act="press-close">Back to Governing</button>
+    </div>
+  </div>
+
+  <div class="overlay" id="ov-street" hidden>
+    <div class="panel narrow scroll">
+      <h2 class="panel-h">Public Order</h2>
+      <div class="corr-head sen-head">
+        <div class="corr-cash">National Unrest <b id="street-nat">0%</b></div>
+        <div>Boiling <b id="street-boiling">0</b></div>
+        <div>Occupied <b id="street-occupied">0</b></div>
+      </div>
+      <p class="corr-note" id="street-note">Every city's unrest climbs on its own, and protests feed themselves.
+        Send in the force before a hotspot gets out of hand — or let the base watch you concede.</p>
+      <div class="sen-list corr-list" id="street-list"></div>
+      <button class="btn wide" data-act="street-close">Back to Governing</button>
+    </div>
+  </div>
+
   <div class="overlay" id="ov-senate" hidden>
     <div class="panel narrow scroll">
       <h2 class="panel-h">The Caucus</h2>
@@ -378,33 +408,35 @@
 </div>
 
 <!-- state.js creates the AD namespace, so it must load first. -->
-<script src="js/state.js?v=42"></script>
-<script src="js/seed.js?v=42"></script>
-<script src="js/audio.js?v=42"></script>
-<script src="js/doctrines.js?v=42"></script>
-<script src="js/corruption.js?v=42"></script>
-<script src="js/renovations.js?v=42"></script>
-<script src="js/senate.js?v=42"></script>
-<script src="js/constitution.js?v=42"></script>
-<script src="js/tutorial.js?v=42"></script>
-<script src="js/achievements.js?v=42"></script>
-<script src="js/briefings.js?v=42"></script>
-<script src="js/cards.js?v=42"></script>
+<script src="js/state.js?v=43"></script>
+<script src="js/seed.js?v=43"></script>
+<script src="js/audio.js?v=43"></script>
+<script src="js/doctrines.js?v=43"></script>
+<script src="js/corruption.js?v=43"></script>
+<script src="js/renovations.js?v=43"></script>
+<script src="js/senate.js?v=43"></script>
+<script src="js/press.js?v=43"></script>
+<script src="js/street.js?v=43"></script>
+<script src="js/constitution.js?v=43"></script>
+<script src="js/tutorial.js?v=43"></script>
+<script src="js/achievements.js?v=43"></script>
+<script src="js/briefings.js?v=43"></script>
+<script src="js/cards.js?v=43"></script>
 <!-- Content packs. Each pushes onto AD.CARDS, so adding a deck is adding a
      file — no engine changes. Order does not matter. -->
-<script src="js/packs/pack-a-honeymoon.js?v=42"></script>
-<script src="js/packs/pack-b-machinery.js?v=42"></script>
-<script src="js/packs/pack-c-consolidation.js?v=42"></script>
-<script src="js/packs/pack-d-evergreen.js?v=42"></script>
-<script src="js/packs/pack-e-secondterm.js?v=42"></script>
-<script src="js/packs/pack-f-record.js?v=42"></script>
-<script src="js/packs/pack-g-record.js?v=42"></script>
+<script src="js/packs/pack-a-honeymoon.js?v=43"></script>
+<script src="js/packs/pack-b-machinery.js?v=43"></script>
+<script src="js/packs/pack-c-consolidation.js?v=43"></script>
+<script src="js/packs/pack-d-evergreen.js?v=43"></script>
+<script src="js/packs/pack-e-secondterm.js?v=43"></script>
+<script src="js/packs/pack-f-record.js?v=43"></script>
+<script src="js/packs/pack-g-record.js?v=43"></script>
 <!-- cay.js reads AD.CAST, so it must load after cards.js -->
-<script src="js/cay.js?v=42"></script>
-<script src="js/events.js?v=42"></script>
-<script src="js/endings.js?v=42"></script>
-<script src="js/engine.js?v=42"></script>
-<script src="js/ui.js?v=42"></script>
-<script src="js/main.js?v=42"></script>
+<script src="js/cay.js?v=43"></script>
+<script src="js/events.js?v=43"></script>
+<script src="js/endings.js?v=43"></script>
+<script src="js/engine.js?v=43"></script>
+<script src="js/ui.js?v=43"></script>
+<script src="js/main.js?v=43"></script>
 </body>
 </html>

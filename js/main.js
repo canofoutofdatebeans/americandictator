@@ -290,6 +290,30 @@ AD.Game = {
   },
 
   /* ---------- the residence ---------- */
+  pressAction (outletId, actionId) {
+    const run = AD.Engine.run;
+    if (!run || run.over) return;
+    const r = AD.doPressAction(run, outletId, actionId);
+    if (!r.ok) return;
+    AD.saveRun(run);
+    AD.Audio.play(actionId === 'settle' || actionId === 'install' ? 'money' : actionId === 'attack' ? 'bad' : 'stamp');
+    AD.UI.renderPress(r); AD.UI.renderHUD();
+    const collapse = AD.Engine.checkCollapse();
+    if (collapse.ending) { AD.Engine.finish(collapse.ending); this.pending = []; setTimeout(() => this.showEnding(AD.Engine.lastScore), 900); }
+  },
+
+  streetAction (cityId, actionId) {
+    const run = AD.Engine.run;
+    if (!run || run.over) return;
+    const r = AD.doStreetAction(run, cityId, actionId);
+    if (!r.ok) return;
+    AD.saveRun(run);
+    AD.Audio.play(actionId === 'sweep' ? 'stamp' : actionId === 'negotiate' ? 'good' : 'bad');
+    AD.UI.renderStreet(r); AD.UI.renderHUD();
+    const collapse = AD.Engine.checkCollapse();
+    if (collapse.ending) { AD.Engine.finish(collapse.ending); this.pending = []; setTimeout(() => this.showEnding(AD.Engine.lastScore), 900); }
+  },
+
   senateAction (senId, actionId) {
     const run = AD.Engine.run;
     if (!run || run.over) return;
@@ -380,6 +404,12 @@ AD.Game = {
       const senact = e.target.closest('[data-senact]');
       if (senact && !senact.disabled) { this.senateAction(senact.dataset.sen, senact.dataset.senact); return; }
 
+      const pressact = e.target.closest('[data-pressact]');
+      if (pressact && !pressact.disabled) { this.pressAction(pressact.dataset.outlet, pressact.dataset.pressact); return; }
+
+      const streetact = e.target.closest('[data-streetact]');
+      if (streetact && !streetact.disabled) { this.streetAction(streetact.dataset.city, streetact.dataset.streetact); return; }
+
       const act = e.target.closest('[data-act]');
       if (act) this.act(act.dataset.act);
     });
@@ -456,6 +486,22 @@ AD.Game = {
         U.stopTimer(); U.renderSenate(); U.overlay('senate', true); break;
       case 'senate-close':
         U.overlay('senate', false);
+        if (AD.Engine.card && !U.el('card').hidden) U.startTimer(AD.Engine.card);
+        break;
+
+      case 'press':
+        if (U.current !== 'game' || !AD.Engine.run || AD.Engine.run.over) break;
+        U.stopTimer(); U.renderPress(); U.overlay('press', true); break;
+      case 'press-close':
+        U.overlay('press', false);
+        if (AD.Engine.card && !U.el('card').hidden) U.startTimer(AD.Engine.card);
+        break;
+
+      case 'street':
+        if (U.current !== 'game' || !AD.Engine.run || AD.Engine.run.over) break;
+        U.stopTimer(); U.renderStreet(); U.overlay('street', true); break;
+      case 'street-close':
+        U.overlay('street', false);
         if (AD.Engine.card && !U.el('card').hidden) U.startTimer(AD.Engine.card);
         break;
 

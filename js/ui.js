@@ -686,6 +686,86 @@ AD.UI = {
     }).join('');
   },
 
+  /* ---------- the press room ---------- */
+  renderPress (result) {
+    const run = AD.Engine.run;
+    AD.ensurePress(run);
+    const sum = AD.pressSummary(run);
+    this.el('press-friendly').textContent = sum.friendly;
+    this.el('press-hostile').textContent = sum.hostile;
+    this.el('press-owned').textContent = sum.owned;
+
+    const note = this.el('press-note');
+    if (result && result.action) {
+      note.className = 'corr-note bought';
+      const verb = { attack: 'branded an enemy of the people', sue: 'served with a lawsuit',
+                     settle: 'bought onside', install: 'handed to a friend of the President' }[result.action.id];
+      note.innerHTML = `<b>${result.outlet.name} ${verb}.</b> ${result.action.blurb}`;
+    } else {
+      note.className = 'corr-note';
+      note.textContent = 'Sue them, buy them onside, or install a friend of the President in the editor\'s chair. ' +
+        'Friendly outlets soften the coverage every month; hostile ones dig in.';
+    }
+
+    const order = run.press.slice().sort((a, b) => a.stance - b.stance);
+    this.el('press-list').innerHTML = order.map(o => {
+      const st = AD.pressStance(o);
+      const buttons = AD.PRESS_ACTIONS.map(act => {
+        const avail = AD.pressActionAvailable(run, o, act);
+        const cost = act.cost ? ` <em>$${act.cost}B</em>` : '';
+        return `<button class="sen-act press-${act.id}" data-outlet="${o.id}" data-pressact="${act.id}" ${avail.ok ? '' : 'disabled'} title="${act.blurb}">${act.icon} ${act.label}${cost}</button>`;
+      }).join('');
+      return `<div class="sen-row press-mood-${st.key}">
+        <div class="sen-top"><span class="sen-dot"></span>
+          <b>${o.name}</b><i>${o.type}${o.sued ? ' · sued' : ''}</i>
+          <span class="sen-mood">${st.label}</span></div>
+        <div class="sen-loywrap"><div class="sen-loy" style="width:${o.stance}%"></div></div>
+        <div class="sen-acts">${buttons}</div>
+      </div>`;
+    }).join('');
+  },
+
+  /* ---------- public order (street) ---------- */
+  renderStreet (result) {
+    const run = AD.Engine.run;
+    AD.ensureStreet(run);
+    const sum = AD.streetSummary(run);
+    const nat = this.el('street-nat');
+    nat.textContent = sum.national + '%';
+    nat.className = sum.national >= 55 ? 'hot' : '';
+    const boil = this.el('street-boiling');
+    boil.textContent = sum.boiling;
+    boil.className = sum.boiling > 0 ? 'hot' : '';
+    this.el('street-occupied').textContent = sum.occupied;
+
+    const note = this.el('street-note');
+    if (result && result.action) {
+      note.className = 'corr-note bought';
+      note.innerHTML = `<b>${result.city.name}: ${result.action.label.toLowerCase()}.</b> ${result.action.blurb}`;
+    } else {
+      note.className = 'corr-note';
+      note.textContent = 'Every city\'s unrest climbs on its own, and protests feed themselves. Send in the force ' +
+        'before a hotspot gets out of hand — or let the base watch you concede.';
+    }
+
+    const order = run.streets.slice().sort((a, b) => b.unrest - a.unrest);
+    this.el('street-list').innerHTML = order.map(c => {
+      const heat = AD.cityHeat(c);
+      const buttons = AD.STREET_ACTIONS.map(act => {
+        const avail = AD.streetActionAvailable(run, c, act);
+        const cost = act.cost ? ` <em>$${act.cost}B</em>` : '';
+        return `<button class="sen-act street-${act.id}" data-city="${c.id}" data-streetact="${act.id}" ${avail.ok ? '' : 'disabled'} title="${act.blurb}">${act.icon} ${act.label}${cost}</button>`;
+      }).join('');
+      return `<div class="sen-row street-heat-${heat.key}">
+        <div class="sen-top"><span class="sen-dot"></span>
+          <b>${c.name}</b><i>${c.occupied ? 'force parked' : 'unrest ' + c.unrest + '%'}</i>
+          <span class="sen-mood">${heat.label}</span></div>
+        <div class="sen-loywrap"><div class="sen-loy street-loy" style="width:${c.unrest}%"></div></div>
+        <div class="sen-acts">${buttons}</div>
+      </div>`;
+    }).join('');
+  },
+
   /* ---------- crisis log ---------- */
   renderLog () {
     const run = AD.Engine.run;
