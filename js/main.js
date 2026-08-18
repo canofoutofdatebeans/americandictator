@@ -17,11 +17,11 @@ AD.Game = {
     this.applySettings();
     this.buildSetupScreen();
     this.buildHowTo();
+    AD.UI.installOverlayCloses();
     this.wire();
 
-    const saved = AD.loadRun();
-    U.el('btn-continue').hidden = !saved;
     const bt = U.el('build-tag'); if (bt) bt.textContent = 'build ' + AD.BUILD;
+    this.refreshTitle();
     U.show('title');
   },
 
@@ -142,7 +142,27 @@ AD.Game = {
   },
 
   /* ---------- start / resume ---------- */
+  /* Guard the one action that destroys a saved term. If a term is in progress,
+     make the player confirm before a New Term overwrites it. This is the other
+     half of the "I lost my progress" fix: the save was always there, but it was
+     too easy to start over on top of it. */
   begin () {
+    const saved = AD.loadRun();
+    if (saved && !saved.over) {
+      const esc = s => String(s || '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+      this.confirm({
+        title: 'Abandon your current term?',
+        msg: 'A term is already in progress: <b>Pres. ' + esc(saved.president || saved.name) + '</b>, ' + AD.dateLabel(saved.month) +
+             '. Starting a new one <b>erases it for good</b>. Use <b>Resume Term</b> on the title screen to go back to it instead.',
+        yes: 'Abandon and start new',
+        onYes: () => this._begin()
+      });
+      return;
+    }
+    this._begin();
+  },
+
+  _begin () {
     clearTimeout(this.endingTimer); this.endingTimer = null;
     this.pending = []; this.awaitingAdvance = false; this.drawAfterOverlays = false;
     const s = this.setup;
@@ -175,6 +195,35 @@ AD.Game = {
     AD.Seed.restore(saved);                // land on the same RNG position
     AD.Engine.start(saved);
     this.enterGame();
+  },
+
+  /* Rebuild the title menu around whether a term is in progress. When there is
+     a live save, RESUME becomes the headline action (top of the menu, primary
+     styling, showing who and when), and starting fresh is demoted to a plain
+     "New Term". When there is no save, Take the Oath is the primary action.
+     This is what makes returning to a term obvious instead of hidden. */
+  refreshTitle () {
+    const U = AD.UI;
+    const cont = U.el('btn-continue');
+    const fresh = document.querySelector('#screen-title [data-act="new"]');
+    if (!cont || !fresh) return;
+    const saved = AD.loadRun();
+    if (saved && !saved.over) {
+      cont.hidden = false;
+      cont.classList.add('btn-primary');
+      cont.textContent = '';
+      const lead = document.createElement('span'); lead.className = 'btn-lead'; lead.textContent = 'Resume Term';
+      const sub = document.createElement('small');
+      sub.textContent = 'Pres. ' + (saved.president || saved.name || 'You') + ' · ' + AD.dateLabel(saved.month);
+      cont.append(lead, sub);
+      const menu = cont.parentNode;
+      if (menu && menu.firstElementChild !== cont) menu.insertBefore(cont, menu.firstElementChild);
+      fresh.classList.remove('btn-primary'); fresh.classList.add('btn-ghost'); fresh.textContent = 'New Term';
+    } else {
+      cont.hidden = true;
+      cont.classList.remove('btn-primary');
+      fresh.classList.add('btn-primary'); fresh.classList.remove('btn-ghost'); fresh.textContent = 'Take the Oath';
+    }
   },
 
   enterGame () {
@@ -591,6 +640,16 @@ AD.Game = {
   wire () {
     const U = AD.UI;
 
+    /* Save-on-exit. The run is already written after every decision, but if the
+       app is closed or backgrounded mid-turn (before a choice) that last look
+       would be lost. These fire on tab-hide, page unload, and the Capacitor
+       app-pause event, so leaving the app never costs progress. */
+    const persist = () => { const r = AD.Engine.run; if (r && !r.over) AD.saveRun(r); };
+    document.addEventListener('visibilitychange', () => { if (document.hidden) persist(); });
+    window.addEventListener('pagehide', persist);
+    window.addEventListener('beforeunload', persist);
+    document.addEventListener('pause', persist, false);   // Capacitor: app sent to background
+
     document.addEventListener('click', e => {
       AD.Audio.unlock();                   // browsers gate audio on first gesture
       AD.Music.start();                    // background marches begin on first tap
@@ -725,7 +784,7 @@ AD.Game = {
 
       case 'begin':    this.begin(); break;
       case 'continue': this.resume(); break;
-      case 'title':    U.el('btn-continue').hidden = !AD.loadRun(); U.show('title'); break;
+      case 'title':    this.refreshTitle(); U.show('title'); break;
       // Play out any front pages / doctrine unlocks before the month ticks.
       case 'next':     this.continueTurn(); break;
 

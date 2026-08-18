@@ -99,10 +99,23 @@ AD.doRally = function (run, stuntId) {
   // silliest, most offensive spectacles land even harder than their numbers.
   const eff = Object.assign({}, s.eff);
   if (AD.applyBaseAppetite) AD.applyBaseAppetite(eff, s);
+
+  // A reaction TWIST, so the same spectacle never plays out quite the same way.
+  // Uses the management rng (off the card stream), so you cannot see it coming.
+  let twist = null;
+  const roll = AD.reactRoll ? AD.reactRoll(run) : 0.5;
+  if (roll < 0.18) {
+    eff.cash = (eff.cash || 0) + 0.05; eff.street = (eff.street || 0) + 2;
+    twist = 'It goes viral. The merch sells out, a second crowd forms outside, and the clip runs itself all weekend.';
+  } else if (roll > 0.85) {
+    eff.press = (eff.press || 0) - 3; eff.courts = (eff.courts || 0) - 2; eff.street = (eff.street || 0) - 3;
+    twist = 'It gets away from you. Someone is hurt, someone films it, and a lawyer is on television before you leave the stage.';
+  }
+
   const deltas = AD.applySenateEffect(run, eff);
   run.stats = run.stats || {};
   run.stats.rallies = (run.stats.rallies || 0) + 1;
-  return { ok: true, stunt: s, deltas };
+  return { ok: true, stunt: s, deltas, twist };
 };
 
 /* Refill the monthly allowance. Called from Engine.advance(). */

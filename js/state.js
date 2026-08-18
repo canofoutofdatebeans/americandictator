@@ -5,7 +5,7 @@
    ============================================================ */
 
 window.AD = window.AD || {};
-AD.BUILD = '81';   // bumped every deploy; shown on the title so a stale cache is obvious
+AD.BUILD = '82';   // bumped every deploy; shown on the title so a stale cache is obvious
 
 /* ---------- Factions ------------------------------------------------------
    Five power centres. Four of them are CAPTURABLE: drive one to 100 and it
@@ -478,6 +478,38 @@ AD.dateLabel = function (month) {
   const i = (month - 1) % 12;
   const y = Math.floor((month - 1) / 12);
   return AD.MONTHS[i] + ', ' + (AD.YEAR_WORDS[y] || 'Year ' + (y + 1));
+};
+
+/* ---------- management-screen randomness ----------------------------------
+   Buying a judge, humiliating a senator or suing an outlet no longer plays out
+   the same way every time. These give the management screens their own private
+   stream of luck, seeded off the run so a term is reproducible, but kept ENTIRELY
+   separate from AD.rng(): touching this never shifts the card sequence, so a
+   shared-seed run still draws the identical crises. The state lives on run._rx,
+   so it survives save/load. */
+AD.reactRoll = function (run) {
+  let s = (run._rx == null)
+    ? (((AD.Seed && AD.Seed.hash) ? AD.Seed.hash(String(run.seed || 'X') + ':react') : 0x9e3779b9) | 0)
+    : run._rx;
+  s = (s + 0x6D2B79F5) | 0;
+  let t = Math.imul(s ^ (s >>> 15), 1 | s);
+  t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+  run._rx = s;
+  return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+};
+/* A signed integer jitter in [-mag, +mag]. */
+AD.reactJitter = function (run, mag) { return Math.round((AD.reactRoll(run) * 2 - 1) * mag); };
+/* True with probability p. */
+AD.reactChance = function (run, p) { return AD.reactRoll(run) < p; };
+
+/* Money is tracked in billions. Payoffs and suits now run in the tens of
+   millions, so format sub-billion figures as $NNM and larger ones as $N.NB. */
+AD.fmtCash = function (b) {
+  if (b == null) return '';
+  const m = Math.round(b * 1000);
+  if (Math.abs(m) < 1000) return '$' + m + 'M';
+  const bn = m / 1000;
+  return '$' + (m % 1000 === 0 ? bn.toFixed(0) : bn.toFixed(1)) + 'B';
 };
 
 /* Swap salty words out when Clean Language is on. */

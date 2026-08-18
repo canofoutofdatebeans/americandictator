@@ -114,18 +114,44 @@ AD.makeSenate = function (run) {
     const loyalty = own
       ? Math.round(55 + rng() * 35)      // 55-90
       : Math.round(8 + rng() * 30);      // 8-38
+    // TEMPERAMENT decides how each senator answers the four tools (see below).
+    // Own party leans loyalist/careerist, with a tail of cowards and the odd
+    // maverick who FIGHTS. Opposition is mostly zealots with a few flippable
+    // opportunists. Deterministic off the senate rng, hidden until you engage.
+    const r = rng();
+    let temperament;
+    if (own) temperament = r < 0.40 ? 'loyalist' : r < 0.72 ? 'careerist' : r < 0.88 ? 'coward' : 'maverick';
+    else     temperament = r < 0.82 ? 'zealot' : 'opportunist';
+    // Sueing a senator now costs a per-person legal budget in the tens of
+    // millions; the fighters lawyer up and cost more.
+    const suePrice = Math.round((temperament === 'maverick' ? 0.035 + rng() * 0.015   // dear, but capped at $50M
+                              : temperament === 'zealot'   ? 0.03 + rng() * 0.02
+                              : 0.01 + rng() * 0.02) * 1000) / 1000;
     return {
       id: 'sen-' + i,
       first: nm.first, last: nm.last,
       state: seat.st,
       party: seat.party,                 // 'own' | 'opp'
       loyalty,
+      temperament,
+      suePrice,
       gripe: own && loyalty < 70 ? pick(AD.SEN_GRIPES) : null,
       sued: false,
       gone: false,
       appointee: false                   // true once they replaced a sacked seat
     };
   });
+};
+
+/* A short read on how a senator will take being handled, shown on the row so an
+   attentive whip can tell a folder from a fighter without being told the maths. */
+AD.SEN_TELLS = {
+  loyalist:    'True believer. Loves a photo.',
+  careerist:   'Wants something. Always.',
+  coward:      'Scares easily.',
+  maverick:    'Likes a camera and a grudge.',
+  zealot:      'Hates you on principle.',
+  opportunist: 'Could be tempted across.'
 };
 
 AD.ensureSenate = function (run) {
@@ -168,53 +194,85 @@ AD.senateSummary = function (run) {
    Each returns a base effect object; party and loyalty tune it. Effects are
    applied through AD.applySenateEffect, which clamps the meters, moves cash
    and Authority, and reports deltas, exactly like buying a holding. */
+/* The ripple: fear pulls every OTHER wavering own-party senator toward the line.
+   Fires only when the target was actually cowed (not when they fought back). */
+function sueRipple (run, s, strength) {
+  (run.senate || []).forEach(o => {
+    if (o.id === s.id || o.gone || o.party !== 'own') return;
+    if (o.loyalty < 60) o.loyalty = AD.clamp(o.loyalty + strength, 0, 100);
+  });
+}
+
 AD.SENATE_ACTIONS = [
   {
     id: 'acknowledge', label: 'Acknowledge', icon: '🤝',
-    blurb: 'A private word, a favour, a photo. They fall back in line.',
+    blurb: 'A private word, a favour, a photo. Most fall back in line.',
     can: (run, s) => !s.gone,
     run (run, s) {
-      const opp = s.party === 'opp';
-      s.loyalty = AD.clamp(s.loyalty + (opp ? 12 : 22), 0, 100);
+      const t = s.temperament;
+      const jit = AD.reactJitter(run, 3);
+      const gain = ({ loyalist: 24, careerist: 20, coward: 18, maverick: 8, opportunist: 12, zealot: 6 }[t] || 15) + Math.max(0, jit);
+      s.loyalty = AD.clamp(s.loyalty + gain, 0, 100);
       if (s.loyalty >= 70) s.gripe = null;
-      return { congress: opp ? 1 : 3, base: 1, press: 1, auth: 1 };
+      const opp = s.party === 'opp';
+      if (t === 'maverick') return { congress: 1, base: -1, press: 2, auth: 0, res: s.first + ' ' + s.last + ' takes the meeting, poses for the photo, and leaks the whole thing by dinner. Barely worth it.' };
+      if (t === 'careerist') return { congress: 3, base: 1, press: 1, auth: 1, res: s.first + ' ' + s.last + ' will fall in line, once a cousin has an ambassadorship and a road is named after their father.' };
+      return { congress: opp ? 1 : 3, base: 1, press: 1, auth: 1, res: s.first + ' ' + s.last + ' warms right up; a photo, a phone call, and they are yours for a while.' };
     }
   },
   {
     id: 'humiliate', label: 'Humiliate', icon: '📢',
-    blurb: 'Attack them by name. The caucus flinches; the base is delighted.',
+    blurb: 'Attack them by name. Some crumble. Some become a martyr on the Sunday shows.',
     can: (run, s) => !s.gone,
     run (run, s) {
-      const opp = s.party === 'opp';
-      s.loyalty = AD.clamp(s.loyalty - (opp ? 12 : 32), 0, 100);
-      // Humiliating the enemy is pure red meat; humiliating your own chills the room.
-      return opp
-        ? { base: 9, press: -4, courts: -2, street: -2, congress: -2, auth: 3 }
-        : { base: 7, congress: -6, press: -3, courts: -1, street: -1, auth: 2 };
+      const t = s.temperament;
+      const jit = AD.reactJitter(run, 3);
+      if (t === 'zealot') {           // enemy true believer: pure red meat
+        s.loyalty = AD.clamp(s.loyalty - 12, 0, 100);
+        return { base: 9, press: -4, courts: -2, street: -2, congress: -2, auth: 3, res: 'You brand ' + s.first + ' ' + s.last + ' the face of the enemy. The base eats it up; nothing of value is lost.' };
+      }
+      if (t === 'maverick') {         // FIGHTS: humiliating one makes a folk hero
+        s.loyalty = AD.clamp(s.loyalty - 5, 0, 100);
+        return { base: 3, congress: -7, press: 4, street: -2, courts: -1, auth: -1, res: 'You go after ' + s.first + ' ' + s.last + ' by name and hand them a martyrdom. The Sunday shows book them for a month and the caucus quietly seethes.' };
+      }
+      const drop = ({ loyalist: 30, careerist: 20, coward: 34, opportunist: 16 }[t] || 26) + Math.max(0, jit);
+      s.loyalty = AD.clamp(s.loyalty - drop, 0, 100);
+      const res = t === 'coward'
+        ? s.first + ' ' + s.last + ' folds in real time, apologises on camera, and votes with you out of fear ever after.'
+        : t === 'loyalist'
+        ? 'Turning on ' + s.first + ' ' + s.last + ', of all people, chills the whole room. The base loves the cruelty; your own side notes who is next.'
+        : s.first + ' ' + s.last + ' gets the message and gets back in line, resentfully.';
+      return { base: 7, congress: -6, press: -3, courts: -1, street: -1, auth: 2, res };
     }
   },
   {
-    id: 'sue', label: 'Sue', icon: '⚖️', cost: 0.3,
-    blurb: 'The process is the punishment, and every other waverer takes note.',
+    id: 'sue', label: 'Sue', icon: '⚖️',
+    blurb: 'The process is the punishment. Unless they enjoy the fight.',
     can: (run, s) => !s.gone,
     run (run, s) {
-      const opp = s.party === 'opp';
+      const t = s.temperament;
       s.sued = true;
-      s.loyalty = AD.clamp(s.loyalty + (opp ? 0 : 15), 0, 100);
-      // the ripple: fear pulls every wavering OWN senator back toward the line
-      (run.senate || []).forEach(o => {
-        if (o.id === s.id || o.gone || o.party !== 'own') return;
-        if (o.loyalty < 60) o.loyalty = AD.clamp(o.loyalty + 8, 0, 100);
-      });
-      return { base: 5, courts: -7, press: -5, congress: -3, auth: 3 };
+      if (t === 'maverick') {         // BACKFIRES: a meritless suit is a fundraising email
+        return { base: -2, courts: -8, press: 5, congress: -3, auth: 0, res: 'The suit against ' + s.first + ' ' + s.last + ' is thin and everyone knows it. They fundraise off it by morning and dare you to depose them.' };
+      }
+      const cow = ({ coward: 22, careerist: 16, loyalist: 5, opportunist: 8, zealot: 0 }[t] || 12);
+      s.loyalty = AD.clamp(s.loyalty + cow, 0, 100);
+      if (cow >= 12) sueRipple(run, s, t === 'coward' ? 10 : 8);   // real fear ripples out
+      const res = t === 'coward'
+        ? 'The filing lands on ' + s.first + ' ' + s.last + ' and the whole wavering wing of the caucus feels the cold draft.'
+        : t === 'zealot'
+        ? 'You sue ' + s.first + ' ' + s.last + ', who was never going to vote for you anyway. It plays as spite, but the base likes the fight.'
+        : 'The process becomes the punishment for ' + s.first + ' ' + s.last + ', and every other waverer takes careful note.';
+      return { base: 5, courts: -7, press: -5, congress: -3, auth: 3, res };
     }
   },
   {
-    id: 'sack', label: 'End Their Career', icon: '🗑️', cost: 0.5, needsAuth: 42,
+    id: 'sack', label: 'End Their Career', icon: '🗑️', cost: 0.05, needsAuth: 42,
     blurb: 'Force them out. A loyalist you choose takes the seat. The institutions revolt.',
     can: (run, s) => !s.gone,
     run (run, s) {
       const opp = s.party === 'opp';
+      const fighter = s.temperament === 'maverick';
       s.gone = true;
       // A hand-picked loyalist takes the seat, so the chamber stays at 100 and
       //, the point, your own party's number does not fall when you purge it.
@@ -222,22 +280,36 @@ AD.SENATE_ACTIONS = [
       const replacement = {
         id: s.id + '-r', first: AD.SEN_FIRST[Math.floor(rng() * AD.SEN_FIRST.length)],
         last: AD.SEN_LAST[Math.floor(rng() * AD.SEN_LAST.length)],
-        state: s.state, party: 'own', loyalty: 88, gripe: null,
-        sued: false, gone: false, appointee: true
+        state: s.state, party: 'own', loyalty: 88, temperament: 'loyalist', suePrice: 0.02,
+        gripe: null, sued: false, gone: false, appointee: true
       };
       run.senate.push(replacement);
-      return opp
-        ? { base: 10, congress: -6, courts: -8, press: -7, street: -4, auth: 4 }
-        : { base: 8,  congress: -10, courts: -6, press: -6, street: -3, auth: 5 };
+      const who = s.first + ' ' + s.last;
+      const newName = replacement.first + ' ' + replacement.last;
+      if (opp) return { base: 10, congress: -6, courts: -8, press: -7, street: -4, auth: 4,
+        res: 'You force out ' + who + ', an opponent, and install ' + newName + '. The base cheers a scalp; the institutions call it what it is.' };
+      if (fighter) return { base: 6, congress: -12, courts: -7, press: -8, street: -4, auth: 4,
+        res: 'Purging ' + who + ' takes a bruising floor fight and a martyr\'s farewell speech, but ' + newName + ' now holds the seat and votes as told.' };
+      return { base: 8, congress: -10, courts: -6, press: -6, street: -3, auth: 5,
+        res: who + ' is retired against their will and ' + newName + ', hand-picked and grateful, is sworn in.' };
     }
   }
 ];
 
 AD.senateAction = id => AD.SENATE_ACTIONS.find(a => a.id === id);
 
+/* Suing is a per-senator legal budget (their suePrice); ending a career is a
+   flat war chest. Everything else is free. */
+AD.senateCostFor = function (run, s, action) {
+  if (!action) return 0;
+  if (action.id === 'sue') return s.suePrice || 0.02;
+  return action.cost || 0;
+};
+
 AD.senateActionAvailable = function (run, s, action) {
   if (!action.can(run, s)) return { ok: false, reason: 'Not available.' };
-  if (action.cost && run.cash < action.cost) return { ok: false, reason: 'You cannot afford it.' };
+  const cost = AD.senateCostFor(run, s, action);
+  if (cost && run.cash < cost) return { ok: false, reason: 'You cannot afford it.' };
   if (action.needsAuth && run.authority < action.needsAuth)
     return { ok: false, reason: 'Requires Authority ' + action.needsAuth + '.' };
   return { ok: true };
@@ -276,12 +348,14 @@ AD.doSenateAction = function (run, senId, actionId) {
   const avail = AD.senateActionAvailable(run, s, action);
   if (!avail.ok) return avail;
 
-  if (action.cost) run.cash = Math.round((run.cash - action.cost) * 100) / 100;
+  const cost = AD.senateCostFor(run, s, action);
+  if (cost) run.cash = Math.round((run.cash - cost) * 100) / 100;
   const eff = action.run(run, s) || {};
+  const res = eff.res; delete eff.res;
   const deltas = AD.applySenateEffect(run, eff);
   run.stats = run.stats || {};
   run.stats.senateActions = (run.stats.senateActions || 0) + 1;
-  return { ok: true, action, senator: s, deltas };
+  return { ok: true, action, senator: s, deltas, res };
 };
 
 /* ---------- the midterms move the chamber ---------------------------------

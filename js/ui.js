@@ -31,6 +31,25 @@ AD.UI = {
     }
   },
 
+  /* Give every management overlay a consistent close affordance: a round ✕ in
+     the top-right corner that fires the overlay's OWN close action (so any
+     turn-advance or re-render tied to that close still happens). One obvious,
+     uniform way out of every screen, injected once so the markup stays DRY. */
+  installOverlayCloses () {
+    document.querySelectorAll('.overlay').forEach(ov => {
+      const closer = ov.querySelector('[data-act$="-close"]');
+      if (!closer) return;                                  // paper/dossier close differently
+      const panel = closer.closest('.panel, .sheet') || ov.firstElementChild;
+      if (!panel || panel.querySelector('.ov-x')) return;
+      const x = document.createElement('button');
+      x.className = 'ov-x';
+      x.setAttribute('aria-label', 'Close');
+      x.setAttribute('data-act', closer.getAttribute('data-act'));
+      x.textContent = '✕';
+      panel.appendChild(x);
+    });
+  },
+
   /* ---------- portrait ---------- */
   portraitSVG (p, party) {
     const P = AD.PORTRAIT;
@@ -908,17 +927,13 @@ AD.UI = {
     const note = this.el('sen-note');
     if (result && result.action) {
       note.className = 'corr-note bought';
-      const s = result.senator;
-      const verb = { acknowledge: 'brought into line', humiliate: 'humiliated in public',
-                     sue: 'served with a lawsuit', sack: 'forced out of the Senate' }[result.action.id];
-      note.innerHTML = `<b>Senator ${s.last} of ${s.state} ${verb}.</b> ` +
-        (result.action.id === 'sue' ? 'The rest of the caucus has taken note.'
-         : result.action.id === 'sack' ? 'A loyalist of your choosing now holds the seat.'
-         : AD.SENATE_ACTIONS.find(a => a.id === result.action.id).blurb);
+      note.innerHTML = result.res
+        ? `<b>${AD.clean(result.res, this.settings.clean)}</b>`
+        : `<b>Senator ${result.senator.last} of ${result.senator.state}.</b> ${AD.SENATE_ACTIONS.find(a => a.id === result.action.id).blurb}`;
     } else {
       note.className = 'corr-note';
-      note.textContent = 'Keep your own party in line. Loyalty drifts down every month, and once the caucus ' +
-        'average sags the whole chamber turns on you. The opposition will almost never approve.';
+      note.textContent = 'Keep your own party in line, but read the room first: a coward folds to a lawsuit, a ' +
+        'maverick turns your attack into a martyrdom. Loyalty drifts down every month until the chamber turns.';
     }
 
     const tabs = [['attention', 'Needs You'], ['party', 'Your Party'], ['opp', 'Opposition'], ['all', 'All 100']];
@@ -941,9 +956,11 @@ AD.UI = {
       const mood = AD.senMood(s);
       const buttons = AD.SENATE_ACTIONS.map(act => {
         const avail = AD.senateActionAvailable(run, s, act);
-        const cost = act.cost ? ` <em>$${act.cost}B</em>` : '';
+        const c = AD.senateCostFor(run, s, act);
+        const cost = c ? ` <em>${AD.fmtCash(c)}</em>` : '';
         return `<button class="sen-act act-${act.id}" data-sen="${s.id}" data-senact="${act.id}" ${avail.ok ? '' : 'disabled'} title="${avail.ok ? act.blurb : avail.reason}">${act.icon} ${act.label}${cost}${avail.ok ? '' : ' <span class="act-lock">' + AD.reasonBadge(avail.reason) + '</span>'}</button>`;
       }).join('');
+      const tell = AD.SEN_TELLS[s.temperament];
       return `<div class="sen-row mood-${mood.key} party-${s.party}">
         <div class="sen-top">
           <span class="sen-dot"></span>
@@ -952,6 +969,7 @@ AD.UI = {
           <span class="sen-mood">${mood.label}</span>
         </div>
         <div class="sen-loywrap"><div class="sen-loy" style="width:${s.loyalty}%"></div></div>
+        ${tell ? `<div class="sen-tell">${tell}</div>` : ''}
         ${s.gripe && s.party === 'own' ? `<div class="sen-gripe">${s.gripe}</div>` : ''}
         <div class="sen-acts">${buttons}</div>
       </div>`;
@@ -970,13 +988,13 @@ AD.UI = {
     const note = this.el('press-note');
     if (result && result.action) {
       note.className = 'corr-note bought';
-      const verb = { attack: 'declared fake news', sue: 'served with a lawsuit',
-                     settle: 'bought onside', install: 'handed to a friend of the President' }[result.action.id];
-      note.innerHTML = `<b>${result.outlet.name} ${verb}.</b> ${result.action.blurb}`;
+      note.innerHTML = result.res
+        ? `<b>${AD.clean(result.res, this.settings.clean)}</b>`
+        : `<b>${result.outlet.name}.</b> ${result.action.blurb}`;
     } else {
       note.className = 'corr-note';
-      note.textContent = 'Sue them, buy them onside, or install a friend of the President in the editor\'s chair. ' +
-        'Friendly outlets soften the coverage every month; hostile ones dig in.';
+      note.textContent = 'Buy the ones with a price, but never sue a true believer, a weak suit is the best thing ' +
+        'that ever happened to them. When money will not work, install your own editor. The row hints at which is which.';
     }
 
     const order = run.press.slice().sort((a, b) => a.stance - b.stance);
@@ -984,15 +1002,18 @@ AD.UI = {
       const st = AD.pressStance(o);
       const buttons = AD.PRESS_ACTIONS.map(act => {
         const avail = AD.pressActionAvailable(run, o, act);
-        const cost = act.cost ? ` <em>$${act.cost}B</em>` : '';
+        const c = AD.pressCostFor(run, o, act);
+        const cost = c ? ` <em>${AD.fmtCash(c)}</em>` : '';
         const tip = avail.ok ? act.blurb : avail.reason;
         return `<button class="sen-act press-${act.id}" data-outlet="${o.id}" data-pressact="${act.id}" ${avail.ok ? '' : 'disabled'} title="${tip}">${act.icon} ${act.label}${cost}${avail.ok ? '' : ' <span class="act-lock">' + AD.reasonBadge(avail.reason) + '</span>'}</button>`;
       }).join('');
+      const tell = o.tell ? `<div class="sen-tell">${o.tell}</div>` : '';
       return `<div class="sen-row press-mood-${st.key}">
         <div class="sen-top"><span class="sen-dot"></span>
           <b>${o.name}</b><i>${o.type}${o.sued ? ' · sued' : ''}</i>
           <span class="sen-mood">${st.label}</span></div>
         <div class="sen-loywrap"><div class="sen-loy" style="width:${o.stance}%"></div></div>
+        ${tell}
         <div class="sen-acts">${buttons}</div>
       </div>`;
     }).join('');
@@ -1138,12 +1159,13 @@ AD.UI = {
     const note = this.el('courts-note');
     if (result && result.action) {
       note.className = 'corr-note bought';
-      const verb = { pressure: 'attacked from the podium', buy: 'quietly bought', sack: 'impeached and replaced with a loyalist' }[result.action.id];
-      note.innerHTML = `<b>${result.judge.name} ${verb}.</b> ${result.action.blurb}`;
+      note.innerHTML = result.res
+        ? `<b>${AD.clean(result.res, this.settings.clean)}</b>`
+        : `<b>${result.judge.name}.</b> ${result.action.blurb}`;
     } else {
       note.className = 'corr-note';
-      note.textContent = 'Pressure the judges, buy the affordable ones, or impeach a hostile one and pack the ' +
-        'seat with a loyalist. A favourable bench pushes the Courts meter up every month.';
+      note.textContent = 'Every judge answers differently. Pressure the nervous ones, buy the ones with a price, ' +
+        'and impeach the true believers, who will never fold. The row tells you what kind you are dealing with.';
     }
 
     const order = run.judges.slice().sort((a, b) => a.align - b.align);
@@ -1151,14 +1173,17 @@ AD.UI = {
       const st = AD.judgeStance(j);
       const buttons = AD.COURT_ACTIONS.map(act => {
         const avail = AD.courtActionAvailable(run, j, act);
-        const cost = act.cost ? ` <em>$${act.cost}B</em>` : '';
+        const c = AD.courtCostFor(run, j, act);
+        const cost = c ? ` <em>${AD.fmtCash(c)}</em>` : '';
         return `<button class="sen-act court-${act.id}" data-judge="${j.id}" data-courtact="${act.id}" ${avail.ok ? '' : 'disabled'} title="${avail.ok ? act.blurb : avail.reason}">${act.icon} ${act.label}${cost}${avail.ok ? '' : ' <span class="act-lock">' + AD.reasonBadge(avail.reason) + '</span>'}</button>`;
       }).join('');
+      const tell = j.tell ? `<div class="sen-tell">${j.tell}</div>` : '';
       return `<div class="sen-row court-mood-${st.key}">
         <div class="sen-top"><span class="sen-dot"></span>
           <b>${j.name}</b><i>${j.court}${j.appointee ? ' · appointed' : ''}</i>
           <span class="sen-mood">${st.label}</span></div>
         <div class="sen-loywrap"><div class="sen-loy court-loy" style="width:${j.align}%"></div></div>
+        ${tell}
         <div class="sen-acts">${buttons}</div>
       </div>`;
     }).join('');
@@ -1175,7 +1200,8 @@ AD.UI = {
     const note = this.el('rally-note');
     if (result && result.stunt) {
       note.className = 'corr-note bought';
-      note.innerHTML = `<b>${result.stunt.label}.</b> ${AD.clean(result.stunt.blurb, this.settings.clean)}`;
+      note.innerHTML = `<b>${result.stunt.label}.</b> ` +
+        (result.twist ? AD.clean(result.twist, this.settings.clean) : AD.clean(result.stunt.blurb, this.settings.clean));
     } else {
       note.className = 'corr-note';
       note.textContent = 'Give the base what it wants. Two spectacles a month. Every one thrills the movement ' +

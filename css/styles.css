@@ -94,7 +94,22 @@ body::before{
 .btn-ghost{background:transparent;text-align:center;color:var(--paper2)}
 .btn.danger{color:#e0857c;border-color:#4a2723}
 .btn.wide{text-align:center;margin-top:14px}
+/* The uniform close control injected into every management overlay (ui.js
+   installOverlayCloses). Anchored to the panel's top-right corner. */
+.overlay .panel, .overlay .sheet{position:relative}
+.ov-x{
+  position:absolute;top:10px;right:10px;width:34px;height:34px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(255,255,255,.06);border:1px solid var(--edge);color:var(--paper);
+  font-size:15px;line-height:1;cursor:pointer;padding:0;z-index:6;transition:var(--fx)
+}
+.ov-x:hover{border-color:var(--gold);background:rgba(255,255,255,.13);transform:none}
+.ov-x:active{transform:scale(.92)}
+
 .menu{display:flex;flex-direction:column;gap:9px;margin:18px 0}
+/* Resume Term carries a second line naming the term you would return to. */
+.menu .btn-lead{display:block;font-weight:700}
+.menu .btn small{display:block;font-size:11px;font-weight:500;opacity:.8;margin-top:3px;letter-spacing:.3px;text-transform:none}
 .icon-btn{
   background:none;border:1px solid var(--edge);color:var(--paper);
   width:38px;height:38px;border-radius:10px;font-size:16px;cursor:pointer;flex:0 0 auto;
@@ -694,6 +709,9 @@ body::before{
 .mood-wavering .sen-loy{background:#c98d3a}
 .mood-hostile .sen-loy{background:#3a6ea5}
 .sen-gripe{font-size:11px;color:var(--muted);font-style:italic;margin-bottom:7px}
+/* The temperament "tell" on a judge/senator/outlet row: a quiet read on how
+   they will take being handled, so the player has information without the maths. */
+.sen-tell{font-size:11px;color:var(--gold);opacity:.72;margin:-1px 0 7px;letter-spacing:.2px}
 .sen-acts{display:flex;gap:5px;flex-wrap:wrap}
 .sen-act{flex:1 1 calc(50% - 3px);min-width:0;padding:7px 6px;font:inherit;font-size:11.5px;
   border-radius:7px;border:1px solid var(--edge);background:var(--ink3);color:var(--paper2);
