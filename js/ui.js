@@ -1055,7 +1055,7 @@ AD.UI = {
       this.el('econ-list').innerHTML = AD.ECON_NATIONS.filter(n => AD.DIPLOMACY[n.id]).map(n => {
         const rel = AD.relations(run, n.id);
         const approaches = AD.DIPLOMACY[n.id].map((a, i) =>
-          `<button class="sen-act ${a.normal ? 'econ-normal' : 'econ-silly'}" data-summit="${i}" data-nation="${n.id}" ${dis}>${AD.clean(a.label, this.settings.clean)}</button>`).join('');
+          `<button class="sen-act ${a.insult ? 'econ-insult' : a.normal ? 'econ-normal' : 'econ-silly'}" data-summit="${i}" data-nation="${n.id}" ${dis} title="${a.insult ? 'A Trump-style insult. The base loves it; relations crater.' : ''}">${AD.clean(a.label, this.settings.clean)}</button>`).join('');
         return `<div class="sen-row econ-dip rel-${AD.relationLabel(rel).toLowerCase()}">
           <div class="sen-top"><span class="sen-dot"></span><b>${n.name}</b><i>${n.leader}</i>
             <span class="sen-mood">${AD.relationLabel(rel)}</span></div>

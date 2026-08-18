@@ -944,6 +944,9 @@ html[data-cb="on"] .fac.danger .fac-val{color:#93c5fd}
 .sen-act.econ-libday-btn{flex:1 1 100%;background:linear-gradient(#33280f,#241c09);border-color:#5c4a15;color:#e6cf7a;font-weight:600;letter-spacing:1px}
 .sen-act.econ-silly{border-color:#5a2030;background:linear-gradient(#2a1016,#1c0b0f);color:#e0a0a6}
 .sen-act.econ-normal{border-color:#2f5138;background:linear-gradient(#1d3325,#142519);color:#a8d4b0}
+.sen-act.econ-insult{border-color:#7a1620;background:linear-gradient(#3a0d13,#26080c);color:#f0a8ae;font-weight:600}
+.sen-act.econ-insult::before{content:"🗣️  ";font-weight:400}
+.sen-act.econ-insult:hover:not(:disabled){border-color:#d8323b;box-shadow:0 0 10px rgba(216,50,59,.25)}
 .sen-row.econ-dip.rel-warm{border-left-color:#4f9160}
 .sen-row.econ-dip.rel-friendly{border-left-color:#6d8f5e}
 .sen-row.econ-dip.rel-correct{border-left-color:var(--edge2)}
@@ -991,3 +994,9 @@ html[data-cb="on"] .fac.danger .fac-val{color:#93c5fd}
 /* ---------- "why is this disabled" lock hint on management buttons ---------- */
 .act-lock{font-size:9.5px;font-weight:700;opacity:.85;margin-left:2px;letter-spacing:.01em}
 .sen-act:disabled .act-lock{color:var(--gold-soft)}
+
+/* Diplomacy buttons carry whole sentences (the jokes are the point), so let
+   them wrap and read left-aligned instead of truncating to an ellipsis. */
+.econ-dip .sen-act{white-space:normal;text-align:left;line-height:1.32;
+  padding:9px 10px;min-height:44px;display:flex;align-items:center;text-overflow:clip}
+.econ-dip .sen-act.econ-insult::before{align-self:flex-start;margin-top:1px}
