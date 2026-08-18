@@ -25,7 +25,7 @@ AD.Tutorial = {
 
     { target: '#card', title: 'A crisis a month.',
       body: 'Somebody walks into your office with a problem. Forty-eight of these a term, ' +
-            'drawn from 342 hand-written crises, so no two administrations look alike.<br><br>' +
+            'drawn from 347 hand-written crises, so no two administrations look alike.<br><br>' +
             'Read who is talking. Deborah wants you to survive. Chet wants your job.' },
 
     { target: '#choices', title: 'Four ways out. Always.',
