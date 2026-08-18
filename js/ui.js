@@ -505,6 +505,19 @@ AD.UI = {
            <rect x="279" y="146" width="9" height="4" rx="2" transform="rotate(38 283 148)"/></g>
       </g>` : ''}
 
+      ${has('revisionism') ? `<g${on('revisionism')}>
+        <rect x="150" y="118" width="140" height="14" rx="1" fill="#7d6119"/>
+        <text x="220" y="128" text-anchor="middle" fill="#ffeeb0"
+              font-family="ui-serif, Georgia, serif" font-size="8" letter-spacing="1.5">THE CORRECTED RECORD</text>
+        <g fill="#3b3021" stroke="#7d6119" stroke-width="0.6">
+          <rect x="158" y="150" width="12" height="15"/><rect x="176" y="150" width="12" height="15"/>
+          <rect x="252" y="150" width="12" height="15"/><rect x="270" y="150" width="12" height="15"/>
+        </g>
+        <g stroke="#c0392b" stroke-width="1.4">
+          <path d="M159 151 L169 164 M169 151 L159 164"/><path d="M253 151 L263 164 M263 151 L253 164"/>
+        </g>
+      </g>` : ''}
+
       ${has('annexe') ? `<g${on('annexe')}>
         <rect x="6" y="158" width="32" height="18" fill="#4a4438"/>
         <polygon points="4,158 40,158 22,150" fill="#5d5646"/>
@@ -762,6 +775,43 @@ AD.UI = {
           <span class="sen-mood">${heat.label}</span></div>
         <div class="sen-loywrap"><div class="sen-loy street-loy" style="width:${c.unrest}%"></div></div>
         <div class="sen-acts">${buttons}</div>
+      </div>`;
+    }).join('');
+  },
+
+  /* ---------- the phone (calls) ---------- */
+  callTab: 'ally',
+  renderCall (result) {
+    const run = AD.Engine.run;
+    const left = AD.callsLeft(run);
+    const leftEl = this.el('call-left');
+    leftEl.textContent = left;
+    leftEl.className = left <= 0 ? 'hot' : '';
+
+    const note = this.el('call-note');
+    if (result && result.line) {
+      note.className = 'corr-note bought';
+      note.innerHTML = `<b>Calling ${result.target.name}.</b> ${AD.clean(result.line, this.settings.clean)}`;
+    } else {
+      note.className = 'corr-note';
+      note.textContent = 'Get somebody on the line and give them a piece of your mind. Pick who; pick what to say. ' +
+        'Two calls a month. Everything you say moves the ratings.';
+    }
+
+    const tabs = [['ally', 'Allies'], ['press', 'The Press'], ['enemy', 'Enemies']];
+    this.el('call-tabs').innerHTML = tabs.map(([k, lab]) =>
+      `<button class="sen-tab ${this.callTab === k ? 'on' : ''}" data-calltab="${k}">${lab}</button>`).join('');
+
+    const list = AD.CALL_BOOK.filter(t => t.cat === this.callTab);
+    const disabled = left <= 0 ? 'disabled' : '';
+    this.el('call-list').innerHTML = list.map(t => {
+      const buttons = AD.CALL_ACTIONS.map(a =>
+        `<button class="sen-act call-${a.id}" data-callwho="${t.id}" data-callsay="${a.id}" ${disabled} title="${a.label}">${a.icon} ${a.label}</button>`
+      ).join('');
+      return `<div class="sen-row call-cat-${t.cat}">
+        <div class="sen-top"><span class="sen-dot"></span>
+          <b>${t.name}</b><i>${t.note}</i></div>
+        <div class="sen-acts call-acts">${buttons}</div>
       </div>`;
     }).join('');
   },

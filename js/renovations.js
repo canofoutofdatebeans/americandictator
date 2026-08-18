@@ -142,6 +142,18 @@ AD.RENOS = [
     passive: { baseGain: 0.09 }
   },
   {
+    id: 'revisionism', cat: 'glory', name: 'The Corrected Record', cost: 1.45, upkeep: 0.020,
+    blurb: 'Rewrite the history on every wall to favour you and discredit the others.',
+    effect: '+7 Authority · Base +9 · Base gains +11%',
+    flavour: '"Every portrait now carries a corrected caption. Two predecessors are labelled ' +
+             '\'overrated\'; one is described only as \'a known loser, did NOTHING\'. The murals ' +
+             'have been repainted so that you are visible, faintly, in the background of the ' +
+             'founding. Four historical societies have written. All four letters are framed."',
+    auth: 7, buy: { base: 9, press: -10, courts: -7, congress: -5, street: -4 },
+    passive: { baseGain: 0.11 },
+    req: r => (r.renos || []).length >= 1
+  },
+  {
     id: 'flame', cat: 'glory', name: 'The Eternal Flame', cost: 0.75, upkeep: 0.022,
     blurb: 'A permanent gas flame on the roof, burning in the shape of your monogram.',
     effect: '+6 Authority · Base +6 · +1 Base every month',

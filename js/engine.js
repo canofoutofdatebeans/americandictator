@@ -420,6 +420,7 @@ AD.Engine = {
     this.lastSenate = AD.senateTick(run);
     this.lastPress = AD.pressTick(run);
     this.lastStreet = AD.streetTick(run);
+    AD.callTick(run);   // refill the monthly phone allowance
     // A story hot enough to leak does damage without needing a card.
     this.lastLeak = AD.cayTick(run);
 

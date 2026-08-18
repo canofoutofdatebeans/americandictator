@@ -719,3 +719,18 @@ body::before{
 .sen-act.street-sweep{border-color:#6a1a22;background:linear-gradient(#33101a,#220a10);color:#f0b0b6}
 .sen-act.street-force{border-color:#5a2030;background:linear-gradient(#2a1016,#1c0b0f);color:#e0a0a6}
 .sen-act.street-negotiate{border-color:#2f5138;background:linear-gradient(#1d3325,#142519);color:#a8d4b0}
+
+/* ---------- the phone (calls) ---------- */
+.chip-row{flex-wrap:wrap}
+.chip-row .const-chip{flex:1 1 calc(50% - 4px)}
+.call-chip:hover{border-color:var(--gold)}
+.call-chip.started b,.call-chip b{color:var(--gold-soft)}
+#call-left.hot{color:var(--red-hot)}
+.call-acts{gap:5px}
+.call-acts .sen-act{flex:1 1 calc(33% - 4px)}
+.sen-row.call-cat-ally{border-left-color:#4f9160}
+.sen-row.call-cat-press{border-left-color:#3a6ea5}
+.sen-row.call-cat-enemy{border-left-color:var(--red-hot)}
+.sen-act.call-losers{border-color:#5a2030;background:linear-gradient(#2a1016,#1c0b0f);color:#e0a0a6}
+.sen-act.call-admire{border-color:#2f5138;background:linear-gradient(#1d3325,#142519);color:#a8d4b0}
+.sen-act.call-greatness{border-color:#5c4a15;background:linear-gradient(#33280f,#241c09);color:#e6cf7a}

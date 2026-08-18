@@ -290,6 +290,18 @@ AD.Game = {
   },
 
   /* ---------- the residence ---------- */
+  makeCall (targetId, actionId) {
+    const run = AD.Engine.run;
+    if (!run || run.over) return;
+    const r = AD.doCall(run, targetId, actionId);
+    if (!r.ok) return;
+    AD.saveRun(run);
+    AD.Audio.play(actionId === 'losers' || actionId === 'complain' ? 'bad' : actionId === 'admire' ? 'good' : 'stamp');
+    AD.UI.renderCall(r); AD.UI.renderHUD();
+    const collapse = AD.Engine.checkCollapse();
+    if (collapse.ending) { AD.Engine.finish(collapse.ending); this.pending = []; setTimeout(() => this.showEnding(AD.Engine.lastScore), 900); }
+  },
+
   pressAction (outletId, actionId) {
     const run = AD.Engine.run;
     if (!run || run.over) return;
@@ -410,6 +422,12 @@ AD.Game = {
       const streetact = e.target.closest('[data-streetact]');
       if (streetact && !streetact.disabled) { this.streetAction(streetact.dataset.city, streetact.dataset.streetact); return; }
 
+      const calltab = e.target.closest('[data-calltab]');
+      if (calltab) { AD.UI.callTab = calltab.dataset.calltab; AD.UI.renderCall(); return; }
+
+      const callsay = e.target.closest('[data-callsay]');
+      if (callsay && !callsay.disabled) { this.makeCall(callsay.dataset.callwho, callsay.dataset.callsay); return; }
+
       const act = e.target.closest('[data-act]');
       if (act) this.act(act.dataset.act);
     });
@@ -502,6 +520,14 @@ AD.Game = {
         U.stopTimer(); U.renderStreet(); U.overlay('street', true); break;
       case 'street-close':
         U.overlay('street', false);
+        if (AD.Engine.card && !U.el('card').hidden) U.startTimer(AD.Engine.card);
+        break;
+
+      case 'call':
+        if (U.current !== 'game' || !AD.Engine.run || AD.Engine.run.over) break;
+        U.stopTimer(); U.renderCall(); U.overlay('call', true); break;
+      case 'call-close':
+        U.overlay('call', false);
         if (AD.Engine.card && !U.el('card').hidden) U.startTimer(AD.Engine.card);
         break;
 
