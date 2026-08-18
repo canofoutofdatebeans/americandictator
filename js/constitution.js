@@ -6,7 +6,7 @@
    so no single unlucky draw can lock you out of the set.
 
    Breaking a clause pays SCORE. Breaking ALL SIXTEEN triggers the
-   completion payment: a lump sum per clause, wired from Rusalka,
+   completion payment: a lump sum per clause, wired from Russia,
    with a note. Nobody asked them to send it. That is the joke —
    the money arrives unbidden, itemised, from a government that has
    been keeping better score than you have.
@@ -90,7 +90,7 @@ AD.recordBreach = function (run, ids) {
 
   const out = { fresh, complete: false, bounty: 0 };
 
-  /* THE FULL SET. Rusalka has been keeping score and settles up. */
+  /* THE FULL SET. Russia has been keeping score and settles up. */
   if (AD.allClausesBroken(run) && !run.flags.rusalka) {
     run.flags.rusalka = true;
     out.complete = true;

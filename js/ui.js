@@ -87,6 +87,7 @@ AD.UI = {
 
     const pico = this.el('ico-phone'); if (pico && !pico.innerHTML) pico.innerHTML = AD.icon('phone');
     const wico = this.el('ico-war');   if (wico && !wico.innerHTML) wico.innerHTML = AD.icon('war');
+    const eico = this.el('ico-econ');  if (eico && !eico.innerHTML) eico.innerHTML = AD.icon('economy');
     const chip = this.el('const-chip');
     const cn = AD.clauseCount(run);
     chip.innerHTML = '<span class="chip-ico">' + AD.icon('constitution') + '</span>THE CONSTITUTION <b>' + cn + '/' + AD.CLAUSES.length + '</b>';
@@ -336,13 +337,13 @@ AD.UI = {
     const note = this.el('const-note');
     if (AD.allClausesBroken(run)) {
       note.className = 'const-note complete';
-      note.innerHTML = '<b>The full set.</b> Rusalka has settled up — ' +
+      note.innerHTML = '<b>The full set.</b> Russia has settled up — ' +
         '$' + (total * AD.CLAUSE_BOUNTY).toFixed(2) + 'B, itemised by clause, ' +
         'through four intermediary banks. Nobody asked them to.';
     } else {
       note.className = 'const-note';
       note.textContent = `Each clause broken is worth ${AD.CLAUSE_SCORE} score. ` +
-        `Break all ${total} and an unbidden payment arrives from Rusalka — ` +
+        `Break all ${total} and an unbidden payment arrives from Russia — ` +
         `$${AD.CLAUSE_BOUNTY.toFixed(2)}B for every one of them.`;
     }
 
@@ -754,7 +755,7 @@ AD.UI = {
     const note = this.el('press-note');
     if (result && result.action) {
       note.className = 'corr-note bought';
-      const verb = { attack: 'branded an enemy of the people', sue: 'served with a lawsuit',
+      const verb = { attack: 'declared fake news', sue: 'served with a lawsuit',
                      settle: 'bought onside', install: 'handed to a friend of the President' }[result.action.id];
       note.innerHTML = `<b>${result.outlet.name} ${verb}.</b> ${result.action.blurb}`;
     } else {
@@ -977,6 +978,64 @@ AD.UI = {
         <div class="sen-acts"><button class="sen-act rally-do" data-stunt="${sn.id}" ${dis}>Do It</button></div>
       </div>`;
     }).join('');
+  },
+
+  /* ---------- the economy (tariffs + diplomacy) ---------- */
+  econTab: 'tariffs',
+  renderEconomy (result) {
+    const run = AD.Engine.run;
+    AD.ensureEconomy(run);
+    const tabs = [['tariffs', 'Tariffs'], ['diplomacy', 'Diplomacy']];
+    this.el('econ-tabs').innerHTML = tabs.map(([k, lab]) =>
+      `<button class="sen-tab ${this.econTab === k ? 'on' : ''}" data-econtab="${k}">${lab}</button>`).join('');
+
+    const note = this.el('econ-note');
+    if (result && result.line) { note.className = 'corr-note bought'; note.innerHTML = result.line; }
+    else { note.className = 'corr-note'; note.textContent = this.econTab === 'tariffs'
+      ? 'Tariffs feel like winning: an instant surge for the base. Then, a couple of months later, they backfire. Raise one for a bigger spike and a worse crash; lift it to dodge the crash and look like you caved.'
+      : 'Pick a leader and pick your approach. The bombastic plays thrill the base and horrify everyone else; the one normal option is dull and actually works. Good relations soften that country\u2019s tariff backfire.'; }
+
+    if (this.econTab === 'tariffs') {
+      const active = (run.tariffs || []).length;
+      this.el('econ-head').innerHTML =
+        `<div class="corr-cash">Tariffs Active <b>${active}</b></div>` +
+        `<div>Market <b class="${active >= 3 ? 'hot' : ''}">${active >= 3 ? 'Shaking' : active ? 'Nervy' : 'Calm'}</b></div>`;
+      const rows = AD.ECON_NATIONS.map(n => {
+        const t = AD.tariffOn(run, n.id);
+        const rel = AD.relations(run, n.id);
+        let status = 'No tariff';
+        if (t) status = t.fired ? 'In effect (backfired)' : 'Fuse lit \u00b7 rate ' + t.rate;
+        const buttons = t
+          ? (t.fired
+              ? `<button class="sen-act econ-lift" data-econtariff="lift" data-nation="${n.id}">Lift the tariff</button>`
+              : `<button class="sen-act econ-raise" data-econtariff="raise" data-nation="${n.id}">Double Down</button>
+                 <button class="sen-act econ-lift" data-econtariff="lift" data-nation="${n.id}">Back Off</button>`)
+          : `<button class="sen-act econ-impose" data-econtariff="impose" data-nation="${n.id}">Impose Tariff</button>`;
+        return `<div class="sen-row econ-row ${t && !t.fired ? 'lit' : t ? 'fired' : ''}">
+          <div class="sen-top"><span class="sen-dot"></span><b>${n.name}</b><i>${n.blurb}</i>
+            <span class="sen-mood">${status}</span></div>
+          <div class="sen-acts">${buttons}</div></div>`;
+      }).join('');
+      const libday = `<div class="sen-row econ-libday"><div class="sen-top"><b>\ud83c\uddfa\ud83c\uddf8 Liberation Day</b>
+        <i>Tariff the entire world at once</i></div>
+        <div class="sen-acts"><button class="sen-act econ-libday-btn" data-econtariff="libday" data-nation="all">Tariff Everyone</button></div></div>`;
+      this.el('econ-list').innerHTML = libday + rows;
+    } else {
+      const left = AD.summitsLeft(run);
+      this.el('econ-head').innerHTML =
+        `<div class="corr-cash">Summits Left <b class="${left <= 0 ? 'hot' : ''}">${left}</b></div>` +
+        `<div>This Month <b>Diplomacy</b></div>`;
+      const dis = left <= 0 ? 'disabled' : '';
+      this.el('econ-list').innerHTML = AD.ECON_NATIONS.filter(n => AD.DIPLOMACY[n.id]).map(n => {
+        const rel = AD.relations(run, n.id);
+        const approaches = AD.DIPLOMACY[n.id].map((a, i) =>
+          `<button class="sen-act ${a.normal ? 'econ-normal' : 'econ-silly'}" data-summit="${i}" data-nation="${n.id}" ${dis}>${AD.clean(a.label, this.settings.clean)}</button>`).join('');
+        return `<div class="sen-row econ-dip rel-${AD.relationLabel(rel).toLowerCase()}">
+          <div class="sen-top"><span class="sen-dot"></span><b>${n.name}</b><i>${n.leader}</i>
+            <span class="sen-mood">${AD.relationLabel(rel)}</span></div>
+          <div class="sen-acts">${approaches}</div></div>`;
+      }).join('');
+    }
   },
 
   /* ---------- crisis log ---------- */

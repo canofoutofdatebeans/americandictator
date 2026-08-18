@@ -28,7 +28,9 @@ AD.ICON = {
   phone:                                           // a classic handset
     '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6.6 3.3c.6-.3 1.3-.1 1.6.5l1.3 2.5c.3.6.2 1.3-.3 1.7l-1 .9c.9 1.9 2.5 3.5 4.4 4.4l.9-1c.4-.5 1.1-.6 1.7-.3l2.5 1.3c.6.3.8 1 .5 1.6l-1 2c-.3.6-1 .9-1.6.8C9.7 20.6 3.4 14.3 3.7 6.9c0-.7.3-1.3.9-1.6Z"/></svg>',
   war:                                             // crossed sabres
-    '<svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M4 4l10 10M20 4L10 14"/><path d="M13 15l-2 2 1.5 1.5M11 15l2 2-1.5 1.5"/><path d="M5 6 4 4l2 1M19 6l1-2-2 1"/></g></svg>'
+    '<svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M4 4l10 10M20 4L10 14"/><path d="M13 15l-2 2 1.5 1.5M11 15l2 2-1.5 1.5"/><path d="M5 6 4 4l2 1M19 6l1-2-2 1"/></g></svg>',
+  economy:                                         // a chart with a turning trend
+    '<svg viewBox="0 0 24 24" aria-hidden="true"><g stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16"/><path d="M4 20V4"/><path d="M7 16l4-4 3 2 4-6"/><path d="M18 12h-2m2 0v2"/></g></svg>'
 };
 
 AD.icon = k => AD.ICON[k] || '';

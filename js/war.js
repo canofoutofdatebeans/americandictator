@@ -27,14 +27,14 @@
 /* Fictional targets. strength 0-3 (0 = uninhabited joke), loot = cash on
    victory (higher for the resource-rich). */
 AD.WAR_TARGETS = [
-  { id: 'cathay',   name: 'Cathay',            leader: 'Chairman Chen',   strength: 3, loot: 0.6, blurb: 'A great power. Very tough. Everybody says it.' },
-  { id: 'glacia',   name: 'Glacia',            leader: 'Premier Ostrov',  strength: 3, loot: 0.5, blurb: 'Cold, enormous, and not a friend.' },
-  { id: 'qadira',   name: 'Qadira',            leader: 'the Emir',        strength: 2, loot: 1.2, blurb: 'Sitting on an ocean of oil. Weak army.' },
-  { id: 'ukrania',  name: 'Ukrania',           leader: 'President Bohdan', strength: 2, loot: 0.4, blurb: 'Contested borders, a lot of grain.' },
-  { id: 'hermit',   name: 'The Hermit Republic',leader: 'the Supreme Guide',strength: 2, loot: 0.3, blurb: 'Isolated, unpredictable, missiles.' },
-  { id: 'baldoro',  name: 'San Baldoro',       leader: 'President Marchetti',strength: 1, loot: 0.5, blurb: 'Small, sunny, a lot of nice hotels.' },
-  { id: 'northland',name: 'Northland',         leader: 'Prime Minister Aas',strength: 1, loot: 0.7, blurb: 'Peaceful, rich, owns an autonomous territory you want.' },
-  { id: 'penguin',  name: 'the Penguin Islands',leader: 'no one',         strength: 0, loot: 0.1, blurb: 'Uninhabited. Population: penguins. Zero army.' }
+  { id: 'cathay',   name: 'China',            leader: 'Chairman Chen',   strength: 3, loot: 0.6, blurb: 'A great power. Very tough. Everybody says it.' },
+  { id: 'glacia',   name: 'Iran',            leader: 'Premier Ostrov',  strength: 3, loot: 0.5, blurb: 'Sanctioned, defiant, and not a friend.' },
+  { id: 'qadira',   name: 'Qatar',            leader: 'the Emir',        strength: 2, loot: 1.2, blurb: 'Sitting on an ocean of oil. Weak army.' },
+  { id: 'ukrania',  name: 'Ukraine',           leader: 'President Bohdan', strength: 2, loot: 0.4, blurb: 'Contested borders, a lot of grain.' },
+  { id: 'hermit',   name: 'North Korea',leader: 'the Supreme Guide',strength: 2, loot: 0.3, blurb: 'Isolated, unpredictable, missiles.' },
+  { id: 'baldoro',  name: 'Panama',       leader: 'President Marchetti',strength: 1, loot: 0.5, blurb: 'Small, sunny, a lot of nice hotels.' },
+  { id: 'northland',name: 'Canada',         leader: 'Prime Minister Aas',strength: 1, loot: 0.7, blurb: 'Peaceful, rich, owns an autonomous territory you want.' },
+  { id: 'penguin',  name: 'the Heard Islands',leader: 'no one',         strength: 0, loot: 0.1, blurb: 'Uninhabited. Population: penguins. Zero army.' }
 ];
 
 AD.warTargetById = id => AD.WAR_TARGETS.find(t => t.id === id);

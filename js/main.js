@@ -263,6 +263,15 @@ AD.Game = {
         : { head: 'QUAGMIRE', sub: 'The war in ' + w.target.name + ' turns; the street turns with it', body: w.res });
       AD.Engine.lastWar = null;
     }
+    else if (AD.Engine.lastEcon && AD.Engine.lastEcon.backfires.length) {
+      const bf = AD.Engine.lastEcon;
+      AD.UI.showTabloid(bf.crash
+        ? { head: 'THE MARKET CRACKS', sub: 'The tariffs land at once; worst week for stocks since the pandemic',
+            body: 'Everything you tariffed retaliated in the same fortnight. Retirement accounts evaporated, the price of everything rose, and the base is furious in a way it cannot articulate. It felt, at the time, like winning.' }
+        : { head: 'IT BACKFIRED', sub: 'The tariff on ' + bf.backfires[0].nation.name + ' comes home',
+            body: 'The retaliation has arrived: ' + bf.backfires[0].hit + ' The tariff felt like strength for exactly as long as it took to land.' });
+      AD.Engine.lastEcon = null;
+    }
     const leak = AD.Engine.lastLeak;
     AD.UI.showLeak(leak && leak.leak);
     if (leak && leak.leak) AD.Audio.play('bad');
@@ -320,6 +329,46 @@ AD.Game = {
     AD.saveRun(run);
     AD.Audio.play(actionId === 'sack' ? 'stamp' : actionId === 'buy' ? 'money' : 'bad');
     AD.UI.renderCourts(r); AD.UI.renderHUD();
+    const collapse = AD.Engine.checkCollapse();
+    if (collapse.ending) { AD.Engine.finish(collapse.ending); this.pending = []; setTimeout(() => this.showEnding(AD.Engine.lastScore), 900); }
+  },
+
+  econTariff (action, nationId) {
+    const run = AD.Engine.run;
+    if (!run || run.over) return;
+    let r;
+    if (action === 'impose') r = AD.imposeTariff(run, nationId);
+    else if (action === 'raise') r = AD.raiseTariff(run, nationId);
+    else if (action === 'lift') r = AD.liftTariff(run, nationId);
+    else if (action === 'libday') r = AD.liberationDay(run);
+    if (!r || !r.ok) return;
+    AD.saveRun(run);
+    AD.Audio.play(action === 'libday' ? 'tabloid' : action === 'lift' ? 'good' : 'bad');
+    const line = action === 'libday'
+        ? '<b>Liberation Day.</b> You have tariffed the entire world at once. The base has never been happier. The bill arrives in a couple of months.'
+      : action === 'impose'
+        ? '<b>Tariff imposed on ' + r.nation.name + '.</b> It feels like winning. In a couple of months it will not.'
+      : action === 'raise'
+        ? '<b>Doubling down on ' + r.nation.name + '.</b> A bigger spike now, a worse crash sooner.'
+      : r.caved
+        ? '<b>Backed off ' + r.nation.name + '.</b> You dodged the crash — and the base watched you cave.'
+        : '<b>Lifted the tariff on ' + r.nation.name + '.</b> Quiet de-escalation.';
+    AD.UI.renderEconomy({ line });
+    AD.UI.renderHUD();
+    const collapse = AD.Engine.checkCollapse();
+    if (collapse.ending) { AD.Engine.finish(collapse.ending); this.pending = []; setTimeout(() => this.showEnding(AD.Engine.lastScore), 900); }
+  },
+
+  econSummit (nationId, index) {
+    const run = AD.Engine.run;
+    if (!run || run.over) return;
+    const r = AD.doSummit(run, nationId, index);
+    if (!r || !r.ok) return;
+    AD.saveRun(run);
+    AD.Audio.play(r.approach.normal ? 'good' : 'stamp');
+    const line = '<b>' + r.nation.leader + ':</b> ' + AD.clean(r.approach.res, AD.UI.settings.clean);
+    AD.UI.renderEconomy({ line });
+    AD.UI.renderHUD();
     const collapse = AD.Engine.checkCollapse();
     if (collapse.ending) { AD.Engine.finish(collapse.ending); this.pending = []; setTimeout(() => this.showEnding(AD.Engine.lastScore), 900); }
   },
@@ -505,6 +554,15 @@ AD.Game = {
       const stunt = e.target.closest('[data-stunt]');
       if (stunt && !stunt.disabled) { this.doRally(stunt.dataset.stunt); return; }
 
+      const econtab = e.target.closest('[data-econtab]');
+      if (econtab) { AD.UI.econTab = econtab.dataset.econtab; AD.UI.renderEconomy(); return; }
+
+      const econtariff = e.target.closest('[data-econtariff]');
+      if (econtariff && !econtariff.disabled) { this.econTariff(econtariff.dataset.econtariff, econtariff.dataset.nation); return; }
+
+      const summit = e.target.closest('[data-summit]');
+      if (summit && !summit.disabled) { this.econSummit(summit.dataset.nation, +summit.dataset.summit); return; }
+
       const act = e.target.closest('[data-act]');
       if (act) this.act(act.dataset.act);
     });
@@ -629,6 +687,14 @@ AD.Game = {
         U.stopTimer(); U.renderBasepop(); U.overlay('basepop', true); break;
       case 'basepop-close':
         U.overlay('basepop', false);
+        if (AD.Engine.card && !U.el('card').hidden) U.startTimer(AD.Engine.card);
+        break;
+
+      case 'economy':
+        if (U.current !== 'game' || !AD.Engine.run || AD.Engine.run.over) break;
+        U.stopTimer(); U.renderEconomy(); U.overlay('economy', true); break;
+      case 'economy-close':
+        U.overlay('economy', false);
         if (AD.Engine.card && !U.el('card').hidden) U.startTimer(AD.Engine.card);
         break;
 

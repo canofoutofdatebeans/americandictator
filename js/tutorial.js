@@ -62,7 +62,7 @@ AD.Tutorial = {
 
     { target: '#const-chip', title: 'The Constitution is a scoreboard.',
       body: 'Sixteen clauses. Certain choices break one, and each is worth score.<br><br>' +
-            'Break <b>all sixteen</b> and an unbidden payment arrives from Rusalka — itemised by clause, ' +
+            'Break <b>all sixteen</b> and an unbidden payment arrives from Russia — itemised by clause, ' +
             'through four intermediary banks, with a note. Tap here any time to see the ledger.' },
 
     { target: '#hud-cash', title: 'And the money.',

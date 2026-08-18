@@ -74,7 +74,7 @@ AD.pressSummary = function (run) {
 /* ---------- the actions --------------------------------------------------- */
 AD.PRESS_ACTIONS = [
   {
-    id: 'attack', label: 'Enemy of the People', icon: '📢',
+    id: 'attack', label: 'Declare Fake News', icon: '📢',
     blurb: 'Call them out by name. The base roars; the newsroom digs in.',
     can: () => true,
     run (run, o) {

@@ -930,3 +930,22 @@ html[data-cb="on"] .fac.danger .fac-val{color:#93c5fd}
 /* A quiet caption so the empty slots explain themselves */
 .pillar-cap{font-size:8px;letter-spacing:2.4px;color:#4a5573;text-transform:uppercase;
   margin:8px 0 -2px;text-align:center}
+
+/* ---------- the economy (tariffs + diplomacy) ---------- */
+.econ-chip:hover{border-color:var(--gold)}
+#econ-head b.hot{color:var(--red-hot)}
+.sen-row.econ-row.lit{border-left-color:#c98d3a;background:#1c1710}
+.sen-row.econ-row.fired{border-left-color:#c0392b}
+.sen-row.econ-libday{border-left-color:var(--gold);background:linear-gradient(180deg,#1c1608,#12100a)}
+.econ-libday .sen-top b{color:var(--gold-soft)}
+.sen-act.econ-impose{border-color:#5a2030;background:linear-gradient(#2a1016,#1c0b0f);color:#e0a0a6}
+.sen-act.econ-raise{border-color:#6a1a22;background:linear-gradient(#33101a,#220a10);color:#f0b0b6}
+.sen-act.econ-lift{border-color:#2f5138;background:linear-gradient(#1d3325,#142519);color:#a8d4b0}
+.sen-act.econ-libday-btn{flex:1 1 100%;background:linear-gradient(#33280f,#241c09);border-color:#5c4a15;color:#e6cf7a;font-weight:600;letter-spacing:1px}
+.sen-act.econ-silly{border-color:#5a2030;background:linear-gradient(#2a1016,#1c0b0f);color:#e0a0a6}
+.sen-act.econ-normal{border-color:#2f5138;background:linear-gradient(#1d3325,#142519);color:#a8d4b0}
+.sen-row.econ-dip.rel-warm{border-left-color:#4f9160}
+.sen-row.econ-dip.rel-friendly{border-left-color:#6d8f5e}
+.sen-row.econ-dip.rel-correct{border-left-color:var(--edge2)}
+.sen-row.econ-dip.rel-frosty{border-left-color:#c98d3a}
+.sen-row.econ-dip.rel-hostile{border-left-color:#c0392b}

@@ -82,7 +82,7 @@ AD.buildDossier = function (score) {
 
   if (s.clausesBroken > 0) {
     paras.push('Broke ' + s.clausesBroken + ' of ' + AD.CLAUSES.length + ' constitutional clauses' +
-      (s.fullSet ? ' — the full set — and collected the bounty from Rusalka in four instalments.' : '.'));
+      (s.fullSet ? ' — the full set — and collected the bounty from Russia in four instalments.' : '.'));
   }
 
   paras.push(win

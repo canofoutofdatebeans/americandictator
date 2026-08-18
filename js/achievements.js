@@ -93,7 +93,7 @@ AD.ACHIEVEMENTS = [
     test: r => (r.clauses || []).length >= 8 },
 
   { id: 'full-constitution', name: 'The Complete Set',
-    desc: 'Break every clause in the ledger and collect from Rusalka.',
+    desc: 'Break every clause in the ledger and collect from Russia.',
     secret: true, test: r => AD.allClausesBroken(r) },
 
   { id: 'constitutionalist', name: 'Read It Once', desc: 'Finish a full term without breaking a single clause.',

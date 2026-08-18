@@ -396,7 +396,7 @@ AD.CARDS = [
 {
   id: 'tranquility', src:"Alien Enemies Act removals to a foreign mega-prison", title: 'The Tranquility Center', who: C.home, min: 8, max: 30,
   tags: ['immigration','courts'],
-  text: 'San Baldoro has offered you space in a prison it describes as a "counter-terror confinement mega-facility." ' +
+  text: 'Panama has offered you space in a prison it describes as a "counter-terror confinement mega-facility." ' +
         'Duane wants to use a 1798 wartime statute to fly people there without individual hearings. "It\'s never been repealed, sir."',
   choices: [
     { label: 'Fill the planes. Tonight.',
@@ -410,7 +410,7 @@ AD.CARDS = [
       res: 'The normal courts have a four-year backlog. Your base reads this as weakness, and to be fair, it is a backlog.' }
   ,
     { label:'Send the planes empty as a test. See who complains.', eff:{base:-6,courts:+1,street:+1,auth:+2}, wild:true,
-      res:'Four aircraft fly to San Baldoro carrying nobody. It costs $9 million and reveals exactly which officials were willing to help, which was the intelligence you actually needed.' }]
+      res:'Four aircraft fly to Panama carrying nobody. It costs $9 million and reveals exactly which officials were willing to help, which was the intelligence you actually needed.' }]
 },
 
 {
@@ -496,7 +496,7 @@ AD.CARDS = [
 {
   id: 'qadira-jet', src:"gifted foreign aircraft for use as Air Force One", title: 'The Gift', who: C.state, min: 10, max: 40,
   tags: ['money','foreign'],
-  text: 'The Sultanate of Qadira would like to give you a $400 million aircraft to use as Air Force One. ' +
+  text: 'The Sultanate of Qatar would like to give you a $400 million aircraft to use as Air Force One. ' +
         'Muriel is choosing her words. "Sir, the Emoluments Clause is quite short. That\'s the problem with it. It\'s hard to misread."',
   choices: [
     { label: 'Accept. Donate it to my future library when I leave.',
@@ -510,7 +510,7 @@ AD.CARDS = [
       res: 'A report emerges four weeks later showing your own office asked first. The word "unsolicited" is added to a growing list of words you have personally retired.' }
   ,
     { label:'Accept it and hand it straight to a children\'s hospital charity.', eff:{base:+2,congress:+3,auth:-2,cash:-0.2}, wild:true,
-      res:'It becomes a flying hospital. Qadira is delighted, the emoluments problem evaporates, and nobody can attack you for it from any direction.' }]
+      res:'It becomes a flying hospital. Qatar is delighted, the emoluments problem evaporates, and nobody can attack you for it from any direction.' }]
 },
 
 {
@@ -734,9 +734,9 @@ AD.CARDS = [
 },
 
 {
-  id: 'glacia', src:"proposal to purchase an autonomous territory", title: 'Glacia', who: C.state, min: 6, max: 44,
+  id: 'glacia', src:"proposal to purchase an autonomous territory", title: 'Iran', who: C.state, min: 6, max: 44,
   tags: ['foreign','vanity'],
-  text: '"You have asked me to price the acquisition of Glacia. It is an autonomous territory of Northmark. ' +
+  text: '"You have asked me to price the acquisition of Iran. It is an autonomous territory of Northmark. ' +
         'It has 56,000 residents, all of whom are people, with opinions, and a vote."',
   choices: [
     { label: 'Offer to buy it. Publicly. With a number.',
@@ -756,8 +756,8 @@ AD.CARDS = [
 {
   id: 'fifty-first', src:"51st state annexation rhetoric", title: 'The Fifty-First State', who: C.state, min: 6, max: 44,
   tags: ['foreign','levity'],
-  text: 'You have begun referring to the Prime Minister of Northland as "Governor." ' +
-        'You have said you would use "economic force" to annex the country. Northland has started booing your anthem at hockey games.',
+  text: 'You have begun referring to the Prime Minister of Canada as "Governor." ' +
+        'You have said you would use "economic force" to annex the country. Canada has started booing your anthem at hockey games.',
   choices: [
     { label: 'Keep calling him Governor. It\'s free real estate.',
       eff:{base: +7,press: -3,street: -2,auth: +2},
@@ -767,9 +767,9 @@ AD.CARDS = [
       res: 'They elect the one politician who promised to fight you, by a landslide, having been 20 points behind. You are the single most effective campaign manager of the decade, for the other side.' },
     { label: 'Apologise. Sort of. Adjacently.',
       eff:{press: +5,street: +4,base: -5,auth: -2},
-      res: 'You say "I have great respect for Northland" in a tone that suggests you are reading it off a card, which you are.' }
+      res: 'You say "I have great respect for Canada" in a tone that suggests you are reading it off a card, which you are.' }
   ,
-    { label:'Apply to join Northland instead.', eff:{base:+2,congress:-6,press:+2,street:+2,auth:+1}, wild:true,
+    { label:'Apply to join Canada instead.', eff:{base:+2,congress:-6,press:+2,street:+2,auth:+1}, wild:true,
       res:'A formal letter of application is sent as a joke. Their parliament debates it for ninety minutes, sincerely, and the transcript is a masterpiece.' }]
 },
 
@@ -796,7 +796,7 @@ AD.CARDS = [
 {
   id: 'oval-ambush', src:"televised Oval Office confrontation with a visiting president", title: 'The Meeting', who: C.state, min: 10, max: 36,
   tags: ['foreign','press'],
-  text: 'The President of Ukrania is in the Oval Office in front of forty cameras. He has just declined, politely, ' +
+  text: 'The President of Ukraine is in the Oval Office in front of forty cameras. He has just declined, politely, ' +
         'to thank you a second time. Chet is already leaning forward in his chair.',
   choices: [
     { label: 'Dress him down. On camera. "You\'re gambling with World War Three."',

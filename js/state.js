@@ -244,6 +244,8 @@ AD.newRun = function (opts) {
     streets: [],                // the cities and their unrest — see street.js
     wars: [],                   // ongoing wars — see war.js
     judges: [],                 // the bench — see courts.js
+    tariffs: [],                // active tariffs — see economy.js
+    relations: {},              // diplomacy standing by nation — see economy.js
     clauses: [],                // constitutional clauses broken — see constitution.js
     stats: { grabs: 0, restraints: 0, timeouts: 0, peakCash: d.startCash, briefings: 0, bought: 0, built: 0 },
     over: false,

@@ -37,6 +37,8 @@ AD.Engine = {
     if (!run.streets || !run.streets.length) run.streets = AD.makeStreet(); // pre-street saves
     if (!run.wars) run.wars = [];           // pre-war saves
     if (!run.judges || !run.judges.length) run.judges = AD.makeCourts(); // pre-courts saves
+    if (!run.tariffs) run.tariffs = [];      // pre-economy saves
+    if (!run.relations) run.relations = {};
 
     this.run = run;
     this.card = null;
@@ -209,7 +211,7 @@ AD.Engine = {
         out.breach = b;
         if (b.complete) {
           out.deltas.cash = (out.deltas.cash || 0) + b.bounty;
-          out.tabloid = b.tabloid;               // Rusalka settles up
+          out.tabloid = b.tabloid;               // Russia settles up
         }
       }
     }
@@ -467,6 +469,8 @@ AD.Engine = {
     });
     AD.callTick(run);   // refill the monthly phone allowance
     AD.rallyTick(run);  // refill the monthly rally allowance
+    AD.summitTick(run); // refill the monthly summit allowance
+    this.lastEcon = AD.economyTick(run);  // matured tariffs backfire
     this.lastWar = AD.warTick(run);   // ongoing wars resolve into victory or quagmire
     // A story hot enough to leak does damage without needing a card.
     this.lastLeak = AD.cayTick(run);

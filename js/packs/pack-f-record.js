@@ -405,7 +405,7 @@ AD.CARDS.push(
 
 { id:'f-fell-in-love', title:'The Letters', who:C.spy, min:12, max:42, tags:['foreign','press'],
   src:'unusually warm public praise for an authoritarian counterpart',
-  text:'Hance has the file. The letters from the Hermit Republic are, in his professional assessment, ' +
+  text:'Hance has the file. The letters from North Korea are, in his professional assessment, ' +
        '"drafted by a committee to flatter a specific individual." You have described them as beautiful.',
   choices:[
     { label:'Say you fell in love. Out loud. At a rally.', eff:{base:+6,street:-8,press:-5,congress:-8,courts:-4,auth:+6},

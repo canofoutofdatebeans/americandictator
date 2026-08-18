@@ -30,7 +30,7 @@ AD.CALL_BOOK = [
   { id: 'broom',  cat: 'ally', name: 'Czar Vandermeer',         note: 'the efficiency man' },
   { id: 'pastor', cat: 'ally', name: 'Reverend Muncy',          note: 'says grace at rallies' },
   { id: 'anchor', cat: 'ally', name: 'Brick Tandy',             note: 'your favourite anchor' },
-  { id: 'volkov', cat: 'ally', name: 'President Volkov',         note: 'of Rusalka; a strong guy' },
+  { id: 'volkov', cat: 'ally', name: 'President Volkov',         note: 'of Russia; a strong guy' },
   { id: 'son',    cat: 'ally', name: 'Trent Jr.',               note: 'the boy' },
 
   // ---- the press ----
@@ -45,8 +45,8 @@ AD.CALL_BOOK = [
   { id: 'opp',    cat: 'enemy', name: 'Leader Ruiz-Bloom',   note: 'the opposition; sad' },
   { id: 'gov',    cat: 'enemy', name: 'Governor Vasquez-Moore',note: 'running her state into the ground' },
   { id: 'judge',  cat: 'enemy', name: 'so-called Judge Vane', note: 'a disgrace to the robe' },
-  { id: 'chen',   cat: 'enemy', name: 'Chairman Chen',        note: 'of Cathay; very tough' },
-  { id: 'ostrov', cat: 'enemy', name: 'Premier Ostrov',       note: 'of Glacia; not a friend' },
+  { id: 'chen',   cat: 'enemy', name: 'Chairman Chen',        note: 'of China; very tough' },
+  { id: 'ostrov', cat: 'enemy', name: 'Premier Ostrov',       note: 'of Iran; not a friend' },
   { id: 'pundit', cat: 'enemy', name: 'the pundit Nate Brill',note: 'nobody watches him' },
   { id: 'speaker',cat: 'enemy', name: 'the other Speaker',    note: 'weak, ineffective' }
 ];
