@@ -28,6 +28,70 @@ function arm (run, key, gap) {
   run.flags['react_' + key] = AD.termMonth(run) + gap;
 }
 
+/* The Regular's escalating arc — a signature running bit. The story advances
+   one stage per call no matter what you choose; the choices only decide what it
+   costs you. Each call references the last. */
+AD.GARY_STAGES = [
+  { title: 'The Regular',
+    text: 'A call has been patched through that should not have been. "It is a man named Gary, sir, from a town ' +
+          'called Coldwater. He has your personal number. Nobody knows how." Deborah covers the receiver. ' +
+          '"He says he is your biggest fan and he has started a militia in your honour. The Patriot Legion. ' +
+          'Four members and a flag."',
+    choices: [
+      { label: 'Bless it. Tell Gary he is a great American.', eff: { base: +8, courts: -3, street: -3, press: -2, auth: +2 },
+        res: 'Gary weeps. The Patriot Legion has a presidential endorsement by lunchtime and four hundred members by dinner.' },
+      { label: 'Tell him, gently, to disband it.', eff: { base: -4, courts: +4, street: +3, press: +2 },
+        res: 'Gary says he understands and will "stand down and stand by," which is not the phrase you would have chosen.' },
+      { label: 'Have the call traced. Say nothing.', eff: { base: +1, street: -1, auth: +2 },
+        res: 'The number is a burner bought in Coldwater. There are, it turns out, a great many burners bought in Coldwater.' },
+      { label: 'Appoint Gary the ambassador to the Patriot Legion.', eff: { base: +5, press: -3, courts: -2, auth: +1 }, wild: true,
+        res: 'The commission is drawn up in earnest. Gary now represents the United States to an organisation the United States does not recognise, which is him.' }
+    ]},
+  { title: 'Gary Calls Back',
+    text: '"It is Gary again, sir." Deborah has stopped pretending this is unusual. "The Patriot Legion is now ' +
+          'four thousand strong and has, his word, a compound. He would like you to visit. He has built you a ' +
+          'chair. He describes it as a throne but insists it is a chair."',
+    choices: [
+      { label: 'Send a signed photo. Do not visit.', eff: { base: +6, street: -2, press: -2, auth: +1 },
+        res: 'The photo is installed above the throne-that-is-a-chair. Pilgrims come to Coldwater to see it. This is now a thing that is happening.' },
+      { label: 'Send the FBI to have a quiet look.', eff: { base: -5, courts: +5, congress: +3, press: +3 },
+        res: 'The agents are welcomed warmly, given lunch, and shown the chair. They report that it is, structurally, a throne.' },
+      { label: 'Tell Gary the compound needs a bigger flag.', eff: { base: +7, courts: -3, street: -4, press: -3, auth: +2 },
+        res: 'The flag that goes up is visible from orbit, which is a sentence you have now caused to be true twice.' },
+      { label: 'Send a rollercoaster.', eff: { base: +5, press: -2, cash: -0.2, auth: +1 }, wild: true,
+        res: 'It circles the compound and crosses the throne room twice. Gary calls it the greatest day of his life and he is, for once, probably right.' }
+    ]},
+  { title: 'Free Coldwater',
+    text: 'Deborah does not cover the receiver this time. "Gary\'s compound has declared independence. It is now ' +
+          'the Sovereign Republic of Free Coldwater. Population four thousand. Head of state: you. Title: God-Emperor, ' +
+          'which he stresses you did not ask for and cannot refuse. The Guard is forty minutes away and awaiting a word."',
+    choices: [
+      { label: 'Accept the crown of Free Coldwater. Why not.', eff: { base: +9, courts: -8, street: -7, congress: -6, press: -5, auth: +5 },
+        res: 'You are now, on paper, the God-Emperor of a breakaway republic in Ohio. Four constitutional scholars resign rather than write the memo.' },
+      { label: 'Disavow it. Publicly. By name.', eff: { base: -8, courts: +7, street: +7, congress: +5, press: +5, auth: -3 },
+        res: 'Gary takes it hard. Free Coldwater lowers its flag to half-mast and issues a statement of "profound but loyal disappointment."' },
+      { label: 'Send the forces. End it before it is a headline.', eff: { base: -4, street: +6, courts: -4, press: -6, auth: +4 },
+        res: 'The Guard arrives to find four thousand people, a chair and a rollercoaster. There is nothing to storm. Everyone has lunch.' },
+      { label: 'Declare war on Free Coldwater to bury a scandal.', eff: { base: +6, press: -5, courts: -4, auth: +3 }, wild: true,
+        res: 'You cannot declare war on part of Ohio, several lawyers explain, at length, over the sound of you not listening.' }
+    ]},
+  { title: 'Senator Gary',
+    text: 'One last call. "Sir. It is Gary. He is not calling from the compound." Deborah pauses. ' +
+          '"He won the special election in Coldwater. Forty-one points. He is calling from the floor of the ' +
+          'Senate, where he has just been sworn in, and he says he owes it all to you, and that he votes exactly ' +
+          'how you tell him, and only how you tell him, forever."',
+    choices: [
+      { label: 'Welcome Senator Gary. He is yours completely.', eff: { base: +7, congress: +8, courts: -3, press: -3, auth: +4 },
+        res: 'You have manufactured the single most loyal senator in the chamber out of a man with a burner phone and a chair. He never once deviates. It is unsettling in a way you cannot name.' },
+      { label: 'Quietly hope he loses the next one.', eff: { base: -2, congress: +2, press: +2 },
+        res: 'He does not lose the next one. He does not lose any of them. Gary is, at time of writing, chair of three committees and unopposed for life.' },
+      { label: 'Give him a real job. He earned it.', eff: { base: +4, congress: +4, courts: -2, auth: +2 },
+        res: 'You put Gary on a committee. He reads every bill in full, out loud, which no senator has done since 1874, and it grinds the chamber to a halt for a month.' },
+      { label: 'Ask Gary, finally, how he got your number.', eff: { base: +3, auth: +1 }, wild: true,
+        res: 'He tells you. It is so simple, so obvious and so completely your own fault that you hang up, sit down, and do not speak for eleven minutes.' }
+    ]}
+];
+
 AD.REACTIVE = [
 
   /* ---- THE REBELLION: a collapsing caucus puts a named rebel on a card ---- */
@@ -129,6 +193,26 @@ AD.REACTIVE = [
             res: 'The garments are tailored and delivered. Not one is worn. They hang, en masse, in a cloakroom that becomes a minor tourist attraction.' }
         ]
       };
+    }
+  },
+
+  /* ---- THE REGULAR: the recurring caller, one stage per visit ---- */
+  {
+    key: 'gary', gap: 9,
+    test (run) {
+      const st = (run.flags && run.flags.garyStage) || 0;
+      return AD.termMonth(run) >= 7 && st < AD.GARY_STAGES.length;
+    },
+    build (run) {
+      const st = (run.flags && run.flags.garyStage) || 0;
+      const stage = AD.GARY_STAGES[st];
+      if (!stage) return null;
+      // the story marches on whatever you choose; wrap each choice's act to advance it
+      const choices = stage.choices.map(c => Object.assign({}, c, {
+        act: r => { if (c.act) c.act(r); r.flags = r.flags || {}; r.flags.garyStage = st + 1; }
+      }));
+      return { id: 'react-gary-' + st, scripted: true, who: RC.cos, tags: ['levity','street'],
+        pillarBanner: 'THE PHONE RINGS', title: stage.title, text: stage.text, choices };
     }
   }
 ];
