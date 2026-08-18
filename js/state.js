@@ -91,6 +91,13 @@ AD.RESIST_HARD = 76;  AD.RESIST_HARD_MULT = 0.58;
    adds a second point at Authority 90 and drops optimal play from 38% to 22%. */
 AD.AUTH_PRESSURE_DIV = 50;
 
+/* The systemic guardrail on the management-screen ticks. See engine.advance().
+   The caucus, press room and public order ticks combined can never remove more
+   than this many points from any single meter in one month — so background
+   drains create pressure but never deliver the killing blow. Raising it lets
+   neglect bite harder; 3 keeps the screens as opt-in leverage, not a tax. */
+AD.MGMT_LOSS_CAP = 3;
+
 /* ---------- The second objective ------------------------------------------
    There are two ways to win. Take the country (Authority 100), or take the
    money ($10B). Reaching the fortune does not end the run — it is banked, and

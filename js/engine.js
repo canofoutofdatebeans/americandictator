@@ -417,10 +417,28 @@ AD.Engine = {
     // pay for the ballroom in the same month it earns.
     this.lastTick = AD.corruptionTick(run);
     this.lastUpkeep = AD.renovationTick(run);
-    // The caucus drifts and, if neglected, drags the Congress meter down.
+    /* ── THE SYSTEMIC GUARDRAIL ─────────────────────────────────────────────
+       The one recurring hazard, fixed once. The three management-screen ticks
+       below (the caucus, the press room, public order) each drain a meter when
+       their system is neglected. Individually each is now mild — but they STACK,
+       and stacked background drain forces a player to spend card-choices
+       defending institutions until the Base, which cools on its own every month,
+       collapses unfed. That cascade got hand-patched three separate times, once
+       per screen. This caps their COMBINED monthly loss to any single meter at
+       AD.MGMT_LOSS_CAP, so no present or future combination of these opt-in
+       systems can ever be the thing that starves a meter to death. Background
+       systems create pressure; only a DECISION lands the killing blow.
+       (The intended costs above — base decay, backlash, exposure, Residence
+       scrutiny — are the real difficulty curve and are deliberately NOT capped.) */
+    const preMgmt = {};
+    AD.FKEYS.forEach(k => { preMgmt[k] = run.meters[k]; });
     this.lastSenate = AD.senateTick(run);
     this.lastPress = AD.pressTick(run);
     this.lastStreet = AD.streetTick(run);
+    AD.FKEYS.forEach(k => {
+      const loss = preMgmt[k] - run.meters[k];
+      if (loss > AD.MGMT_LOSS_CAP) run.meters[k] = preMgmt[k] - AD.MGMT_LOSS_CAP;
+    });
     AD.callTick(run);   // refill the monthly phone allowance
     this.lastWar = AD.warTick(run);   // ongoing wars resolve into victory or quagmire
     // A story hot enough to leak does damage without needing a card.
