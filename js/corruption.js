@@ -343,3 +343,36 @@ AD.applyPassivesToEffect = function (run, eff) {
   });
   return eff;
 };
+
+/* ============================================================
+   THE STRATEGIC FREEDOM RESERVE — the one-time heist.
+
+   The single most lucrative and most dangerous thing you can do with
+   the office: go on television, declare a national emergency about a
+   threat you never quite specify, and route the appropriation into a
+   discretionary reserve only you can sign against. Five billion
+   dollars, gone before anyone can name the emergency it was for.
+
+   Once per game. The base barely notices — an emergency is an
+   emergency — but the courts, the press, Congress and the street all
+   go to war over it at once, and you will spend months digging out.
+   ============================================================ */
+AD.canDivert = run => !(run.flags && run.flags.divertedFunds);
+
+AD.DIVERT_AMOUNT = 5;   // $B added to the fortune
+
+AD.divertFunds = function (run) {
+  if (!AD.canDivert(run)) return { ok: false, reason: 'You can only do that once.' };
+  run.flags = run.flags || {};
+  run.flags.divertedFunds = true;
+  // The institutions go to war; the base shrugs. Routed through the shared
+  // applier so any shields you own blunt the blow — a reason to build the
+  // machine before you pull the lever.
+  const deltas = AD.applySenateEffect(run, {
+    courts: -20, press: -20, congress: -18, street: -16, base: 3, auth: 5
+  });
+  run.cash = Math.round((run.cash + AD.DIVERT_AMOUNT) * 100) / 100;
+  if (run.cash > (run.stats.peakCash || 0)) run.stats.peakCash = run.cash;
+  run.stats = run.stats || {}; run.stats.diverted = 1;
+  return { ok: true, deltas, amount: AD.DIVERT_AMOUNT };
+};

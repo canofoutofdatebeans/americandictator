@@ -949,3 +949,45 @@ html[data-cb="on"] .fac.danger .fac-val{color:#93c5fd}
 .sen-row.econ-dip.rel-correct{border-left-color:var(--edge2)}
 .sen-row.econ-dip.rel-frosty{border-left-color:#c98d3a}
 .sen-row.econ-dip.rel-hostile{border-left-color:#c0392b}
+
+/* ============================================================
+   THE STRATEGIC FREEDOM RESERVE — the one-time heist banner
+   ============================================================ */
+.heist{border:1px solid #6a1a22;border-radius:10px;padding:14px 14px 12px;margin:0 0 16px;
+  background:linear-gradient(160deg,#2a0d12,#160a10);position:relative;overflow:hidden;
+  box-shadow:inset 0 0 0 1px rgba(216,50,59,.12),0 10px 26px rgba(0,0,0,.4)}
+.heist::before{content:"";position:absolute;inset:0;pointer-events:none;
+  background:repeating-linear-gradient(45deg,rgba(201,162,39,.05) 0 10px,transparent 10px 20px)}
+.heist-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px;position:relative}
+.heist-top b{font-size:15px;letter-spacing:.02em;color:#f0c56a}
+.heist-take{font-size:12px;font-weight:700;color:#f0b0b6;white-space:nowrap;
+  border:1px solid #6a1a22;border-radius:6px;padding:2px 7px;background:#33101a}
+.heist-blurb{display:block;font-size:12px;line-height:1.55;color:var(--paper2);
+  font-style:italic;margin:8px 0 8px;position:relative}
+.heist-warn{font-size:11px;line-height:1.5;color:#e0a0a6;margin:0 0 12px;position:relative}
+.heist-go{width:100%;padding:11px;border-radius:8px;border:1px solid #8a222c;cursor:pointer;
+  font:inherit;font-weight:700;font-size:13.5px;letter-spacing:.02em;color:#fff;
+  background:linear-gradient(#b3202b,#7c1720);transition:var(--fx);position:relative;
+  animation:heistPulse 2.6s ease-in-out infinite}
+.heist-go:hover{filter:brightness(1.12);transform:translateY(-1px)}
+.heist-go:active{transform:translateY(0) scale(.99)}
+@keyframes heistPulse{0%,100%{box-shadow:0 0 0 0 rgba(216,50,59,.0)}
+  50%{box-shadow:0 0 18px 1px rgba(216,50,59,.35)}}
+.heist.spent{border-color:#2a1a1e;background:linear-gradient(160deg,#160f11,#100b0d);opacity:.72}
+.heist.spent .heist-top b{color:#8a7a5a}
+.heist.spent .heist-take{color:#7f8ca3;border-color:#3a2a2e;background:#1a1214}
+.heist.spent::before{opacity:.4}
+
+/* ---------- generic confirmation modal ---------- */
+.confirm-box{max-width:400px}
+.confirm-msg{font-size:13px;line-height:1.6;color:var(--paper2);margin:2px 0 18px}
+.confirm-msg b{color:var(--gold-soft)}
+.confirm-actions{display:flex;gap:10px}
+.confirm-actions .btn{flex:1;padding:12px}
+.confirm-danger{background:linear-gradient(#b3202b,#7c1720)!important;color:#fff!important;
+  border:1px solid #8a222c!important;font-weight:700}
+.confirm-danger:hover{filter:brightness(1.1)}
+
+/* ---------- "why is this disabled" lock hint on management buttons ---------- */
+.act-lock{font-size:9.5px;font-weight:700;opacity:.85;margin-left:2px;letter-spacing:.01em}
+.sen-act:disabled .act-lock{color:var(--gold-soft)}

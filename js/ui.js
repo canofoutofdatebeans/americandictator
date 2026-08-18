@@ -379,6 +379,31 @@ AD.UI = {
         'shields, multipliers, monthly drip and the income to buy more of all three.';
     }
 
+    // The Strategic Freedom Reserve — the one-time heist, shown as a
+    // banner above the shop until it is spent.
+    const heistSlot = this.el('corr-heist');
+    if (heistSlot) {
+      if (AD.canDivert(run)) {
+        heistSlot.innerHTML = `<div class="heist">
+          <div class="heist-top">
+            <b>The Strategic Freedom Reserve</b>
+            <span class="heist-take">+$${AD.DIVERT_AMOUNT.toFixed(0)}B · once</span>
+          </div>
+          <i class="heist-blurb">Declare a national emergency. Never say which one. The appropriation
+            flows into a discretionary reserve only you can sign against — five billion dollars, gone
+            before anyone can name the crisis it was for.</i>
+          <div class="heist-warn">The base won't blink. The courts, the press, Congress and the street
+            will all go to war at once.</div>
+          <button class="btn heist-go" data-act="divert">Invent a National Emergency</button>
+        </div>`;
+      } else {
+        heistSlot.innerHTML = `<div class="heist spent">
+          <div class="heist-top"><b>The Strategic Freedom Reserve</b><span class="heist-take">SPENT</span></div>
+          <i class="heist-blurb">The emergency was never named. It cannot be declared twice.</i>
+        </div>`;
+      }
+    }
+
     this.el('corr-list').innerHTML = AD.ASSET_CATS.map(cat => {
       const items = AD.ASSETS.filter(a => a.cat === cat.id);
       const rows = items.map(a => {
@@ -727,7 +752,7 @@ AD.UI = {
       const buttons = AD.SENATE_ACTIONS.map(act => {
         const avail = AD.senateActionAvailable(run, s, act);
         const cost = act.cost ? ` <em>$${act.cost}B</em>` : '';
-        return `<button class="sen-act act-${act.id}" data-sen="${s.id}" data-senact="${act.id}" ${avail.ok ? '' : 'disabled'} title="${act.blurb}">${act.icon} ${act.label}${cost}</button>`;
+        return `<button class="sen-act act-${act.id}" data-sen="${s.id}" data-senact="${act.id}" ${avail.ok ? '' : 'disabled'} title="${avail.ok ? act.blurb : avail.reason}">${act.icon} ${act.label}${cost}${avail.ok ? '' : ' <span class="act-lock">' + AD.reasonBadge(avail.reason) + '</span>'}</button>`;
       }).join('');
       return `<div class="sen-row mood-${mood.key} party-${s.party}">
         <div class="sen-top">
@@ -770,7 +795,8 @@ AD.UI = {
       const buttons = AD.PRESS_ACTIONS.map(act => {
         const avail = AD.pressActionAvailable(run, o, act);
         const cost = act.cost ? ` <em>$${act.cost}B</em>` : '';
-        return `<button class="sen-act press-${act.id}" data-outlet="${o.id}" data-pressact="${act.id}" ${avail.ok ? '' : 'disabled'} title="${act.blurb}">${act.icon} ${act.label}${cost}</button>`;
+        const tip = avail.ok ? act.blurb : avail.reason;
+        return `<button class="sen-act press-${act.id}" data-outlet="${o.id}" data-pressact="${act.id}" ${avail.ok ? '' : 'disabled'} title="${tip}">${act.icon} ${act.label}${cost}${avail.ok ? '' : ' <span class="act-lock">' + AD.reasonBadge(avail.reason) + '</span>'}</button>`;
       }).join('');
       return `<div class="sen-row press-mood-${st.key}">
         <div class="sen-top"><span class="sen-dot"></span>
@@ -811,7 +837,7 @@ AD.UI = {
       const buttons = AD.STREET_ACTIONS.map(act => {
         const avail = AD.streetActionAvailable(run, c, act);
         const cost = act.cost ? ` <em>$${act.cost}B</em>` : '';
-        return `<button class="sen-act street-${act.id}" data-city="${c.id}" data-streetact="${act.id}" ${avail.ok ? '' : 'disabled'} title="${act.blurb}">${act.icon} ${act.label}${cost}</button>`;
+        return `<button class="sen-act street-${act.id}" data-city="${c.id}" data-streetact="${act.id}" ${avail.ok ? '' : 'disabled'} title="${avail.ok ? act.blurb : avail.reason}">${act.icon} ${act.label}${cost}${avail.ok ? '' : ' <span class="act-lock">' + AD.reasonBadge(avail.reason) + '</span>'}</button>`;
       }).join('');
       return `<div class="sen-row street-heat-${heat.key}">
         <div class="sen-top"><span class="sen-dot"></span>
@@ -936,7 +962,7 @@ AD.UI = {
       const buttons = AD.COURT_ACTIONS.map(act => {
         const avail = AD.courtActionAvailable(run, j, act);
         const cost = act.cost ? ` <em>$${act.cost}B</em>` : '';
-        return `<button class="sen-act court-${act.id}" data-judge="${j.id}" data-courtact="${act.id}" ${avail.ok ? '' : 'disabled'} title="${act.blurb}">${act.icon} ${act.label}${cost}</button>`;
+        return `<button class="sen-act court-${act.id}" data-judge="${j.id}" data-courtact="${act.id}" ${avail.ok ? '' : 'disabled'} title="${avail.ok ? act.blurb : avail.reason}">${act.icon} ${act.label}${cost}${avail.ok ? '' : ' <span class="act-lock">' + AD.reasonBadge(avail.reason) + '</span>'}</button>`;
       }).join('');
       return `<div class="sen-row court-mood-${st.key}">
         <div class="sen-top"><span class="sen-dot"></span>

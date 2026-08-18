@@ -350,6 +350,19 @@ AD.saveSettings = s  => AD.store.write(AD.SET_KEY, s);
 
 /* ---------- Small helpers -------------------------------------------------- */
 AD.clamp = (n, lo, hi) => Math.max(lo, Math.min(hi, n));
+
+/* Compact "why is this disabled" badge for management-screen buttons.
+   Turns a full reason sentence into a tiny lock hint the eye can read at a
+   glance, while the button's title keeps the full sentence for hover. */
+AD.reasonBadge = function (reason) {
+  if (!reason) return '';
+  const m = /Authority\s+(\d+)/i.exec(reason);
+  if (m) return '🔒 Auth ' + m[1];
+  if (/afford|cannot pay|cash/i.test(reason)) return '🔒 $';
+  if (/already|yours|owned/i.test(reason)) return '✓';
+  if (/once|twice|spent/i.test(reason)) return '✓ done';
+  return '🔒';
+};
 AD.MONTHS = ['January','February','March','April','May','June',
              'July','August','September','October','November','December'];
 AD.YEAR_WORDS = ['Year One','Year Two','Year Three','Year Four',

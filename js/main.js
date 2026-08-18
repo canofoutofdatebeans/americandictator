@@ -320,6 +320,54 @@ AD.Game = {
     }
   },
 
+  /* ---------- generic confirmation ----------
+     A single reusable "are you sure?" gate. Stash the yes-callback and
+     paint the modal; the act() dispatcher fires it on confirm-yes. */
+  confirm (opts) {
+    const U = AD.UI;
+    this._confirmYes = opts.onYes || null;
+    U.el('confirm-title').textContent = opts.title || 'Are you sure?';
+    U.el('confirm-msg').innerHTML = opts.msg || '';
+    U.el('confirm-yes').textContent = opts.yes || 'Do It';
+    U.overlay('confirm', true);
+  },
+
+  /* ---------- the Strategic Freedom Reserve (money diversion) ---------- */
+  divertConfirm () {
+    const run = AD.Engine.run;
+    if (!run || run.over || !AD.canDivert(run)) return;
+    this.confirm({
+      title: 'Declare the emergency?',
+      msg: 'You will pull <b>+$' + AD.DIVERT_AMOUNT.toFixed(0) + 'B</b> into a reserve only you can touch — ' +
+           'and start four fires at once. The <b>courts</b> will move to freeze it, the <b>press</b> will hunt ' +
+           'the paper trail, <b>Congress</b> will subpoena, and the <b>street</b> will fill. The base will not ' +
+           'care. You can only do this <b>once</b>, and there is no putting it back.',
+      yes: 'Declare it',
+      onYes: () => this.doDivert()
+    });
+  },
+
+  doDivert () {
+    const run = AD.Engine.run;
+    if (!run || run.over) return;
+    const r = AD.divertFunds(run);
+    if (!r.ok) return;
+    run.stats.bought = (run.stats.bought || 0) + 0; // untouched; kept for parity
+    AD.Audio.play('money');
+    this.haptic([30, 40, 30]);
+    AD.saveRun(run);
+    // Inline feedback only — a tabloid overlay stacked on the corruption
+    // panel would let its close handler advance the turn (see buyAsset).
+    AD.UI.renderCorruption();
+    AD.UI.renderHUD();
+    const collapse = AD.Engine.checkCollapse();
+    if (collapse.ending) {
+      AD.Engine.finish(collapse.ending);
+      this.pending = [];
+      setTimeout(() => this.showEnding(AD.Engine.lastScore), 900);
+    }
+  },
+
   /* ---------- the residence ---------- */
   courtAction (judgeId, actionId) {
     const run = AD.Engine.run;
@@ -632,6 +680,17 @@ AD.Game = {
         U.overlay('corruption', false);
         // resume the clock only if a crisis is actually on screen
         if (AD.Engine.card && !U.el('card').hidden) U.startTimer(AD.Engine.card);
+        break;
+      case 'divert':
+        this.divertConfirm();
+        break;
+      case 'confirm-yes':
+        U.overlay('confirm', false);
+        { const fn = this._confirmYes; this._confirmYes = null; if (fn) fn(); }
+        break;
+      case 'confirm-no':
+        U.overlay('confirm', false);
+        this._confirmYes = null;
         break;
 
       case 'senate':

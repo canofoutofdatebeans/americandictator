@@ -103,7 +103,7 @@ AD.PRESS_ACTIONS = [
     }
   },
   {
-    id: 'install', label: 'Install an Ally', icon: '🪑', cost: 0.9, needsAuth: 40,
+    id: 'install', label: 'Install an Ally', icon: '🪑', cost: 0.9, needsAuth: 30,
     blurb: 'A friend of the President takes the editor\'s chair. It is yours now.',
     can: o => !o.owned,
     run (run, o) {
