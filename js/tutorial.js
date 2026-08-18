@@ -121,31 +121,46 @@ AD.Tutorial = {
     const box = document.getElementById('tut-box');
     ov.hidden = false;
 
-    /* Spotlight: a transparent rect with an enormous shadow darkening the rest. */
-    if (s.target) {
-      const el = document.querySelector(s.target);
-      if (el) {
-        const r = el.getBoundingClientRect();
-        const pad = 6;
-        spot.hidden = false;
-        spot.style.left   = (r.left - pad) + 'px';
-        spot.style.top    = (r.top - pad) + 'px';
-        spot.style.width  = (r.width + pad * 2) + 'px';
-        spot.style.height = (r.height + pad * 2) + 'px';
-        // place the card on whichever side has more room
-        const below = window.innerHeight - r.bottom;
-        box.style.top = below > 240 ? (r.bottom + 14) + 'px' : '';
-        box.style.bottom = below > 240 ? '' : (window.innerHeight - r.top + 14) + 'px';
-      } else { spot.hidden = true; box.style.top = ''; box.style.bottom = ''; }
-    } else {
-      spot.hidden = true; box.style.top = ''; box.style.bottom = '';
-    }
-
+    /* Fill the content FIRST so the box has its true height before we place it —
+       positioning off a stale height was half the old messiness. */
     document.getElementById('tut-step').textContent =
       'STEP ' + (this.step + 1) + ' OF ' + this.STEPS.length;
     document.getElementById('tut-title').textContent = s.title;
     document.getElementById('tut-body').innerHTML = s.body;
     document.getElementById('tut-next').textContent =
       this.step === this.STEPS.length - 1 ? 'Take the first decision' : 'Next';
+
+    /* Placement. The box is always positioned by an explicit pixel `top` with
+       `bottom:auto`, so it can never get both edges pinned at once (which used
+       to stretch it into a mess when a target sat low on the screen). */
+    const margin = 14;
+    const boxH = box.offsetHeight;
+    const clampTop = t => Math.max(margin, Math.min(t, window.innerHeight - boxH - margin));
+    const el = s.target ? document.querySelector(s.target) : null;
+
+    if (el) {
+      const r = el.getBoundingClientRect();
+      const pad = 6;
+      spot.hidden = false;
+      spot.style.left   = (r.left - pad) + 'px';
+      spot.style.top    = (r.top - pad) + 'px';
+      spot.style.width  = (r.width + pad * 2) + 'px';
+      spot.style.height = (r.height + pad * 2) + 'px';
+      const roomBelow = window.innerHeight - r.bottom - margin;
+      const roomAbove = r.top - margin;
+      // sit below the highlight when it fits (or when there's simply more room
+      // there); otherwise sit above it. Either way, clamp on-screen.
+      const top = (roomBelow >= boxH || roomBelow >= roomAbove)
+        ? clampTop(r.bottom + margin)
+        : clampTop(r.top - margin - boxH);
+      box.style.top = top + 'px';
+      box.style.bottom = 'auto';
+    } else {
+      // No target: dead-centre, measured in pixels (no transform tricks that
+      // would fight the box's horizontal centring).
+      spot.hidden = true;
+      box.style.top = Math.max(margin, (window.innerHeight - boxH) / 2) + 'px';
+      box.style.bottom = 'auto';
+    }
   }
 };

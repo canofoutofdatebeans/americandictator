@@ -467,7 +467,7 @@ body::before{
   background:linear-gradient(var(--ink3),var(--ink2));
   border:1px solid var(--edge2);border-radius:var(--radius);
   padding:16px;box-shadow:var(--shadow);
-  top:50%;margin-top:0;
+  top:14px;max-height:calc(100vh - 28px);overflow-y:auto;
   /* NOT the shared fadeIn: its `to{transform:none}` would cancel the
      translateX(-50%) that centres this box and shove it off-screen. */
   animation:tutIn .3s ease both;
