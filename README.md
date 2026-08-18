@@ -80,6 +80,7 @@ is tested; the native shells have never been compiled or run on hardware.
 | `js/courts.js` | **The Bench.** Ten judges to pressure, buy, or sack & pack. |
 | `js/basepop.js` | **The Rally.** Silly all-American stunts to feed the base. |
 | `js/dossier.js` | **The Dossier.** A generated end-of-term front page that narrates your run. |
+| `js/reactive.js` | **Cross-system triggers.** Bespoke crises a subsystem raises, plus the recurring caller. |
 | `js/packs/*.js` | **195 more crises** in seven loadable packs. Each pushes onto `AD.CARDS`. |
 | `js/events.js` | Scripted beats: the Address, Midterms, Pillar backlash, Re-election, the Twenty-Second. |
 | `js/doctrines.js` | Five permanent rule-changing unlocks. |
@@ -198,6 +199,17 @@ tells you what you *did*. At the end of every run a generated front page names t
 you purged, judges you packed, outlets you captured, wars you declared (and why), clauses you
 broke and the fortune you kept — with a headline chosen from your dominant strategy and a
 one-line shareable summary carrying the seed. Two runs never produce the same dossier.
+
+**Cross-system triggers & the recurring caller** (`reactive.js`): the subsystems generate their
+own crises. A collapsed caucus puts a named rebel on a card; a hot Saint Ambrose scandal offers a
+"start a war to change the subject" card that actually fires the War Room; a packed bench provokes
+a revolt. And **The Regular** — a supporter named Gary who somehow has your number and calls back
+every few months, escalating from a four-man militia to a breakaway republic to a Senate seat.
+
+**Onboarding, feel & accessibility:** a first-ever run gets a four-month *training grace* (a
+zeroed meter is floored, not fatal, so a new player can learn). A **capture moment** (gold flash +
+stamp) and **animated meters**. **Haptics**, a **colour-blind palette**, dialog semantics and
+focus management on every overlay, and reduce-motion respected throughout — all as settings.
 
 **The systemic guardrail** (`engine.advance`): every management screen's monthly tick is capped so
 their *combined* loss to any one meter can never exceed `AD.MGMT_LOSS_CAP`. Background systems
