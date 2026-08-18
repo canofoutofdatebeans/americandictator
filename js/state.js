@@ -189,7 +189,7 @@ AD.PORTRAIT = {
 AD.PARTY_COLORS = ['#c8342f', '#2d5fa8', '#e0b33a', '#2f7a52', '#6b3f8f', '#e07a2d'];
 
 /* ---------- Default settings --------------------------------------------- */
-AD.DEFAULT_SETTINGS = { timer: true, motion: false, clean: false, pack: false };
+AD.DEFAULT_SETTINGS = { timer: true, motion: false, clean: false, pack: false, cb: false, haptics: true };
 
 /* ---------- A fresh run --------------------------------------------------- */
 AD.newRun = function (opts) {

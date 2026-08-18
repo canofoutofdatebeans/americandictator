@@ -99,33 +99,54 @@ AD.UI = {
       `<div class="pill ${run.locked[f.key] ? 'on' : ''}" title="${f.pillar}">${
         run.locked[f.key] ? f.pillar : '—'}</div>`).join('');
 
-    this.el('factions').innerHTML = AD.FACTIONS.map(f => {
+    this.renderFactions(run);
+  },
+
+  /* The faction tiles are built ONCE and then updated in place, so the meter
+     fills can transition (animate) instead of jumping every render. The click
+     handler is event-delegated on document, so nothing here re-binds. */
+  renderFactions (run) {
+    const wrap = this.el('factions');
+    if (wrap.children.length !== AD.FACTIONS.length) {
+      wrap.innerHTML = AD.FACTIONS.map(f =>
+        `<div class="fac" data-fk="${f.key}" role="meter" tabindex="0" aria-valuemin="0" aria-valuemax="100">
+          <span class="lock" aria-hidden="true">🔒</span>
+          <span class="fac-cog" aria-hidden="true">⚙</span>
+          <div class="fac-fig" aria-hidden="true">${f.icon}</div>
+          <div class="fac-bar" aria-hidden="true"><div class="fac-fill"></div></div>
+          <div class="fac-val" aria-hidden="true">0</div>
+          <div class="fac-name" aria-hidden="true">${f.short}</div>
+        </div>`).join('');
+    }
+    AD.FACTIONS.forEach(f => {
+      const tile = wrap.querySelector('.fac[data-fk="' + f.key + '"]');
+      if (!tile) return;
       const v = run.meters[f.key];
       const locked = !!run.locked[f.key];
       const danger = !locked && (v <= 18 || (f.key === 'base' && v >= 88));
-      const col = locked ? 'linear-gradient(90deg,#c9a227,#f2dd8a)'
-                : v <= 22 ? '#c0392b'
-                : v >= 80 ? '#c9a227'
-                : v >= 55 ? '#6d8f5e' : '#8d8271';
-      const label = locked
-        ? `${f.name}: captured. ${f.pillar} secured.`
-        : `${f.name}: ${v} of 100.${danger ? ' Critical.' : ''}`;
-      // Three of the five power centres have a management screen behind them;
-      // clicking the tile opens it. The others are governed only through cards.
+      const cb = this.settings && this.settings.cb;
+      const col = locked ? (cb ? 'linear-gradient(90deg,#f59e0b,#fcd34d)' : 'linear-gradient(90deg,#c9a227,#f2dd8a)')
+                : v <= 22 ? (cb ? '#1d4ed8' : '#c0392b')
+                : v >= 80 ? (cb ? '#f59e0b' : '#c9a227')
+                : v >= 55 ? (cb ? '#60a5fa' : '#6d8f5e')
+                : (cb ? '#64748b' : '#8d8271');
       const screen = AD.FAC_SCREEN[f.key];
-      const manage = screen && !locked ? ` data-manage="${f.key}"` : '';
-      return `<div class="fac ${locked ? 'locked' : ''} ${danger ? 'danger' : ''} ${screen && !locked ? 'has-screen' : ''}"${manage}
-             title="${f.name} — ${f.blurb}${screen && !locked ? ' — tap to manage' : ''}"
-             role="meter" tabindex="0"
-             aria-label="${label}${screen && !locked ? ' Activate to manage.' : ''}" aria-valuenow="${v}" aria-valuemin="0" aria-valuemax="100">
-        ${locked ? '<span class="lock" aria-hidden="true">🔒</span>' : ''}
-        ${screen && !locked ? '<span class="fac-cog" aria-hidden="true">⚙</span>' : ''}
-        <div class="fac-fig" aria-hidden="true">${f.icon}</div>
-        <div class="fac-bar" aria-hidden="true"><div class="fac-fill" style="width:${v}%;background:${col}"></div></div>
-        <div class="fac-val" aria-hidden="true">${v}</div>
-        <div class="fac-name" aria-hidden="true">${f.short}</div>
-      </div>`;
-    }).join('');
+      const manage = !!(screen && !locked);
+      tile.classList.toggle('locked', locked);
+      tile.classList.toggle('danger', danger);
+      tile.classList.toggle('has-screen', manage);
+      if (manage) tile.setAttribute('data-manage', f.key); else tile.removeAttribute('data-manage');
+      const fill = tile.querySelector('.fac-fill');
+      fill.style.width = v + '%'; fill.style.background = col;
+      tile.querySelector('.fac-val').textContent = v;
+      tile.querySelector('.lock').style.display = locked ? '' : 'none';
+      tile.querySelector('.fac-cog').style.display = manage ? '' : 'none';
+      tile.setAttribute('aria-valuenow', v);
+      tile.setAttribute('aria-label', (locked
+        ? `${f.name}: captured. ${f.pillar} secured.`
+        : `${f.name}: ${v} of 100.${danger ? ' Critical.' : ''}`) + (manage ? ' Activate to manage.' : ''));
+      tile.title = `${f.name} — ${f.blurb}${manage ? ' — tap to manage' : ''}`;
+    });
   },
 
   /* ---------- the capture moment ---------- */

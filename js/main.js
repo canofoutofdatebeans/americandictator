@@ -26,10 +26,19 @@ AD.Game = {
   applySettings () {
     const s = AD.UI.settings;
     document.documentElement.setAttribute('data-motion', s.motion ? 'off' : 'on');
-    ['timer', 'motion', 'clean', 'pack'].forEach(k => {
+    document.documentElement.setAttribute('data-cb', s.cb ? 'on' : 'off');
+    ['timer', 'motion', 'clean', 'pack', 'cb', 'haptics'].forEach(k => {
       const el = AD.UI.el('opt-' + k);
       if (el) el.checked = !!s[k];
     });
+  },
+
+  /* Fire a short vibration on capable devices, gated on the setting and the
+     reduce-motion preference. A no-op on desktop. */
+  haptic (pattern) {
+    const s = AD.UI.settings;
+    if (!s || !s.haptics || s.motion) return;
+    if (navigator.vibrate) { try { navigator.vibrate(pattern); } catch (e) {} }
   },
 
   /* ---------- character creation ---------- */
@@ -172,8 +181,9 @@ AD.Game = {
     if (out.tabloid)  this.pending.push({ type: 'tabloid',  data: out.tabloid });
     if (out.doctrine) this.pending.push({ type: 'doctrine', data: out.doctrine });
 
-    /* --- audio: the most significant thing that happened, once --- */
+    /* --- audio + haptics: the most significant thing that happened, once --- */
     const A = AD.Audio;
+    this.haptic(out.pillar ? [0, 40, 30, 70] : 12);
     if (out.pillar)        { A.play('pillar'); AD.UI.captureFlash(out.pillar); }
     else if (out.breach)   A.play('clause');
     else if (out.doctrine) A.play('doctrine');
@@ -494,7 +504,7 @@ AD.Game = {
       if (act) this.act(act.dataset.act);
     });
 
-    ['timer', 'motion', 'clean', 'pack'].forEach(k => {
+    ['timer', 'motion', 'clean', 'pack', 'cb', 'haptics'].forEach(k => {
       const el = U.el('opt-' + k);
       if (!el) return;
       el.addEventListener('change', () => {
