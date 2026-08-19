@@ -114,7 +114,24 @@ AD.ACHIEVEMENTS = [
     test: r => r.legacy && r.legacy.chaos >= AD.CHAOS_CAP },
 
   { id: 'all-endings', name: 'The Complete Archive', desc: 'Reach 10 different endings across all your administrations.',
-    test: () => new Set(AD.loadLibrary().map(x => x.endingId)).size >= 10 }
+    test: () => new Set(AD.loadLibrary().map(x => x.endingId)).size >= 10 },
+
+  /* ---- the revolving door, the record, the desk ---- */
+  { id: 'revolving-door', name: 'The Fifth Secretary of Homeland Security',
+    desc: 'Churn through 6 or more cabinet officials in a single term.',
+    test: (r, s) => (s && s.cabinetChurn || 0) >= 6 },
+
+  { id: 'reality-optional', name: 'Alternative Facts, Load-Bearing',
+    desc: 'Finish a term with the Truth Index at 80 or higher.',
+    secret: true, test: (r, s) => (s && s.truthIndex != null ? s.truthIndex : 50) >= 80 },
+
+  { id: 'boy-scout', name: 'Suspiciously Honest',
+    desc: 'Serve a full term with the Truth Index at 25 or lower.',
+    secret: true, test: (r, s) => (s && s.truthIndex != null ? s.truthIndex : 50) <= 25 && r.month >= 40 },
+
+  { id: 'struck-down', name: 'Blocked, Nationwide, Effective Immediately',
+    desc: 'Have three of your own Executive Orders struck down in one term.',
+    test: (r, s) => (s && s.eoStruck || 0) >= 3 }
 ];
 
 AD.loadAchievements = () => AD.store.read(AD.ACH_KEY, []);

@@ -18,17 +18,22 @@ AD.EVENTS = {
     id: 'evt-address', scripted: true, title: 'The Address', who: E.cos,
     tags: ['press'],
     text: 'The whole government is in one room: the Cabinet, both chambers, the Court, the Chiefs. ' +
-          'Sixty million people are watching. Deborah has three drafts and no opinion she is willing to state out loud.',
+          'Sixty million people are watching. A member of the opposition is already holding up a small sign, ' +
+          'saved for exactly this camera angle. Deborah has three drafts, a fourth she is pretending she did not write, ' +
+          'and no opinion she is willing to state out loud.',
     choices: [
       { label: 'The unity speech. Reach across the aisle.',
         eff: { press: +8, congress: +7, street: +7, base: -7, auth: -2 },
-        res: 'Standing ovations from people who will vote against you on Thursday. Your own side sits on their hands for the best line in it.' },
+        res: 'Standing ovations from people who will vote against you on Thursday. Your own side sits on their hands for the best line in it. The sign stays down; there was nothing on it worth holding up for.' },
       { label: 'The grievance speech. Name every enemy.',
         eff: { base: +12, press: -8, congress: -6, street: -6, auth: +5 },
-        res: 'A justice walks out. Two governors issue statements before you finish. Your fundraising takes in $61 million overnight.' },
+        res: 'A justice walks out. Two governors issue statements before you finish. Your fundraising takes in $61 million overnight, and the sign finally comes up on cue, which was, in its way, the point.' },
       { label: 'The emergency speech. The country is under threat from within.',
         eff: { base: +9, press: -6, courts: -6, street: -8, congress: -3, auth: +9 },
-        res: 'You use the phrase "invasion from within" while facing the Joint Chiefs. Nobody in the room stands up. Nobody in the room leaves either.' }
+        res: 'You use the phrase "invasion from within" while facing the Joint Chiefs. Nobody in the room stands up. Nobody in the room leaves either.' },
+      { label: 'Go off script entirely. Ad-lib the whole thing.', wild: true,
+        eff: { base: +10, press: -9, congress: -7, street: -5, auth: +2 },
+        res: 'You set the fourth draft aside and talk for eleven unscripted minutes. Deborah\'s face, caught on a cutaway camera, becomes its own news cycle. Nobody, including you, can fully reconstruct what was promised.' }
     ]
   },
 

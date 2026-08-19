@@ -361,6 +361,8 @@ AD.SECTION_EVENTS = [
       const m = AD.termMonth(run);
       const p = run.eoPending.find(x => x.due <= m);
       run.eoPending = run.eoPending.filter(x => x !== p);
+      run.stats = run.stats || {};
+      run.stats.eoStruck = (run.stats.eoStruck || 0) + 1;
       return {
         id: 'sec-eo-strike-' + p.id, scripted: true, who: C.lawyer, tags: ['eo','courts'],
         pillarBanner: 'STRUCK DOWN',

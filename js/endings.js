@@ -318,6 +318,7 @@ AD.scoreRun = function (run, endingId) {
     cayStage: (run.cay && run.cay.stage) || 0,
     cabinetChurn: (run.stats && run.stats.cabinetChurn) || 0,
     truthIndex: (run.stats && run.stats.truthIndex != null) ? run.stats.truthIndex : 50,
+    eoStruck: (run.stats && run.stats.eoStruck) || 0,
     score: score,
     stamp: Date.now()
   };
