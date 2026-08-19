@@ -48,7 +48,7 @@ html[data-motion="off"] *{animation:none!important;transition:none!important}
   overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 html,body{height:100%}
 /* The Spectacle meter (the President's boredom), under the Authority bar. */
-.spectacle{display:flex;align-items:center;gap:7px;margin:7px 0 2px;font-size:10px}
+.spectacle{display:flex;align-items:center;gap:7px;margin:4px 0 2px;font-size:10px}
 .spec-lab{color:var(--paper2);letter-spacing:1px;white-space:nowrap}
 .spec-bar{position:relative;flex:1;height:6px;border-radius:4px;background:#141c2c;overflow:hidden}
 .spec-bar i{position:absolute;left:0;top:0;bottom:0;border-radius:4px;transition:width .4s ease}
@@ -91,6 +91,12 @@ body::before{
   position:absolute;inset:0;display:none;flex-direction:column;
   padding:max(14px, env(safe-area-inset-top)) 14px max(14px, env(safe-area-inset-bottom));
   overflow-y:auto;overscroll-behavior:contain;
+}
+/* The game screen packs the most into one view (HUD, ratings, a crisis
+   card), so it gets a leaner top/bottom margin than the menu-style screens. */
+#screen-game{
+  padding-top:max(8px, env(safe-area-inset-top));
+  padding-bottom:max(8px, env(safe-area-inset-bottom));
 }
 .screen.active{display:flex;animation:fadeIn .34s ease both}
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
@@ -244,7 +250,7 @@ body::before{
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .hud-cash{
   font-size:13px;color:#9ec9a5;border:1px solid #1d3a4a;background:#0c1a22;
-  padding:8px 9px;border-radius:10px;white-space:nowrap;flex:0 0 auto;
+  padding:6px 9px;border-radius:10px;white-space:nowrap;flex:0 0 auto;
   font-family:inherit;cursor:pointer;transition:var(--fx);
 }
 .hud-cash:hover{border-color:#4f9160;background:#132218}
@@ -255,7 +261,7 @@ body::before{
 .hud-money{display:flex;flex-direction:column;gap:4px;flex:0 0 auto}
 .hud-purse{
   font-size:12px;color:#9db6d6;border:1px solid #24344f;background:#0c1420;
-  padding:6px 9px;border-radius:10px;white-space:nowrap;
+  padding:5px 9px;border-radius:10px;white-space:nowrap;
   font-family:inherit;cursor:pointer;transition:var(--fx)}
 .hud-purse:hover{border-color:#4f6fa0;background:#111d2e}
 .hud-purse.broke{color:#e0857c;border-color:#4a2723;background:#1c1210}
@@ -313,7 +319,7 @@ body::before{
 .asset-buy:disabled{opacity:.35;cursor:not-allowed}
 
 /* ---------- authority ---------- */
-.authority-wrap{margin:12px 0 8px;flex:0 0 auto}
+.authority-wrap{margin:8px 0 5px;flex:0 0 auto}
 .authority-label{font-size:10px;letter-spacing:3px;color:var(--muted);margin-bottom:5px;display:flex;justify-content:space-between}
 .authority-label span{color:var(--gold-soft);font-weight:700;letter-spacing:1px}
 .authority-bar{
@@ -339,7 +345,7 @@ body::before{
   animation:pulse 2.4s ease-in-out infinite}
 .warn-row.good{color:var(--gold-soft);border-color:var(--edge2);background:#171208}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.62}}
-.pillar-row{display:flex;gap:5px;margin-top:7px}
+.pillar-row{display:flex;gap:5px;margin-top:5px}
 .pill{
   flex:1;font-size:9px;letter-spacing:.6px;text-align:center;padding:4px 2px;
   border:1px solid var(--edge);border-radius:7px;color:#5b5347;background:var(--ink2);
@@ -384,7 +390,7 @@ body::before{
   border-top:1px dashed #4a2030;line-height:1.4}
 
 /* ---------- facade + factions ---------- */
-.facade{position:relative;margin:6px 0 4px;flex:0 0 auto}
+.facade{position:relative;margin:4px 0 3px;flex:0 0 auto}
 .facade-roof{
   height:12px;
   background:
@@ -394,15 +400,15 @@ body::before{
   box-shadow:inset 0 -6px 10px rgba(0,0,0,.5);
 }
 .factions{
-  display:flex;gap:4px;padding:8px 6px;background:var(--ink2);
+  display:flex;gap:4px;padding:5px 6px;background:var(--ink2);
   border:1px solid var(--edge);border-radius:0 0 10px 10px;
 }
 .fac{flex:1;text-align:center;min-width:0;cursor:default;position:relative}
 .fac-fig{
-  height:30px;display:flex;align-items:flex-end;justify-content:center;
+  height:18px;display:flex;align-items:flex-end;justify-content:center;
   font-size:19px;line-height:1;transition:var(--fx);filter:grayscale(.35);
 }
-.fac-bar{height:5px;background:#1c1712;border-radius:99px;overflow:hidden;margin:4px 0 3px}
+.fac-bar{height:4px;background:#1c1712;border-radius:99px;overflow:hidden;margin:3px 0 2px}
 .fac-fill{height:100%;width:50%;border-radius:99px;transition:width .5s cubic-bezier(.2,.8,.25,1),background .3s}
 .fac-name{font-size:8px;letter-spacing:.7px;color:#6c6355;text-transform:uppercase;
   overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -448,10 +454,10 @@ body::before{
 .timer span{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--paper2)}
 
 .card-title{
-  margin:0 0 8px;font-size:21px;line-height:1.15;letter-spacing:-.3px;
+  margin:0 0 6px;font-size:19px;line-height:1.15;letter-spacing:-.3px;
   color:var(--gold-soft);
 }
-.card-text{margin:0 0 14px;font-size:15px;line-height:1.55;color:var(--paper2)}
+.card-text{margin:0 0 10px;font-size:14.5px;line-height:1.42;color:var(--paper2)}
 /* The pop-up bulletin label ("📞 THE PHONE", "🪧 THE STREET", ...). It sits
    INSIDE .card-title, which paints its text with a transparent gradient fill;
    -webkit-text-fill-color is inherited, so without the explicit reset below the
@@ -473,11 +479,11 @@ body::before{
 
 /* Four options per card, tighter spacing so a full crisis still fits a phone
    screen without the stage scrolling. */
-.choices{display:flex;flex-direction:column;gap:6px}
+.choices{display:flex;flex-direction:column;gap:5px}
 .choice{
-  width:100%;text-align:left;padding:10px 12px;
+  width:100%;text-align:left;padding:8px 11px;
   background:var(--ink2);border:1px solid var(--edge);border-radius:11px;
-  color:var(--paper);font:inherit;font-size:14px;line-height:1.35;cursor:pointer;
+  color:var(--paper);font:inherit;font-size:13.5px;line-height:1.32;cursor:pointer;
   transition:var(--fx);position:relative;
 }
 .choice:hover{border-color:var(--gold);background:var(--ink3);transform:translateX(2px)}
@@ -950,14 +956,14 @@ html[data-cb="on"] .fac.danger .fac-val{color:#93c5fd}
   box-shadow:0 10px 30px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.05)}
 .factions{
   background:linear-gradient(180deg,#141d33,#0e1526);
-  padding:12px 8px 10px;border-color:#2a3a5c;
+  padding:6px 6px 5px;border-color:#2a3a5c;
 }
-.fac{padding:4px 2px 2px;border-radius:9px;transition:background .2s,transform .12s}
+.fac{padding:2px 2px 1px;border-radius:9px;transition:background .2s,transform .12s}
 .fac.has-screen:hover{background:rgba(47,93,168,.14);transform:translateY(-1px)}
-.fac-fig{height:32px}
-.fac-val{font-weight:700;font-size:16px;color:var(--paper);letter-spacing:.3px}
-.fac-name{font-size:8.5px;letter-spacing:1.6px;color:#6c7a94}
-.fac-bar{height:4px;border-radius:3px;background:#0a1120;margin:5px 3px 4px;overflow:hidden}
+.fac-fig{height:19px}
+.fac-val{font-weight:700;font-size:13px;color:var(--paper);letter-spacing:.3px}
+.fac-name{font-size:7.5px;letter-spacing:1.2px;color:#6c7a94}
+.fac-bar{height:3px;border-radius:3px;background:#0a1120;margin:3px 3px 2px;overflow:hidden}
 
 /* refined chips, quieter, more premium */
 .const-chip{
@@ -977,7 +983,7 @@ html[data-cb="on"] .fac.danger .fac-val{color:#93c5fd}
 .authority-fill{border-radius:5px}
 
 /* ---------- character portraits in the speaker avatar ---------- */
-.sil{width:46px;height:46px;padding:0;overflow:hidden;
+.sil{width:38px;height:38px;padding:0;overflow:hidden;
   background:radial-gradient(circle at 40% 30%,#2a2118,#100c08);
   border:1.5px solid #3a3020;box-shadow:0 2px 6px rgba(0,0,0,.5),inset 0 0 0 1px rgba(201,162,39,.12)}
 .sil svg{width:100%;height:auto;display:block;margin-top:1px}
@@ -985,37 +991,39 @@ html[data-cb="on"] .fac.danger .fac-val{color:#93c5fd}
 /* ---------- the crisis card as a hero ---------- */
 .card{
   background:linear-gradient(180deg,#182137,#0d1322);
-  border:1px solid #2a3958;border-radius:14px;padding:16px 16px 15px;
+  border:1px solid #2a3958;border-radius:14px;padding:13px 13px 12px;
   box-shadow:0 18px 44px rgba(0,0,0,.62),0 0 0 1px rgba(201,162,39,.06),inset 0 1px 0 rgba(255,255,255,.05);
 }
-.card-speaker{padding-bottom:11px;margin-bottom:12px;border-bottom:1px solid rgba(201,162,39,.14)}
-.who b{font-size:15px;letter-spacing:.2px}
-.who em{color:var(--gold);opacity:.75;font-size:10px;letter-spacing:1.4px}
-.card-title{font-size:22px;font-weight:700;
+.card-speaker{padding-bottom:8px;margin-bottom:9px;border-bottom:1px solid rgba(201,162,39,.14)}
+.who b{font-size:14px;letter-spacing:.2px}
+.who em{color:var(--gold);opacity:.75;font-size:9.5px;letter-spacing:1.4px}
+.card-title{font-size:19px;font-weight:700;
   background:linear-gradient(180deg,#f2dd8a,#c9a227);-webkit-background-clip:text;background-clip:text;
   -webkit-text-fill-color:transparent}
 
 /* ---------- refined choices with number badges ---------- */
-.choice{display:flex;align-items:center;gap:10px;padding:11px 12px;
+.choice{display:flex;align-items:center;gap:9px;padding:8px 11px;
   background:linear-gradient(180deg,#141d33,#0f1626);border:1px solid #26324e;border-radius:11px;
   overflow:hidden}
 .choice::before{content:'';position:absolute;left:0;top:0;bottom:0;width:0;
   background:linear-gradient(var(--gold-soft),var(--gold));transition:width .16s}
 .choice:hover:not(:disabled){border-color:#3d5488;background:linear-gradient(180deg,#1a2848,#121b30);transform:translateX(2px)}
 .choice:hover:not(:disabled)::before{width:3px}
-.ch-num{flex:0 0 auto;width:21px;height:21px;border-radius:6px;display:flex;align-items:center;
-  justify-content:center;font-size:11px;font-weight:700;color:var(--gold-soft);
+.ch-num{flex:0 0 auto;width:19px;height:19px;border-radius:6px;display:flex;align-items:center;
+  justify-content:center;font-size:10.5px;font-weight:700;color:var(--gold-soft);
   background:rgba(201,162,39,.1);border:1px solid rgba(201,162,39,.25)}
 .choice.wild .ch-num{color:#c9a9e0;background:rgba(122,63,176,.14);border-color:rgba(122,63,176,.4)}
 .ch-label{flex:1;min-width:0}
 .choice:disabled{opacity:.4}
 
 /* ═══════════════ HUD DECLUTTER ═══════════════ */
-/* Tighter vertical rhythm so the top reads as one calm block */
-.authority-wrap{margin:10px 0 6px}
-.pillar-row{margin-top:6px;gap:4px}
-.chip-row{margin-top:6px;gap:5px}
-.facade{margin-top:8px}
+/* Tighter vertical rhythm so the top reads as one calm block, compact enough
+   that the whole HUD (authority, pillars, boredometer, factions, rooms) plus
+   a crisis card fits a phone screen without scrolling in the common case. */
+.authority-wrap{margin:6px 0 4px}
+.pillar-row{margin-top:4px;gap:4px}
+.chip-row{margin-top:4px}
+.facade{margin-top:3px}
 
 /* Empty pillar slots become quiet dashes; a captured one lights GOLD (secured),
    matching the captured-meter colour instead of shouting in red. */
@@ -1025,9 +1033,21 @@ html[data-cb="on"] .fac.danger .fac-val{color:#93c5fd}
   color:#241a06;background:linear-gradient(180deg,#f2dd8a,#c9a227);
   box-shadow:0 0 14px rgba(201,162,39,.3)}
 
-/* A quiet caption so the empty slots explain themselves */
-.pillar-cap{font-size:8px;letter-spacing:2.4px;color:#4a5573;text-transform:uppercase;
-  margin:8px 0 -2px;text-align:center}
+/* Icon-only management-room strip: one row of six, badge counts overlaid in
+   the corner for Constitution/Residence. Full names live in the title
+   tooltip; the bespoke icon set (icons.js) carries the meaning at this size. */
+.chip-row{display:grid;grid-template-columns:repeat(6,1fr);gap:4px}
+.chip-row .const-chip{
+  margin-top:0;height:34px;padding:0;position:relative;
+  display:flex;align-items:center;justify-content:center;
+}
+.chip-row .chip-ico{margin:0;display:flex}
+.chip-row .chip-ico svg{width:16px;height:16px}
+.chip-row .const-chip b{
+  position:absolute;bottom:1px;right:3px;font-size:7px;letter-spacing:0;
+  color:var(--gold-soft);font-weight:700;
+}
+.chip-row .const-chip.full b{color:inherit}
 
 /* ---------- the economy (tariffs + diplomacy) ---------- */
 .econ-chip:hover{border-color:var(--gold)}

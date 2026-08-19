@@ -181,18 +181,19 @@ AD.UI = {
     const dico = this.el('ico-pardon'); if (dico && !dico.innerHTML) dico.innerHTML = AD.icon('pardon');
     const chip = this.el('const-chip');
     const cn = AD.clauseCount(run);
-    chip.innerHTML = '<span class="chip-ico">' + AD.icon('constitution') + '</span>THE CONSTITUTION <b>' + cn + '/' + AD.CLAUSES.length + '</b>';
+    chip.innerHTML = '<span class="chip-ico">' + AD.icon('constitution') + '</span><b>' + cn + '/' + AD.CLAUSES.length + '</b>';
     chip.classList.toggle('full', AD.allClausesBroken(run));
     chip.classList.toggle('started', cn > 0);
+    chip.title = 'THE CONSTITUTION — ' + cn + '/' + AD.CLAUSES.length + ' clauses broken. The Ledger of Broken Clauses.';
 
     const rchip = this.el('reno-chip');
     const rn = (run.renos || []).length;
-    rchip.innerHTML = '<span class="chip-ico">' + AD.icon('residence') + '</span>THE RESIDENCE <b>' + rn + '/' + AD.RENOS.length + '</b>';
+    rchip.innerHTML = '<span class="chip-ico">' + AD.icon('residence') + '</span><b>' + rn + '/' + AD.RENOS.length + '</b>';
     rchip.classList.toggle('started', rn > 0);
     rchip.classList.toggle('full', rn === AD.RENOS.length);
-    rchip.title = rn
+    rchip.title = 'THE RESIDENCE — ' + (rn
       ? `Upkeep −$${Math.round(AD.upkeep(run) * 1000)}M every month`
-      : 'The Residence, improvements to the White House';
+      : 'improvements to the White House');
 
     const warns = AD.Engine.warnings();
     this.el('warnings').innerHTML = warns.map(w =>
