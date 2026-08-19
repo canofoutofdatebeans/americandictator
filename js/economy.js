@@ -106,7 +106,37 @@ AD.TARIFF_PROFILE = {
 AD.ensureEconomy = function (run) {
   if (!run.tariffs) run.tariffs = [];
   if (!run.relations) run.relations = {};
+  if (typeof run.sp500 !== 'number') run.sp500 = 5000;      // pre-market saves
+  if (typeof run.biz !== 'number') run.biz = 100;
+  if (!run.marketHistory) run.marketHistory = [{ m: run.month - 1 || 0, sp: run.sp500, biz: run.biz }];
   return run;
+};
+
+/* Monthly: move the market. The S&P drifts up on a calm month and is dragged
+   down by open tariffs, ongoing wars and a collapsing street; the President's
+   own BUSINESS index is a higher-beta bet on the same market that ALSO jumps
+   with his personal wealth (a good corruption month lifts the family firm). Both
+   are recorded so the Economy screen can chart them. Uses a market-local rng,
+   off the card stream, so a shared seed still draws identical crises. */
+AD.marketTick = function (run) {
+  AD.ensureEconomy(run);
+  const rng = econRng((run.seed || 'X') + 'market' + run.month);
+  let spPct = 0.006;                                        // gentle bull drift
+  spPct -= (run.tariffs || []).filter(t => !t.fired).length * 0.006;
+  spPct -= (run.wars || []).filter(w => !w.done).length * 0.012;
+  spPct += (((run.meters && run.meters.street) || 50) - 50) * 0.0004;
+  spPct += (rng() - 0.5) * 0.05;                            // noise / volatility
+  run.sp500 = Math.max(600, Math.round(run.sp500 * (1 + spPct)));
+
+  const cashDelta = (run.cash || 0) - (run._prevCash == null ? (run.cash || 0) : run._prevCash);
+  run._prevCash = run.cash || 0;
+  let bizPct = spPct * 1.5 + (rng() - 0.5) * 0.06 + AD.clamp(cashDelta * 0.03, -0.12, 0.2);
+  run.biz = Math.max(5, Math.round(run.biz * (1 + bizPct) * 10) / 10);
+
+  run.marketHistory = run.marketHistory || [];
+  run.marketHistory.push({ m: run.month, sp: run.sp500, biz: run.biz });
+  if (run.marketHistory.length > 60) run.marketHistory = run.marketHistory.slice(-60);
+  return { sp: run.sp500, biz: run.biz };
 };
 AD.relations = (run, id) => (run.relations && run.relations[id] !== undefined) ? run.relations[id] : 50;
 AD.tariffOn = (run, id) => (run.tariffs || []).find(t => t.id === id);

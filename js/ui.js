@@ -1264,9 +1264,47 @@ AD.UI = {
 
   /* ---------- the economy (tariffs + diplomacy) ---------- */
   econTab: 'tariffs',
+  /* A two-line trading chart: the S&P 500 (the country's market) and the
+     President's own business index (a higher-beta bet that also rides his
+     personal wealth). Pure inline SVG, theme-aware, no library. */
+  renderMarketChart (run) {
+    const el = this.el('market-chart');
+    if (!el) return;
+    const hist = (run.marketHistory || []).slice(-40);
+    if (hist.length < 2) { el.innerHTML = '<div class="mkt-empty">The markets open as the term begins.</div>'; return; }
+    const W = 300, H = 96, padL = 4, padR = 4, padT = 8, padB = 8;
+    const xs = (i) => padL + (i / (hist.length - 1)) * (W - padL - padR);
+    // Each series is normalised to its own min/max so both fit the same box.
+    const line = (key, cls) => {
+      const vals = hist.map(h => h[key]);
+      let lo = Math.min(...vals), hi = Math.max(...vals);
+      if (hi - lo < 1e-6) { hi = lo + 1; }
+      const y = (v) => padT + (1 - (v - lo) / (hi - lo)) * (H - padT - padB);
+      const d = hist.map((h, i) => (i ? 'L' : 'M') + xs(i).toFixed(1) + ' ' + y(h[key]).toFixed(1)).join(' ');
+      const last = vals[vals.length - 1];
+      return { d, cls, lastY: y(last), up: last >= vals[0] };
+    };
+    const sp = line('sp', 'mkt-sp');
+    const biz = line('biz', 'mkt-biz');
+    const first = hist[0], now = hist[hist.length - 1];
+    const pct = (a, b) => (b === 0 ? 0 : Math.round(((a - b) / b) * 100));
+    const spPct = pct(now.sp, first.sp), bizPct = pct(now.biz, first.biz);
+    const arrow = p => p >= 0 ? '▲' : '▼';
+    el.innerHTML =
+      `<div class="mkt-legend">
+         <span class="mkt-key sp"><i></i>S&amp;P 500 <b>${now.sp.toLocaleString()}</b> <em class="${spPct >= 0 ? 'up' : 'dn'}">${arrow(spPct)}${Math.abs(spPct)}%</em></span>
+         <span class="mkt-key biz"><i></i>${AD.clean('Your Business', this.settings.clean)} <b>${now.biz.toLocaleString()}</b> <em class="${bizPct >= 0 ? 'up' : 'dn'}">${arrow(bizPct)}${Math.abs(bizPct)}%</em></span>
+       </div>
+       <svg viewBox="0 0 ${W} ${H}" class="mkt-svg" preserveAspectRatio="none" aria-hidden="true">
+         <path d="${sp.d}" class="mkt-sp" fill="none"/>
+         <path d="${biz.d}" class="mkt-biz" fill="none"/>
+       </svg>`;
+  },
+
   renderEconomy (result) {
     const run = AD.Engine.run;
     AD.ensureEconomy(run);
+    this.renderMarketChart(run);
     const tabs = [['tariffs', 'Tariffs'], ['diplomacy', 'Diplomacy']];
     this.el('econ-tabs').innerHTML = tabs.map(([k, lab]) =>
       `<button class="sen-tab ${this.econTab === k ? 'on' : ''}" data-econtab="${k}">${lab}</button>`).join('');

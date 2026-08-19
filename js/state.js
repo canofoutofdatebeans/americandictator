@@ -5,7 +5,7 @@
    ============================================================ */
 
 window.AD = window.AD || {};
-AD.BUILD = '87';   // bumped every deploy; shown on the title so a stale cache is obvious
+AD.BUILD = '88';   // bumped every deploy; shown on the title so a stale cache is obvious
 
 /* ---------- Factions ------------------------------------------------------
    Five power centres. Four of them are CAPTURABLE: drive one to 100 and it
@@ -335,6 +335,9 @@ AD.newRun = function (opts) {
     locked: {},                 // key -> true once captured
     cash: d.startCash,                            // personal wealth (the fortune)
     purse: AD.START_PURSE,                         // national treasury (wars, tariffs)
+    sp500: 5000,                                   // the market index, tracked monthly
+    biz: 100,                                       // the President's own business index
+    marketHistory: [{ m: 0, sp: 5000, biz: 100 }], // for the Economy trading chart
     wealthGoal: d.wealthGoal || AD.WEALTH_GOAL,   // fortune target for this run
     authority: 0,
     rawAuth: 0,                 // earned by decisions, capped at AD.SOFT_CAP

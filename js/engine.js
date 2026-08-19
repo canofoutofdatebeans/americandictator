@@ -559,6 +559,7 @@ AD.Engine = {
     AD.rallyTick(run);  // refill the monthly rally allowance
     AD.summitTick(run); // refill the monthly summit allowance
     this.lastEcon = AD.economyTick(run);  // matured tariffs backfire
+    if (AD.marketTick) AD.marketTick(run); // move the S&P and the family business
     this.lastWar = AD.warTick(run);   // ongoing wars resolve into victory or quagmire
     // A story hot enough to leak does damage without needing a card.
     this.lastLeak = AD.cayTick(run);
