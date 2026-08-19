@@ -22,6 +22,19 @@
 const C = AD.CAST;
 const pick = arr => arr[Math.floor(AD.rng() * arr.length)];
 
+/* Executive Orders sign for the cameras now and, some of the time, get
+   struck down a few months later once a court actually reads them. Kept as
+   a tiny scheduling queue on the run rather than a new engine concept, in
+   the same spirit as run.queue (immediate) but for a specific later month. */
+AD.scheduleEO = function (run, flavor, delay) {
+  run.eoPending = run.eoPending || [];
+  run.eoPending.push({
+    id: flavor.id + '-' + run.eoPending.length + '-' + Math.floor(AD.rng() * 1000),
+    name: flavor.name,
+    due: AD.termMonth(run) + delay
+  });
+};
+
 AD.SECTION_EVENTS = [
 
   /* ------------------------- THE ECONOMY ------------------------- */
@@ -290,6 +303,84 @@ AD.SECTION_EVENTS = [
             res: `You turn down a fortune in public and let everyone watch. It is genuinely admirable and genuinely the last time it happens.` },
           { label: `Take it and launch a coin to "give back".`, eff: { base: 4, press: -4, courts: -3, cash: 0.6, auth: 1 }, wild: true,
             res: `You accept the fund and immediately float a token so your supporters can lose money alongside you, in solidarity. It moons, it craters, it moons again by breakfast.` }
+        ]
+      };
+    }
+  },
+
+  /* ------------------------- EXECUTIVE ORDERS ------------------------- */
+  {
+    key: 'eo', gap: 6,
+    test (run) { return AD.termMonth(run) >= 3 && (run.eoPending || []).length < 3; },
+    build (run) {
+      const FLAVORS = [
+        { id: 'mascot', name: 'the National Resilience Mascot Order',
+          desc: 'a costumed eagle mascot for "national morale," budget and vendor unspecified' },
+        { id: 'renamed', name: 'the Heritage Renaming Order',
+          desc: 'renaming four federal buildings after you, effective immediately' },
+        { id: 'shrimp', name: 'the Strategic Shrimp Reserve Order',
+          desc: 'declaring frozen shrimp a matter of national security' },
+        { id: 'portrait', name: 'the Portrait Standardisation Order',
+          desc: 'one approved photograph of you for every federal building lobby' },
+        { id: 'commute', name: 'the Golf Commute Order',
+          desc: 'reclassifying the motorcade to the golf course as official state business' }
+      ];
+      const f = pick(FLAVORS);
+      return {
+        id: 'sec-eo-' + f.id, scripted: true, who: C.ag, tags: ['eo','courts'],
+        pillarBanner: 'THE OVAL OFFICE DESK',
+        title: 'An Order Ready For Your Signature',
+        text: `Bo slides a folder across the desk. "` + f.desc + `. Legal has some concerns, sir, but a concern ` +
+              `is not a no, and the cameras are already set up in the Roosevelt Room."`,
+        choices: [
+          { label: `Sign it live, hold the page up for the cameras.`, wild: true,
+            eff: { base: 6, press: -5, courts: -3, auth: 2 },
+            res: `You hold the signature up like a trophy. It leads every broadcast for a day and a half.`,
+            act: r => AD.scheduleEO(r, f, 3) },
+          { label: `Sign it quietly, no ceremony, no cameras.`,
+            eff: { base: 2, courts: -1, auth: 1 },
+            res: `It takes effect by six that evening, under a one-line notice nobody reads.`,
+            act: r => AD.scheduleEO(r, f, 5) },
+          { label: `Send it to the Counsel's Office to be narrowed first.`,
+            eff: { base: -1, courts: 2, congress: 1 },
+            res: `Legal spends two weeks sanding the edges off it. What finally gets signed barely makes the news, and survives.` },
+          { label: `Sign three more just like it while you're at it.`, wild: true,
+            eff: { base: 9, press: -7, courts: -6, auth: 3 },
+            res: `You sign a stack of them in one sitting, barely reading the titles. Somewhere in Legal, Bo puts his head in his hands.`,
+            act: r => { AD.scheduleEO(r, f, 2); AD.scheduleEO(r, pick(FLAVORS), 4); } }
+        ]
+      };
+    }
+  },
+
+  /* --------------------- THE ORDER COMES BACK --------------------- */
+  {
+    key: 'eo-strikedown', gap: 5,
+    test (run) { return (run.eoPending || []).some(p => p.due <= AD.termMonth(run)); },
+    build (run) {
+      const m = AD.termMonth(run);
+      const p = run.eoPending.find(x => x.due <= m);
+      run.eoPending = run.eoPending.filter(x => x !== p);
+      return {
+        id: 'sec-eo-strike-' + p.id, scripted: true, who: C.lawyer, tags: ['eo','courts'],
+        pillarBanner: 'STRUCK DOWN',
+        title: 'A Judge Has Read The Order',
+        text: `Sy has the ruling printed out, already annotated. "` + p.name + `, sir. A district judge has ` +
+              `blocked it, nationwide, effective immediately. She used the word 'unconstitutional' four times ` +
+              `in nine pages, twice in the same sentence."`,
+        choices: [
+          { label: `Comply. Let the lawyers handle the appeal.`,
+            eff: { courts: 3, press: 2, base: -2 },
+            res: `You comply on paper the same afternoon, which costs nothing and satisfies no one who was cheering three weeks ago.` },
+          { label: `Announce you'll ignore it until the Supreme Court says otherwise.`, wild: true,
+            eff: { base: 7, courts: -6, congress: -3, auth: 2 },
+            res: `You keep enforcing it anyway. Two more judges enter the case within a week, unprompted.` },
+          { label: `Go on television and name the judge personally.`, wild: true,
+            eff: { base: 5, press: -4, courts: -4, street: -2 },
+            res: `You call her out by name and by law school. Her chambers report a week of threats and a bump in her book sales.` },
+          { label: `Quietly rewrite it narrower and resubmit next month.`,
+            eff: { courts: 1, base: 1, auth: 1 },
+            res: `A second, smaller version goes out under a new number. It survives specifically by being boring.` }
         ]
       };
     }

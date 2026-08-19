@@ -707,6 +707,16 @@ AD.Game = {
     }
   },
 
+  copyFrontPage () {
+    const txt = AD.UI._frontPageShare || '';
+    const done = () => { const b = document.querySelector('[data-act="paper-copy"]'); if (b) { b.textContent = 'Copied!'; setTimeout(() => { b.textContent = 'Copy the Front Page'; }, 1600); } };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(done, done);
+    else {
+      const ta = document.createElement('textarea'); ta.value = txt; document.body.appendChild(ta);
+      ta.select(); try { document.execCommand('copy'); } catch (e) {} document.body.removeChild(ta); done();
+    }
+  },
+
   /* ---------- input ---------- */
   wire () {
     const U = AD.UI;
@@ -1026,6 +1036,7 @@ AD.Game = {
         if (AD.Engine.lastScore) U.renderFrontPage(AD.Engine.lastScore);
         break;
       case 'paper-close': U.overlay('paper', false); break;
+      case 'paper-copy': this.copyFrontPage(); break;
     }
   }
 };

@@ -59,6 +59,15 @@ AD.buildDossier = function (score) {
   if (s.outletsOwned > 0) paras.push('Took ' + s.outletsOwned + ' newsroom' + (s.outletsOwned === 1 ? '' : 's') +
     ' into the tank' + (s.ownedName ? ', beginning with ' + s.ownedName : '') + '.');
 
+  if (s.cabinetChurn > 0) paras.push('Went through ' + s.cabinetChurn + ' cabinet official' +
+    (s.cabinetChurn === 1 ? '' : 's') + (s.cabinetChurn >= 6 ? ', a revolving door that never fully closed.' :
+    s.cabinetChurn >= 3 ? ', a churn nobody in the building stopped commenting on.' : '.'));
+
+  if (s.truthIndex >= 70) paras.push('Official statements drifted a long way from the record; the Truth Index ' +
+    'closed the term at ' + s.truthIndex + '/100, deep into "do not, under any circumstances, believe the readout" territory.');
+  else if (s.truthIndex <= 30) paras.push('Whatever else happened, the record largely held up; the Truth Index ' +
+    'closed the term at ' + s.truthIndex + '/100, unusually honest for the office.');
+
   if (s.warLog && s.warLog.length) {
     const wl = s.warLog;
     const named = wl.slice(0, 3).map(w => {
@@ -101,6 +110,7 @@ AD.buildDossier = function (score) {
   if (s.judgesPacked) bits.push(plural(s.judgesPacked, 'judge') + ' packed');
   if (s.warsDeclared) bits.push(plural(s.warsDeclared, 'war'));
   if (s.clausesBroken) bits.push(s.clausesBroken + '/' + AD.CLAUSES.length + ' clauses broken');
+  if (s.cabinetChurn) bits.push(plural(s.cabinetChurn, 'cabinet official') + ' churned');
   const share = 'AMERICAN DICTATOR, ' + (e.title || 'THE END') + ' in month ' + s.months + '. ' +
     (bits.length ? bits.slice(0, 3).join(', ') + '. ' : '') +
     'Score ' + num(s.score) + (s.seed ? '. Seed ' + s.seed : '') + '.';
@@ -134,7 +144,11 @@ AD.buildFrontPage = function (score) {
   if (score.warsDeclared) parts.push(`declared ${score.warsDeclared} war${score.warsDeclared === 1 ? '' : 's'}`);
   if (score.judgesPacked) parts.push(`packed ${score.judgesPacked} seats on the bench`);
   if (score.outletsOwned) parts.push(`took ${score.outletsOwned} newsroom${score.outletsOwned === 1 ? '' : 's'} in hand`);
+  if (score.cabinetChurn) parts.push(`burned through ${score.cabinetChurn} cabinet official${score.cabinetChurn === 1 ? '' : 's'}`);
   if (parts.length) story.push('Along the way the administration ' + parts.join(', ') + '.');
+
+  if (score.truthIndex >= 70) story.push(`By the independent tallies that still exist, the gap between what was said and what was true never fully closed; call it a <b>Truth Index of ${score.truthIndex}/100</b>.`);
+  else if (score.truthIndex <= 30) story.push(`For an administration of this description, the public record held up unusually well; the <b>Truth Index closed at ${score.truthIndex}/100</b>.`);
 
   if (score.pardons) {
     let s = `On the way out the door, ${score.pardons} pardon${score.pardons === 1 ? ' was' : 's were'} signed`;
@@ -168,6 +182,16 @@ AD.buildFrontPage = function (score) {
       { n: (score.clausesBroken || 0) + '/' + AD.CLAUSES.length, label: 'Clauses' },
       { n: score.score.toLocaleString(), label: 'Final Score' }
     ],
-    verdict: AD.clean ? e.epitaph : e.epitaph
+    verdict: AD.clean ? e.epitaph : e.epitaph,
+    /* The one-block plain-text version of the front page, for a share sheet
+       or a paste into a chat, headline through verdict, no markup. */
+    share: 'THE NATIONAL SCREAM, FINAL EDITION\n' +
+      (e.head || (score.win ? 'HE DID IT' : 'IT IS OVER')) +
+      (e.sub ? '\n' + e.sub : '') +
+      '\n\n' + name + ', ' + (score.party || 'independent') + ', ' + score.months + ' months in office.\n' +
+      'Authority ' + score.authority + '/100 · ' + score.pillars + '/4 pillars · $' + score.cash + 'B fortune' +
+      (score.clausesBroken ? ' · ' + score.clausesBroken + '/' + AD.CLAUSES.length + ' clauses broken' : '') +
+      '\nFinal score ' + score.score.toLocaleString() + (score.seed ? ' · seed ' + score.seed : '') +
+      '\n\n"' + (e.epitaph || '') + '"\n\nAMERICAN DICTATOR'
   };
 };

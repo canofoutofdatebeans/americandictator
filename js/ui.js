@@ -1501,8 +1501,10 @@ AD.UI = {
       <div class="fp-story">${f.story.map(p => `<p>${cln(p)}</p>`).join('')}</div>
       <div class="fp-verdict">${cln(f.verdict)}</div>
       <div class="dos-actions">
+        <button class="btn btn-primary" data-act="paper-copy">Copy the Front Page</button>
         <button class="btn btn-ghost" data-act="paper-close">Close</button>
       </div>`;
+    this._frontPageShare = f.share;
     this.overlay('paper', true);
   },
 

@@ -316,6 +316,8 @@ AD.scoreRun = function (run, endingId) {
     topPardon: (run.pardoned || []).map(id => AD.pardonById && AD.pardonById(id)).filter(p => p && !p.saint).map(p => p.name)[0] || null,
     cayHeat: (AD.cayHeat ? AD.cayHeat(run) : 0),
     cayStage: (run.cay && run.cay.stage) || 0,
+    cabinetChurn: (run.stats && run.stats.cabinetChurn) || 0,
+    truthIndex: (run.stats && run.stats.truthIndex != null) ? run.stats.truthIndex : 50,
     score: score,
     stamp: Date.now()
   };

@@ -5,7 +5,7 @@
    ============================================================ */
 
 window.AD = window.AD || {};
-AD.BUILD = '103';   // bumped every deploy; shown on the title so a stale cache is obvious
+AD.BUILD = '104';   // bumped every deploy; shown on the title so a stale cache is obvious
 
 /* ---------- Factions ------------------------------------------------------
    Five power centres. Four of them are CAPTURABLE: drive one to 100 and it
@@ -159,6 +159,26 @@ AD.funThreshold = run => AD.BOREDOM_WIN[(run && run.difficulty)] || 70;
 AD.entertained = run => (run.fun || 0) >= AD.funThreshold(run);
 /* Nudge it, clamped. Positive = a bit of fun; negative = another dull afternoon. */
 AD.moveFun = function (run, d) { run.fun = AD.clamp((run.fun == null ? AD.FUN_START : run.fun) + d, 0, 100); return run.fun; };
+
+/* The revolving cabinet door, tallied so the Dossier/Front Page can name a
+   number ("your 4th Secretary of Homeland Security this term"). Tracked
+   separately from the Senate purge count (r.stats.grabs is broader). */
+AD.bumpCabinetChurn = function (run, n) {
+  run.stats = run.stats || {};
+  run.stats.cabinetChurn = (run.stats.cabinetChurn || 0) + (n || 1);
+};
+
+/* The Truth Index: how far official statements have drifted from reality.
+   0 = scrupulously accurate, 100 = pure fabrication. Not a HUD meter (the
+   HUD is already full); it's tracked quietly and only surfaces in the
+   Dossier/Front Page recap, so a handful of cards can move it without any
+   new always-visible UI. */
+AD.moveTruth = function (run, d) {
+  run.stats = run.stats || {};
+  const cur = run.stats.truthIndex == null ? 50 : run.stats.truthIndex;
+  run.stats.truthIndex = AD.clamp(cur + d, 0, 100);
+  return run.stats.truthIndex;
+};
 
 AD.START_PURSE = 500;   // $500B in the national coffers at inauguration
 AD.purse = run => (run && typeof run.purse === 'number') ? run.purse : AD.START_PURSE;
@@ -380,7 +400,9 @@ AD.newRun = function (opts) {
     pardoned: [],               // ids of people pardoned, see pardons.js
     relations: {},              // diplomacy standing by nation, see economy.js
     clauses: [],                // constitutional clauses broken, see constitution.js
-    stats: { grabs: 0, restraints: 0, timeouts: 0, peakCash: d.startCash, briefings: 0, bought: 0, built: 0 },
+    stats: { grabs: 0, restraints: 0, timeouts: 0, peakCash: d.startCash, briefings: 0, bought: 0, built: 0,
+      cabinetChurn: 0,           // cabinet officials fired/replaced this term, see pack-j-cabinet.js
+      truthIndex: 50 },          // 0-100, how far official statements drift from reality; see dossier.js
     over: false,
     legacy: opts.legacy || null // inherited wreckage, see AD.inheritance()
   };
