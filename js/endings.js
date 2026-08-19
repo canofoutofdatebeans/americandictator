@@ -77,6 +77,18 @@ AD.ENDINGS = {
     epitaph: 'You were president. That was the whole thing that happened.'
   },
 
+  'bored': {
+    win: false, title: 'THE ABDICATION', kicker: 'Died of Boredom',
+    head: 'HE JUST STOPPED SHOWING UP',
+    sub: 'With the prize in reach, the President lost interest and wandered off',
+    body: 'You had it. The country, or the fortune, or both, right there for the taking. And then a Tuesday ' +
+          'arrived that was exactly like the Monday, all memos and meetings and sensible decisions, and the ' +
+          'President could no longer remember why any of this was supposed to be fun. He stopped returning the ' +
+          'calls. He spent the afternoons on the back nine. The most powerful office on Earth turned out to be, ' +
+          'in the end, a job, and he had never once in his life finished a job that bored him.',
+    epitaph: 'He did not lose the presidency. He simply could not be bothered to keep it.'
+  },
+
   'merely-president': {
     win: false, title: 'MERELY PRESIDENT', kicker: 'The Term Expired',
     head: 'AND THEN IT WAS OVER',
@@ -251,6 +263,13 @@ AD.zeroEnding = key => 'zero-' + key;
 
 /* Build the final scorecard shown on the ending screen. */
 AD.scoreRun = function (run, endingId) {
+  // THE BOREDOM GATE. A win only counts if the easily-bored President was still
+  // entertained at the end (run.fun above the difficulty floor). Fall below it
+  // and the victory curdles into THE ABDICATION, he had it, and could not be
+  // bothered to keep it.
+  if (AD.ENDINGS[endingId] && AD.ENDINGS[endingId].win && AD.entertained && !AD.entertained(run)) {
+    endingId = 'bored';
+  }
   const e = AD.ENDINGS[endingId];
   const pillars = Object.keys(run.locked).length;
   const mult = { rookie: 0.7, standard: 1, historic: 1.5 }[run.difficulty] || 1;

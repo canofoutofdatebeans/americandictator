@@ -220,6 +220,20 @@ AD.UI = {
         `<span class="vt-help">?</span>`;
     }
 
+    // The Spectacle meter: how entertained the President is, against the floor he
+    // must clear to actually win.
+    const spec = this.el('spectacle');
+    if (spec) {
+      const fun = run.fun == null ? AD.FUN_START : run.fun;
+      const floor = AD.funThreshold(run);
+      const ok = fun >= floor;
+      spec.className = 'spectacle' + (ok ? ' ok' : ' bored');
+      spec.innerHTML =
+        `<span class="spec-lab">🎪 THE SPECTACLE</span>` +
+        `<span class="spec-bar"><i style="width:${fun}%"></i><b style="left:${floor}%"></b></span>` +
+        `<span class="spec-num">${fun}<em>/${floor}</em></span>`;
+    }
+
     this.renderFactions(run);
   },
 
@@ -1110,8 +1124,9 @@ AD.UI = {
     const list = AD.CALL_BOOK.filter(t => t.cat === this.callTab);
     const disabled = left <= 0 ? 'disabled' : '';
     this.el('call-list').innerHTML = list.map(t => {
-      const buttons = AD.CALL_ACTIONS.map(a =>
-        `<button class="sen-act call-${a.id}" data-callwho="${t.id}" data-callsay="${a.id}" ${disabled} title="${a.label}">${a.icon} ${a.label}</button>`
+      // Each person has their OWN bespoke options now; a MAJOR one is flagged.
+      const buttons = (t.opts || []).map((o, i) =>
+        `<button class="sen-act call-opt${o.major ? ' call-major' : ''}" data-callwho="${t.id}" data-callopt="${i}" ${disabled} title="${AD.clean(o.line, this.settings.clean)}">${o.icon} ${o.label}${o.major ? ' <em>major</em>' : ''}</button>`
       ).join('');
       return `<div class="sen-row call-cat-${t.cat}">
         <div class="sen-top"><span class="sen-dot"></span>

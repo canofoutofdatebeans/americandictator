@@ -113,6 +113,7 @@ AD.doRally = function (run, stuntId) {
   }
 
   const deltas = AD.applySenateEffect(run, eff);
+  if (AD.moveFun) AD.moveFun(run, 3);   // a stunt is exactly the President's idea of fun
   run.stats = run.stats || {};
   run.stats.rallies = (run.stats.rallies || 0) + 1;
   return { ok: true, stunt: s, deltas, twist };

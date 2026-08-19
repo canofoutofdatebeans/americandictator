@@ -164,6 +164,13 @@ AD.Game = {
       whatever ending you reach. It upgrades a win, and it <em>converts a loss into a win</em>.
       You can be removed from office and still come out ahead.</p>
 
+      <h4>The Spectacle (do not get bored)</h4>
+      <p>The President is easily bored. The <b>🎪 Spectacle</b> meter under Authority is how entertained he
+      is: the <b>silly, loud, wild</b> options (the fourth choice on a card, the rallies, the stunts) keep
+      him engaged, while sober, sensible governing bores him rigid, a point at a time. To actually <b>win</b>,
+      the Spectacle must be above the floor at the end, <b>50 / 70 / 90</b> by difficulty. Have the whole
+      country in your grip and a bored President, and he simply loses interest and wanders off.</p>
+
       <h4>Two Purses</h4>
       <p>Money comes in two pools, shown top-right. <b>💰 Personal Wealth</b> is your private
       fortune, the one you are trying to grow, and it pays for bribes, the residence and private
@@ -583,13 +590,14 @@ AD.Game = {
     if (collapse.ending) { AD.Engine.finish(collapse.ending); this.pending = []; setTimeout(() => this.showEnding(AD.Engine.lastScore), 900); }
   },
 
-  makeCall (targetId, actionId) {
+  makeCall (targetId, optIndex) {
     const run = AD.Engine.run;
     if (!run || run.over) return;
-    const r = AD.doCall(run, targetId, actionId);
+    const r = AD.doCall(run, targetId, +optIndex);
     if (!r.ok) return;
     AD.saveRun(run);
-    AD.Audio.play(actionId === 'losers' || actionId === 'complain' ? 'bad' : actionId === 'admire' ? 'good' : 'stamp');
+    const net = AD.FKEYS.reduce((a, k) => a + (r.deltas[k] || 0), 0);
+    AD.Audio.play(r.deltas.cash > 0 ? 'money' : net >= 5 ? 'good' : net <= -5 ? 'bad' : 'stamp');
     AD.UI.renderCall(r); AD.UI.renderHUD();
     const collapse = AD.Engine.checkCollapse();
     if (collapse.ending) { AD.Engine.finish(collapse.ending); this.pending = []; setTimeout(() => this.showEnding(AD.Engine.lastScore), 900); }
@@ -785,8 +793,8 @@ AD.Game = {
       const calltab = e.target.closest('[data-calltab]');
       if (calltab) { AD.UI.callTab = calltab.dataset.calltab; AD.UI.renderCall(); return; }
 
-      const callsay = e.target.closest('[data-callsay]');
-      if (callsay && !callsay.disabled) { this.makeCall(callsay.dataset.callwho, callsay.dataset.callsay); return; }
+      const callsay = e.target.closest('[data-callopt]');
+      if (callsay && !callsay.disabled) { this.makeCall(callsay.dataset.callwho, callsay.dataset.callopt); return; }
 
       const warbtn = e.target.closest('[data-warop]');
       if (warbtn && !warbtn.disabled) { this.warOp(warbtn.dataset.wartarget, warbtn.dataset.warop); return; }

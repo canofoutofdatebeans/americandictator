@@ -37,6 +37,7 @@ AD.Engine = {
     if (!run.streets || !run.streets.length) run.streets = AD.makeStreet(); // pre-street saves
     if (!run.wars) run.wars = [];           // pre-war saves
     if (typeof run.purse !== 'number') run.purse = AD.START_PURSE;   // pre-treasury saves
+    if (typeof run.fun !== 'number') run.fun = AD.FUN_START;          // pre-Spectacle saves
     if (!run.allies) run.allies = {};       // pre-alliance saves
     if (!run.conquests) run.conquests = {}; // pre-conquest saves
     if (!run.judges || !run.judges.length) run.judges = AD.makeCourts(); // pre-courts saves
@@ -194,6 +195,15 @@ AD.Engine = {
        and BEFORE the meters land, so the amplified figure is what the crowd
        actually feels and what the resolution reports. */
     AD.applyBaseAppetite(eff, choice);
+
+    /* THE SPECTACLE. The wild, silly option keeps the easily-bored President
+       entertained; every other, more sober choice is another dull afternoon that
+       bores him a little. Feeding the base hard also amuses him. He must stay
+       above the boredom floor by the end, or he loses interest and wanders off. */
+    if (AD.moveFun) {
+      const spice = choice.wild ? 6 : ((eff.base || 0) >= 6 ? 1 : -1);
+      out.funDelta = AD.moveFun(run, spice) - (run._funBefore == null ? run.fun : run._funBefore);
+    }
 
     /* --- Apply to meters --- */
     AD.FKEYS.forEach(k => {

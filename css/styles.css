@@ -47,6 +47,18 @@ html[data-motion="off"] *{animation:none!important;transition:none!important}
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;
   overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 html,body{height:100%}
+/* The Spectacle meter (the President's boredom), under the Authority bar. */
+.spectacle{display:flex;align-items:center;gap:7px;margin:7px 0 2px;font-size:10px}
+.spec-lab{color:var(--paper2);letter-spacing:1px;white-space:nowrap}
+.spec-bar{position:relative;flex:1;height:6px;border-radius:4px;background:#141c2c;overflow:hidden}
+.spec-bar i{position:absolute;left:0;top:0;bottom:0;border-radius:4px;transition:width .4s ease}
+.spec-bar b{position:absolute;top:-2px;bottom:-2px;width:2px;background:var(--gold);opacity:.85}
+.spectacle.ok .spec-bar i{background:linear-gradient(90deg,#c9a227,#f2dd8a)}
+.spectacle.bored .spec-bar i{background:linear-gradient(90deg,#7a1620,#c0392b)}
+.spec-num{font-variant-numeric:tabular-nums;color:var(--paper);white-space:nowrap}
+.spec-num em{font-style:normal;color:var(--muted)}
+.spectacle.bored .spec-num{color:#e0857c}
+
 /* Mobile: a horizontal swipe must NEVER trigger the browser's back/forward
    navigation and drop the player out of the game. Block horizontal overscroll
    and confine touch panning to the vertical axis; nothing in the game scrolls

@@ -5,7 +5,7 @@
    ============================================================ */
 
 window.AD = window.AD || {};
-AD.BUILD = '91';   // bumped every deploy; shown on the title so a stale cache is obvious
+AD.BUILD = '92';   // bumped every deploy; shown on the title so a stale cache is obvious
 
 /* ---------- Factions ------------------------------------------------------
    Five power centres. Four of them are CAPTURABLE: drive one to 100 and it
@@ -146,6 +146,19 @@ AD.wealthGoal = run => (run && run.wealthGoal) || AD.WEALTH_GOAL;
 /* Each calendar month of the presidency is THREE cards: the clock (and every
    monthly tick, decay, the market, war resolution) advances only on the third. */
 AD.CARDS_PER_MONTH = 3;
+
+/* ---------- THE SPECTACLE (the President's boredom) -----------------------
+   The President is easily bored. run.fun (0-100) is how ENTERTAINED he is: the
+   dumb, loud, silly, transgressive moves keep him engaged; sober, sensible
+   governing bores him rigid. Governing bleaks a point of it every card. To WIN,
+   the Spectacle must be above the difficulty floor at the end, otherwise the
+   President loses interest, wanders off, and simply does not finish the job. */
+AD.FUN_START = 50;
+AD.BOREDOM_WIN = { rookie: 50, standard: 70, historic: 90 };
+AD.funThreshold = run => AD.BOREDOM_WIN[(run && run.difficulty)] || 70;
+AD.entertained = run => (run.fun || 0) >= AD.funThreshold(run);
+/* Nudge it, clamped. Positive = a bit of fun; negative = another dull afternoon. */
+AD.moveFun = function (run, d) { run.fun = AD.clamp((run.fun == null ? AD.FUN_START : run.fun) + d, 0, 100); return run.fun; };
 
 AD.START_PURSE = 500;   // $500B in the national coffers at inauguration
 AD.purse = run => (run && typeof run.purse === 'number') ? run.purse : AD.START_PURSE;
@@ -339,6 +352,7 @@ AD.newRun = function (opts) {
     locked: {},                 // key -> true once captured
     cash: d.startCash,                            // personal wealth (the fortune)
     purse: AD.START_PURSE,                         // national treasury (wars, tariffs)
+    fun: AD.FUN_START,                             // the Spectacle: how entertained the President is
     sp500: 5000,                                   // the market index, tracked monthly
     biz: 100,                                       // the President's own business index
     marketHistory: [{ m: 0, sp: 5000, biz: 100 }], // for the Economy trading chart
