@@ -236,17 +236,47 @@ AD.PARDONS = [
 AD.pardonById = id => AD.PARDONS.find(p => p.id === id);
 AD.isPardoned = (run, id) => (run.pardoned || []).indexOf(id) !== -1;
 
+/* How likely a freed crook is to make you regret it, by type. A war criminal or
+   a kingpin is a far worse bet than a tax cheat. Saints never reoffend. */
+AD.PARDON_RISK = {
+  warlord: 0.5, kingpin: 0.45, insurrection: 0.4, cartel: 0.45,
+  fraud: 0.22, crony: 0.25, donor: 0.2, spy: 0.35, default: 0.28
+};
+
 AD.doPardon = function (run, id) {
   const p = AD.pardonById(id);
   if (!p) return { ok: false, reason: 'No such case.' };
   if (AD.isPardoned(run, id)) return { ok: false, reason: 'Already pardoned.' };
   run.pardoned = run.pardoned || [];
   run.pardoned.push(id);
-  const deltas = AD.applySenateEffect(run, p.eff);   // shared meter/cash/auth applier
+
+  // Base effect, then a REACTION TWIST so no two pardons of the same person
+  // would play the same way, and a risky one can genuinely blow up in your face.
+  const eff = Object.assign({}, p.eff);
+  let twist = null;
+  const roll = AD.reactRoll ? AD.reactRoll(run) : 0.5;
+  if (p.saint) {
+    if (roll > 0.62) {
+      eff.press = (eff.press || 0) + 3; eff.courts = (eff.courts || 0) + 2; eff.auth = (eff.auth || 0) + 1;
+      twist = p.name + ' is fully, publicly vindicated, and freeing them turns out to reflect very well on you.';
+    }
+  } else {
+    const risk = AD.PARDON_RISK[p.kind] || AD.PARDON_RISK.default;
+    if (roll < risk) {              // reoffends, on camera, with your signature on the release
+      eff.press = (eff.press || 0) - 6; eff.courts = (eff.courts || 0) - 4; eff.street = (eff.street || 0) - 3;
+      eff.base = (eff.base || 0) - 2; eff.auth = (eff.auth || 0) - 2;
+      twist = p.name + ' reoffends within the month, loudly, and every report notes whose signature is on the release.';
+    } else if (roll > 0.88) {       // extravagantly grateful
+      eff.cash = (eff.cash || 0) + 0.25; eff.base = (eff.base || 0) + 2;
+      twist = p.name + ' is so grateful that a second, much larger token of appreciation arrives through four banks.';
+    }
+  }
+
+  const deltas = AD.applySenateEffect(run, eff);
   run.stats = run.stats || {};
   run.stats.pardons = (run.stats.pardons || 0) + 1;
   if (p.saint) run.stats.saintPardons = (run.stats.saintPardons || 0) + 1;
-  return { ok: true, pardon: p, deltas };
+  return { ok: true, pardon: p, deltas, twist };
 };
 
 /* Summary for the screen header. */

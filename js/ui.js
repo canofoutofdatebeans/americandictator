@@ -613,7 +613,7 @@ AD.UI = {
     if (result && result.pardon) {
       note.className = 'corr-note bought';
       note.innerHTML = `<b>${result.pardon.name}, pardoned.</b> ` +
-        AD.clean(result.pardon.blurb, this.settings.clean);
+        AD.clean(result.twist || result.pardon.blurb, this.settings.clean);
     } else {
       note.className = 'corr-note';
       note.textContent = 'Article Two hands you an eraser with no check on it. Most of these people should ' +
