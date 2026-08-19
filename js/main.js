@@ -355,6 +355,19 @@ AD.Game = {
   advance () {
     this.awaitingAdvance = false;
     if (!AD.Engine.run || AD.Engine.run.over) return;   // never tick a finished term
+    const run = AD.Engine.run;
+
+    // A month is three cards. The first two just deal the next crisis of the same
+    // month; only the third rolls the clock and runs every monthly tick.
+    run.cardInMonth = (run.cardInMonth || 0) + 1;
+    if (run.cardInMonth < AD.CARDS_PER_MONTH) {
+      AD.Engine.lastDrift = null;                        // no month passed, so no drift brief
+      AD.UI.renderHUD();
+      this.nextCard();
+      return;
+    }
+    run.cardInMonth = 0;
+
     const timeEnding = AD.Engine.advance();             // the clock alone can kill you
     AD.UI.renderHUD();
     if (timeEnding) { this.showEnding(AD.Engine.lastScore); return; }

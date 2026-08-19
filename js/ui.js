@@ -143,7 +143,8 @@ AD.UI = {
   renderHUD () {
     const run = AD.Engine.run;
     this.el('hud-date').textContent = AD.dateLabel(run.month) +
-      (run.term > 1 ? ' · 2nd Term' : '');
+      (run.term > 1 ? ' · 2nd Term' : '') +
+      ' · ' + (((run.cardInMonth || 0) % AD.CARDS_PER_MONTH) + 1) + '/' + AD.CARDS_PER_MONTH;
     this.el('hud-rank').textContent = AD.rankFor(run.authority);
     const inc = AD.passives(run).income || 0;
     const cashEl = this.el('hud-cash');

@@ -5,7 +5,7 @@
    ============================================================ */
 
 window.AD = window.AD || {};
-AD.BUILD = '88';   // bumped every deploy; shown on the title so a stale cache is obvious
+AD.BUILD = '89';   // bumped every deploy; shown on the title so a stale cache is obvious
 
 /* ---------- Factions ------------------------------------------------------
    Five power centres. Four of them are CAPTURABLE: drive one to 100 and it
@@ -143,6 +143,10 @@ AD.wealthGoal = run => (run && run.wealthGoal) || AD.WEALTH_GOAL;
    run.purse is the NATIONAL TREASURY, a separate, much larger pool in the
    hundreds of billions that funds WARS and is moved by TARIFFS and the economy.
    A dictator can, of course, quietly move money from one to the other. */
+/* Each calendar month of the presidency is THREE cards: the clock (and every
+   monthly tick, decay, the market, war resolution) advances only on the third. */
+AD.CARDS_PER_MONTH = 3;
+
 AD.START_PURSE = 500;   // $500B in the national coffers at inauguration
 AD.purse = run => (run && typeof run.purse === 'number') ? run.purse : AD.START_PURSE;
 /* Spend from / add to the treasury, clamped at zero, two-decimal rounded. */
