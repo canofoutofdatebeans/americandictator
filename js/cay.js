@@ -57,6 +57,7 @@ AD.cayHeat = run => (run.cay ? run.cay.heat : 0);
 AD.bumpHeat = function (run, n) {
   const c = AD.cayState(run);
   c.heat = AD.clamp(c.heat + n, 0, AD.CAY_MAX_HEAT);
+  c.peakHeat = Math.max(c.peakHeat || 0, c.heat);   // for the well-managed boost
   return c.heat;
 };
 
@@ -188,6 +189,20 @@ AD.CAY_STAGES = [
 
       if (mode === 'clean') {
         c.heat = 0;
+        // Managing this well is HARD: you had to stay transparent and never let
+        // the story get hot. If you did (peak heat stayed low), coming clean is a
+        // triumph, the rare President who told the truth first and came out ahead,
+        // a huge boost across the board. If you let it run hot and only now come
+        // clean, it still ends it, but it costs a sixth of your movement.
+        if ((c.peakHeat || 0) <= 3) {
+          return { eff: { press: +14, congress: +12, courts: +11, street: +9, base: +6, auth: +12 },
+            res: 'Because you never let it get hot, coming clean lands as statesmanship instead of surrender. ' +
+                 'It is the best week of your presidency, and the one nobody will believe you managed on purpose.',
+            tabloid: { head: 'HE TOLD THE TRUTH', sub: 'Administration releases the Saint Ambrose material in full, having never once hidden it',
+              body: 'The documents went up unredacted and, because the President had been ahead of the story from the ' +
+                    'first week, the release read as confidence rather than confession. His approval rose. Historians ' +
+                    'noted, with visible discomfort, that honesty had worked, and quietly hoped no one would try it again.' } };
+        }
         return { eff: { press: +14, congress: +10, courts: +9, street: +8, base: -11, auth: -5 },
           res: 'It is finished. It cost you a sixth of your movement and it is finished, which nothing else on this ' +
                'list would have been.',
@@ -244,11 +259,12 @@ AD.cayFor = function (run) {
   // never on top of the November card
   if (tm >= run.termLength - 2) return null;
 
-  const card = AD.CAY_STAGES[c.stage];
+  const sc = AD.curScandal ? AD.curScandal(run) : null;
+  const card = AD.reskinCay ? AD.reskinCay(AD.CAY_STAGES[c.stage], sc) : AD.CAY_STAGES[c.stage];
   c.stage++;
   // A hot story comes back faster. A cold one drifts.
   c.next = tm + Math.max(4, AD.CAY_GAP - Math.floor(c.heat / 2));
-  return Object.assign({ scripted: true, cay: true, pillarBanner: 'THE SAINT AMBROSE FILES' }, card);
+  return Object.assign({ scripted: true, cay: true, pillarBanner: (sc && sc.banner) || 'THE SAINT AMBROSE FILES' }, card);
 };
 
 /* ---------- the between-instalments leak ---------------------------------- */
@@ -275,7 +291,9 @@ AD.cayTick = function (run) {
   if (AD.rng() >= chance) return out;
 
   c.leaks = (c.leaks || 0) + 1;
-  out.leak = AD.CAY_LEAKS[Math.floor(AD.rng() * AD.CAY_LEAKS.length)];
+  const sc = AD.curScandal ? AD.curScandal(run) : null;
+  const pool = (sc && sc.leaks) || AD.CAY_LEAKS;
+  out.leak = pool[Math.floor(AD.rng() * pool.length)];
   const bite = 1 + Math.floor(c.heat / 4);
   ['press', 'street', 'base'].forEach(k => {
     if (run.locked[k]) return;
