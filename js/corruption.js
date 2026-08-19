@@ -270,6 +270,8 @@ AD.buyAsset = function (run, id) {
     run.meters[k] = AD.clamp(before + v, 0, 100);
     if (run.meters[k] !== before) deltas[k] = run.meters[k] - before;
   });
+  // Boredom: acquiring an empire (a network, a coin, a bank) is a mild thrill.
+  if (AD.moveFun) { const bf = run.fun; AD.moveFun(run, 1); if (run.fun !== bf) deltas.fun = run.fun - bf; }
   return { ok: true, asset: a, deltas };
 };
 
@@ -369,7 +371,7 @@ AD.divertFunds = function (run) {
   // applier so any shields you own blunt the blow, a reason to build the
   // machine before you pull the lever.
   const deltas = AD.applySenateEffect(run, {
-    courts: -20, press: -20, congress: -18, street: -16, base: 3, auth: 5
+    courts: -20, press: -20, congress: -18, street: -16, base: 3, auth: 5, fun: 6
   });
   run.cash = Math.round((run.cash + AD.DIVERT_AMOUNT) * 100) / 100;
   if (run.cash > (run.stats.peakCash || 0)) run.stats.peakCash = run.cash;

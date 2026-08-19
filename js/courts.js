@@ -176,6 +176,9 @@ AD.doCourtAction = function (run, judgeId, actionId) {
   if (cost) run.cash = Math.round((run.cash - cost) * 100) / 100;
   const eff = action.run(run, j) || {};
   const res = eff.res; delete eff.res;
+  // Boredom: attacking a judge from the podium or purging the bench is a show;
+  // quietly buying one is only mildly diverting.
+  if (eff.fun == null) eff.fun = { pressure: 2, buy: 1, sack: 3 }[action.id] || 1;
   const deltas = AD.applySenateEffect(run, eff);
   run.stats = run.stats || {};
   run.stats.courtActions = (run.stats.courtActions || 0) + 1;

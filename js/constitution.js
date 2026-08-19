@@ -120,7 +120,7 @@ AD.clauseScore = run => AD.clauseCount(run) * AD.CLAUSE_SCORE +
    free. Each deliberate breach hammers the institutions (which now also drags
    your Authority down with them) and thrills the base, so breaking all sixteen
    is a genuine scorched-earth strategy, not a free win. */
-AD.CLAUSE_BREAK_EFF = { courts: -6, press: -5, congress: -4, base: 4 };
+AD.CLAUSE_BREAK_EFF = { courts: -6, press: -5, congress: -4, base: 4, fun: 3 };
 
 AD.breakClause = function (run, id) {
   const c = AD.clauseById(id);

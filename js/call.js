@@ -274,7 +274,11 @@ AD.doCall = function (run, targetId, optIndex) {
   if (!opt) return { ok: false, reason: 'Wrong number.' };
   if (AD.callsLeft(run) <= 0) return { ok: false, reason: 'No more calls this month.' };
   run.calls = AD.callsLeft(run) - 1;
-  const deltas = AD.applySenateEffect(run, Object.assign({}, opt.eff));
+  // Boredom: the President loves the phone. A big-swing call is a genuine thrill;
+  // even a routine one beats a briefing.
+  const ceff = Object.assign({}, opt.eff);
+  if (ceff.fun == null) ceff.fun = opt.major ? 3 : 1;
+  const deltas = AD.applySenateEffect(run, ceff);
   run.stats = run.stats || {}; run.stats.calls = (run.stats.calls || 0) + 1;
   return { ok: true, target: t, opt: opt, deltas: deltas, line: opt.line };
 };

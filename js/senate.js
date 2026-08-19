@@ -337,6 +337,15 @@ AD.applySenateEffect = function (run, eff) {
     AD.recomputeAuthority(run);
     if (run.authority !== b) deltas.auth = run.authority - b;
   }
+  // THE BOREDOMETER. Every action carries a `fun` charge (see AD.actionFun): the
+  // dramatic, aggressive, transgressive moves entertain the easily-bored President,
+  // the sober diplomatic ones bore him. So every action in the game moves boredom,
+  // not just the five meters.
+  if (typeof eff.fun === 'number' && AD.moveFun) {
+    const b = run.fun;
+    AD.moveFun(run, eff.fun);
+    if (run.fun !== b) deltas.fun = run.fun - b;
+  }
   return deltas;
 };
 
@@ -352,6 +361,8 @@ AD.doSenateAction = function (run, senId, actionId) {
   if (cost) run.cash = Math.round((run.cash - cost) * 100) / 100;
   const eff = action.run(run, s) || {};
   const res = eff.res; delete eff.res;
+  // Boredom: humiliating and purging are theatre; a quiet favour is a chore.
+  if (eff.fun == null) eff.fun = { acknowledge: -2, humiliate: 3, sue: 2, sack: 3 }[action.id] || 1;
   const deltas = AD.applySenateEffect(run, eff);
   run.stats = run.stats || {};
   run.stats.senateActions = (run.stats.senateActions || 0) + 1;

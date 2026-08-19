@@ -272,6 +272,9 @@ AD.doPardon = function (run, id) {
     }
   }
 
+  // Boredom: springing a colourful crook is a hoot; freeing an innocent is worthy
+  // and, to this President, faintly boring.
+  if (eff.fun == null) eff.fun = p.saint ? -1 : 2;
   const deltas = AD.applySenateEffect(run, eff);
   run.stats = run.stats || {};
   run.stats.pardons = (run.stats.pardons || 0) + 1;

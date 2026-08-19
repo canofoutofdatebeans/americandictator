@@ -226,6 +226,9 @@ AD.doWarOp = function (run, targetId, opId) {
     res += ' Betraying an ally tears up the deal and the world takes note, at a steep and lasting price.';
   }
 
+  // Boredom: war and conquest are the greatest show on earth; a trade deal is
+  // paperwork. Applied here so the ally-betrayal surcharge above is already in eff.
+  if (eff.fun == null) eff.fun = { sabre: 2, strike: 3, invade: 4, regime: 3, ally: -2, annex: 4 }[op.id] || 1;
   const deltas = AD.applySenateEffect(run, eff);
   if (ongoing) startWar(run, t);
   run.stats = run.stats || {};

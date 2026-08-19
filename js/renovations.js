@@ -255,6 +255,8 @@ AD.buildReno = function (run, id) {
     run.meters[k] = AD.clamp(before + v, 0, 100);
     if (run.meters[k] !== before) deltas[k] = run.meters[k] - before;
   });
+  // Boredom: gilding the residence with a monument to himself genuinely delights him.
+  if (AD.moveFun) { const bf = run.fun; AD.moveFun(run, 2); if (run.fun !== bf) deltas.fun = run.fun - bf; }
 
   // Glory is raw Authority. AD.SOFT_CAP still applies, a monument is not
   // a captured branch of government, however visible from orbit.

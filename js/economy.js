@@ -159,6 +159,7 @@ AD.imposeTariff = function (run, id) {
   const prof = AD.TARIFF_PROFILE[n.kind];
   const rng = econRng((run.seed || 'X') + id + run.month);
   const eff = Object.assign({}, prof.impose);
+  eff.fun = 2;             // a trade war is entertaining television
   const deltas = AD.applySenateEffect(run, eff);
   AD.movePurse(run, 18);   // customs revenue flows into the Treasury
   run.tariffs.push({ id, rate: 1, backfireAt: run.month + 2 + Math.floor(rng() * 2), fired: false });
@@ -172,7 +173,7 @@ AD.raiseTariff = function (run, id) {
   t.rate++;
   const rng = econRng((run.seed || 'X') + id + 'r' + run.month);
   t.backfireAt = run.month + 1 + Math.floor(rng() * 1);   // sooner
-  const deltas = AD.applySenateEffect(run, { base: 6, press: -3, courts: -2, auth: 3 });
+  const deltas = AD.applySenateEffect(run, { base: 6, press: -3, courts: -2, auth: 3, fun: 3 });
   return { ok: true, nation: n, deltas, action: 'raise' };
 };
 
@@ -182,8 +183,8 @@ AD.liftTariff = function (run, id) {
   run.tariffs = run.tariffs.filter(x => x.id !== id);
   // Chickening out before the crash costs face; lifting a spent one is a mild win.
   const deltas = t.fired
-    ? AD.applySenateEffect(run, { press: 3, street: 2 })
-    : AD.applySenateEffect(run, { base: -6, press: 2, congress: 2 });
+    ? AD.applySenateEffect(run, { press: 3, street: 2, fun: -2 })
+    : AD.applySenateEffect(run, { base: -6, press: 2, congress: 2, fun: -2 });
   return { ok: true, nation: n, deltas, action: 'lift', caved: !t.fired };
 };
 
@@ -197,7 +198,7 @@ AD.liberationDay = function (run) {
   targets.forEach(n => run.tariffs.push({ id: n.id, rate: 1, backfireAt: run.month + 2 + Math.floor(rng() * 2), fired: false, libday: true }));
   run.stats = run.stats || {}; run.stats.tariffs = (run.stats.tariffs || 0) + targets.length;
   run.flags = run.flags || {}; run.flags.liberationDay = true;
-  const deltas = AD.applySenateEffect(run, { base: 14, press: -6, courts: -4, congress: -4, cash: 0.4, auth: 6 });
+  const deltas = AD.applySenateEffect(run, { base: 14, press: -6, courts: -4, congress: -4, cash: 0.4, auth: 6, fun: 5 });
   return { ok: true, count: targets.length, deltas };
 };
 
@@ -416,6 +417,8 @@ AD.doSummit = function (run, nationId, index) {
   run.summits = AD.summitsLeft(run) - 1;
   const eff = Object.assign({}, a.eff);
   if (eff.cayHeat && AD.bumpHeat) { AD.bumpHeat(run, eff.cayHeat); delete eff.cayHeat; }
+  // Boredom: the bombastic, base-thrilling summit play is fun; sober diplomacy bores him.
+  if (eff.fun == null) eff.fun = ((a.eff && (a.eff.base || 0) >= 4)) ? 2 : -1;
   const deltas = AD.applySenateEffect(run, eff);
   run.relations[nationId] = AD.clamp(AD.relations(run, nationId) + (a.rel || 0), 0, 100);
   run.stats = run.stats || {}; run.stats.summits = (run.stats.summits || 0) + 1;

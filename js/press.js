@@ -179,6 +179,8 @@ AD.doPressAction = function (run, outletId, actionId) {
   if (cost) run.cash = Math.round((run.cash - cost) * 100) / 100;
   const eff = action.run(run, o) || {};
   const res = eff.res; delete eff.res;
+  // Boredom: declaring fake news and suing are red meat; quietly settling is dull.
+  if (eff.fun == null) eff.fun = { attack: 2, sue: 2, settle: -1, install: 2 }[action.id] || 1;
   const deltas = AD.applySenateEffect(run, eff);   // shared meter/cash/auth applier
   run.stats = run.stats || {};
   run.stats.pressActions = (run.stats.pressActions || 0) + 1;
