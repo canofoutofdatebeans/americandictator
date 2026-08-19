@@ -123,7 +123,10 @@ AD.scandalFill = function (str, sc) {
     .replace(/\bMeridian Institute\b/g, sc.org)
     .replace(/\bthe Institute\b/g, sc.org)
     .replace(/flight manifest/g, sc.doc1)
-    .replace(/guest book/g, sc.doc2);
+    .replace(/guest book/g, sc.doc2)
+    // stage TITLES ("The Manifest", "The Guest Book") in title case
+    .replace(/The Manifest/g, 'The ' + sc.doc1.replace(/\b\w/g, m => m.toUpperCase()))
+    .replace(/The Guest Book/g, 'The ' + sc.doc2.replace(/\b\w/g, m => m.toUpperCase()));
 };
 
 /* Reskin a whole instalment card (text + every choice's label/res). Returns a
@@ -131,6 +134,7 @@ AD.scandalFill = function (str, sc) {
 AD.reskinCay = function (card, sc) {
   if (!sc || sc.id === 'ambrose') return card;
   const out = Object.assign({}, card);
+  out.title = AD.scandalFill(card.title, sc);
   out.text = AD.scandalFill(card.text, sc);
   out.choices = (card.choices || []).map(ch => Object.assign({}, ch, {
     label: AD.scandalFill(ch.label, sc),
