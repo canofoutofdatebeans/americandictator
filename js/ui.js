@@ -229,9 +229,9 @@ AD.UI = {
       const ok = fun >= floor;
       spec.className = 'spectacle' + (ok ? ' ok' : ' bored');
       spec.innerHTML =
-        `<span class="spec-lab">🎪 THE SPECTACLE</span>` +
-        `<span class="spec-bar"><i style="width:${fun}%"></i><b style="left:${floor}%"></b></span>` +
-        `<span class="spec-num">${fun}<em>/${floor}</em></span>`;
+        `<span class="spec-lab">🥱 BOREDOMETER</span>` +
+        `<span class="spec-bar"><i style="width:${fun}%"></i><b style="left:${floor}%" title="Win floor ${floor}"></b></span>` +
+        `<span class="spec-num">${fun}<em>/100</em></span>`;
     }
 
     this.renderFactions(run);
@@ -347,11 +347,13 @@ AD.UI = {
 
     const titleEl = this.el('card-title');
     // pillarBanner carries its own wording so non-pillar beats (the Second
-    // Inaugural) don't get "SECURED" bolted onto the end of them.
+    // Inaugural) don't get "SECURED" bolted onto the end of them. Title/text/labels
+    // go through AD.ct so a chosen language shows its translation, English otherwise.
+    const T = (f, i) => AD.ct ? AD.ct(card, f, i) : (f === 'title' ? card.title : f === 'text' ? card.text : (card.choices[i] || {}).label);
     titleEl.innerHTML = (card.pillarBanner
-        ? `<span class="card-banner">${card.pillarBanner}</span><br>` : '') + cln(card.title);
+        ? `<span class="card-banner">${card.pillarBanner}</span><br>` : '') + cln(T('title'));
     c.classList.toggle('has-banner', !!card.pillarBanner);   // pop-ups read as interruptions
-    this.el('card-text').textContent = cln(card.text);
+    this.el('card-text').textContent = cln(T('text'));
 
     /* NO IMPACT PREVIEW. The score behind a choice is deliberately hidden, 
        you decide on the words, and you find out what it cost afterwards.
@@ -366,7 +368,7 @@ AD.UI = {
       }
       const wild = ch.wild ? ' wild' : '';
       return `<button class="choice${wild}" data-choice="${i}" ${afford ? '' : 'disabled'}
-        aria-keyshortcuts="${i + 1}"><span class="ch-num" aria-hidden="true">${i + 1}</span><span class="ch-label">${cln(ch.label)}${tag}</span></button>`;
+        aria-keyshortcuts="${i + 1}"><span class="ch-num" aria-hidden="true">${i + 1}</span><span class="ch-label">${cln(T('label', i))}${tag}</span></button>`;
     }).join('');
 
     this.startTimer(card);

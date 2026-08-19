@@ -74,7 +74,7 @@ body{
     radial-gradient(80% 45% at 50% 108%, rgba(179,32,43,.16) 0%, transparent 60%),
     var(--ink);
   color:var(--paper);
-  font:16px/1.5 ui-serif, Georgia, "Iowan Old Style", "Times New Roman", serif;
+  font:16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
   -webkit-font-smoothing:antialiased;
   overflow:hidden;
 }
@@ -591,7 +591,7 @@ body::before{
 }
 @keyframes slam{from{opacity:0;transform:scale(1.18) rotate(1.5deg)}to{opacity:1;transform:none}}
 .tab-masthead{
-  font-family:ui-serif,Georgia,serif;font-weight:900;text-align:center;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;font-weight:900;text-align:center;
   font-size:clamp(22px,7.5vw,30px);letter-spacing:-.6px;text-transform:uppercase;
   border-bottom:3px double #141210;padding-bottom:5px;
 }
@@ -873,7 +873,7 @@ body::before{
   background:linear-gradient(#f3efe4,#e8e2d2);color:#1a1712;
   max-width:520px;width:100%;max-height:88vh;overflow-y:auto;
   border-radius:6px;padding:22px 24px 20px;box-shadow:var(--shadow);
-  font-family:ui-serif, Georgia, "Times New Roman", serif;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
   animation:slam .4s cubic-bezier(.2,1.2,.3,1) both;
 }
 .dos-masthead{font-size:clamp(22px,6vw,30px);font-weight:900;letter-spacing:1px;
@@ -1180,12 +1180,12 @@ html[data-cb="on"] .fac.danger .fac-val{color:#93c5fd}
   max-height:92vh;overflow-y:auto;
   background-image:repeating-linear-gradient(0deg,rgba(0,0,0,.016) 0 1px,transparent 1px 3px);
   animation:slam .4s cubic-bezier(.2,1.2,.3,1) both}
-.fp-masthead{font-family:ui-serif,Georgia,serif;font-weight:900;text-align:center;
+.fp-masthead{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;font-weight:900;text-align:center;
   font-size:clamp(24px,8vw,34px);letter-spacing:-.5px;text-transform:uppercase;
   border-bottom:3px double #141210;padding-bottom:5px}
 .fp-strap{display:flex;justify-content:space-between;font-size:9.5px;letter-spacing:1.4px;
   text-transform:uppercase;padding:4px 0;border-bottom:1px solid #141210;color:#4a453d}
-.fp-head{font-family:ui-serif,Georgia,serif;font-size:clamp(26px,9vw,38px);line-height:.98;
+.fp-head{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;font-size:clamp(26px,9vw,38px);line-height:.98;
   margin:12px 0 6px;text-transform:uppercase;font-weight:900;letter-spacing:-1px;color:#141210}
 .fp-head.win{color:#7c1720}
 .fp-deck{font-size:14px;line-height:1.3;margin:0 0 8px;font-weight:600;font-style:italic;color:#33302a}
@@ -1194,13 +1194,13 @@ html[data-cb="on"] .fac.danger .fac-val{color:#93c5fd}
 .fp-boxes{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:#cfc6b3;
   border:1px solid #cfc6b3;margin-bottom:12px}
 .fp-box{background:var(--paper);text-align:center;padding:8px 4px}
-.fp-box b{display:block;font-family:ui-serif,Georgia,serif;font-size:17px;color:#141210;line-height:1}
+.fp-box b{display:block;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;font-size:17px;color:#141210;line-height:1}
 .fp-box i{font-size:9px;letter-spacing:.6px;text-transform:uppercase;color:#6a655c;font-style:normal}
 .fp-story{font-size:12.5px;line-height:1.62;color:#22201c;column-count:2;column-gap:14px;
   column-rule:1px solid #d8cfbc;text-align:justify;hyphens:auto}
 .fp-story p{margin:0 0 8px}
 .fp-story b{color:#7c1720}
-.fp-verdict{font-family:ui-serif,Georgia,serif;font-style:italic;font-size:13.5px;line-height:1.5;
+.fp-verdict{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;font-style:italic;font-size:13.5px;line-height:1.5;
   color:#141210;border-top:2px solid #141210;margin-top:6px;padding-top:10px}
 .frontpage .dos-actions{margin-top:14px}
 .frontpage .btn{background:#141210;color:var(--paper);border-color:#141210}

@@ -171,7 +171,9 @@ AD.Engine = {
       out.tabloid = d.tabloid || null;
     } else {
       eff = Object.assign({}, choice.eff || {});
-      out.res = choice.res || '';
+      // AD.ct returns the localized resolution line, or the English one written on
+      // the card when there is no translation for this language.
+      out.res = (AD.ct ? AD.ct(card, 'res', index) : choice.res) || '';
     }
 
     /* --- Cost --- */

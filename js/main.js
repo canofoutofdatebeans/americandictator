@@ -15,6 +15,7 @@ AD.Game = {
     U.settings = AD.loadSettings();
     const chosen = AD.loadLang();
     AD.setLang(chosen || 'en-US');
+    if (AD.loadCardLang) AD.loadCardLang();   // pull the deck translations for the chosen language
     AD.Music.init(U.settings);
     this.applySettings();
     this.buildLanguageScreen();
@@ -46,6 +47,10 @@ AD.Game = {
   pickLang (code) {
     AD.setLang(code);
     if (AD.UI.settings) { AD.UI.settings.lang = code; AD.saveSettings(AD.UI.settings); }
+    // Load this language's deck translations; re-render the live card once they arrive.
+    if (AD.loadCardLang) AD.loadCardLang(AD.cardLangCode(), () => {
+      if (AD.UI.current === 'game' && AD.Engine.card) AD.UI.renderCard(AD.Engine.card);
+    });
     AD.UI.localizeDOM();
     this.buildLanguageScreen();
     this.buildSetupScreen();
@@ -164,9 +169,9 @@ AD.Game = {
       whatever ending you reach. It upgrades a win, and it <em>converts a loss into a win</em>.
       You can be removed from office and still come out ahead.</p>
 
-      <h4>The Spectacle (do not get bored)</h4>
-      <p>The President is easily bored. The <b>🎪 Spectacle</b> meter under Authority is how entertained he
-      is: the <b>silly, loud, wild</b> options (the fourth choice on a card, the rallies, the stunts) keep
+      <h4>The Boredometer (do not get bored)</h4>
+      <p>The President is easily bored. The <b>🥱 Boredometer</b> under Authority is how entertained he
+      is, out of 100: the <b>silly, loud, wild</b> options (the fourth choice on a card, the rallies, the stunts) keep
       him engaged, while sober, sensible governing bores him rigid, a point at a time. To actually <b>win</b>,
       the Spectacle must be above the floor at the end, <b>50 / 70 / 90</b> by difficulty. Have the whole
       country in your grip and a bored President, and he simply loses interest and wanders off.</p>
