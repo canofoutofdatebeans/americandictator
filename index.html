@@ -11,15 +11,15 @@
 
 <!-- Installable-app metadata (PWA + iOS home screen). The native shells get
      their icons from capacitor assets; this covers the web build. -->
-<link rel="manifest" href="manifest.json?v=84">
-<link rel="icon" type="image/svg+xml" href="icon.svg?v=84">
-<link rel="apple-touch-icon" href="icon.svg?v=84">
+<link rel="manifest" href="manifest.json?v=85">
+<link rel="icon" type="image/svg+xml" href="icon.svg?v=85">
+<link rel="apple-touch-icon" href="icon.svg?v=85">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Am. Dictator">
 
-<link rel="stylesheet" href="css/styles.css?v=84">
+<link rel="stylesheet" href="css/styles.css?v=85">
 </head>
 <body>
 
@@ -188,8 +188,12 @@
         <div class="month-line"><span id="hud-date">January, Year One</span></div>
         <div class="rank-line" id="hud-rank">Duly Elected President</div>
       </div>
-      <button class="hud-cash" id="hud-cash" data-act="corruption"
-              title="Private Interests, spend your fortune">$<span>3.0</span>B</button>
+      <div class="hud-money">
+        <button class="hud-cash" id="hud-cash" data-act="corruption"
+                title="Personal wealth, your private fortune">💰 $<span>3.0</span>B</button>
+        <button class="hud-purse" id="hud-purse" data-act="economy"
+                title="The Treasury, the national coffers that fund wars and move with tariffs">🏛️ $<span>500</span>B</button>
+      </div>
     </header>
 
     <div class="authority-wrap">
@@ -569,60 +573,60 @@
 </div>
 
 <!-- state.js creates the AD namespace, so it must load first. -->
-<script src="js/state.js?v=84"></script>
-<script src="js/i18n.js?v=84"></script>
-<script src="js/i18n/cs.js?v=84"></script>
-<script src="js/i18n/de.js?v=84"></script>
-<script src="js/i18n/es.js?v=84"></script>
-<script src="js/i18n/fr.js?v=84"></script>
-<script src="js/i18n/it.js?v=84"></script>
-<script src="js/i18n/nl.js?v=84"></script>
-<script src="js/i18n/pl.js?v=84"></script>
-<script src="js/i18n/pt.js?v=84"></script>
-<script src="js/i18n/ru.js?v=84"></script>
-<script src="js/i18n/zh.js?v=84"></script>
-<script src="js/icons.js?v=84"></script>
-<script src="js/portraits.js?v=84"></script>
-<script src="js/seed.js?v=84"></script>
-<script src="js/audio.js?v=84"></script>
-<script src="js/music.js?v=84"></script>
-<script src="js/doctrines.js?v=84"></script>
-<script src="js/corruption.js?v=84"></script>
-<script src="js/renovations.js?v=84"></script>
-<script src="js/senate.js?v=84"></script>
-<script src="js/press.js?v=84"></script>
-<script src="js/street.js?v=84"></script>
-<script src="js/call.js?v=84"></script>
-<script src="js/war.js?v=84"></script>
-<script src="js/courts.js?v=84"></script>
-<script src="js/basepop.js?v=84"></script>
-<script src="js/economy.js?v=84"></script>
-<script src="js/pardons.js?v=84"></script>
-<script src="js/dossier.js?v=84"></script>
-<script src="js/constitution.js?v=84"></script>
-<script src="js/tutorial.js?v=84"></script>
-<script src="js/achievements.js?v=84"></script>
-<script src="js/briefings.js?v=84"></script>
-<script src="js/cards.js?v=84"></script>
+<script src="js/state.js?v=85"></script>
+<script src="js/i18n.js?v=85"></script>
+<script src="js/i18n/cs.js?v=85"></script>
+<script src="js/i18n/de.js?v=85"></script>
+<script src="js/i18n/es.js?v=85"></script>
+<script src="js/i18n/fr.js?v=85"></script>
+<script src="js/i18n/it.js?v=85"></script>
+<script src="js/i18n/nl.js?v=85"></script>
+<script src="js/i18n/pl.js?v=85"></script>
+<script src="js/i18n/pt.js?v=85"></script>
+<script src="js/i18n/ru.js?v=85"></script>
+<script src="js/i18n/zh.js?v=85"></script>
+<script src="js/icons.js?v=85"></script>
+<script src="js/portraits.js?v=85"></script>
+<script src="js/seed.js?v=85"></script>
+<script src="js/audio.js?v=85"></script>
+<script src="js/music.js?v=85"></script>
+<script src="js/doctrines.js?v=85"></script>
+<script src="js/corruption.js?v=85"></script>
+<script src="js/renovations.js?v=85"></script>
+<script src="js/senate.js?v=85"></script>
+<script src="js/press.js?v=85"></script>
+<script src="js/street.js?v=85"></script>
+<script src="js/call.js?v=85"></script>
+<script src="js/war.js?v=85"></script>
+<script src="js/courts.js?v=85"></script>
+<script src="js/basepop.js?v=85"></script>
+<script src="js/economy.js?v=85"></script>
+<script src="js/pardons.js?v=85"></script>
+<script src="js/dossier.js?v=85"></script>
+<script src="js/constitution.js?v=85"></script>
+<script src="js/tutorial.js?v=85"></script>
+<script src="js/achievements.js?v=85"></script>
+<script src="js/briefings.js?v=85"></script>
+<script src="js/cards.js?v=85"></script>
 <!-- Content packs. Each pushes onto AD.CARDS, so adding a deck is adding a
      file, no engine changes. Order does not matter. -->
-<script src="js/packs/pack-a-honeymoon.js?v=84"></script>
-<script src="js/packs/pack-b-machinery.js?v=84"></script>
-<script src="js/packs/pack-c-consolidation.js?v=84"></script>
-<script src="js/packs/pack-d-evergreen.js?v=84"></script>
-<script src="js/packs/pack-e-secondterm.js?v=84"></script>
-<script src="js/packs/pack-f-record.js?v=84"></script>
-<script src="js/packs/pack-g-record.js?v=84"></script>
-<script src="js/packs/pack-h-frontier.js?v=84"></script>
+<script src="js/packs/pack-a-honeymoon.js?v=85"></script>
+<script src="js/packs/pack-b-machinery.js?v=85"></script>
+<script src="js/packs/pack-c-consolidation.js?v=85"></script>
+<script src="js/packs/pack-d-evergreen.js?v=85"></script>
+<script src="js/packs/pack-e-secondterm.js?v=85"></script>
+<script src="js/packs/pack-f-record.js?v=85"></script>
+<script src="js/packs/pack-g-record.js?v=85"></script>
+<script src="js/packs/pack-h-frontier.js?v=85"></script>
 <!-- cay.js reads AD.CAST, so it must load after cards.js -->
-<script src="js/cay.js?v=84"></script>
-<script src="js/reactive.js?v=84"></script>
-<script src="js/sections.js?v=84"></script>
-<script src="js/popups.js?v=84"></script>
-<script src="js/events.js?v=84"></script>
-<script src="js/endings.js?v=84"></script>
-<script src="js/engine.js?v=84"></script>
-<script src="js/ui.js?v=84"></script>
-<script src="js/main.js?v=84"></script>
+<script src="js/cay.js?v=85"></script>
+<script src="js/reactive.js?v=85"></script>
+<script src="js/sections.js?v=85"></script>
+<script src="js/popups.js?v=85"></script>
+<script src="js/events.js?v=85"></script>
+<script src="js/endings.js?v=85"></script>
+<script src="js/engine.js?v=85"></script>
+<script src="js/ui.js?v=85"></script>
+<script src="js/main.js?v=85"></script>
 </body>
 </html>

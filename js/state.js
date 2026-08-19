@@ -5,7 +5,7 @@
    ============================================================ */
 
 window.AD = window.AD || {};
-AD.BUILD = '84';   // bumped every deploy; shown on the title so a stale cache is obvious
+AD.BUILD = '85';   // bumped every deploy; shown on the title so a stale cache is obvious
 
 /* ---------- Factions ------------------------------------------------------
    Five power centres. Four of them are CAPTURABLE: drive one to 100 and it
@@ -136,6 +136,20 @@ AD.DECISION_FLOOR = 8;
 AD.WEALTH_GOAL = 15;   // fallback; the live target is per-run, see AD.wealthGoal
 /* The fortune target scales with difficulty: rookie 12, standard 15, historic 20. */
 AD.wealthGoal = run => (run && run.wealthGoal) || AD.WEALTH_GOAL;
+
+/* ---------- two purses ----------------------------------------------------
+   run.cash is the President's PERSONAL WEALTH (the fortune goal, and what pays
+   for bribes, the residence and private holdings, tens of millions to billions).
+   run.purse is the NATIONAL TREASURY, a separate, much larger pool in the
+   hundreds of billions that funds WARS and is moved by TARIFFS and the economy.
+   A dictator can, of course, quietly move money from one to the other. */
+AD.START_PURSE = 500;   // $500B in the national coffers at inauguration
+AD.purse = run => (run && typeof run.purse === 'number') ? run.purse : AD.START_PURSE;
+/* Spend from / add to the treasury, clamped at zero, two-decimal rounded. */
+AD.movePurse = function (run, delta) {
+  run.purse = Math.max(0, Math.round((AD.purse(run) + delta) * 100) / 100);
+  return run.purse;
+};
 
 AD.BASE_DECAY = -3;      // a movement that isn't fed every month cools off
 
@@ -319,7 +333,8 @@ AD.newRun = function (opts) {
     // to ~47% and lands optimal play at ~39%.
     meters: { base: 62, congress: 55, courts: 52, press: 52, street: 56 },
     locked: {},                 // key -> true once captured
-    cash: d.startCash,
+    cash: d.startCash,                            // personal wealth (the fortune)
+    purse: AD.START_PURSE,                         // national treasury (wars, tariffs)
     wealthGoal: d.wealthGoal || AD.WEALTH_GOAL,   // fortune target for this run
     authority: 0,
     rawAuth: 0,                 // earned by decisions, capped at AD.SOFT_CAP

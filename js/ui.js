@@ -148,14 +148,25 @@ AD.UI = {
     const inc = AD.passives(run).income || 0;
     const cashEl = this.el('hud-cash');
     const prevCash = this._hudCash; this._hudCash = run.cash;
-    cashEl.innerHTML = '$<span class="hud-cash-n">' + run.cash.toFixed(1) + '</span>B' +
+    cashEl.innerHTML = '💰 $<span class="hud-cash-n">' + run.cash.toFixed(1) + '</span>B' +
       (inc ? '<em>+' + Math.round(inc * 1000) + 'M</em>' : '');
     if (prevCash != null && prevCash !== run.cash)
       this.rollNum(cashEl.querySelector('.hud-cash-n'), prevCash, run.cash, v => v.toFixed(1));
     cashEl.classList.toggle('rich', run.cash >= AD.wealthGoal(run));
     cashEl.title = run.cash >= AD.wealthGoal(run)
-      ? 'The fortune is secured. Private Interests.'
-      : `Private Interests, $${(AD.wealthGoal(run) - run.cash).toFixed(1)}B short of the fortune`;
+      ? 'Personal wealth. The fortune is secured.'
+      : `Personal wealth, $${(AD.wealthGoal(run) - run.cash).toFixed(1)}B short of the fortune`;
+
+    // The national treasury, a separate pool that funds wars and moves with tariffs.
+    const purseEl = this.el('hud-purse');
+    if (purseEl) {
+      const purse = AD.purse(run);
+      const prevPurse = this._hudPurse; this._hudPurse = purse;
+      purseEl.innerHTML = '🏛️ $<span class="hud-purse-n">' + Math.round(purse) + '</span>B';
+      if (prevPurse != null && prevPurse !== purse)
+        this.rollNum(purseEl.querySelector('.hud-purse-n'), prevPurse, purse, v => String(Math.round(v)));
+      purseEl.classList.toggle('broke', purse <= 50);
+    }
     document.documentElement.style.setProperty('--party', run.color);
 
     const prevAuth = this._hudAuth; this._hudAuth = run.authority;

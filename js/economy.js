@@ -130,6 +130,7 @@ AD.imposeTariff = function (run, id) {
   const rng = econRng((run.seed || 'X') + id + run.month);
   const eff = Object.assign({}, prof.impose);
   const deltas = AD.applySenateEffect(run, eff);
+  AD.movePurse(run, 18);   // customs revenue flows into the Treasury
   run.tariffs.push({ id, rate: 1, backfireAt: run.month + 2 + Math.floor(rng() * 2), fired: false });
   run.stats = run.stats || {}; run.stats.tariffs = (run.stats.tariffs || 0) + 1;
   return { ok: true, nation: n, deltas, action: 'impose' };
@@ -190,6 +191,7 @@ AD.economyTick = function (run) {
                               : Math.round(prof.backfire[k] * relMult * rateMult);
     });
     const deltas = AD.applySenateEffect(run, eff);
+    AD.movePurse(run, -Math.round(35 * relMult * rateMult));   // the crash guts customs revenue
     t.fired = true;
     out.backfires.push({ nation: n, deltas, libday: !!t.libday,
       hit: prof.hit, res: 'The tariff on ' + n.name + ' has backfired: ' + prof.hit });

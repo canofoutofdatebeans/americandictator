@@ -106,13 +106,25 @@ AD.WAR_OPS = [
 ];
 
 AD.warOpById = id => AD.WAR_OPS.find(o => o.id === id);
-AD.warOpCostFor = (run, t, op) => (op && op.cost) || 0;
+
+/* War is paid for out of the NATIONAL TREASURY (run.purse), not the President's
+   personal wealth, and it is expensive: costs scale with the target's strength,
+   from tens of billions for a limited strike to hundreds of billions to invade a
+   great power. Sabre-rattling is free. */
+AD.warOpCostFor = function (run, t, op) {
+  if (!op || !t) return 0;
+  const s = t.strength || 0;
+  if (op.id === 'strike') return 20 + s * 15;    // $20B .. $65B
+  if (op.id === 'invade') return 60 + s * 60;    // $60B .. $240B
+  if (op.id === 'regime') return 50 + s * 40;    // $50B .. $170B
+  return 0;                                       // sabre
+};
 
 AD.warOpAvailable = function (run, t, op) {
   if (!op) return { ok: false, reason: 'No such operation.' };
   if (AD.atWarWith(run, t.id)) return { ok: false, reason: 'Already at war with ' + t.name + '.' };
   const cost = AD.warOpCostFor(run, t, op);
-  if (cost && run.cash < cost) return { ok: false, reason: 'You cannot afford it.' };
+  if (cost && AD.purse(run) < cost) return { ok: false, reason: 'The Treasury cannot afford it.' };
   if (op.needsAuth && run.authority < op.needsAuth) return { ok: false, reason: 'Requires Authority ' + op.needsAuth + '.' };
   return { ok: true };
 };
@@ -136,7 +148,7 @@ AD.doWarOp = function (run, targetId, opId) {
   if (!avail.ok) return avail;
 
   const cost = AD.warOpCostFor(run, t, op);
-  if (cost) run.cash = Math.round((run.cash - cost) * 100) / 100;
+  if (cost) AD.movePurse(run, -cost);          // war is paid from the Treasury
 
   const eff = op.run(run, t) || {};
   let res = eff.res; delete eff.res;

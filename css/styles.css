@@ -232,6 +232,14 @@ body::before{
 .hud-cash em{font-style:normal;font-size:10px;color:#6ea87a;margin-left:3px}
 .hud-cash.rich{color:var(--gold-soft);border-color:#5c4a15;background:#1b1608;
   box-shadow:0 0 12px rgba(201,162,39,.25)}
+/* Personal wealth over the national treasury, stacked in the HUD corner. */
+.hud-money{display:flex;flex-direction:column;gap:4px;flex:0 0 auto}
+.hud-purse{
+  font-size:12px;color:#9db6d6;border:1px solid #24344f;background:#0c1420;
+  padding:6px 9px;border-radius:10px;white-space:nowrap;
+  font-family:inherit;cursor:pointer;transition:var(--fx)}
+.hud-purse:hover{border-color:#4f6fa0;background:#111d2e}
+.hud-purse.broke{color:#e0857c;border-color:#4a2723;background:#1c1210}
 
 /* ---------- private interests ---------- */
 .corr-head{display:flex;gap:8px;margin-bottom:10px}
