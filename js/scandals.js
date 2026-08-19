@@ -123,8 +123,6 @@ AD.scandalFill = function (str, sc) {
     .replace(/\bMeridian Institute\b/g, sc.org)
     .replace(/\bthe Institute\b/g, sc.org)
     .replace(/flight manifest/g, sc.doc1)
-    .replace(/the manifest/g, 'the ' + sc.doc1)
-    .replace(/\bmanifest\b/g, sc.doc1)
     .replace(/guest book/g, sc.doc2);
 };
 

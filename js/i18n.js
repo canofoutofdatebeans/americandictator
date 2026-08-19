@@ -140,7 +140,27 @@ AD.STRINGS.en = {
   /* situation room (settings) */
   'settings.h': 'The Situation Room',
   'settings.language': 'Language',
-  'settings.changeLang': 'Change Language'
+  'settings.changeLang': 'Change Language',
+
+  /* the management rooms (overlay headers) */
+  'room.bench': 'The Bench',
+  'room.caucus': 'The Caucus',
+  'room.pressroom': 'The Press Room',
+  'room.publicorder': 'Public Order',
+  'room.rally': 'The Rally',
+  'room.private': 'Private Interests',
+  'room.pardon': 'The Pardon Power',
+  'room.constitution': 'The Constitution',
+  'room.residence': 'The Residence',
+  'room.phone': 'The Phone',
+  'room.war': 'The War Room',
+  'room.economy': 'The Economy',
+  'room.log': 'Crisis Log',
+  'room.library': 'Presidential Library',
+  'room.howto': 'How to Seize Power',
+  'room.assumeoffice': 'Assume the Office',
+  'room.settings': 'Settings',
+  'howplay': 'How to Play'
 };
 
 /* US and UK English differ only in spelling across the shell; both inherit the
