@@ -16,7 +16,8 @@
 /* The languages offered on the first screen. `native` is shown in that
    language's own script so the picker is self-explanatory. */
 AD.LANGS = [
-  { code: 'en', native: 'English',    flag: '🇬🇧' },
+  { code: 'en-US', native: 'English (US)', flag: '🇺🇸' },
+  { code: 'en-GB', native: 'English (UK)', flag: '🇬🇧' },
   { code: 'cs', native: 'Čeština',    flag: '🇨🇿' },
   { code: 'de', native: 'Deutsch',    flag: '🇩🇪' },
   { code: 'es', native: 'Español',    flag: '🇪🇸' },
@@ -37,11 +38,13 @@ AD.LANG = 'en';
    else and survives a settings reset. */
 AD.LANG_KEY = 'americandictator.lang.v1';
 AD.loadLang = function () {
-  const v = AD.store ? AD.store.read(AD.LANG_KEY, null) : null;
+  let v = AD.store ? AD.store.read(AD.LANG_KEY, null) : null;
+  if (v === 'en') v = 'en-US';                                 // migrate the old single 'English'
   return (v && AD.LANGS.some(l => l.code === v)) ? v : null;   // null = not chosen yet
 };
 AD.setLang = function (code) {
-  if (!AD.LANGS.some(l => l.code === code)) code = 'en';
+  if (code === 'en') code = 'en-US';
+  if (!AD.LANGS.some(l => l.code === code)) code = 'en-US';
   AD.LANG = code;
   if (AD.store) AD.store.write(AD.LANG_KEY, code);
 };
@@ -139,3 +142,8 @@ AD.STRINGS.en = {
   'settings.language': 'Language',
   'settings.changeLang': 'Change Language'
 };
+
+/* US and UK English differ only in spelling across the shell; both inherit the
+   full base English table above and override the handful of words that change. */
+AD.STRINGS['en-US'] = { 'setup.colour': 'Party Color' };
+AD.STRINGS['en-GB'] = { 'setup.colour': 'Party Colour' };

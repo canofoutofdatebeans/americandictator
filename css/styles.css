@@ -47,6 +47,13 @@ html[data-motion="off"] *{animation:none!important;transition:none!important}
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;
   overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 html,body{height:100%}
+/* Mobile: a horizontal swipe must NEVER trigger the browser's back/forward
+   navigation and drop the player out of the game. Block horizontal overscroll
+   and confine touch panning to the vertical axis; nothing in the game scrolls
+   sideways (wide tables/charts use their own overflow-x containers). */
+html{overscroll-behavior-x:none}
+body{overscroll-behavior:none;touch-action:pan-y}
+#app{touch-action:pan-y}
 body{
   margin:0;
   background:
@@ -256,6 +263,9 @@ body::before{
 .mkt-svg{width:100%;height:96px;display:block}
 .mkt-svg .mkt-sp{stroke:#5aa9e6;stroke-width:1.6;vector-effect:non-scaling-stroke}
 .mkt-svg .mkt-biz{stroke:var(--gold);stroke-width:1.6;vector-effect:non-scaling-stroke;opacity:.95}
+
+/* A clause not yet broken: a quiet read-only line, no longer a button. */
+.clause-intact{font-size:11px;color:var(--muted);font-style:italic;margin-top:6px;opacity:.75}
 
 /* ---------- private interests ---------- */
 .corr-head{display:flex;gap:8px;margin-bottom:10px}

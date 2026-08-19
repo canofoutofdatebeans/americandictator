@@ -14,7 +14,7 @@ AD.Game = {
     const U = AD.UI;
     U.settings = AD.loadSettings();
     const chosen = AD.loadLang();
-    AD.setLang(chosen || 'en');
+    AD.setLang(chosen || 'en-US');
     AD.Music.init(U.settings);
     this.applySettings();
     this.buildLanguageScreen();
@@ -164,10 +164,26 @@ AD.Game = {
       whatever ending you reach. It upgrades a win, and it <em>converts a loss into a win</em>.
       You can be removed from office and still come out ahead.</p>
 
+      <h4>Two Purses</h4>
+      <p>Money comes in two pools, shown top-right. <b>💰 Personal Wealth</b> is your private
+      fortune, the one you are trying to grow, and it pays for bribes, the residence and private
+      holdings. <b>🏛️ The Treasury</b> is the national coffers: a much larger pool that <b>funds
+      wars</b> and swings with <b>tariffs</b>. Spend the country's money on the country's wars;
+      spend your own on getting rich.</p>
+
+      <h4>The Rooms</h4>
+      <p>Under the meters are the rooms where you actually govern. <b>The Constitution</b> tracks the
+      clauses you break (only a crisis can tempt you to break one). <b>The Bench</b>, <b>The Caucus</b>
+      and <b>The Press Room</b> are where you pressure, buy or purge the people behind Courts, Congress
+      and Press. <b>The War Room</b> lets you rattle sabres, cut deals, annex territory or invade, each
+      country plays differently. <b>The Economy</b> shows the market and your business, and runs the
+      tariffs. <b>The Phone</b>, <b>The Rally</b> and <b>The Pardons</b> feed the base and bank favours.</p>
+
       <h4>The Clock</h4>
-      <p>Forty-eight months. The Midterms land around month 23 and are scored on whatever you chose
-      to make them about. The Election is the final card and there are three doors out of it, 
-      one of them only opens above Authority 62.</p>`;
+      <p>Each month is <b>three crises</b>; the clock and every monthly change roll over on the third.
+      A term is forty-eight months. The Midterms land around month 23. The Election is the final card,
+      with three doors out of it, one of which only opens at high Authority. Winning a single term is
+      brutally hard; the real game is winning the <b>second</b>.</p>`;
   },
 
   /* ---------- start / resume ---------- */
@@ -749,9 +765,6 @@ AD.Game = {
 
       const pardon = e.target.closest('[data-pardon]');
       if (pardon && !pardon.disabled) { this.pardonAction(pardon.dataset.pardon); return; }
-
-      const breakc = e.target.closest('[data-breakclause]');
-      if (breakc && !breakc.disabled) { this.breakClauseAction(breakc.dataset.breakclause); return; }
 
       // Clicking a power-centre tile opens its management screen.
       const manage = e.target.closest('[data-manage]');

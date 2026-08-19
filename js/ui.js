@@ -512,15 +512,11 @@ AD.UI = {
         'through four intermediary banks. Nobody asked them to.';
     } else {
       note.className = 'const-note';
-      note.textContent = `Break a clause yourself, any turn, or wait for a crisis to offer one. ` +
-        `Each is worth ${AD.CLAUSE_SCORE} score and hammers the institutions. Break all ${total} ` +
-        `and an unbidden payment arrives from Russia, $${AD.CLAUSE_BOUNTY.toFixed(2)}B for every one.`;
+      note.textContent = `The Constitution is not a menu. A clause only falls when a crisis tempts you to ` +
+        `break it, and the deck will, again and again. Each break is worth ${AD.CLAUSE_SCORE} score and ` +
+        `hammers the institutions. Break all ${total} and an unbidden payment arrives from Russia, ` +
+        `$${AD.CLAUSE_BOUNTY.toFixed(2)}B for every one.`;
     }
-
-    const eff = AD.CLAUSE_BREAK_EFF;
-    const effLine = ['courts', 'press', 'congress', 'base'].filter(k => eff[k]).map(k => {
-      const f = AD.faction(k); return `${f.short} ${eff[k] > 0 ? '+' : ''}${eff[k]}`;
-    }).join(' · ');
 
     this.el('const-list').innerHTML = AD.CLAUSES.map(c => {
       const broke = AD.brokeClause(run, c.id);
@@ -528,7 +524,7 @@ AD.UI = {
         <div class="clause-top"><b>${c.name}</b><span>${c.ref}</span></div>
         <i class="clause-line">${c.line}</i>
         ${broke ? `<div class="clause-broke">${AD.clean(c.broke, this.settings.clean)}</div>`
-                : `<button class="btn clause-break" data-breakclause="${c.id}">Break it <em>${effLine}</em></button>`}
+                : `<div class="clause-intact">Intact. A crisis will offer the chance to break it.</div>`}
       </div>`;
     }).join('');
   },

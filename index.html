@@ -11,15 +11,15 @@
 
 <!-- Installable-app metadata (PWA + iOS home screen). The native shells get
      their icons from capacitor assets; this covers the web build. -->
-<link rel="manifest" href="manifest.json?v=89">
-<link rel="icon" type="image/svg+xml" href="icon.svg?v=89">
-<link rel="apple-touch-icon" href="icon.svg?v=89">
+<link rel="manifest" href="manifest.json?v=90">
+<link rel="icon" type="image/svg+xml" href="icon.svg?v=90">
+<link rel="apple-touch-icon" href="icon.svg?v=90">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Am. Dictator">
 
-<link rel="stylesheet" href="css/styles.css?v=89">
+<link rel="stylesheet" href="css/styles.css?v=90">
 </head>
 <body>
 
@@ -204,8 +204,10 @@
       </div>
       <div class="pillar-cap">Pillars of the Regime, capture three</div>
       <div class="pillar-row" id="pillar-row"></div>
-      <button class="victory-tracker" id="victory-tracker" data-act="howto"
-              title="How to win, tap for the full strategy"></button>
+
+      <!-- The five power centres sit directly under Authority, above the rooms. -->
+      <div class="factions" id="factions" role="group" aria-label="Power centres"></div>
+
       <div class="chip-row">
         <button class="const-chip" id="const-chip" data-act="constitution"
                 title="The Ledger of Broken Clauses">THE CONSTITUTION <b>0/16</b></button>
@@ -223,8 +225,6 @@
     </div>
 
     <div class="facade">
-      <div class="facade-roof" aria-hidden="true"></div>
-      <div class="factions" id="factions" role="group" aria-label="Power centres"></div>
       <div class="warnings" id="warnings" role="status" aria-live="polite"></div>
       <div class="monthbrief" id="monthbrief" role="status" aria-live="polite" hidden></div>
       <div class="ticker" id="ticker" role="status" hidden>
@@ -534,7 +534,10 @@
           In the shipping build this is the single optional in-app purchase. Here it's a switch.</p>
         <div class="opt"><label><input type="checkbox" id="opt-pack"> Hire a Chief of Staff</label><em>Simulated purchase.</em></div>
       </div>
-      <button class="btn wide" data-act="settings-close">Done</button>
+      <hr class="rule">
+      <button class="btn wide" data-act="howto">📖 How to Play</button>
+      <button class="btn wide btn-ghost" data-act="language" style="margin-top:8px">🌐 Change Language</button>
+      <button class="btn wide" data-act="settings-close" style="margin-top:8px">Done</button>
     </div>
   </div>
 
@@ -574,61 +577,61 @@
 </div>
 
 <!-- state.js creates the AD namespace, so it must load first. -->
-<script src="js/state.js?v=89"></script>
-<script src="js/i18n.js?v=89"></script>
-<script src="js/i18n/cs.js?v=89"></script>
-<script src="js/i18n/de.js?v=89"></script>
-<script src="js/i18n/es.js?v=89"></script>
-<script src="js/i18n/fr.js?v=89"></script>
-<script src="js/i18n/it.js?v=89"></script>
-<script src="js/i18n/nl.js?v=89"></script>
-<script src="js/i18n/pl.js?v=89"></script>
-<script src="js/i18n/pt.js?v=89"></script>
-<script src="js/i18n/ru.js?v=89"></script>
-<script src="js/i18n/zh.js?v=89"></script>
-<script src="js/icons.js?v=89"></script>
-<script src="js/portraits.js?v=89"></script>
-<script src="js/seed.js?v=89"></script>
-<script src="js/audio.js?v=89"></script>
-<script src="js/music.js?v=89"></script>
-<script src="js/doctrines.js?v=89"></script>
-<script src="js/corruption.js?v=89"></script>
-<script src="js/renovations.js?v=89"></script>
-<script src="js/senate.js?v=89"></script>
-<script src="js/press.js?v=89"></script>
-<script src="js/street.js?v=89"></script>
-<script src="js/call.js?v=89"></script>
-<script src="js/war.js?v=89"></script>
-<script src="js/courts.js?v=89"></script>
-<script src="js/basepop.js?v=89"></script>
-<script src="js/economy.js?v=89"></script>
-<script src="js/pardons.js?v=89"></script>
-<script src="js/dossier.js?v=89"></script>
-<script src="js/constitution.js?v=89"></script>
-<script src="js/tutorial.js?v=89"></script>
-<script src="js/achievements.js?v=89"></script>
-<script src="js/briefings.js?v=89"></script>
-<script src="js/cards.js?v=89"></script>
+<script src="js/state.js?v=90"></script>
+<script src="js/i18n.js?v=90"></script>
+<script src="js/i18n/cs.js?v=90"></script>
+<script src="js/i18n/de.js?v=90"></script>
+<script src="js/i18n/es.js?v=90"></script>
+<script src="js/i18n/fr.js?v=90"></script>
+<script src="js/i18n/it.js?v=90"></script>
+<script src="js/i18n/nl.js?v=90"></script>
+<script src="js/i18n/pl.js?v=90"></script>
+<script src="js/i18n/pt.js?v=90"></script>
+<script src="js/i18n/ru.js?v=90"></script>
+<script src="js/i18n/zh.js?v=90"></script>
+<script src="js/icons.js?v=90"></script>
+<script src="js/portraits.js?v=90"></script>
+<script src="js/seed.js?v=90"></script>
+<script src="js/audio.js?v=90"></script>
+<script src="js/music.js?v=90"></script>
+<script src="js/doctrines.js?v=90"></script>
+<script src="js/corruption.js?v=90"></script>
+<script src="js/renovations.js?v=90"></script>
+<script src="js/senate.js?v=90"></script>
+<script src="js/press.js?v=90"></script>
+<script src="js/street.js?v=90"></script>
+<script src="js/call.js?v=90"></script>
+<script src="js/war.js?v=90"></script>
+<script src="js/courts.js?v=90"></script>
+<script src="js/basepop.js?v=90"></script>
+<script src="js/economy.js?v=90"></script>
+<script src="js/pardons.js?v=90"></script>
+<script src="js/dossier.js?v=90"></script>
+<script src="js/constitution.js?v=90"></script>
+<script src="js/tutorial.js?v=90"></script>
+<script src="js/achievements.js?v=90"></script>
+<script src="js/briefings.js?v=90"></script>
+<script src="js/cards.js?v=90"></script>
 <!-- Content packs. Each pushes onto AD.CARDS, so adding a deck is adding a
      file, no engine changes. Order does not matter. -->
-<script src="js/packs/pack-a-honeymoon.js?v=89"></script>
-<script src="js/packs/pack-b-machinery.js?v=89"></script>
-<script src="js/packs/pack-c-consolidation.js?v=89"></script>
-<script src="js/packs/pack-d-evergreen.js?v=89"></script>
-<script src="js/packs/pack-e-secondterm.js?v=89"></script>
-<script src="js/packs/pack-f-record.js?v=89"></script>
-<script src="js/packs/pack-g-record.js?v=89"></script>
-<script src="js/packs/pack-h-frontier.js?v=89"></script>
-<script src="js/packs/pack-i-geopolitics.js?v=89"></script>
+<script src="js/packs/pack-a-honeymoon.js?v=90"></script>
+<script src="js/packs/pack-b-machinery.js?v=90"></script>
+<script src="js/packs/pack-c-consolidation.js?v=90"></script>
+<script src="js/packs/pack-d-evergreen.js?v=90"></script>
+<script src="js/packs/pack-e-secondterm.js?v=90"></script>
+<script src="js/packs/pack-f-record.js?v=90"></script>
+<script src="js/packs/pack-g-record.js?v=90"></script>
+<script src="js/packs/pack-h-frontier.js?v=90"></script>
+<script src="js/packs/pack-i-geopolitics.js?v=90"></script>
 <!-- cay.js reads AD.CAST, so it must load after cards.js -->
-<script src="js/cay.js?v=89"></script>
-<script src="js/reactive.js?v=89"></script>
-<script src="js/sections.js?v=89"></script>
-<script src="js/popups.js?v=89"></script>
-<script src="js/events.js?v=89"></script>
-<script src="js/endings.js?v=89"></script>
-<script src="js/engine.js?v=89"></script>
-<script src="js/ui.js?v=89"></script>
-<script src="js/main.js?v=89"></script>
+<script src="js/cay.js?v=90"></script>
+<script src="js/reactive.js?v=90"></script>
+<script src="js/sections.js?v=90"></script>
+<script src="js/popups.js?v=90"></script>
+<script src="js/events.js?v=90"></script>
+<script src="js/endings.js?v=90"></script>
+<script src="js/engine.js?v=90"></script>
+<script src="js/ui.js?v=90"></script>
+<script src="js/main.js?v=90"></script>
 </body>
 </html>
