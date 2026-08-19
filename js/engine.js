@@ -332,8 +332,25 @@ AD.Engine = {
     if (collapse.ending) { out.ending = collapse.ending; this.finish(out.ending); return out; }
     if (collapse.saved) { out.shieldSaved = collapse.saved; out.tabloid = collapse.tabloid; }
 
-    // 3. Total authority.
-    if (run.authority >= 100) { out.ending = 'dictator'; this.finish(out.ending); return out; }
+    // 3. Total authority, but ONLY a second-term president can consummate it.
+    //    A first term is near-impossible to win: hitting Authority 100 in term one
+    //    makes you dominant, not dictator, you must be re-elected with all of it
+    //    behind you and finish the job in a second term. So term one holds the
+    //    coronation and plays on toward the election.
+    if (run.authority >= 100) {
+      if (run.term >= 2) { out.ending = 'dictator'; this.finish(out.ending); return out; }
+      run.flags = run.flags || {};
+      if (!run.flags.brinkShown) {
+        run.flags.brinkShown = true;
+        out.tabloid = {
+          head: 'ONE TERM IS NOT ENOUGH',
+          sub: 'Total control of the machinery, and a Constitution that still, technically, expires in November',
+          body: 'You have every lever in your hand. But the office is, on paper, still temporary, and a ' +
+                'first-term strongman is just a president having a very good year. To make it permanent you ' +
+                'have to win it again, with all of this behind you, and then never hand it back. Survive to the election.'
+        };
+      }
+    }
 
     // 4. New doctrine crossed? Queue it as a three-way DECISION card (sign /
     //    bin / the comedy option) rather than granting it silently.
