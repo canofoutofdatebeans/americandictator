@@ -31,6 +31,22 @@ AD.UI = {
     }
   },
 
+  /* Localise the static markup: every element with data-i18n gets its text from
+     AD.t(key); data-i18n-ph fills a placeholder; data-i18n-html sets innerHTML
+     (for the few strings that carry markup). Called at boot and on every language
+     change, so switching language re-skins the whole shell without a reload. */
+  localizeDOM (root) {
+    (root || document).querySelectorAll('[data-i18n]').forEach(el => {
+      el.textContent = AD.t(el.getAttribute('data-i18n'));
+    });
+    (root || document).querySelectorAll('[data-i18n-html]').forEach(el => {
+      el.innerHTML = AD.t(el.getAttribute('data-i18n-html'));
+    });
+    (root || document).querySelectorAll('[data-i18n-ph]').forEach(el => {
+      el.setAttribute('placeholder', AD.t(el.getAttribute('data-i18n-ph')));
+    });
+  },
+
   /* Give every management overlay a consistent close affordance: a round ✕ in
      the top-right corner that fires the overlay's OWN close action (so any
      turn-advance or re-render tied to that close still happens). One obvious,

@@ -13,16 +13,45 @@ AD.Game = {
   init () {
     const U = AD.UI;
     U.settings = AD.loadSettings();
+    const chosen = AD.loadLang();
+    AD.setLang(chosen || 'en');
     AD.Music.init(U.settings);
     this.applySettings();
+    this.buildLanguageScreen();
     this.buildSetupScreen();
     this.buildHowTo();
     AD.UI.installOverlayCloses();
     this.wire();
 
     const bt = U.el('build-tag'); if (bt) bt.textContent = 'build ' + AD.BUILD;
+    U.localizeDOM();
     this.refreshTitle();
-    U.show('title');
+    // A brand-new player picks a language before anything else; a returning one
+    // goes straight to the title in the language they chose.
+    if (chosen) U.show('title');
+    else U.show('language');
+  },
+
+  /* Fill the language picker from AD.LANGS. Each option names itself in its own
+     language, so the screen needs no translation to be understood. */
+  buildLanguageScreen () {
+    const grid = AD.UI.el('lang-grid');
+    if (!grid) return;
+    grid.innerHTML = AD.LANGS.map(l =>
+      `<button class="lang-opt${l.code === AD.LANG ? ' on' : ''}" data-act="pick-lang" data-lang="${l.code}">
+        <span class="lang-flag">${l.flag}</span><span class="lang-name">${l.native}</span>
+      </button>`).join('');
+  },
+
+  pickLang (code) {
+    AD.setLang(code);
+    if (AD.UI.settings) { AD.UI.settings.lang = code; AD.saveSettings(AD.UI.settings); }
+    AD.UI.localizeDOM();
+    this.buildLanguageScreen();
+    this.buildSetupScreen();
+    this.buildHowTo();
+    this.refreshTitle();
+    AD.UI.show('title');
   },
 
   applySettings () {
@@ -212,17 +241,17 @@ AD.Game = {
       cont.hidden = false;
       cont.classList.add('btn-primary');
       cont.textContent = '';
-      const lead = document.createElement('span'); lead.className = 'btn-lead'; lead.textContent = 'Resume Term';
+      const lead = document.createElement('span'); lead.className = 'btn-lead'; lead.textContent = AD.t('menu.resume');
       const sub = document.createElement('small');
-      sub.textContent = 'Pres. ' + (saved.president || saved.name || 'You') + ' · ' + AD.dateLabel(saved.month);
+      sub.textContent = AD.t('menu.resumeSub', { name: (saved.president || saved.name || 'You'), date: AD.dateLabel(saved.month) });
       cont.append(lead, sub);
       const menu = cont.parentNode;
       if (menu && menu.firstElementChild !== cont) menu.insertBefore(cont, menu.firstElementChild);
-      fresh.classList.remove('btn-primary'); fresh.classList.add('btn-ghost'); fresh.textContent = 'New Term';
+      fresh.classList.remove('btn-primary'); fresh.classList.add('btn-ghost'); fresh.textContent = AD.t('menu.newTerm');
     } else {
       cont.hidden = true;
       cont.classList.remove('btn-primary');
-      fresh.classList.add('btn-primary'); fresh.classList.remove('btn-ghost'); fresh.textContent = 'Take the Oath';
+      fresh.classList.add('btn-primary'); fresh.classList.remove('btn-ghost'); fresh.textContent = AD.t('menu.oath');
     }
   },
 
@@ -654,6 +683,9 @@ AD.Game = {
       AD.Audio.unlock();                   // browsers gate audio on first gesture
       AD.Music.start();                    // background marches begin on first tap
 
+      const langOpt = e.target.closest('[data-lang]');
+      if (langOpt) { this.pickLang(langOpt.dataset.lang); return; }
+
       const choice = e.target.closest('.choice');
       if (choice && !choice.disabled) { this.decide(+choice.dataset.choice, false); return; }
 
@@ -785,6 +817,7 @@ AD.Game = {
       case 'begin':    this.begin(); break;
       case 'continue': this.resume(); break;
       case 'title':    this.refreshTitle(); U.show('title'); break;
+      case 'language': U.show('language'); break;
       // Play out any front pages / doctrine unlocks before the month ticks.
       case 'next':     this.continueTurn(); break;
 

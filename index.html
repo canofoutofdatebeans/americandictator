@@ -11,15 +11,15 @@
 
 <!-- Installable-app metadata (PWA + iOS home screen). The native shells get
      their icons from capacitor assets; this covers the web build. -->
-<link rel="manifest" href="manifest.json?v=83">
-<link rel="icon" type="image/svg+xml" href="icon.svg?v=83">
-<link rel="apple-touch-icon" href="icon.svg?v=83">
+<link rel="manifest" href="manifest.json?v=84">
+<link rel="icon" type="image/svg+xml" href="icon.svg?v=84">
+<link rel="apple-touch-icon" href="icon.svg?v=84">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Am. Dictator">
 
-<link rel="stylesheet" href="css/styles.css?v=83">
+<link rel="stylesheet" href="css/styles.css?v=84">
 </head>
 <body>
 
@@ -27,6 +27,16 @@
 
   <!-- Master sound toggle, fixed and visible at all times, above every overlay -->
   <button class="mute-btn" id="mute-btn" data-act="mute" aria-label="Toggle sound" title="Sound on/off">🔊</button>
+
+  <!-- ══════════════════ LANGUAGE (first screen for a new player) ══════════════════ -->
+  <section class="screen" id="screen-language">
+    <div class="lang-wrap">
+      <div class="lang-globe" aria-hidden="true">🌐</div>
+      <h1 class="lang-h" data-i18n="lang.title">Choose your language</h1>
+      <div class="lang-grid" id="lang-grid"></div>
+      <p class="lang-sub" data-i18n="lang.sub">You can change this later in the Situation Room.</p>
+    </div>
+  </section>
 
   <!-- ══════════════════ TITLE ══════════════════ -->
   <section class="screen active" id="screen-title">
@@ -85,17 +95,17 @@
         </svg>
       </div>
       <h1 class="game-title">American<span>Dictator</span></h1>
-      <p class="tagline">Four years. One country. How hard could it be?</p>
+      <p class="tagline" data-i18n="title.tagline">Four years. One country. How hard could it be?</p>
       <div class="menu">
         <button class="btn btn-primary" data-act="new">Take the Oath</button>
         <button class="btn" data-act="continue" id="btn-continue" hidden>Resume Term</button>
-        <button class="btn btn-ghost" data-act="library">Presidential Library</button>
-        <button class="btn btn-ghost" data-act="settings">The Situation Room</button>
-        <button class="btn btn-ghost" data-act="howto">How to Seize Power</button>
-        <button class="btn btn-ghost" data-act="replay-tutorial">Replay the Walkthrough</button>
+        <button class="btn btn-ghost" data-act="library" data-i18n="menu.library">Presidential Library</button>
+        <button class="btn btn-ghost" data-act="settings" data-i18n="menu.situation">The Situation Room</button>
+        <button class="btn btn-ghost" data-act="howto" data-i18n="menu.howto">How to Seize Power</button>
+        <button class="btn btn-ghost" data-act="replay-tutorial" data-i18n="menu.replayTut">Replay the Walkthrough</button>
       </div>
       <div class="build-tag" id="build-tag"></div>
-      <p class="disclaimer">A work of satire. Every president, party, agency, court, country and crisis in this game
+      <p class="disclaimer" data-i18n="title.disclaimer">A work of satire. Every president, party, agency, court, country and crisis in this game
         is fictional. Any resemblance to persons living, indicted, or posting is entirely the fault of the opposition.</p>
     </div>
   </section>
@@ -103,10 +113,10 @@
   <!-- ══════════════════ SETUP ══════════════════ -->
   <section class="screen" id="screen-setup">
     <div class="panel">
-      <h2 class="panel-h">Assume the Office</h2>
+      <h2 class="panel-h" data-i18n="setup.h">Assume the Office</h2>
 
       <div class="inheritance" id="inheritance" hidden>
-        <div class="inh-kicker">YOU INHERIT</div>
+        <div class="inh-kicker" data-i18n="setup.inherit">YOU INHERIT</div>
         <p class="inh-note" id="inh-note"></p>
         <div class="inh-mods" id="inh-mods"></div>
       </div>
@@ -115,56 +125,56 @@
         <div class="portrait-box">
           <div id="portrait-slot"></div>
           <div class="port-controls">
-            <button class="mini" data-port="sex">Sex</button>
-            <button class="mini" data-port="build">Size</button>
-            <button class="mini" data-port="hair">Hair</button>
-            <button class="mini" data-port="skin">Complexion</button>
-            <button class="mini" data-port="tie">Tie</button>
-            <button class="mini" data-port="suit">Suit</button>
+            <button class="mini" data-port="sex" data-i18n="port.sex">Sex</button>
+            <button class="mini" data-port="build" data-i18n="port.build">Size</button>
+            <button class="mini" data-port="hair" data-i18n="port.hair">Hair</button>
+            <button class="mini" data-port="skin" data-i18n="port.skin">Complexion</button>
+            <button class="mini" data-port="tie" data-i18n="port.tie">Tie</button>
+            <button class="mini" data-port="suit" data-i18n="port.suit">Suit</button>
           </div>
         </div>
 
         <div class="setup-fields">
           <label class="field">
-            <span>Name of the President</span>
-            <input id="in-name" type="text" maxlength="26" placeholder="Ronald J. Trumbull" autocomplete="off">
+            <span data-i18n="setup.name">Name of the President</span>
+            <input id="in-name" type="text" maxlength="26" data-i18n-ph="setup.namePh" placeholder="Ronald J. Trumbull" autocomplete="off">
           </label>
 
           <label class="field">
-            <span>Party</span>
-            <input id="in-party" type="text" maxlength="24" placeholder="The Patriot Party" autocomplete="off">
+            <span data-i18n="setup.party">Party</span>
+            <input id="in-party" type="text" maxlength="24" data-i18n-ph="setup.partyPh" placeholder="The Patriot Party" autocomplete="off">
           </label>
 
           <div class="field">
-            <span>Party Colour</span>
+            <span data-i18n="setup.colour">Party Colour</span>
             <div class="swatches" id="swatches"></div>
           </div>
 
           <label class="field">
-            <span>Seed <em>optional, share a run</em></span>
-            <input id="in-seed" type="text" maxlength="16" placeholder="leave blank for random" autocomplete="off">
+            <span><span data-i18n="setup.seed">Seed</span> <em data-i18n="setup.seedNote">optional, share a run</em></span>
+            <input id="in-seed" type="text" maxlength="16" data-i18n-ph="setup.seedPh" placeholder="leave blank for random" autocomplete="off">
           </label>
 
           <div class="field">
-            <span>Difficulty</span>
+            <span data-i18n="setup.difficulty">Difficulty</span>
             <div class="segmented" id="seg-diff">
-              <button data-diff="rookie">Rookie</button>
-              <button data-diff="standard" class="on">Standard</button>
-              <button data-diff="historic">Historic</button>
+              <button data-diff="rookie" data-i18n="diff.rookie">Rookie</button>
+              <button data-diff="standard" class="on" data-i18n="diff.standard">Standard</button>
+              <button data-diff="historic" data-i18n="diff.historic">Historic</button>
             </div>
             <p class="hint" id="diff-hint"></p>
           </div>
 
           <div class="field">
-            <span>Modifiers <em>optional, stack any</em></span>
+            <span><span data-i18n="setup.mods">Modifiers</span> <em data-i18n="setup.modsNote">optional, stack any</em></span>
             <div class="mutators" id="mutators"></div>
           </div>
         </div>
       </div>
 
       <div class="row-end">
-        <button class="btn btn-ghost" data-act="title">Back</button>
-        <button class="btn btn-primary" data-act="begin">So Help Me God</button>
+        <button class="btn btn-ghost" data-act="title" data-i18n="setup.back">Back</button>
+        <button class="btn btn-primary" data-act="begin" data-i18n="setup.begin">So Help Me God</button>
       </div>
     </div>
   </section>
@@ -559,49 +569,60 @@
 </div>
 
 <!-- state.js creates the AD namespace, so it must load first. -->
-<script src="js/state.js?v=83"></script>
-<script src="js/icons.js?v=83"></script>
-<script src="js/portraits.js?v=83"></script>
-<script src="js/seed.js?v=83"></script>
-<script src="js/audio.js?v=83"></script>
-<script src="js/music.js?v=83"></script>
-<script src="js/doctrines.js?v=83"></script>
-<script src="js/corruption.js?v=83"></script>
-<script src="js/renovations.js?v=83"></script>
-<script src="js/senate.js?v=83"></script>
-<script src="js/press.js?v=83"></script>
-<script src="js/street.js?v=83"></script>
-<script src="js/call.js?v=83"></script>
-<script src="js/war.js?v=83"></script>
-<script src="js/courts.js?v=83"></script>
-<script src="js/basepop.js?v=83"></script>
-<script src="js/economy.js?v=83"></script>
-<script src="js/pardons.js?v=83"></script>
-<script src="js/dossier.js?v=83"></script>
-<script src="js/constitution.js?v=83"></script>
-<script src="js/tutorial.js?v=83"></script>
-<script src="js/achievements.js?v=83"></script>
-<script src="js/briefings.js?v=83"></script>
-<script src="js/cards.js?v=83"></script>
+<script src="js/state.js?v=84"></script>
+<script src="js/i18n.js?v=84"></script>
+<script src="js/i18n/cs.js?v=84"></script>
+<script src="js/i18n/de.js?v=84"></script>
+<script src="js/i18n/es.js?v=84"></script>
+<script src="js/i18n/fr.js?v=84"></script>
+<script src="js/i18n/it.js?v=84"></script>
+<script src="js/i18n/nl.js?v=84"></script>
+<script src="js/i18n/pl.js?v=84"></script>
+<script src="js/i18n/pt.js?v=84"></script>
+<script src="js/i18n/ru.js?v=84"></script>
+<script src="js/i18n/zh.js?v=84"></script>
+<script src="js/icons.js?v=84"></script>
+<script src="js/portraits.js?v=84"></script>
+<script src="js/seed.js?v=84"></script>
+<script src="js/audio.js?v=84"></script>
+<script src="js/music.js?v=84"></script>
+<script src="js/doctrines.js?v=84"></script>
+<script src="js/corruption.js?v=84"></script>
+<script src="js/renovations.js?v=84"></script>
+<script src="js/senate.js?v=84"></script>
+<script src="js/press.js?v=84"></script>
+<script src="js/street.js?v=84"></script>
+<script src="js/call.js?v=84"></script>
+<script src="js/war.js?v=84"></script>
+<script src="js/courts.js?v=84"></script>
+<script src="js/basepop.js?v=84"></script>
+<script src="js/economy.js?v=84"></script>
+<script src="js/pardons.js?v=84"></script>
+<script src="js/dossier.js?v=84"></script>
+<script src="js/constitution.js?v=84"></script>
+<script src="js/tutorial.js?v=84"></script>
+<script src="js/achievements.js?v=84"></script>
+<script src="js/briefings.js?v=84"></script>
+<script src="js/cards.js?v=84"></script>
 <!-- Content packs. Each pushes onto AD.CARDS, so adding a deck is adding a
      file, no engine changes. Order does not matter. -->
-<script src="js/packs/pack-a-honeymoon.js?v=83"></script>
-<script src="js/packs/pack-b-machinery.js?v=83"></script>
-<script src="js/packs/pack-c-consolidation.js?v=83"></script>
-<script src="js/packs/pack-d-evergreen.js?v=83"></script>
-<script src="js/packs/pack-e-secondterm.js?v=83"></script>
-<script src="js/packs/pack-f-record.js?v=83"></script>
-<script src="js/packs/pack-g-record.js?v=83"></script>
-<script src="js/packs/pack-h-frontier.js?v=83"></script>
+<script src="js/packs/pack-a-honeymoon.js?v=84"></script>
+<script src="js/packs/pack-b-machinery.js?v=84"></script>
+<script src="js/packs/pack-c-consolidation.js?v=84"></script>
+<script src="js/packs/pack-d-evergreen.js?v=84"></script>
+<script src="js/packs/pack-e-secondterm.js?v=84"></script>
+<script src="js/packs/pack-f-record.js?v=84"></script>
+<script src="js/packs/pack-g-record.js?v=84"></script>
+<script src="js/packs/pack-h-frontier.js?v=84"></script>
 <!-- cay.js reads AD.CAST, so it must load after cards.js -->
-<script src="js/cay.js?v=83"></script>
-<script src="js/reactive.js?v=83"></script>
-<script src="js/sections.js?v=83"></script>
-<script src="js/popups.js?v=83"></script>
-<script src="js/events.js?v=83"></script>
-<script src="js/endings.js?v=83"></script>
-<script src="js/engine.js?v=83"></script>
-<script src="js/ui.js?v=83"></script>
-<script src="js/main.js?v=83"></script>
+<script src="js/cay.js?v=84"></script>
+<script src="js/reactive.js?v=84"></script>
+<script src="js/sections.js?v=84"></script>
+<script src="js/popups.js?v=84"></script>
+<script src="js/events.js?v=84"></script>
+<script src="js/endings.js?v=84"></script>
+<script src="js/engine.js?v=84"></script>
+<script src="js/ui.js?v=84"></script>
+<script src="js/main.js?v=84"></script>
 </body>
 </html>
