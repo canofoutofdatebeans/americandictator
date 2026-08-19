@@ -16,6 +16,12 @@
 AD.CARDT = {};                       // code -> { cardId -> {t, x, c:[[l,r]...]} }
 AD._cardLangLoaded = { en: true };   // load state per language code
 
+/* Which languages have a FULL card-deck translation (not just the UI shell).
+   The language picker only offers these, plus English, so a player never
+   lands in a language that quietly falls back to English mid-crisis.
+   Update this list as each language's cards-<code>.js reaches full coverage. */
+AD.CARD_DECK_COMPLETE = ['es', 'fr'];
+
 /* US/UK English share the English source; everything else has its own file. */
 AD.cardLangCode = function () {
   const l = AD.LANG || 'en';

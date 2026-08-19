@@ -34,11 +34,16 @@ AD.Game = {
   },
 
   /* Fill the language picker from AD.LANGS. Each option names itself in its own
-     language, so the screen needs no translation to be understood. */
+     language, so the screen needs no translation to be understood. Only offered
+     if the card DECK for that language is fully translated (English needs no
+     deck translation at all) — otherwise a player would land in a language that
+     quietly falls back to English mid-crisis, which reads as broken, not lazy. */
   buildLanguageScreen () {
     const grid = AD.UI.el('lang-grid');
     if (!grid) return;
-    grid.innerHTML = AD.LANGS.map(l =>
+    const done = AD.CARD_DECK_COMPLETE || [];
+    const offered = AD.LANGS.filter(l => l.code === 'en-US' || l.code === 'en-GB' || done.indexOf(l.code) !== -1);
+    grid.innerHTML = offered.map(l =>
       `<button class="lang-opt${l.code === AD.LANG ? ' on' : ''}" data-act="pick-lang" data-lang="${l.code}">
         <span class="lang-flag">${l.flag}</span><span class="lang-name">${l.native}</span>
       </button>`).join('');
@@ -988,6 +993,14 @@ AD.Game = {
       case 'renovations':
         if (U.current !== 'game' || !AD.Engine.run || AD.Engine.run.over) break;
         U.pauseTimer(); U.renderResidence(); U.overlay('renovations', true); break;
+
+      /* Jump straight to whichever room a directed crisis (objectives.js) is
+         waiting on, reusing that room's own open action. */
+      case 'objective-go': {
+        const ob = AD.Engine.run && AD.Engine.run.objective;
+        if (ob && ob.room) this.act(ob.room);
+        break;
+      }
       case 'renovations-close':
         U.overlay('renovations', false);
         if (AD.Engine.card && !U.el('card').hidden) U.resumeTimer();

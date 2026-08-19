@@ -200,6 +200,18 @@ AD.UI = {
     this.el('warnings').innerHTML = warns.map(w =>
       `<div class="warn-row ${w.level}">${w.text}</div>`).join('');
 
+    /* A directed crisis in progress: see objectives.js. */
+    const obEl = this.el('objective-banner');
+    if (obEl) {
+      const ob = run.objective;
+      if (ob) {
+        const left = ob.dueMonth - AD.termMonth(run);
+        this.el('objective-text').textContent = ob.label +
+          (left > 0 ? ` (${left} month${left === 1 ? '' : 's'} left)` : ' (overdue)');
+      }
+      obEl.hidden = !ob;
+    }
+
     const pillars = AD.FACTIONS.filter(f => f.capturable);
     this.el('pillar-row').innerHTML = pillars.map(f =>
       `<div class="pill ${run.locked[f.key] ? 'on' : ''}" title="${f.pillar}">${

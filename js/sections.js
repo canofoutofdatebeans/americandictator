@@ -35,6 +35,61 @@ AD.scheduleEO = function (run, flavor, delay) {
   });
 };
 
+/* ---- directed-crisis objective types (see objectives.js) ---- */
+if (AD.defineObjectiveType) {
+  AD.defineObjectiveType('swing-senator', {
+    check (run, obj) {
+      const s = AD.senatorById(run, obj.data.senId);
+      if (!s || s.gone) return false;
+      return s.party === 'opp' ? s.loyalty >= 55 : s.loyalty >= 72;
+    },
+    onSuccess (run, obj) {
+      AD.applySenateEffect(run, { base: 3, congress: 4, auth: 1 });
+      if (run.queue) run.queue.push({
+        id: 'obj-senate-won-' + obj.data.senId, scripted: true, who: C.cos,
+        title: 'Handled', tags: ['senate'],
+        text: `Deborah closes the file. "` + (obj.data.name || 'The Senator') + ` came around, sir. Quietly, through the room, exactly like you asked. Nobody outside this building ever hears about the whip count that almost wasn't."`,
+        choices: [{ label: 'Good. Next.', eff: { base: 1 }, res: 'One fewer name on the list. The rest of the caucus, notably, is paying attention.' }]
+      });
+    },
+    onExpire (run, obj) {
+      AD.applySenateEffect(run, { base: -4, congress: -6, press: -3 });
+      if (run.queue) run.queue.push({
+        id: 'obj-senate-lost-' + obj.data.senId, scripted: true, who: C.press,
+        title: 'It Leaked', tags: ['senate','press'],
+        text: `Kaylee has the headline already written for her. "` + (obj.data.name || 'The Senator') + ` went on the record, sir. ‘No longer confident in the direction of the party.’ It is running everywhere by lunchtime."`,
+        choices: [{ label: 'Get ahead of it.', eff: { press: -1 }, res: 'You spend the afternoon on the phone anyway, three months too late to matter as much as it would have.' }]
+      });
+    }
+  });
+
+  AD.defineObjectiveType('win-outlet', {
+    check (run, obj) {
+      const o = AD.outletById(run, obj.data.outletId);
+      if (!o) return false;
+      return o.owned || o.stance >= 60;
+    },
+    onSuccess (run, obj) {
+      AD.applySenateEffect(run, { press: 4, base: 2 });
+      if (run.queue) run.queue.push({
+        id: 'obj-press-won-' + obj.data.outletId, scripted: true, who: C.press,
+        title: 'A Softer Line', tags: ['press'],
+        text: `Kaylee slides the morning clips across the desk. "` + (obj.data.name || 'The newsroom') + ` came around, sir. Same facts, noticeably softer verbs. That took actual work in that building."`,
+        choices: [{ label: 'On to the next one.', eff: { base: 1 }, res: 'One fewer hostile byline in the morning stack. It will not last, but this week it holds.' }]
+      });
+    },
+    onExpire (run, obj) {
+      AD.applySenateEffect(run, { press: -5, base: 2 });
+      if (run.queue) run.queue.push({
+        id: 'obj-press-lost-' + obj.data.outletId, scripted: true, who: C.press,
+        title: 'They Did Not Come Around', tags: ['press'],
+        text: `Kaylee shrugs. "` + (obj.data.name || 'The newsroom') + ` ran the piece anyway, sir. Every fact checked out. That was, apparently, the whole problem."`,
+        choices: [{ label: 'Note it and move on.', eff: { base: 2, press: -1 }, res: 'You add the byline to a list you keep. The list is getting long.' }]
+      });
+    }
+  });
+}
+
 AD.SECTION_EVENTS = [
 
   /* ------------------------- THE ECONOMY ------------------------- */
@@ -383,6 +438,74 @@ AD.SECTION_EVENTS = [
           { label: `Quietly rewrite it narrower and resubmit next month.`,
             eff: { courts: 1, base: 1, auth: 1 },
             res: `A second, smaller version goes out under a new number. It survives specifically by being boring.` }
+        ]
+      };
+    }
+  },
+
+  /* ------------- DIRECTED CRISIS: THE WHIP COUNT ------------- */
+  /* A story card that, on one choice, sends the player to a specific room
+     with a deadline instead of resolving on the spot. See objectives.js. */
+  {
+    key: 'directed-senate', gap: 10,
+    test (run) {
+      if (run.objective) return false;
+      if (AD.termMonth(run) < 5) return false;
+      return (run.senate || []).some(s => !s.gone && s.party === 'own' && s.loyalty < 72 && s.loyalty >= 30);
+    },
+    build (run) {
+      const s = (run.senate || []).find(x => !x.gone && x.party === 'own' && x.loyalty < 72 && x.loyalty >= 30);
+      const due = AD.termMonth(run) + 3;
+      return {
+        id: 'sec-directed-senate-' + s.id, scripted: true, who: C.cos, tags: ['senate','directed'],
+        pillarBanner: 'THE WHIP COUNT',
+        title: 'A Name On A List',
+        text: `Deborah has a list she wishes were shorter. "` + s.first + ' ' + s.last + `, sir` +
+              (s.state ? ', of ' + s.state + ',' : '') + ` is drifting. If it leaks that you cannot hold your own ` +
+              `party, the story writes itself. You have a few months to bring ` + s.first + ` back personally, ` +
+              `through the Senate room, before somebody else counts the votes for you."`,
+        choices: [
+          { label: `Handle it personally. Send it to the Senate.`, eff: { auth: 1 },
+            res: s.first + ' ' + s.last + ` comes off the general whip list and onto your own desk. The clock starts now.`,
+            act: r => AD.setObjective(r, {
+              type: 'swing-senator', room: 'senate', dueMonth: due,
+              data: { senId: s.id, name: s.first + ' ' + s.last },
+              label: `Bring Sen. ${s.last} back in line, through the Senate.`
+            }) },
+          { label: `Let it ride. Some things fix themselves.`, eff: { congress: -2 },
+            res: s.first + ' ' + s.last + ` notices being ignored, which turns out to be its own kind of message, not a good one.` }
+        ]
+      };
+    }
+  },
+
+  /* ------------- DIRECTED CRISIS: THE HOSTILE NEWSROOM ------------- */
+  {
+    key: 'directed-press', gap: 10,
+    test (run) {
+      if (run.objective) return false;
+      if (AD.termMonth(run) < 5) return false;
+      return (run.press || []).some(o => !o.owned && o.stance < 40);
+    },
+    build (run) {
+      const o = (run.press || []).find(x => !x.owned && x.stance < 40);
+      const due = AD.termMonth(run) + 3;
+      return {
+        id: 'sec-directed-press-' + o.id, scripted: true, who: C.press, tags: ['press','directed'],
+        pillarBanner: 'THE MORNING CLIPS',
+        title: 'One Newsroom, Circled',
+        text: `Kaylee has a single outlet highlighted in three colours. "` + o.name + `, sir. Every story this month has an edge to it. ` +
+              `I can work this one personally, through the Press Room, but it will take a real run at them, not one phone call."`,
+        choices: [
+          { label: `Put Kaylee on it. Send it to the Press Room.`, eff: { auth: 1 },
+            res: `Kaylee takes ` + o.name + ` as a personal project. She has done this before. It has never once been quick.`,
+            act: r => AD.setObjective(r, {
+              type: 'win-outlet', room: 'press', dueMonth: due,
+              data: { outletId: o.id, name: o.name },
+              label: `Bring ${o.name} around, through the Press Room.`
+            }) },
+          { label: `Ignore them. One outlet is one outlet.`, eff: { press: -1 },
+            res: o.name + ` runs the story anyway. It was, in fairness, one outlet.` }
         ]
       };
     }

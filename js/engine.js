@@ -617,6 +617,10 @@ AD.Engine = {
     if (collapse.ending) { this.finish(collapse.ending); return collapse.ending; }
     this.pendingShield = collapse.saved ? collapse.tabloid : null;
 
+    // A directed crisis (see objectives.js) that missed its deadline resolves
+    // here, once a month, after everything else the passage of time did.
+    if (AD.tickObjectiveExpiry) AD.tickObjectiveExpiry(run);
+
     AD.saveRun(run);
     return null;
   },

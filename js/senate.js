@@ -346,6 +346,11 @@ AD.applySenateEffect = function (run, eff) {
     AD.moveFun(run, eff.fun);
     if (run.fun !== b) deltas.fun = run.fun - b;
   }
+  // A directed crisis (see objectives.js) polls its own success condition right
+  // here, since nearly every management screen's action routes through this one
+  // function. Cheap to check, and means an objective resolves the instant it's
+  // actually met instead of waiting for the next month tick.
+  if (AD.checkObjective) AD.checkObjective(run);
   return deltas;
 };
 

@@ -95,8 +95,8 @@ body::before{
 /* The game screen packs the most into one view (HUD, ratings, a crisis
    card), so it gets a leaner top/bottom margin than the menu-style screens. */
 #screen-game{
-  padding-top:max(8px, env(safe-area-inset-top));
-  padding-bottom:max(8px, env(safe-area-inset-bottom));
+  padding-top:max(6px, env(safe-area-inset-top));
+  padding-bottom:max(6px, env(safe-area-inset-bottom));
 }
 .screen.active{display:flex;animation:fadeIn .34s ease both}
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
@@ -334,6 +334,23 @@ body::before{
 }
 .tick{position:absolute;top:0;bottom:0;width:1px;background:rgba(255,255,255,.16)}
 .tick.cap{width:2px;background:rgba(255,255,255,.5);box-shadow:0 0 6px rgba(255,255,255,.35)}
+
+/* A directed crisis: sent to a specific room, with a deadline. Only ever
+   visible while one is actually active, so it costs nothing the rest of
+   the time. See objectives.js. */
+.objective-banner{
+  display:flex;align-items:center;gap:7px;margin-top:5px;padding:6px 8px;
+  border-radius:7px;border:1px solid #4a3c14;
+  background:linear-gradient(180deg,#1c1608,#12100a);
+}
+.obj-tag{font-size:8.5px;letter-spacing:1.6px;color:var(--gold-soft);font-weight:700;flex:0 0 auto}
+.obj-text{font-size:11px;line-height:1.3;color:var(--paper2);flex:1;min-width:0}
+.obj-go{
+  flex:0 0 auto;padding:5px 12px;border-radius:6px;border:1px solid var(--gold-soft);
+  background:linear-gradient(180deg,#f2dd8a,#c9a227);color:#241a06;
+  font:inherit;font-size:11px;font-weight:700;cursor:pointer;
+}
+.obj-go:hover{filter:brightness(1.06)}
 
 /* warnings under the meters */
 .warnings{display:flex;flex-direction:column;gap:4px;margin-top:5px}
@@ -1038,11 +1055,11 @@ html[data-cb="on"] .fac.danger .fac-val{color:#93c5fd}
    tooltip; the bespoke icon set (icons.js) carries the meaning at this size. */
 .chip-row{display:grid;grid-template-columns:repeat(6,1fr);gap:4px}
 .chip-row .const-chip{
-  margin-top:0;height:34px;padding:0;position:relative;
+  margin-top:0;height:38px;padding:0;position:relative;
   display:flex;align-items:center;justify-content:center;
 }
 .chip-row .chip-ico{margin:0;display:flex}
-.chip-row .chip-ico svg{width:16px;height:16px}
+.chip-row .chip-ico svg{width:21px;height:21px}
 .chip-row .const-chip b{
   position:absolute;bottom:1px;right:3px;font-size:7px;letter-spacing:0;
   color:var(--gold-soft);font-weight:700;
