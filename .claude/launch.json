@@ -4,8 +4,9 @@
     {
       "name": "american-dictator",
       "runtimeExecutable": "python",
-      "runtimeArgs": ["-m", "http.server", "8412"],
-      "port": 8412
+      "runtimeArgs": ["-c", "import http.server,os; port=int(os.environ.get('PORT','8412')); http.server.ThreadingHTTPServer.allow_reuse_address=True; http.server.ThreadingHTTPServer(('',port),http.server.SimpleHTTPRequestHandler).serve_forever()"],
+      "port": 8412,
+      "autoPort": true
     }
   ]
 }
