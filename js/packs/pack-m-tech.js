@@ -443,7 +443,7 @@ AD.CARDS.push(
       res:'A competitor\'s links load just slowly enough to lose the click. It is invisible, deniable, and precisely the kind of leverage an antitrust filing is built to find eighteen months from now.' },
     { label:'Leave it alone. Compete on the product.', eff:{base:-2,press:+4,congress:+2,cash:-0.1,auth:0},
       res:'You let the rival grow on its own merits, which is a genuinely strange sentence to write about this administration and is, this once, true.' },
-    { label:'Buy the rival outright instead.', eff:{base:+4,press:-3,courts:-3,cash:-0.7,auth:+2},
+    { label:'Buy the rival outright instead.', eff:{base:+4,press:-3,courts:-3,cash:-0.5,auth:+2},
       res:'You purchase the competition rather than throttle it, which achieves the same result through a check instead of code. The lawyers prefer this version, slightly.' },
     { label:'Publicly recommend the rival platform yourself.', eff:{base:-3,press:+3,street:+1,cash:-0.2,auth:-2}, wild:true,
       res:'You tell your own followers to try the competitor. Bellow\'s stock dips four percent in an hour and Brayden looks, for the first time all year, physically ill.' }]},
@@ -455,13 +455,13 @@ AD.CARDS.push(
        'president\'s combined net worth, on paper, by Tuesday. "The timing, sir, coincides with the trade bill. I ' +
        'am obligated to say that out loud once."',
   choices:[
-    { label:'Let it price. Say nothing about the trade bill.', eff:{base:+6,press:-6,courts:-5,congress:-3,cash:+1.2,auth:+3},
+    { label:'Let it price. Say nothing about the trade bill.', eff:{base:+6,press:-6,courts:-5,congress:-3,cash:+0.6,auth:+3},
       res:'A trade bill that happens to boost Bellow\'s ad business passes the same week your stake converts to a fortune. Lyle\'s one obligatory sentence is the only acknowledgment anyone in the building makes.' },
     { label:'Delay the trade bill until after the IPO clears scrutiny.', eff:{base:-2,press:+4,courts:+3,congress:-1,cash:+0.3,auth:-1},
       res:'You slow down policy to put daylight between two events that should never have been near each other. It is a small, real act of self-restraint that nobody outside this room will ever know cost you anything.' },
     { label:'Sell the stake entirely before the IPO prices.', eff:{base:-4,press:+5,courts:+4,cash:+0.4,auth:-2},
       res:'You cash out early, at a lower number, purely to remove the conflict. It costs real money and it is, on paper, the only clean version of this week available to you.' },
-    { label:'Donate a symbolic ten percent of the gain to charity, keep the rest.', eff:{base:+2,press:-2,courts:-2,cash:+0.8,auth:+1}, wild:true,
+    { label:'Donate a symbolic ten percent of the gain to charity, keep the rest.', eff:{base:+2,press:-2,courts:-2,cash:+0.5,auth:+1}, wild:true,
       res:'A tenth of a fortune goes to charity, with a press release, while ninety percent of a trade-bill-adjacent windfall stays exactly where it landed.' }]},
 
 { id:'m-bellow-outage-crisis', title:'The Wrong Night To Go Down', who:C.social, min:6, max:46, tags:['tech','press'],

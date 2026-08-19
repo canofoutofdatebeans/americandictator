@@ -566,7 +566,7 @@ AD.CARDS.push(
       res:'A genuinely sensible scheduling change and a few pallets of water bottles prevent the next forty-one calls. It is invisible, cheap, and correct.' },
     { label:'Blame the venue for insufficient shade.', eff:{base:+3,press:-3,street:-2,auth:+1},
       res:'You fault the stadium rather than the schedule. The venue\'s management, reached for comment, points out they offered an evening slot that was declined.' },
-    { label:'Have Dr. Prine personally hydrate the front row on camera.', eff:{base:+2,press:-3,street:-2,auth:0}, wild:true,
+    { label:'Have Dr. Prine personally hydrate the front row on camera.', eff:{base:+2,press:-4,street:-2,courts:-1,auth:0}, wild:true,
       res:'The Physician to the President spends a rally handing out water bottles to the front row instead of monitoring the tent behind him. He calls it, afterward, "not my finest triage."' }]},
 
 { id:'q-wax-figure', title:'The Wax Figure', who:C.hist, tags:['base','levity'],
