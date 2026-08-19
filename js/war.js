@@ -27,26 +27,54 @@
    is fictional. Ongoing wars resolve on a war-local deterministic rng.
    ============================================================ */
 
-/* strength 0-3 (0 = uninhabited joke), loot = cash on a win. nukes raises the
-   danger of striking/invading; ally makes any attack expensive; posture drives
-   how they answer a threat. */
+/* A modern, geopolitics-flavoured roster. Each country offers only the
+   operations that make sense against it (`ops`), so a great power can be
+   sabre-rattled, allied with, or, if you are insane, invaded, but NOT quietly
+   "regime-changed" like a banana republic. Fields:
+     strength 0-3 (0 = uninhabited joke)
+     nukes     a strike/invasion risks catastrophe
+     posture   fragile (folds) / defiant (bluff) / wildcard / proxy
+     tradeIncome  $B/month to the Treasury if you ALLY with them
+     resource     $B/month to the Treasury if you ANNEX / conquer them
+     annexCost    Treasury price to buy/annex a territory outright
+   Leaders are fictional stand-ins; the country names are real, which is the joke. */
 AD.WAR_TARGETS = [
-  { id: 'cathay',   name: 'China',            leader: 'Chairman Chen',      strength: 3, loot: 0.6, nukes: true,  posture: 'defiant',  tell: 'Will call your bluff.' },
-  { id: 'glacia',   name: 'Iran',             leader: 'Premier Ostrov',     strength: 3, loot: 0.5, nukes: true,  posture: 'wildcard', tell: 'Genuinely unpredictable.' },
-  { id: 'qadira',   name: 'Qatar',            leader: 'the Emir',           strength: 2, loot: 1.2, nukes: false, posture: 'fragile',  tell: 'Rich, and would rather pay.' },
-  { id: 'ukrania',  name: 'Ukraine',          leader: 'President Bohdan',   strength: 2, loot: 0.4, nukes: false, posture: 'proxy',    tell: 'Someone bigger has their back.' },
-  { id: 'hermit',   name: 'North Korea',      leader: 'the Supreme Guide',  strength: 2, loot: 0.3, nukes: true,  posture: 'wildcard', tell: 'Missiles and no phone number.' },
-  { id: 'baldoro',  name: 'Panama',           leader: 'President Marchetti',strength: 1, loot: 0.5, nukes: false, posture: 'fragile',  tell: 'Small, sunny, folds fast.' },
-  { id: 'northland',name: 'Canada',           leader: 'Prime Minister Aas', strength: 1, loot: 0.7, nukes: false, ally: true, posture: 'fragile', tell: 'An ally. This gets expensive.' },
-  { id: 'penguin',  name: 'the Heard Islands',leader: 'no one',             strength: 0, loot: 0.1, nukes: false, posture: 'fragile',  tell: 'Population: penguins.' }
+  { id: 'cathay',    name: 'China',        leader: 'Chairman Chen',      strength: 3, nukes: true,  posture: 'defiant',
+    ops: ['sabre', 'ally', 'strike', 'invade'], tradeIncome: 30, tell: 'A great power. A trade war, or a trade deal.' },
+  { id: 'rus',       name: 'Russia',       leader: 'President Volkov',   strength: 3, nukes: true,  posture: 'defiant',
+    ops: ['sabre', 'ally', 'strike', 'invade'], tradeIncome: 12, tell: 'A nuclear rival, mid-invasion of a neighbour.' },
+  { id: 'iran',      name: 'Iran',         leader: 'the Supreme Council',strength: 2, nukes: false, posture: 'wildcard',
+    ops: ['sabre', 'strike', 'invade', 'regime'], resource: 16, tell: 'Sanctioned, defiant, chasing a bomb.' },
+  { id: 'hermit',    name: 'North Korea',  leader: 'the Supreme Guide',  strength: 2, nukes: true,  posture: 'wildcard',
+    ops: ['sabre', 'ally', 'strike'], tradeIncome: 4, tell: 'Nuclear, isolated, oddly wants your attention.' },
+  { id: 'ukrania',   name: 'Ukraine',      leader: 'President Bohdan',   strength: 2, nukes: false, posture: 'proxy',
+    ops: ['sabre', 'ally'], tradeIncome: 6, tell: 'Already at war. Back them, or do not.' },
+  { id: 'greenland', name: 'Greenland',    leader: 'the Premier',        strength: 0, nukes: false, posture: 'fragile',
+    ops: ['sabre', 'ally', 'annex'], resource: 12, annexCost: 45, tell: 'Not for sale. Allegedly. Rare earths and ice.' },
+  { id: 'northland', name: 'Canada',       leader: 'Prime Minister Aas', strength: 1, nukes: false, posture: 'fragile',
+    ops: ['sabre', 'ally', 'annex', 'strike'], resource: 22, annexCost: 65, tell: 'The 51st state, if you ask nicely.' },
+  { id: 'baldoro',   name: 'Panama',       leader: 'President Marchetti',strength: 1, nukes: false, posture: 'fragile',
+    ops: ['sabre', 'strike', 'invade', 'regime', 'annex'], resource: 9, annexCost: 30, tell: 'It is about the canal. It was always the canal.' },
+  { id: 'qadira',    name: 'Qatar',        leader: 'the Emir',           strength: 2, nukes: false, posture: 'fragile',
+    ops: ['sabre', 'ally'], tradeIncome: 15, tell: 'Rich, generous with gifts, would rather pay than fight.' },
+  { id: 'penguin',   name: 'the Heard Islands', leader: 'no one',        strength: 0, nukes: false, posture: 'fragile',
+    ops: ['sabre', 'strike', 'annex'], resource: 1, annexCost: 5, tell: 'Population: penguins. Tariff them anyway.' }
 ];
+
+AD.ensureAllies    = run => (run.allies    = run.allies    || {});
+AD.ensureConquests = run => (run.conquests = run.conquests || {});
+AD.isAlly     = (run, id) => !!(run.allies    && run.allies[id]);
+AD.isConquered = (run, id) => !!(run.conquests && run.conquests[id]);
 
 AD.warTargetById = id => AD.WAR_TARGETS.find(t => t.id === id);
 
 AD.ensureWars = function (run) { if (!run.wars) run.wars = []; return run.wars; };
 AD.atWarWith = (run, targetId) => (run.wars || []).some(w => w.target === targetId && !w.done);
 
-/* ---------- the operations ------------------------------------------------ */
+/* ---------- the operations ------------------------------------------------
+   op.run returns an effect object plus optional MARKERS the applier ignores but
+   doWarOp acts on: `ongoing` (start a war), `_ally` (sign an alliance -> monthly
+   trade income), `_conquer` (annex/absorb -> monthly resource income). */
 AD.WAR_OPS = [
   {
     id: 'sabre', label: 'Sabre-Rattle', icon: '🗣️',
@@ -55,7 +83,7 @@ AD.WAR_OPS = [
       const roll = AD.reactRoll(run);
       const folds = t.posture === 'fragile' || (t.strength <= 1 && t.posture !== 'defiant');
       if (folds && roll > 0.15) {
-        const tribute = Math.round((0.03 + t.loot * 0.12) * 100) / 100;
+        const tribute = Math.round((0.04 + (t.tradeIncome || t.resource || 0) * 0.004) * 100) / 100;
         return { base: 4, auth: 3, press: -1, cash: tribute,
           res: t.leader + ' folds within the hour, offering concessions, a trade "deal", and a very respectful statement. You pocket the tribute and the win.' };
       }
@@ -64,7 +92,29 @@ AD.WAR_OPS = [
     }
   },
   {
-    id: 'strike', label: 'Targeted Strike', icon: '🎯', cost: 0.03,
+    id: 'ally', label: 'Cut a Deal', icon: '🤝',
+    blurb: 'A summit, an aid package, a "historic" trade deal. Trade income flows to the Treasury.',
+    run (run, t) {
+      run.allies = run.allies || {};
+      run.allies[t.id] = t.tradeIncome || 6;
+      return { base: 2, press: 3, congress: 3, courts: 2, auth: 2, _ally: true,
+        res: 'You sign a "historic" deal with ' + t.leader + '. The cameras love it, and ' + t.name +
+             ' now sends about $' + (t.tradeIncome || 6) + 'B a month your way. Some of it is even trade.' };
+    }
+  },
+  {
+    id: 'annex', label: 'Buy / Annex', icon: '🗺️',
+    blurb: 'Acquire the territory outright. Expansionism thrills the base; the map changes; the resources are yours.',
+    run (run, t) {
+      run.conquests = run.conquests || {};
+      run.conquests[t.id] = t.resource || 5;
+      return { base: 6, press: -4, courts: -4, congress: -3, auth: 4, _conquer: true,
+        res: 'You add ' + t.name + ' to the map. The base is electric, the cartographers are furious, and roughly $' +
+             (t.resource || 5) + 'B a month in resources now flows into the Treasury.' };
+    }
+  },
+  {
+    id: 'strike', label: 'Targeted Strike', icon: '🎯',
     blurb: 'A limited operation. Clean on the weak. A gamble on a nuclear power.',
     run (run, t) {
       const roll = AD.reactRoll(run);
@@ -76,30 +126,32 @@ AD.WAR_OPS = [
         return { base: 6, auth: 3, courts: -3, press: -3, street: -2, ongoing: true,
           res: 'The "limited" strike on ' + t.name + ' does not stay limited. They mobilise, and it is a real war now.' };
       }
-      const loot = t.loot >= 1 ? 0.08 : 0;
+      const loot = (t.resource || 0) >= 8 ? 0.08 : 0;
       return { base: 7, auth: 4, courts: -3, press: -3, street: -1, cash: loot,
         res: 'A clean, televised strike on ' + t.name + '. The footage is spectacular and, for tonight at least, nobody is shooting back.' };
     }
   },
   {
-    id: 'invade', label: 'Full Invasion', icon: '⚔️', cost: 0.05, needsAuth: 40,
-    blurb: 'The big one. An immediate flag-rally, then an ongoing war to win or lose.',
+    id: 'invade', label: 'Full Invasion', icon: '⚔️', needsAuth: 40,
+    blurb: 'The big one. An immediate flag-rally, then an ongoing war. Win it and the country is yours.',
     run (run, t) {
-      return { base: 7, auth: 5, street: 2, congress: -5, courts: -6, press: -5, cash: -0.05, ongoing: true,
+      return { base: 7, auth: 5, street: 2, congress: -5, courts: -6, press: -5, ongoing: true,
         res: 'You order the full invasion of ' + t.name + '. The base rallies to the flag; the institutions you never consulted do not.' };
     }
   },
   {
-    id: 'regime', label: 'Regime Change', icon: '🕵️', cost: 0.05, needsAuth: 45,
-    blurb: 'A covert operation to install a friend. Huge if it holds, a scandal if it leaks.',
+    id: 'regime', label: 'Regime Change', icon: '🕵️', needsAuth: 45,
+    blurb: 'A covert operation to install a friend. Huge if it holds, a scandal if it leaks. Not an option against great powers.',
     run (run, t) {
       const roll = AD.reactRoll(run);
-      const exposeRisk = t.posture === 'defiant' ? 0.5 : t.strength >= 3 ? 0.48 : t.posture === 'wildcard' ? 0.4 : 0.26;
+      const exposeRisk = t.posture === 'wildcard' ? 0.42 : t.strength >= 2 ? 0.4 : 0.26;
       if (roll < exposeRisk) {
         return { base: -2, press: -7, courts: -6, congress: -4, auth: -1,
           res: 'The operation in ' + t.name + ' is exposed. There are documents, there are hearings, and there is a genuinely terrible week.' };
       }
-      return { base: 5, auth: 5, courts: -3, press: -3, cash: t.loot,
+      run.allies = run.allies || {};
+      run.allies[t.id] = t.tradeIncome || t.resource || 8;
+      return { base: 5, auth: 5, courts: -3, press: -3, _ally: true,
         res: 'A friendly government takes power in ' + t.name + ' overnight, expressing immediate and fulsome gratitude. The resources begin to flow your way.' };
     }
   }
@@ -114,15 +166,24 @@ AD.warOpById = id => AD.WAR_OPS.find(o => o.id === id);
 AD.warOpCostFor = function (run, t, op) {
   if (!op || !t) return 0;
   const s = t.strength || 0;
+  if (op.id === 'ally')   return 10 + (t.tradeIncome || 6);   // aid package / summit
+  if (op.id === 'annex')  return t.annexCost || 30;           // buy the territory
   if (op.id === 'strike') return 20 + s * 15;    // $20B .. $65B
   if (op.id === 'invade') return 60 + s * 60;    // $60B .. $240B
   if (op.id === 'regime') return 50 + s * 40;    // $50B .. $170B
   return 0;                                       // sabre
 };
 
+/* An operation is only available if THIS country offers it (t.ops). That is how
+   great powers can be allied with or, at ruinous cost, invaded, but never simply
+   "regime-changed", and how only territories can be annexed. */
 AD.warOpAvailable = function (run, t, op) {
   if (!op) return { ok: false, reason: 'No such operation.' };
-  if (AD.atWarWith(run, t.id)) return { ok: false, reason: 'Already at war with ' + t.name + '.' };
+  if (t.ops && t.ops.indexOf(op.id) === -1) return { ok: false, reason: 'Not an option here.' };
+  if ((op.id === 'ally' || op.id === 'annex') && (AD.isAlly(run, t.id) || AD.isConquered(run, t.id)))
+    return { ok: false, reason: 'Already done.' };
+  if (op.id !== 'ally' && op.id !== 'annex' && AD.atWarWith(run, t.id))
+    return { ok: false, reason: 'Already at war with ' + t.name + '.' };
   const cost = AD.warOpCostFor(run, t, op);
   if (cost && AD.purse(run) < cost) return { ok: false, reason: 'The Treasury cannot afford it.' };
   if (op.needsAuth && run.authority < op.needsAuth) return { ok: false, reason: 'Requires Authority ' + op.needsAuth + '.' };
@@ -151,15 +212,18 @@ AD.doWarOp = function (run, targetId, opId) {
   if (cost) AD.movePurse(run, -cost);          // war is paid from the Treasury
 
   const eff = op.run(run, t) || {};
-  let res = eff.res; delete eff.res;
+  let res = eff.res; delete eff.res; delete eff._ally; delete eff._conquer;
   const ongoing = eff.ongoing; delete eff.ongoing;
 
-  // Attacking an ally is diplomatically ruinous, on top of whatever else happens.
-  if (t.ally && op.id !== 'sabre') {
-    eff.street = (eff.street || 0) - 3;
-    eff.press = (eff.press || 0) - 3;
-    eff.congress = (eff.congress || 0) - 3;
-    res += ' Moving on an ally carries a diplomatic price, and it is steep.';
+  // Turning on a country you had ALLIED with is diplomatically ruinous, and it
+  // tears up the deal (the trade income stops).
+  const isAttack = op.id === 'strike' || op.id === 'invade' || op.id === 'regime';
+  if (isAttack && AD.isAlly(run, t.id)) {
+    delete run.allies[t.id];
+    eff.street = (eff.street || 0) - 4;
+    eff.press = (eff.press || 0) - 4;
+    eff.congress = (eff.congress || 0) - 4;
+    res += ' Betraying an ally tears up the deal and the world takes note, at a steep and lasting price.';
   }
 
   const deltas = AD.applySenateEffect(run, eff);
@@ -192,10 +256,26 @@ function warRng (seed) {
   };
 }
 
-/* Monthly: ongoing wars resolve over a few months into victory or quagmire. A
-   weak target and high Authority make victory likely; nukes drag it down. */
+/* Total monthly income the Treasury draws from standing alliances (trade) and
+   conquered/annexed territory (resources). */
+AD.treasuryIncome = function (run) {
+  let sum = 0;
+  if (run.allies)    Object.keys(run.allies).forEach(k => { sum += run.allies[k] || 0; });
+  if (run.conquests) Object.keys(run.conquests).forEach(k => { sum += run.conquests[k] || 0; });
+  return sum;
+};
+
+/* Monthly: alliances and conquests pay into the Treasury, then ongoing wars
+   resolve over a few months into victory (the country becomes yours, with its
+   resources) or quagmire. A weak target and high Authority make victory likely;
+   nukes drag it down. */
 AD.warTick = function (run) {
   const out = { resolved: [] };
+
+  // Standing income first, so a term spent building an empire actually pays.
+  const income = AD.treasuryIncome(run);
+  if (income) { AD.movePurse(run, income); out.income = income; }
+
   if (!run.wars || !run.wars.length) return out;
 
   run.wars.forEach(w => {
@@ -212,10 +292,14 @@ AD.warTick = function (run) {
     const won = rng() < winChance;
     let eff, res;
     if (won) {
-      eff = { base: 6, street: 4, auth: 3, courts: -1, cash: w.loot ? t.loot : 0.2 };
-      res = 'Victory in ' + t.name + '. ' + (w.loot ? 'The resources are ours. ' : '') + 'There will be a parade.';
+      // A won war ANNEXES the country: its resources now flow to the Treasury.
+      run.conquests = run.conquests || {};
+      run.conquests[t.id] = t.resource || t.tradeIncome || 6;
+      eff = { base: 6, street: 4, auth: 3, courts: -1 };
+      res = 'Victory in ' + t.name + '. It is yours now, and about $' + run.conquests[t.id] +
+            'B a month in resources flows into the Treasury. There will be a parade.';
     } else {
-      eff = { base: -6, street: -7, courts: -5, press: -4, congress: -3, cash: -0.3, auth: -2 };
+      eff = { base: -6, street: -7, courts: -5, press: -4, congress: -3, auth: -2 };
       res = 'The war in ' + t.name + ' has become a quagmire. The body bags are on the news and the street has turned.';
     }
     w.won = won;

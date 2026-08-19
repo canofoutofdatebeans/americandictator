@@ -37,6 +37,8 @@ AD.Engine = {
     if (!run.streets || !run.streets.length) run.streets = AD.makeStreet(); // pre-street saves
     if (!run.wars) run.wars = [];           // pre-war saves
     if (typeof run.purse !== 'number') run.purse = AD.START_PURSE;   // pre-treasury saves
+    if (!run.allies) run.allies = {};       // pre-alliance saves
+    if (!run.conquests) run.conquests = {}; // pre-conquest saves
     if (!run.judges || !run.judges.length) run.judges = AD.makeCourts(); // pre-courts saves
     if (!run.tariffs) run.tariffs = [];      // pre-economy saves
     if (!run.relations) run.relations = {};

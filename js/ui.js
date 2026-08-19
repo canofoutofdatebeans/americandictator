@@ -1156,19 +1156,28 @@ AD.UI = {
 
     const targets = AD.WAR_TARGETS.map(t => {
       const atWar = AD.atWarWith(run, t.id);
-      const buttons = AD.WAR_OPS.map(op => {
+      const allied = AD.isAlly(run, t.id);
+      const annexed = AD.isConquered(run, t.id);
+      // Only the operations THIS country actually offers.
+      const ops = AD.WAR_OPS.filter(op => !t.ops || t.ops.indexOf(op.id) !== -1);
+      const buttons = ops.map(op => {
         const avail = AD.warOpAvailable(run, t, op);
         const c = AD.warOpCostFor(run, t, op);
         const cost = c ? ` <em>${AD.fmtCash(c)}</em>` : '';
         return `<button class="sen-act war-${op.id}" data-wartarget="${t.id}" data-warop="${op.id}" ${avail.ok ? '' : 'disabled'} title="${avail.ok ? op.blurb : avail.reason}">${op.icon} ${op.label}${cost}${avail.ok ? '' : ' <span class="act-lock">' + AD.reasonBadge(avail.reason) + '</span>'}</button>`;
       }).join('');
       const badges = (t.nukes ? '<span class="war-badge nuke">☢️ nuclear</span>' : '') +
-                     (t.ally ? '<span class="war-badge ally">🤝 ally</span>' : '') +
-                     (t.loot >= 1 ? '<span class="war-badge rich">💰 rich</span>' : '');
+                     (annexed ? `<span class="war-badge rich">🗺️ annexed +$${run.conquests[t.id]}B/mo</span>`
+                       : allied ? `<span class="war-badge ally">🤝 allied +$${run.allies[t.id]}B/mo</span>`
+                       : (t.tradeIncome ? '<span class="war-badge ally">🤝 dealable</span>' : '')) +
+                     (t.resource ? '<span class="war-badge rich">⛏️ resources</span>' : '');
+      const status = annexed ? '<span class="sen-mood">Annexed</span>'
+                   : allied ? '<span class="sen-mood">Allied</span>'
+                   : atWar ? '<span class="sen-mood">At war</span>' : '';
       return `<div class="sen-row war-target ${atWar ? 'mood-gone' : ''}">
         <div class="sen-top"><span class="sen-dot"></span>
           <b>${t.name}</b><i>${t.leader} · ${strengthLabel(t)}</i>
-          ${atWar ? '<span class="sen-mood">At war</span>' : ''}</div>
+          ${status}</div>
         <div class="war-badges">${badges}</div>
         ${t.tell ? `<div class="sen-tell">${t.tell}</div>` : ''}
         <div class="sen-acts war-acts">${buttons}</div>
