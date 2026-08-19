@@ -45,6 +45,9 @@ AD.UI = {
     (root || document).querySelectorAll('[data-i18n-ph]').forEach(el => {
       el.setAttribute('placeholder', AD.t(el.getAttribute('data-i18n-ph')));
     });
+    (root || document).querySelectorAll('[data-i18n-title]').forEach(el => {
+      el.setAttribute('title', AD.t(el.getAttribute('data-i18n-title')));
+    });
   },
 
   /* Give every management overlay a consistent close affordance: a round ✕ in
@@ -184,16 +187,14 @@ AD.UI = {
     chip.innerHTML = '<span class="chip-ico">' + AD.icon('constitution') + '</span><b>' + cn + '/' + AD.CLAUSES.length + '</b>';
     chip.classList.toggle('full', AD.allClausesBroken(run));
     chip.classList.toggle('started', cn > 0);
-    chip.title = 'THE CONSTITUTION — ' + cn + '/' + AD.CLAUSES.length + ' clauses broken. The Ledger of Broken Clauses.';
+    chip.title = AD.t('chip.constitution') + ' — ' + cn + '/' + AD.CLAUSES.length;
 
     const rchip = this.el('reno-chip');
     const rn = (run.renos || []).length;
     rchip.innerHTML = '<span class="chip-ico">' + AD.icon('residence') + '</span><b>' + rn + '/' + AD.RENOS.length + '</b>';
     rchip.classList.toggle('started', rn > 0);
     rchip.classList.toggle('full', rn === AD.RENOS.length);
-    rchip.title = 'THE RESIDENCE — ' + (rn
-      ? `Upkeep −$${Math.round(AD.upkeep(run) * 1000)}M every month`
-      : 'improvements to the White House');
+    rchip.title = AD.t('chip.residence') + ' — ' + rn + '/' + AD.RENOS.length;
 
     const warns = AD.Engine.warnings();
     this.el('warnings').innerHTML = warns.map(w =>
@@ -230,7 +231,7 @@ AD.UI = {
       const ok = fun >= floor;
       spec.className = 'spectacle' + (ok ? ' ok' : ' bored');
       spec.innerHTML =
-        `<span class="spec-lab">🥱 BOREDOMETER</span>` +
+        `<span class="spec-lab">🥱 ${AD.t('hud.boredometer')}</span>` +
         `<span class="spec-bar"><i style="width:${fun}%"></i><b style="left:${floor}%" title="Win floor ${floor}"></b></span>` +
         `<span class="spec-num">${fun}<em>/100</em></span>`;
     }

@@ -40,6 +40,8 @@ AD.STRINGS.es = {
   "port.suit": "Traje",
   "hud.authority": "Autoridad",
   "hud.pillars": "PILARES DEL RÉGIMEN, CAPTURA TRES",
+  "hud.boredometer": "EL ABURRÍMETRO",
+  "hud.boredometerTip": "El Aburrímetro: mantenga al presidente entretenido (por encima del mínimo) o perderá el interés",
   "victory.country": "El País",
   "victory.money": "El Dinero",
   "chip.constitution": "La Constitución",

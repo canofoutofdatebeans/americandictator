@@ -40,6 +40,8 @@ AD.STRINGS.de = {
   "port.suit": "Anzug",
   "hud.authority": "Autorität",
   "hud.pillars": "SÄULEN DES REGIMES, EROBERE DREI",
+  "hud.boredometer": "LANGEWEILEMETER",
+  "hud.boredometerTip": "Der Langeweilemeter: Halten Sie den Präsidenten bei Laune (über der Grenze), sonst zieht er sich zurück",
   "victory.country": "Das Land",
   "victory.money": "Das Geld",
   "chip.constitution": "Die Verfassung",

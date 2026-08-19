@@ -40,6 +40,8 @@ AD.STRINGS.cs = {
   "port.suit": "Oblek",
   "hud.authority": "Autorita",
   "hud.pillars": "PILÍŘE REŽIMU, ZÍSKEJTE TŘI",
+  "hud.boredometer": "NUDOMĚR",
+  "hud.boredometerTip": "Nudoměr: udržujte prezidenta pobaveného (nad minimem), jinak ho to přestane bavit",
   "victory.country": "Země",
   "victory.money": "Peníze",
   "chip.constitution": "Ústava",

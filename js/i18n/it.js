@@ -40,6 +40,8 @@ AD.STRINGS.it = {
   "port.suit": "Abito",
   "hud.authority": "Autorità",
   "hud.pillars": "PILASTRI DEL REGIME, CONQUISTANE TRE",
+  "hud.boredometer": "IL NOIOMETRO",
+  "hud.boredometerTip": "Il Noiometro: tenete il presidente intrattenuto (sopra la soglia), altrimenti si distrae",
   "victory.country": "Il Paese",
   "victory.money": "Il Denaro",
   "chip.constitution": "La Costituzione",

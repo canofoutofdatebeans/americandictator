@@ -40,6 +40,8 @@ AD.STRINGS.pt = {
   "port.suit": "Fato",
   "hud.authority": "Autoridade",
   "hud.pillars": "PILARES DO REGIME, CAPTURE TRÊS",
+  "hud.boredometer": "O TEDÔMETRO",
+  "hud.boredometerTip": "O Tedômetro: mantenha o presidente entretido (acima do limite), ou ele perderá o interesse",
   "victory.country": "O País",
   "victory.money": "O Dinheiro",
   "chip.constitution": "A Constituição",

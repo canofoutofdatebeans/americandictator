@@ -109,6 +109,8 @@ AD.STRINGS.en = {
   /* HUD + management chips */
   'hud.authority': 'Authority',
   'hud.pillars': 'PILLARS OF THE REGIME, CAPTURE THREE',
+  'hud.boredometer': 'BOREDOMETER',
+  'hud.boredometerTip': 'The Boredometer: keep the President entertained (above the floor) or he wanders off',
   'victory.country': 'The Country',
   'victory.money': 'The Money',
   'chip.constitution': 'The Constitution',

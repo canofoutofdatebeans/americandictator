@@ -40,6 +40,8 @@ AD.STRINGS.nl = {
   "port.suit": "Pak",
   "hud.authority": "Gezag",
   "hud.pillars": "PIJLERS VAN HET REGIME, VEROVER ER DRIE",
+  "hud.boredometer": "DE VERVELINGSMETER",
+  "hud.boredometerTip": "De Vervelingsmeter: houd de president vermaakt (boven de grens), anders raakt hij afgeleid",
   "victory.country": "Het Land",
   "victory.money": "Het Geld",
   "chip.constitution": "De Grondwet",

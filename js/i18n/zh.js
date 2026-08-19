@@ -40,6 +40,8 @@ AD.STRINGS.zh = {
   "port.suit": "西装",
   "hud.authority": "权威",
   "hud.pillars": "政权支柱,夺取其三",
+  "hud.boredometer": "无聊指数",
+  "hud.boredometerTip": "无聊指数:让总统保持兴致(高于底线),否则他会心不在焉",
   "victory.country": "国家",
   "victory.money": "金钱",
   "chip.constitution": "宪法",

@@ -40,6 +40,8 @@ AD.STRINGS.fr = {
   "port.suit": "Costume",
   "hud.authority": "Autorité",
   "hud.pillars": "PILIERS DU RÉGIME, EN CAPTURER TROIS",
+  "hud.boredometer": "L'ENNUIMÈTRE",
+  "hud.boredometerTip": "L'Ennuimètre : gardez le président diverti (au-dessus du seuil), sinon il se désintéresse",
   "victory.country": "Le Pays",
   "victory.money": "L'Argent",
   "chip.constitution": "La Constitution",

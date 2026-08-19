@@ -40,6 +40,8 @@ AD.STRINGS.pl = {
   "port.suit": "Garnitur",
   "hud.authority": "Autorytet",
   "hud.pillars": "FILARY REŻIMU, ZDOBĄDŹ TRZY",
+  "hud.boredometer": "NUDOMETR",
+  "hud.boredometerTip": "Nudometr: zapewnij prezydentowi rozrywkę (powyżej progu), inaczej się znudzi i odejdzie",
   "victory.country": "Kraj",
   "victory.money": "Pieniądze",
   "chip.constitution": "Konstytucja",

@@ -40,6 +40,8 @@ AD.STRINGS.ru = {
   "port.suit": "Костюм",
   "hud.authority": "Власть",
   "hud.pillars": "СТОЛПЫ РЕЖИМА, ЗАХВАТИТЕ ТРИ",
+  "hud.boredometer": "СКУКОМЕР",
+  "hud.boredometerTip": "Скукомер: развлекайте президента (выше нижнего порога), иначе он потеряет интерес",
   "victory.country": "Страна",
   "victory.money": "Деньги",
   "chip.constitution": "Конституция",
