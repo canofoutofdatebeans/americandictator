@@ -243,10 +243,46 @@ AD.PARDON_RISK = {
   fraud: 0.22, crony: 0.25, donor: 0.2, spy: 0.35, default: 0.28
 };
 
+/* ---------- rationing and scrutiny ----------------------------------------
+   Clemency is rationed like the phone and the summit table: it is one of the
+   few genuinely unreviewable powers in the game, and being able to spend it
+   all in one afternoon made it the cheapest money on the board. */
+AD.PARDONS_PER_MONTH = 1;
+AD.pardonsLeft = run => (run.pardonsLeft === undefined ? AD.PARDONS_PER_MONTH : run.pardonsLeft);
+/* Refilled from Engine.advance(), alongside calls and summits. */
+AD.pardonTick = function (run) { run.pardonsLeft = AD.PARDONS_PER_MONTH; };
+
+/* How conspicuous the clemency operation has become. Counts CROOKS only:
+   freeing the innocent is not what anybody is objecting to. */
+AD.clemencyScrutiny = function (run) {
+  return (run.pardoned || []).filter(id => {
+    const p = AD.pardonById(id);
+    return p && !p.saint;
+  }).length;
+};
+
+/* What the next crooked pardon will cost and pay, given how many have already
+   been signed. Exposed so the screen can warn you BEFORE you sign. */
+AD.clemencyPressure = function (run) {
+  const n = AD.clemencyScrutiny(run);
+  return {
+    signed: n,
+    pressHit: Math.min(9, n),                       // extra press damage
+    courtsHit: Math.min(6, Math.floor(n / 2)),      // extra courts damage
+    payMult: Math.max(0.2, 1 - n * 0.13),           // the going rate collapses
+    riskUp: Math.min(0.25, n * 0.03)                // and they get sloppier
+  };
+};
+
 AD.doPardon = function (run, id) {
   const p = AD.pardonById(id);
   if (!p) return { ok: false, reason: 'No such case.' };
   if (AD.isPardoned(run, id)) return { ok: false, reason: 'Already pardoned.' };
+  if (AD.pardonsLeft(run) <= 0) return { ok: false, reason: 'No clemency left this month.' };
+  // Scrutiny is read BEFORE this pardon joins the list, so the first one is
+  // signed at full price and it is the SECOND that starts paying for it.
+  const pressure = AD.clemencyPressure(run);
+  run.pardonsLeft = AD.pardonsLeft(run) - 1;
   run.pardoned = run.pardoned || [];
   run.pardoned.push(id);
 
@@ -261,13 +297,22 @@ AD.doPardon = function (run, id) {
       twist = p.name + ' is fully, publicly vindicated, and freeing them turns out to reflect very well on you.';
     }
   } else {
-    const risk = AD.PARDON_RISK[p.kind] || AD.PARDON_RISK.default;
+    /* THE QUEUE IS VISIBLE. Every crook already pardoned makes this one land
+       harder and pay less: the press has a running tally, the courts have
+       noticed the pattern, and the going rate for a signature collapses once
+       it is obvious everybody can get one. */
+    if (pressure.pressHit)  eff.press  = (eff.press  || 0) - pressure.pressHit;
+    if (pressure.courtsHit) eff.courts = (eff.courts || 0) - pressure.courtsHit;
+    if (eff.cash) eff.cash = Math.round(eff.cash * pressure.payMult * 100) / 100;
+
+    const risk = (AD.PARDON_RISK[p.kind] || AD.PARDON_RISK.default) + pressure.riskUp;
     if (roll < risk) {              // reoffends, on camera, with your signature on the release
       eff.press = (eff.press || 0) - 6; eff.courts = (eff.courts || 0) - 4; eff.street = (eff.street || 0) - 3;
       eff.base = (eff.base || 0) - 2; eff.auth = (eff.auth || 0) - 2;
       twist = p.name + ' reoffends within the month, loudly, and every report notes whose signature is on the release.';
     } else if (roll > 0.88) {       // extravagantly grateful
-      eff.cash = (eff.cash || 0) + 0.25; eff.base = (eff.base || 0) + 2;
+      eff.cash = (eff.cash || 0) + Math.round(0.25 * pressure.payMult * 100) / 100;
+      eff.base = (eff.base || 0) + 2;
       twist = p.name + ' is so grateful that a second, much larger token of appreciation arrives through four banks.';
     }
   }
@@ -286,5 +331,6 @@ AD.doPardon = function (run, id) {
 AD.pardonSummary = function (run) {
   const done = (run.pardoned || []).length;
   const saints = (run.pardoned || []).filter(id => { const p = AD.pardonById(id); return p && p.saint; }).length;
-  return { done, total: AD.PARDONS.length, saints, crooks: done - saints };
+  return { done, total: AD.PARDONS.length, saints, crooks: done - saints,
+           left: AD.pardonsLeft(run), pressure: AD.clemencyPressure(run) };
 };

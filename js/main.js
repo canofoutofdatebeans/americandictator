@@ -860,6 +860,28 @@ AD.Game = {
   pardonAction (id) {
     const run = AD.Engine.run;
     if (!run || run.over) return;
+
+    /* THE QUEUE IS VISIBLE. Once a few have been signed, clemency stops being
+       free money and starts being a pattern with a running tally. That has to
+       be said BEFORE the signature, in a dialog the player has to answer,
+       rather than in a note under it they have already scrolled past. */
+    const pr = AD.clemencyPressure ? AD.clemencyPressure(run) : null;
+    const p = AD.pardonById(id);
+    if (pr && pr.signed >= 2 && p && !p.saint && !this._pardonWarned) {
+      const pay = Math.round(pr.payMult * 100);
+      this.confirm({
+        title: 'Sign your ' + AD.ordinal(pr.signed + 1) + ' pardon?',
+        msg: 'You have already signed <b>' + pr.signed + '</b>. There is a running tally now.<br><br>' +
+             'This one lands <b>' + pr.pressHit + ' worse in the press</b>' +
+             (pr.courtsHit ? ' and <b>' + pr.courtsHit + ' worse in the courts</b>' : '') +
+             ', and pays <b>' + pay + '%</b> of the going rate. The price of a signature ' +
+             'collapses once it is obvious that everybody can get one.',
+        yes: 'Sign it anyway',
+        onYes: () => { this._pardonWarned = true; this.pardonAction(id); this._pardonWarned = false; }
+      });
+      return;
+    }
+
     const r = AD.doPardon(run, id);
     if (!r.ok) return;
     AD.saveRun(run);

@@ -885,10 +885,28 @@ AD.UI = {
         AD.clean(result.twist || result.pardon.blurb, this.settings.clean);
     } else {
       note.className = 'corr-note';
-      note.textContent = 'Article Two hands you an eraser with no check on it. Most of these people should ' +
-        'never touch it, and several are grateful in cash. A few are genuinely innocent: freeing them pleases ' +
-        'the institutions and annoys a base that wanted a scalp.';
+      const pr = sum.pressure;
+      let base = 'Article Two hands you an eraser with no check on it, and it is rationed to ' +
+        AD.PARDONS_PER_MONTH + ' a month. Most of these people should never touch it, and several are ' +
+        'grateful in cash. A few are genuinely innocent: freeing them pleases the institutions and ' +
+        'annoys a base that wanted a scalp.';
+      // The queue is visible: warn BEFORE they sign, not after.
+      if (pr.signed >= 2) {
+        note.className = 'corr-note refused';
+        base = 'You have signed <b>' + pr.signed + '</b> of these. There is a running tally now, and the ' +
+          'next one lands <b>' + pr.pressHit + ' worse in the press</b>' +
+          (pr.courtsHit ? ' and <b>' + pr.courtsHit + ' worse in the courts</b>' : '') +
+          ' and pays <b>' + Math.round(pr.payMult * 100) + '% of the going rate</b>. ' +
+          'The price of a signature collapses once it is obvious everybody can get one.';
+        note.innerHTML = base;
+      } else {
+        note.textContent = base;
+      }
     }
+
+    // The monthly allowance, shown where the count is.
+    const leftEl = this.el('pardon-left');
+    if (leftEl) { leftEl.textContent = sum.left; leftEl.className = sum.left <= 0 ? 'hot' : ''; }
 
     const fmt = eff => {
       const L = { base: 'Base', congress: 'Congress', courts: 'Courts', press: 'Press', street: 'Street', auth: 'Authority' };
@@ -907,7 +925,7 @@ AD.UI = {
         <i class="asset-blurb">${p.crime}</i>
         <div class="asset-effect">${fmt(p.eff)}</div>
         <div class="pardon-desc">${AD.clean(p.blurb, this.settings.clean)}</div>
-        ${done ? '' : `<button class="btn asset-buy" data-pardon="${p.id}">Sign the Pardon</button>`}
+        ${done ? '' : `<button class="btn asset-buy" data-pardon="${p.id}" ${sum.left > 0 ? '' : 'disabled'}>${sum.left > 0 ? 'Sign the Pardon' : 'No clemency left this month'}</button>`}
       </div>`;
     }).join('');
   },

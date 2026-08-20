@@ -630,6 +630,7 @@ AD.Engine = {
     AD.callTick(run);   // refill the monthly phone allowance
     AD.rallyTick(run);  // refill the monthly rally allowance
     AD.summitTick(run); // refill the monthly summit allowance
+    if (AD.pardonTick) AD.pardonTick(run);   // and the monthly clemency allowance
 
     /* THE WORLD'S OPINION LEAKS INWARD. Standing feeds Congress, the Press, the
        Base and the Street every month, small, so a term of insults is a slow

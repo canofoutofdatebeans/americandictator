@@ -5,7 +5,7 @@
    ============================================================ */
 
 window.AD = window.AD || {};
-AD.BUILD = '130';   // bumped every deploy; shown on the title so a stale cache is obvious
+AD.BUILD = '132';   // bumped every deploy; shown on the title so a stale cache is obvious
 
 /* ---------- Factions ------------------------------------------------------
    Five power centres. Four of them are CAPTURABLE: drive one to 100 and it
@@ -565,6 +565,15 @@ AD.saveSettings = s  => AD.store.write(AD.SET_KEY, s);
 
 /* ---------- Small helpers -------------------------------------------------- */
 AD.clamp = (n, lo, hi) => Math.max(lo, Math.min(hi, n));
+
+/* 1st, 2nd, 3rd, 4th... including the 11th/12th/13th exceptions that a naive
+   last-digit rule gets wrong. */
+AD.ordinal = function (n) {
+  const v = Math.abs(Math.round(n)) % 100;
+  const suffix = (v >= 11 && v <= 13) ? 'th'
+    : ({ 1: 'st', 2: 'nd', 3: 'rd' }[v % 10] || 'th');
+  return n + suffix;
+};
 
 /* Compact "why is this disabled" badge for management-screen buttons.
    Turns a full reason sentence into a tiny lock hint the eye can read at a
