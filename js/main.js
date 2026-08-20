@@ -311,37 +311,62 @@ AD.Game = {
     this.clearCrisisTimer();
     if (!AD.Engine.run || AD.Engine.run.over) return;
     if (!ms) { this.dealNow(); return; }
-    this._waitUntil = Date.now() + ms;
+    // Remaining time, not a deadline. The gap is meant to be spent working the
+    // rooms, so it would be self-defeating for it to drain while you are in one:
+    // the clock only advances on the main screen.
+    this._waitLeft = ms;
     this._waitTotal = ms;
+    this._lastTick = Date.now();
     this.paintNextBar();
-    this._crisisTick = setInterval(() => {
-      if (Date.now() >= this._waitUntil) { this.dealNow(); return; }
-      this.paintNextBar();
-    }, 200);
+    this._crisisTick = setInterval(() => this.crisisTick(), 200);
+  },
+
+  crisisTick () {
+    const now = Date.now();
+    const elapsed = now - (this._lastTick || now);
+    this._lastTick = now;
+    // Paused: a room is open, the game is paused, or a crisis is already up.
+    if (this.clockPaused()) { this.paintNextBar(); return; }
+    this._waitLeft = Math.max(0, (this._waitLeft || 0) - elapsed);
+    if (this._waitLeft <= 0) { this.dealNow(); return; }
+    this.paintNextBar();
+  },
+
+  /* The countdown is frozen whenever the player is not looking at the board:
+     inside any management room, on the pause screen, off the game screen
+     entirely, or already dealing with a crisis. */
+  clockPaused () {
+    if (AD.UI.current !== 'game') return true;
+    if (this.roomOpen()) return true;
+    const crisis = AD.UI.el('ov-crisis');
+    if (crisis && !crisis.hidden) return true;
+    return false;
   },
 
   clearCrisisTimer () {
     if (this._crisisTick) { clearInterval(this._crisisTick); this._crisisTick = null; }
-    this._waitUntil = 0;
+    this._waitLeft = 0;
+    this._lastTick = 0;
     const bar = AD.UI.el('nextbar'); if (bar) bar.hidden = true;
   },
 
   paintNextBar () {
     const bar = AD.UI.el('nextbar');
     if (!bar) return;
-    const left = Math.max(0, this._waitUntil - Date.now());
+    const left = Math.max(0, this._waitLeft || 0);
     const total = this._waitTotal || AD.CRISIS_GAP_MS;
+    const paused = this.clockPaused();
     bar.hidden = false;
-    bar.classList.toggle('held', !!this._heldByOverlay);
+    bar.classList.toggle('held', paused);
     const fill = AD.UI.el('nb-fill');
     if (fill) fill.style.width = (100 - (left / total) * 100) + '%';
     const num = AD.UI.el('nb-num');
-    if (num) num.textContent = this._heldByOverlay ? 'WAITING' : Math.ceil(left / 1000) + 's';
+    if (num) num.textContent = paused ? 'PAUSED' : Math.ceil(left / 1000) + 's';
+    const lab = AD.UI.el('nb-lab');
+    if (lab) lab.textContent = paused ? 'ON HOLD' : 'NEXT CRISIS';
   },
 
-  /* True while any management overlay is open. A crisis that comes due while
-     the player is mid-action in a room waits for them to close it rather than
-     yanking them out of it. */
+  /* True while any management overlay is open. */
   roomOpen () {
     const ovs = document.querySelectorAll('.overlay:not(#ov-crisis)');
     for (let i = 0; i < ovs.length; i++) if (!ovs[i].hidden) return true;
@@ -350,16 +375,15 @@ AD.Game = {
 
   dealNow () {
     if (!AD.Engine.run || AD.Engine.run.over) { this.clearCrisisTimer(); return; }
-    // Hold the crisis at the door while a room is open, and keep ticking so the
-    // bar can say so; it fires the moment they come back out.
-    if (this.roomOpen()) {
-      this._heldByOverlay = true;
-      this._waitUntil = Date.now();
+    // If something is open over the board (a room, the pause screen), hold at
+    // zero rather than dealing behind it. The tick keeps running and fires the
+    // moment the player is back on the main screen.
+    if (this.clockPaused() && !(AD.UI.el('ov-crisis') && !AD.UI.el('ov-crisis').hidden)) {
+      this._waitLeft = 0;
       this.paintNextBar();
-      if (!this._crisisTick) this._crisisTick = setInterval(() => this.dealNow(), 300);
+      if (!this._crisisTick) this._crisisTick = setInterval(() => this.crisisTick(), 200);
       return;
     }
-    this._heldByOverlay = false;
     this.clearCrisisTimer();
     const card = AD.Engine.draw();
     if (!card) { this.finishRun('merely-president'); return; }
@@ -369,8 +393,8 @@ AD.Game = {
   },
 
   skipWait () {
-    if (!this._waitUntil) return;
-    this._waitUntil = Date.now();
+    if (!this._crisisTick) return;
+    this._waitLeft = 0;
     this.dealNow();
   },
 
