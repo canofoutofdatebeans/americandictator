@@ -60,7 +60,11 @@ const FREE_OMIT = [
 ];
 
 /* Directories copied wholesale. */
-const COPY_DIRS = ['css', 'js', 'assets', 'img'];
+/* Music/ is here deliberately: it is by far the largest thing in the project
+   and leaving it out of this list silently shipped both editions with no
+   music at all, which is exactly the kind of omission a copy-the-folder build
+   invites. If a new asset directory is added, it goes here. */
+const COPY_DIRS = ['css', 'js', 'assets', 'img', 'Music'];
 const COPY_FILES = ['index.html', 'manifest.json', 'icon.svg'];
 
 function rmrf (p) { if (fs.existsSync(p)) fs.rmSync(p, { recursive: true, force: true }); }
