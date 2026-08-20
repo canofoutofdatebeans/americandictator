@@ -214,6 +214,19 @@ AD.UI = {
     const eico = this.el('ico-econ');  if (eico && !eico.innerHTML) eico.innerHTML = AD.icon('economy');
     const dico = this.el('ico-pardon'); if (dico && !dico.innerHTML) dico.innerHTML = AD.icon('pardon');
     const wlico = this.el('ico-wealth'); if (wlico && !wlico.innerHTML) wlico.innerHTML = AD.icon('wealth');
+    const dpico = this.el('ico-diplo'); if (dpico && !dpico.innerHTML) dpico.innerHTML = AD.icon('diplo');
+    // The Diplomacy tile carries live standing, since it now leaks into four
+    // other meters every month.
+    const dnum = this.el('diplo-chip-num');
+    if (dnum && AD.diploStanding) {
+      const st = AD.diploStanding(run);
+      dnum.textContent = st.overall;
+      const dchip = this.el('diplo-chip');
+      if (dchip) {
+        dchip.classList.toggle('started', st.overall >= 65);
+        dchip.classList.toggle('full', st.overall <= 32);   // 'full' is the alarm styling
+      }
+    }
     // Private Interests carries the live fortune on its own tile, so the second
     // win condition is visible from the main screen instead of only in the HUD.
     const wnum = this.el('wealth-chip-num');
@@ -1557,6 +1570,99 @@ AD.UI = {
 
   },
 
+  /* ---------- the state department (diplomacy) ----------
+     Its own room now rather than a tab inside the Economy, because relations
+     touch four other meters every month (see AD.diplomacyTick). Opens on a
+     flag grid of all hundred countries; picking one shows its summits. */
+  diploPick: null,
+  diploBloc: 'all',
+
+  renderDiplomacy (result) {
+    const run = AD.Engine.run;
+    AD.ensureEconomy(run);
+    const st = AD.diploStanding(run);
+    const counts = AD.diploCounts(run);
+    this.paintRoomStatus('diplomacy', st.overall);
+
+    this.el('diplo-head').innerHTML =
+      `<div class="corr-cash">Standing <b>${st.overall}</b></div>` +
+      `<div>Allies <b class="${st.allies < 40 ? 'low' : ''}">${st.allies}</b></div>` +
+      `<div>Strongmen <b>${st.strongmen}</b></div>` +
+      `<div>Summits <b>${AD.summitsLeft(run)}</b></div>`;
+
+    const note = this.el('diplo-note');
+    if (result && result.res) {
+      note.className = 'corr-note bought';
+      note.innerHTML = AD.clean(result.res, this.settings.clean);
+    } else {
+      note.className = 'corr-note';
+      note.textContent =
+        'Every insult is free today and expensive for four years. Standing leaks into Congress, the Press, ' +
+        'the Base and the Street every single month, so a term of shouting is a slow puncture in four rooms ' +
+        'at once. ' + counts.hostile + ' governments are currently hostile, ' + counts.close + ' are close.';
+    }
+
+    /* FRONT SCREEN: the whole world, filterable, readable at a glance. */
+    if (!this.diploPick) {
+      const bloc = this.diploBloc || 'all';
+      const tabs = [['all', 'Everyone'], ['allies', 'Allies'], ['strongmen', 'Strongmen'],
+                    ['rogues', 'Rogues'], ['hot', 'Needs Work']];
+      const list = (AD.ECON_NATIONS || []).filter(n => {
+        if (bloc === 'all') return true;
+        if (bloc === 'hot') return AD.relations(run, n.id) < 40;
+        return AD.diploBlocOf(n) === bloc;
+      }).sort((a, b) => AD.relations(run, a.id) - AD.relations(run, b.id));
+
+      const tiles = list.map(n => {
+        const r = AD.relations(run, n.id);
+        const lb = AD.relLabel(r);
+        return `<button class="natile ptile mood-${lb.key}" data-diplopick="${n.id}" title="${n.blurb}">
+          <span class="ptile-type">${n.leader}</span>
+          <span class="natile-name">${n.name}</span>
+          <span class="citile-num">${r}</span>
+          <span class="citile-bar"><i style="width:${r}%"></i></span>
+          <span class="natile-state">${lb.label}</span>
+          ${AD.onBoard && AD.onBoard(run, n.id) ? '<span class="natile-pip own" title="Board of Peace">\u{1F54A}\u{FE0F}</span>' : ''}
+        </button>`;
+      }).join('');
+
+      this.el('diplo-list').innerHTML =
+        `<div class="sen-tabs">${tabs.map(t =>
+          `<button class="sen-tab ${bloc === t[0] ? 'on' : ''}" data-diplobloc="${t[0]}">${t[1]}</button>`).join('')}</div>` +
+        `<div class="natile-grid citile-grid">${tiles}</div>` +
+        (list.length ? '' : '<div class="deal-window">Nobody in this bracket. For now.</div>');
+      return;
+    }
+
+    /* DETAIL: one country, its summits. */
+    const n = AD.econNation(this.diploPick);
+    const opts = (AD.DIPLOMACY[this.diploPick] || []);
+    const left = AD.summitsLeft(run);
+    const r = AD.relations(run, n.id);
+    const lb = AD.relLabel(r);
+
+    const buttons = opts.map((o, i) => this.actBtnHTML({
+      cls: 'diplo-opt' + (o.insult ? ' diplo-insult' : o.normal ? ' diplo-normal' : ''),
+      icon: o.insult ? '\u{1F5E3}\u{FE0F}' : o.normal ? '\u{1F91D}' : '\u{1F3AD}',
+      label: o.label,
+      cost: (o.rel > 0 ? '+' : '') + (o.rel || 0) + ' rel',
+      blurb: AD.clean(o.res, this.settings.clean),
+      ok: left > 0, reason: 'No summits left this month.',
+      data: 'data-diplowho="' + n.id + '" data-diploopt="' + i + '"'
+    })).join('');
+
+    this.el('diplo-list').innerHTML =
+      '<button class="backpick" data-diplopick="">← All countries</button>' +
+      `<div class="sen-row diplo-row mood-${lb.key}">
+        <div class="sen-top"><span class="sen-dot"></span>
+          <b>${n.name}</b><i>${n.leader}</i>
+          <span class="sen-mood">${lb.label} ${r}</span></div>
+        <div class="sen-loywrap"><div class="sen-loy" style="width:${r}%"></div></div>
+        <div class="sen-tell">${AD.clean(n.blurb, this.settings.clean)}</div>
+        <div class="sen-acts">${buttons}</div>
+      </div>`;
+  },
+
   /* ---------- the bench (courts) ---------- */
   renderCourts (result) {
     this.paintRoomStatus('courts', AD.Engine.run.meters.courts);
@@ -1764,9 +1870,12 @@ AD.UI = {
     const run = AD.Engine.run;
     AD.ensureEconomy(run);
     this.renderMarketChart(run);
-    const tabs = [['tariffs', 'Tariffs'], ['diplomacy', 'Diplomacy']];
-    this.el('econ-tabs').innerHTML = tabs.map(([k, lab]) =>
-      `<button class="sen-tab ${this.econTab === k ? 'on' : ''}" data-econtab="${k}">${lab}</button>`).join('');
+    // Diplomacy moved out to its own room (see renderDiplomacy); the Economy
+    // is tariffs and the market, and points at the door for the rest.
+    this.econTab = 'tariffs';
+    this.el('econ-tabs').innerHTML =
+      '<button class="sen-tab on" data-econtab="tariffs">Tariffs</button>' +
+      '<button class="sen-tab" data-act="diplomacy">Diplomacy →</button>';
 
     const note = this.el('econ-note');
     if (result && result.line) { note.className = 'corr-note bought'; note.innerHTML = result.line; }

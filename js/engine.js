@@ -630,6 +630,11 @@ AD.Engine = {
     AD.callTick(run);   // refill the monthly phone allowance
     AD.rallyTick(run);  // refill the monthly rally allowance
     AD.summitTick(run); // refill the monthly summit allowance
+
+    /* THE WORLD'S OPINION LEAKS INWARD. Standing feeds Congress, the Press, the
+       Base and the Street every month, small, so a term of insults is a slow
+       puncture in four rooms at once. See diplomacy.js. */
+    if (AD.diplomacyTick) this.lastDiplo = AD.diplomacyTick(run);
     this.lastEcon = AD.economyTick(run);  // matured tariffs backfire
     if (AD.marketTick) AD.marketTick(run); // move the S&P and the family business
     this.lastWar = AD.warTick(run);   // ongoing wars resolve into victory or quagmire

@@ -557,6 +557,19 @@ AD.Game = {
   /* Send a Board of Peace invitation. A refusal costs nothing but the
      afternoon, so the interesting decision is who you are willing to be seen
      asking, not whether you can afford it. */
+  /* A summit, from the State Department. Relations move, and standing leaks
+     into four other meters every month afterwards (see diplomacy.js). */
+  doSummit (nationId, index) {
+    const run = AD.Engine.run;
+    if (!run || run.over) return;
+    const r = AD.doSummit(run, nationId, index);
+    if (!r.ok) return;
+    AD.saveRun(run);
+    AD.Audio.play('stamp');
+    AD.UI.renderDiplomacy(r);
+    AD.UI.renderHUD();
+  },
+
   inviteBoard (nationId) {
     const run = AD.Engine.run;
     if (!run || run.over) return;
@@ -955,6 +968,13 @@ AD.Game = {
       // Private Interests: switch between the permanent catalogue, the
       // rotating market and the Board of Peace.
       /* Front-screen pickers: an empty value goes back to the grid. */
+      const dpick = e.target.closest('[data-diplopick]');
+      if (dpick) { AD.UI.diploPick = dpick.dataset.diplopick || null; AD.UI.renderDiplomacy(); return; }
+      const dbloc = e.target.closest('[data-diplobloc]');
+      if (dbloc) { AD.UI.diploBloc = dbloc.dataset.diplobloc; AD.UI.renderDiplomacy(); return; }
+      const dopt = e.target.closest('[data-diploopt]');
+      if (dopt && !dopt.disabled) { this.doSummit(dopt.dataset.diplowho, +dopt.dataset.diploopt); return; }
+
       const wpick = e.target.closest('[data-warpick]');
       if (wpick) { AD.UI.warPick = wpick.dataset.warpick || null; AD.UI.renderWar(); return; }
       const cpick = e.target.closest('[data-citypick]');
@@ -1171,6 +1191,15 @@ AD.Game = {
         U.pauseTimer(); U.renderPardons(); U.overlay('pardon', true); break;
       case 'pardon-close':
         U.overlay('pardon', false);
+        if (AD.Engine.card && !U.el('card').hidden) U.resumeTimer();
+        break;
+
+      case 'diplomacy':
+        if (U.current !== 'game' || !AD.Engine.run || AD.Engine.run.over) break;
+        U.overlay('economy', false);
+        U.diploPick = null; U.pauseTimer(); U.renderDiplomacy(); U.overlay('diplomacy', true); break;
+      case 'diplomacy-close':
+        U.overlay('diplomacy', false);
         if (AD.Engine.card && !U.el('card').hidden) U.resumeTimer();
         break;
 

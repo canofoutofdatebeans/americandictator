@@ -88,6 +88,14 @@ AD.ROOM_STATUS = {
     terrible: { art: '\u{1F4DE}\u{1F634}', line: 'He has stopped asking what is on the schedule. This is the state that loses you the whole thing at the final whistle, and it is entirely fixable from this room.' }
   },
 
+  diplomacy: {
+    great:    { art: '\u{1F30D}\u{1F91D}', line: 'Allies take the call on the first ring and the rivals return it within the hour. You are, improbably, the adult in several rooms at once.' },
+    good:     { art: '\u{1F30D}\u{1F642}', line: 'The alliance holds, the deals get signed, and nobody abroad is briefing against you this week.' },
+    ok:       { art: '\u{1F30D}\u{1F610}', line: 'Correct, cool, transactional. Everybody turns up and nobody stays for dinner.' },
+    bad:      { art: '\u{1F30D}\u{2744}\u{FE0F}', line: 'Calls go unreturned. Two allies have started coordinating with each other before they coordinate with you, which is how alliances end.' },
+    terrible: { art: '\u{1F30D}\u{1F525}', line: 'Nobody will stand next to you for a photograph. A bloc has formed whose entire organising principle is managing you, and it is working.' }
+  },
+
   war: {
     great:    { art: '\u{1F396}\u{FE0F}\u{1F54A}\u{FE0F}', line: 'The generals salute, the wars are short, and the footage is spectacular. Somebody has floated a Nobel, unprompted, probably.' },
     good:     { art: '\u{1F396}\u{FE0F}\u{1F642}', line: 'The Joint Chiefs disagree with you privately and execute anyway, which is the whole arrangement.' },
