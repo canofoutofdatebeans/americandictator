@@ -23,8 +23,12 @@
      something and knows whether they liked it.
    ============================================================ */
 
-/* Set at build time. A paid build ships with 'full'. */
-AD.TIER = 'free';
+/* Set at build time by build.js, which writes this line for each edition.
+   The value checked into the repo is 'full', because the working copy (and
+   the GitHub Pages preview served from it) is the DEVELOPMENT build: whoever
+   is looking at it, a tester or the author, should be seeing the whole game.
+   Neither shipped edition inherits this; build.js overwrites it for both. */
+AD.TIER = 'full';
 
 /* Every gateable capability, and which editions have it. Anything not
    listed here is available to everybody, which is the safe default: a new
