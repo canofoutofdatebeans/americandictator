@@ -666,6 +666,31 @@ AD.Engine = {
     if (collapse.ending) { this.finish(collapse.ending); return collapse.ending; }
     this.pendingShield = collapse.saved ? collapse.tabloid : null;
 
+    /* THE PRESIDENT WANDERS OFF. Boredom above AD.BORED_DANGER is not a losing
+       SCORE (that is the end-of-term ceiling), it is a losing STATE: three
+       straight months that bored and he resigns mid-term, wanders off, and does
+       something silly instead of the job. Warned the first two months, so like
+       every death in this game it comes from sustained neglect and never from
+       one surprise. The Phone is the lever that resets the streak. */
+    this.pendingBored = null;
+    if (!run.over && AD.boredom(run) > AD.BORED_DANGER) {
+      run.boredStreak = (run.boredStreak || 0) + 1;
+      if (run.boredStreak >= AD.BORED_DANGER_MONTHS) { this.finish('bored'); return 'bored'; }
+      const left = AD.BORED_DANGER_MONTHS - run.boredStreak;
+      this.pendingBored = {
+        head: run.boredStreak === 1 ? 'THE PRESIDENT IS RESTLESS' : 'THE PRESIDENT IS BARELY IN THE ROOM',
+        sub: 'Boredom at ' + AD.boredom(run) + ', over the danger line for ' + run.boredStreak +
+             (run.boredStreak === 1 ? ' month' : ' months') + '; ' + left +
+             (left === 1 ? ' more and he walks' : ' more and he walks'),
+        body: 'He has stopped reading the folders. He is asking who else is on the schedule and whether any of ' +
+              'it is interesting. ' + (left === 1
+                ? 'One more month this bored and he resigns, wanders off, and finds his own entertainment. Get him on the Phone.'
+                : 'Two more months this bored and he is gone. The Phone is the fastest way to bring him back into the room.')
+      };
+    } else if (!run.over) {
+      run.boredStreak = 0;
+    }
+
     // A directed crisis (see objectives.js) that missed its deadline resolves
     // here, once a month, after everything else the passage of time did.
     if (AD.tickObjectiveExpiry) AD.tickObjectiveExpiry(run);

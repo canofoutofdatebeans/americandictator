@@ -563,7 +563,10 @@ AD.Game = {
     const timeEnding = AD.Engine.advance();             // the clock alone can kill you
     AD.UI.renderHUD();
     if (timeEnding) { this.showEnding(AD.Engine.lastScore); return; }
-    if (AD.Engine.pendingFortune) {           // crossed $10B this month
+    if (AD.Engine.pendingBored) {              // dangerously bored: warn before he walks
+      AD.UI.showTabloid(AD.Engine.pendingBored);
+      AD.Engine.pendingBored = null;
+    } else if (AD.Engine.pendingFortune) {           // crossed $10B this month
       AD.UI.showTabloid(AD.Engine.pendingFortune);
       AD.Engine.pendingFortune = null;
     } else if (AD.Engine.pendingShield) {     // the shield fired on the monthly tick

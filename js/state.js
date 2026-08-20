@@ -5,7 +5,7 @@
    ============================================================ */
 
 window.AD = window.AD || {};
-AD.BUILD = '136';   // bumped every deploy; shown on the title so a stale cache is obvious
+AD.BUILD = '138';   // bumped every deploy; shown on the title so a stale cache is obvious
 
 /* ---------- Factions ------------------------------------------------------
    Five power centres. Four of them are CAPTURABLE: drive one to 100 and it
@@ -163,6 +163,13 @@ AD.BORED_START = 50;
    tolerates less boredom. (These mirror the old entertainment floors: an
    entertainment floor of F is exactly a boredom ceiling of 100 - F.) */
 AD.BOREDOM_MAX = { rookie: 50, standard: 30, historic: 10 };
+/* Boredom is also a mid-term LOSS STATE, not only an end-of-term score: over
+   AD.BORED_DANGER for AD.BORED_DANGER_MONTHS straight and the President resigns
+   and wanders off (the 'bored' ending). Well above every difficulty ceiling, so
+   it is a genuine "he has checked out" crisis and not just missing the win gate.
+   Warned the first two months (see engine.advance). */
+AD.BORED_DANGER = 75;
+AD.BORED_DANGER_MONTHS = 3;
 AD.boredCeiling = run => {
   const v = AD.BOREDOM_MAX[(run && run.difficulty)];
   return typeof v === 'number' ? v : 30;
@@ -294,8 +301,8 @@ AD.rankFor = a => AD.RANKS.filter(r => a >= r.at).pop().name;
 
 /* ---------- Difficulty ---------------------------------------------------- */
 /* pillarValue is tuned against AD.SOFT_CAP (55) to set how many branches a
-   dictatorship costs: rookie 2 (55+52=107), standard 3 (55+44=99, one short),
-   historic 2 but on a 40-month clock with every meter sagging underneath you. */
+   dictatorship costs: rookie 2 (55+52=107), standard 2 (55+46=101, off the old
+   3-pillar cliff), historic 2 on a 40-month clock with every meter sagging. */
 AD.DIFFS = {
   rookie: {
     id: 'rookie', label: 'Rookie', months: 48, capture: 90, pillarValue: 26, timer: 120,
@@ -303,15 +310,15 @@ AD.DIFFS = {
     hint: 'Ninety is a capture, and two of them is enough. The institutions are tired.'
   },
   standard: {
-    id: 'standard', label: 'Standard', months: 48, capture: 100, pillarValue: 22, timer: 60,
+    id: 'standard', label: 'Standard', months: 48, capture: 95, pillarValue: 23, timer: 60,
     startCash: 3, drift: 0, wealthGoal: 15, inheritMult: 1,
-    hint: 'One term, and a dictatorship costs three of the four branches. The intended experience.'
+    hint: 'One term, and a dictatorship costs two of the four branches. The intended experience.'
   },
   historic: {
     // pillarValue 23 puts two pillars at 46, so a win needs rawAuth 54 of a
     // possible 55, effectively "max out everything AND take two branches, or
     // take three." 22 makes it impossible; 25 makes it easy. It is a cliff.
-    id: 'historic', label: 'Historic', months: 40, capture: 100, pillarValue: 23, timer: 30,
+    id: 'historic', label: 'Historic', months: 40, capture: 94, pillarValue: 23, timer: 30,
     startCash: 2, drift: 0, pressureMult: 2, wealthGoal: 20, inheritMult: 1.6,
     hint: 'Forty months, three branches, twenty seconds a decision, and every institution you take ' +
           'makes the next one fight twice as hard.'
