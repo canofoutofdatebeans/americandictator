@@ -1723,3 +1723,35 @@ html[data-motion="off"] .rs-terrible{animation:none}
 }
 .board .factions{margin:0}
 .board .chip-row{margin-top:0}
+
+/* ═══════════════════════════════════════════════════════════════
+   THE PRESIDENT'S REACTION                           (build 120)
+   One line under the deltas. Not a summary of what happened, a
+   reaction that shows he understood none of it.
+   ═══════════════════════════════════════════════════════════════ */
+.potus-line{
+  display:flex;flex-direction:column;gap:3px;
+  margin:11px 0 2px;padding:9px 11px 10px;
+  border-radius:11px;border:1px solid var(--edge2);
+  background:linear-gradient(180deg,#1a1524,#12100a);
+  border-left:3px solid var(--gold-soft);
+  text-align:left;
+  animation:potusIn .38s cubic-bezier(.2,.9,.25,1) both;
+}
+@keyframes potusIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+html[data-motion="off"] .potus-line{animation:none}
+.potus-who{
+  font-size:7.5px;letter-spacing:2.2px;font-weight:800;color:var(--gold-soft);
+}
+.potus-say{
+  font-size:13px;line-height:1.45;color:var(--paper);
+  font-style:italic;
+}
+.potus-say::before{content:'\201C'}
+.potus-say::after{content:'\201D'}
+/* he is delighted / he is bored: two register shifts worth marking */
+.potus-wild,.potus-crowd{border-left-color:#e0575f}
+.potus-wild .potus-who,.potus-crowd .potus-who{color:#f0a0a6}
+.potus-bored,.potus-dull{border-left-color:#3f4a63}
+.potus-bored .potus-who,.potus-dull .potus-who{color:#6c7a94}
+.potus-bored .potus-say,.potus-dull .potus-say{color:var(--paper2)}

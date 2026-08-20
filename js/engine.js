@@ -164,6 +164,7 @@ AD.Engine = {
     const choice = card.choices[index];
     if (!choice) return out;
     if (card.sfx) out.sfx = card.sfx;        // a card can name its own sound
+    out.wasWild = !!choice.wild;             // the President's reaction reads this (voice.js)
     const baseAtStart = run.meters.base;     // enforce the per-decision base creep cap below
 
     /* --- Dynamic events (midterms, election) compute their own outcome --- */

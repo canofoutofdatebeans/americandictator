@@ -553,6 +553,21 @@ AD.UI = {
       else if (out.authCapped) chips.push(`<span class="delta">⚑ CAPPED AT ${AD.SOFT_CAP}, TAKE A BRANCH</span>`);
       if (d.cash) chips.push(`<span class="delta ${d.cash > 0 ? 'pos' : 'neg'}">$ ${d.cash > 0 ? '+' : ''}${d.cash}B</span>`);
       this.el('res-deltas').innerHTML = chips.join('');
+
+      /* THE PRESIDENT REACTS. One line, chosen by what actually happened, that
+         reveals he has understood none of it. See voice.js. */
+      const pl = this.el('potus-line');
+      if (pl) {
+        const v = AD.presidentLine ? AD.presidentLine(AD.Engine.run, out) : null;
+        if (v) {
+          pl.className = 'potus-line potus-' + v.bucket;
+          this.el('potus-say').textContent = AD.clean(v.line, this.settings.clean);
+          pl.hidden = false;
+        } else {
+          pl.hidden = true;
+        }
+      }
+
       this.renderBriefing(out);
       this.renderHUD();
     }, 250);
