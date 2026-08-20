@@ -228,6 +228,48 @@ AD.Game = {
     this._begin();
   },
 
+  /* THE DAILY. Everybody gets the same term today: same seed, so the same
+     crises in the same order, and the only variable is what you did about them.
+     Difficulty, modifiers and inheritance are all fixed, otherwise comparing
+     two players' endings would mean nothing. */
+  startDaily () {
+    const seed = AD.dailySeed();
+    const done = AD.dailyDone(seed);
+    const saved = AD.loadRun();
+    const go = () => this._beginDaily(seed);
+    if (done) {
+      this.confirm({
+        title: 'Play today again?',
+        msg: "You have already finished <b>today's term</b>: <b>" + (AD.ENDINGS[done.endingId] || {}).title +
+             '</b>, score <b>' + (done.score || 0).toLocaleString() + '</b>. Replaying overwrites that result ' +
+             'for today, and everybody is playing the same crises, so you already know what is coming.',
+        yes: 'Play it again',
+        onYes: go
+      });
+      return;
+    }
+    if (saved && !saved.over) {
+      this.confirm({
+        title: 'Abandon your current term?',
+        msg: "A term is already in progress. Starting today's <b>erases it for good</b>.",
+        yes: 'Abandon and play today',
+        onYes: go
+      });
+      return;
+    }
+    go();
+  },
+
+  _beginDaily (seed) {
+    const el = AD.UI.el('in-seed');
+    if (el) el.value = seed;
+    this.setup.difficulty = 'standard';
+    this.setup.mutators = [];
+    this.setup.legacy = null;           // no inherited wreckage: same start for everybody
+    this._begin();
+    AD.Engine.run.daily = seed;
+  },
+
   _begin () {
     clearTimeout(this.endingTimer); this.endingTimer = null;
     this.pending = []; this.awaitingAdvance = false; this.drawAfterOverlays = false;
@@ -269,6 +311,17 @@ AD.Game = {
      "New Term". When there is no save, Take the Oath is the primary action.
      This is what makes returning to a term obvious instead of hidden. */
   refreshTitle () {
+    // The Daily button says whether today has been played, and how it went.
+    const db = AD.UI.el('btn-daily');
+    if (db && AD.dailySeed) {
+      const seed = AD.dailySeed();
+      const done = AD.dailyDone(seed);
+      db.innerHTML = done
+        ? '<span class="btn-lead">Today’s Term</span><small>Played · ' +
+          ((AD.ENDINGS[done.endingId] || {}).title || 'finished') + ' · ' +
+          (done.score || 0).toLocaleString() + '</small>'
+        : '<span class="btn-lead">Today’s Term</span><small>The same term for everybody, today only</small>';
+    }
     const U = AD.UI;
     const cont = U.el('btn-continue');
     const fresh = document.querySelector('#screen-title [data-act="new"]');
@@ -544,6 +597,11 @@ AD.Game = {
   },
 
   showEnding (score) {
+    // A finished daily is recorded so the title button can report it.
+    if (AD.Engine.run && AD.Engine.run.daily && AD.markDailyDone) {
+      AD.markDailyDone(AD.Engine.run.daily, score);
+      this.refreshTitle();
+    }
     if (!score) return;
     clearTimeout(this.endingTimer); this.endingTimer = null;
     AD.Audio.play(score.win ? 'win' : 'collapse');
@@ -1069,6 +1127,7 @@ AD.Game = {
         this.buildSetupScreen(); U.show('setup'); break;
 
       case 'begin':    this.begin(); break;
+      case 'daily':    this.startDaily(); break;
       case 'continue': this.resume(); break;
       case 'title':    this.refreshTitle(); U.show('title'); break;
       case 'language': U.show('language'); break;

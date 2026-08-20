@@ -5,7 +5,7 @@
    ============================================================ */
 
 window.AD = window.AD || {};
-AD.BUILD = '127';   // bumped every deploy; shown on the title so a stale cache is obvious
+AD.BUILD = '128';   // bumped every deploy; shown on the title so a stale cache is obvious
 
 /* ---------- Factions ------------------------------------------------------
    Five power centres. Four of them are CAPTURABLE: drive one to 100 and it
@@ -355,6 +355,30 @@ AD.applyMutators = function (run, ids) {
     if (m.flag) { run.flags = run.flags || {}; run.flags[m.flag] = true; }
   });
   run.mutators = (ids || []).slice();
+};
+
+/* ---------- THE DAILY -------------------------------------------------------
+   Everybody in the world gets the same term today: same seed, so the same
+   crises in the same order, and the only variable is what you did about them.
+   The seed is the date, which means it needs no server and no clock authority,
+   and two people can compare endings without either of them typing anything.
+   Locked to difficulty 'standard' so the comparison is honest. */
+AD.dailySeed = function (d) {
+  const t = d || new Date();
+  const p = n => (n < 10 ? '0' : '') + n;
+  return 'DAILY-' + t.getFullYear() + p(t.getMonth() + 1) + p(t.getDate());
+};
+AD.isDailySeed = s => /^DAILY-\d{8}$/.test(String(s || ''));
+AD.DAILY_KEY = 'americandictator.daily.v1';
+/* Which daily you have already finished, so the button can say so. */
+AD.dailyDone = function (seed) {
+  const rec = AD.store.read(AD.DAILY_KEY, {});
+  return rec && rec[seed] ? rec[seed] : null;
+};
+AD.markDailyDone = function (seed, score) {
+  const rec = AD.store.read(AD.DAILY_KEY, {}) || {};
+  rec[seed] = { endingId: score.endingId, score: score.score, win: !!score.win, cash: score.cash };
+  AD.store.write(AD.DAILY_KEY, rec);
 };
 
 AD.PORTRAIT = {
