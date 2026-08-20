@@ -1595,7 +1595,15 @@ AD.UI = {
        opens only that country's operations. `warPick` null means show the grid. */
     const picked = this.warPick;
     if (!picked) {
-      const tiles = AD.WAR_TARGETS.map(t => {
+      /* A HUNDRED TILES is too many to read in one screen, so the grid is
+         filtered by region, the same way the State Department filters by bloc.
+         The free edition ships only the original ten, in which case there is
+         nothing to filter and the tabs are simply not drawn. */
+      const regions = AD.WAR_REGIONS || [];
+      const reg = this.warRegion || 'all';
+      const shown = AD.WAR_TARGETS.filter(t =>
+        reg === 'all' || (t.region || 'world') === reg);
+      const tiles = shown.map(t => {
         const annexed = AD.isConquered(run, t.id);
         const allied = AD.isAlly(run, t.id);
         const atWar = AD.atWarWith(run, t.id);
@@ -1608,11 +1616,15 @@ AD.UI = {
           ${t.nukes ? '<span class="natile-pip nuke" title="Nuclear">\u2622\u{FE0F}</span>' : ''}
         </button>`;
       }).join('');
-      this.el('war-list').innerHTML = ongoing +
+      const tabs = regions.length ? `<div class="sen-tabs">${regions.map(r =>
+        `<button class="sen-tab ${reg === r[0] ? 'on' : ''}" data-warregion="${r[0]}">${r[1]}</button>`).join('')}</div>` : '';
+
+      this.el('war-list').innerHTML = ongoing + tabs +
         `<div class="natile-grid">${tiles}</div>` +
-        `<div class="deal-window">Ten countries, and every one of them answers differently. Rattle the sabre at
-          the ones who will fold, strike the weak, and never gamble a strike on a nuclear power unless you can
-          afford the fallout. <b>Pick a country</b> to see what is actually on the table there.</div>`;
+        `<div class="deal-window">${AD.WAR_TARGETS.length} countries, and every one of them answers differently.
+          Rattle the sabre at the ones who will fold, strike the weak, and never gamble a strike on a nuclear
+          power unless you can afford the fallout. Every country also has <b>one operation nobody else offers</b>,
+          available once. <b>Pick a country</b> to see what is actually on the table there.</div>`;
       return;
     }
 
@@ -1620,19 +1632,23 @@ AD.UI = {
       const atWar = AD.atWarWith(run, t.id);
       const allied = AD.isAlly(run, t.id);
       const annexed = AD.isConquered(run, t.id);
-      // Only the operations THIS country actually offers.
-      const ops = AD.WAR_OPS.filter(op => !t.ops || t.ops.indexOf(op.id) !== -1);
+      // Only the operations THIS country actually offers, plus its signature.
+      const ops = AD.warOpsFor ? AD.warOpsFor(t)
+        : AD.WAR_OPS.filter(op => !t.ops || t.ops.indexOf(op.id) !== -1);
       const buttons = ops.map(op => {
         const avail = AD.warOpAvailable(run, t, op);
         const c = AD.warOpCostFor(run, t, op);
         const cost = c ? ` <em>${AD.fmtCash(c)}</em>` : '';
         return this.actBtnHTML({
-          cls: 'war-' + op.id, icon: op.icon, label: op.label, cost: cost.replace(/<\/?em>/g, '').trim(),
+          cls: op.bespoke ? 'war-sig' : 'war-' + op.id,
+          icon: op.icon, label: op.label, cost: cost.replace(/<\/?em>/g, '').trim(),
           blurb: op.blurb, ok: avail.ok, reason: avail.reason,
           data: 'data-wartarget="' + t.id + '" data-warop="' + op.id + '"'
         });
       }).join('');
-      const badges = (t.nukes ? '<span class="war-badge nuke">☢️ nuclear</span>' : '') +
+      const badges = (AD.FLAG[t.id] ? '<span class="war-badge flagb">' + AD.FLAG[t.id] + '</span>' : '') +
+                     (t.nukes ? '<span class="war-badge nuke">☢️ nuclear</span>' : '') +
+                     (t.sig && !AD.sigUsed(run, t.id) ? '<span class="war-badge sigb">★ signature ready</span>' : '') +
                      (annexed ? `<span class="war-badge rich">🗺️ annexed +$${run.conquests[t.id]}B/mo</span>`
                        : allied ? `<span class="war-badge ally">🤝 allied +$${run.allies[t.id]}B/mo</span>`
                        : (t.tradeIncome ? '<span class="war-badge ally">🤝 dealable</span>' : '')) +

@@ -1067,6 +1067,8 @@ AD.Game = {
 
       const wpick = e.target.closest('[data-warpick]');
       if (wpick) { AD.UI.warPick = wpick.dataset.warpick || null; AD.UI.renderWar(); return; }
+      const wreg = e.target.closest('[data-warregion]');
+      if (wreg) { AD.UI.warRegion = wreg.dataset.warregion; AD.UI.renderWar(); return; }
       const cpick = e.target.closest('[data-citypick]');
       if (cpick) { AD.UI.cityPick = cpick.dataset.citypick || null; AD.UI.renderStreet(); return; }
       const ppick = e.target.closest('[data-presspick]');

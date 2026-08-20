@@ -48,6 +48,10 @@ const FREE_OMIT = [
   'js/packs/pack-r-laworder.js',
   // the 65 extra nations and their summits (purely additive to the roster)
   'js/nations.js',
+  // the other ninety war targets and their signature operations. The free
+  // edition keeps the ten hand-built countries in war.js, which is a complete
+  // War Room on its own; the region tabs simply do not appear.
+  'js/wartargets.js',
   // the rotating market and the Board of Peace (additive to the shop)
   'js/interests.js',
   'js/boardofpeace.js',

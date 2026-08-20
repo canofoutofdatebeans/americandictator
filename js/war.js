@@ -98,8 +98,12 @@ AD.WAR_OPS = [
     blurb: 'Threats and troop movements. Some fold and pay. Some call your bluff.',
     run (run, t) {
       const roll = AD.reactRoll(run);
-      const folds = t.posture === 'fragile' || (t.strength <= 1 && t.posture !== 'defiant');
-      if (folds && roll > 0.15) {
+      /* `fold` is the per-country chance a threat actually works, set in
+         wartargets.js so Luxembourg and Turkiye do not answer the same way.
+         Countries without one fall back to the old posture heuristic. */
+      const fold = (t.fold != null) ? t.fold
+        : ((t.posture === 'fragile' || (t.strength <= 1 && t.posture !== 'defiant')) ? 0.85 : 0);
+      if (roll < fold) {
         const tribute = Math.round((0.04 + (t.tradeIncome || t.resource || 0) * 0.004) * 100) / 100;
         return { base: 4, auth: 3, press: -1, cash: tribute,
           res: t.leader + ' folds within the hour, offering concessions, a trade "deal", and a very respectful statement. You pocket the tribute and the win.' };
@@ -135,11 +139,17 @@ AD.WAR_OPS = [
     blurb: 'A limited operation. Clean on the weak. A gamble on a nuclear power.',
     run (run, t) {
       const roll = AD.reactRoll(run);
-      if (t.nukes && roll < 0.30) {
+      /* `risk` is how badly a strike THERE can go, set per country in
+         wartargets.js. It is not just strength: a nuclear rival is the obvious
+         case, but so is any target where the fallout is political rather than
+         radioactive. Countries with no risk set fall back to the old rule. */
+      const risk = (t.risk != null) ? t.risk
+        : (t.nukes ? 0.30 : t.strength >= 2 ? 0.20 : 0.05);
+      if (t.nukes && roll < risk) {
         return { base: 2, street: -6, courts: -5, press: -6, congress: -4, auth: -2,
           res: 'The strike lands on a nuclear power and does not stay small. Retaliation is immediate, the markets crater, and "miscalculation" is on every screen.' };
       }
-      if (t.strength >= 2 && roll < 0.42) {
+      if (roll < 0.12 + risk * 0.7) {
         return { base: 6, auth: 3, courts: -3, press: -3, street: -2, ongoing: true,
           res: 'The "limited" strike on ' + t.name + ' does not stay limited. They mobilise, and it is a real war now.' };
       }
@@ -161,7 +171,8 @@ AD.WAR_OPS = [
     blurb: 'A covert operation to install a friend. Huge if it holds, a scandal if it leaks. Not an option against great powers.',
     run (run, t) {
       const roll = AD.reactRoll(run);
-      const exposeRisk = t.posture === 'wildcard' ? 0.42 : t.strength >= 2 ? 0.4 : 0.26;
+      const exposeRisk = (t.risk != null) ? AD.clamp(0.18 + t.risk * 0.5, 0.15, 0.6)
+        : t.posture === 'wildcard' ? 0.42 : t.strength >= 2 ? 0.4 : 0.26;
       if (roll < exposeRisk) {
         return { base: -2, press: -7, courts: -6, congress: -4, auth: -1,
           res: 'The operation in ' + t.name + ' is exposed. There are documents, there are hearings, and there is a genuinely terrible week.' };
@@ -176,12 +187,33 @@ AD.WAR_OPS = [
 
 AD.warOpById = id => AD.WAR_OPS.find(o => o.id === id);
 
+/* ---------- the signature operation --------------------------------------
+   Every country in wartargets.js carries ONE bespoke operation that exists
+   nowhere else: the canal, the chip machines, the mega-prison, the Pontiff.
+   It is the reason a hundred targets are a hundred targets and not one target
+   with a hundred names. Signatures are ONCE PER TERM, so using one is a
+   decision rather than a button you farm. */
+AD.warOpsFor = function (t) {
+  const shared = AD.WAR_OPS.filter(op => !t.ops || t.ops.indexOf(op.id) !== -1);
+  return t.sig ? shared.concat([t.sig]) : shared;
+};
+
+/* Resolve an op id IN THE CONTEXT OF A TARGET, so 'sig' means that country's
+   signature and not somebody else's. */
+AD.warOpFor = function (t, id) {
+  if (id === 'sig') return (t && t.sig) || null;
+  return AD.warOpById(id);
+};
+
+AD.sigUsed = (run, id) => !!(run.warSigs && run.warSigs[id]);
+
 /* War is paid for out of the NATIONAL TREASURY (run.purse), not the President's
    personal wealth, and it is expensive: costs scale with the target's strength,
    from tens of billions for a limited strike to hundreds of billions to invade a
    great power. Sabre-rattling is free. */
 AD.warOpCostFor = function (run, t, op) {
   if (!op || !t) return 0;
+  if (op.bespoke) return op.cost || 0;      // signatures carry their own price
   const s = t.strength || 0;
   if (op.id === 'ally')   return 10 + (t.tradeIncome || 6);   // aid package / summit
   if (op.id === 'annex')  return t.annexCost || 30;           // buy the territory
@@ -196,6 +228,14 @@ AD.warOpCostFor = function (run, t, op) {
    "regime-changed", and how only territories can be annexed. */
 AD.warOpAvailable = function (run, t, op) {
   if (!op) return { ok: false, reason: 'No such operation.' };
+  if (op.bespoke) {
+    if (op !== t.sig) return { ok: false, reason: 'Not an option here.' };
+    if (op.once && AD.sigUsed(run, t.id)) return { ok: false, reason: 'Already done. Once was plenty.' };
+    const c = op.cost || 0;
+    if (c && AD.purse(run) < c) return { ok: false, reason: 'The Treasury cannot afford it.' };
+    if (op.needsAuth && run.authority < op.needsAuth) return { ok: false, reason: 'Requires Authority ' + op.needsAuth + '.' };
+    return { ok: true };
+  }
   if (t.ops && t.ops.indexOf(op.id) === -1) return { ok: false, reason: 'Not an option here.' };
   if ((op.id === 'ally' || op.id === 'annex') && (AD.isAlly(run, t.id) || AD.isConquered(run, t.id)))
     return { ok: false, reason: 'Already done.' };
@@ -220,7 +260,7 @@ function startWar (run, t, loot) {
 
 AD.doWarOp = function (run, targetId, opId) {
   const t = AD.warTargetById(targetId);
-  const op = AD.warOpById(opId);
+  const op = AD.warOpFor(t, opId);
   if (!t || !op) return { ok: false, reason: 'No such operation.' };
   const avail = AD.warOpAvailable(run, t, op);
   if (!avail.ok) return avail;
@@ -228,13 +268,28 @@ AD.doWarOp = function (run, targetId, opId) {
   const cost = AD.warOpCostFor(run, t, op);
   if (cost) AD.movePurse(run, -cost);          // war is paid from the Treasury
 
-  const eff = op.run(run, t) || {};
+  /* A signature is a flat, written outcome rather than a die roll: the whole
+     point of it is that THIS country answers in a way no other country can,
+     so it does not get randomised into the same three paragraphs. */
+  let eff;
+  if (op.bespoke) {
+    eff = Object.assign({}, op.eff);
+    eff.res = op.res;
+    if (op.ongoing) eff.ongoing = true;
+    run.warSigs = run.warSigs || {};
+    run.warSigs[t.id] = true;
+    run.stats = run.stats || {};
+    run.stats.warSigs = (run.stats.warSigs || 0) + 1;
+  } else {
+    eff = op.run(run, t) || {};
+  }
   let res = eff.res; delete eff.res; delete eff._ally; delete eff._conquer;
   const ongoing = eff.ongoing; delete eff.ongoing;
 
   // Turning on a country you had ALLIED with is diplomatically ruinous, and it
   // tears up the deal (the trade income stops).
-  const isAttack = op.id === 'strike' || op.id === 'invade' || op.id === 'regime';
+  const isAttack = op.bespoke ? !!op.hostile
+    : (op.id === 'strike' || op.id === 'invade' || op.id === 'regime');
   if (isAttack && AD.isAlly(run, t.id)) {
     delete run.allies[t.id];
     eff.street = (eff.street || 0) - 4;
@@ -306,8 +361,11 @@ AD.warTick = function (run) {
     if (rng() > 0.35 + w.months * 0.15 && w.months < 5) return;   // still ongoing
 
     w.done = true;
+    // `bias` is the per-country thumb on the scale: some places are simply
+    // harder to finish than their strength number suggests. See wartargets.js.
     const winChance = AD.clamp(
-      0.5 + (run.authority - 50) * 0.004 + (3 - t.strength) * 0.12 - (t.nukes ? 0.12 : 0),
+      0.5 + (run.authority - 50) * 0.004 + (3 - t.strength) * 0.12 - (t.nukes ? 0.12 : 0)
+        + (t.bias || 0),
       0.10, 0.92);
     const won = rng() < winChance;
     let eff, res;

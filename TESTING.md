@@ -62,6 +62,9 @@ nothing, a number that looks wrong, anything that made you go "huh?"
   crises today, so you can compare endings with another tester directly.
 - **The Receipts** on the ending screen — the ledger of what your term cost.
 - **Save as Image** on the Front Page — it makes a shareable newspaper.
+- **The War Room** now has a hundred countries behind region tabs, and every
+  one of them has a **signature operation nobody else offers**, usable once.
+  Try Panama, El Salvador, Finland and the Holy See, in that order.
 - **The Board of Peace** (Private Interests) — invite countries to join for
   $1B. Try inviting Canada, then try Qatar.
 - The **bright orange** complexion in the character creator.

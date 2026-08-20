@@ -802,6 +802,13 @@ body::before{
 .war-badge.nuke{color:#ffd36b;border-color:#5a4718;background:rgba(201,162,39,.12)}
 .war-badge.ally{color:#7fd0ff;border-color:#1d4560;background:rgba(60,150,210,.12)}
 .war-badge.rich{color:#8be0a0;border-color:#1f5232;background:rgba(60,180,110,.1)}
+/* The flag chip is just the emoji at readable size; the signature chip flags
+   the one operation that exists only against this country (see wartargets.js)
+   and disappears the moment it is spent. */
+.war-badge.flagb{font-size:15px;padding:0 5px;border-color:transparent;line-height:1.3}
+.war-badge.sigb{color:#ffcf8b;border-color:#6a4a12;background:rgba(255,180,60,.14);font-weight:800}
+.act.war-sig{border-color:#7a5310;background:linear-gradient(180deg,rgba(255,180,60,.16),rgba(255,180,60,.05))}
+.act.war-sig .act-lab{color:#ffd79a}
 .sen-acts{display:flex;gap:5px;flex-wrap:wrap}
 .sen-act{flex:1 1 calc(50% - 3px);min-width:0;padding:7px 6px;font:inherit;font-size:11.5px;
   border-radius:7px;border:1px solid var(--edge);background:var(--ink3);color:var(--paper2);
