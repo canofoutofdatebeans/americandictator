@@ -182,6 +182,18 @@ AD.UI = {
     const wico = this.el('ico-war');   if (wico && !wico.innerHTML) wico.innerHTML = AD.icon('war');
     const eico = this.el('ico-econ');  if (eico && !eico.innerHTML) eico.innerHTML = AD.icon('economy');
     const dico = this.el('ico-pardon'); if (dico && !dico.innerHTML) dico.innerHTML = AD.icon('pardon');
+    const wlico = this.el('ico-wealth'); if (wlico && !wlico.innerHTML) wlico.innerHTML = AD.icon('wealth');
+    // Private Interests carries the live fortune on its own tile, so the second
+    // win condition is visible from the main screen instead of only in the HUD.
+    const wnum = this.el('wealth-chip-num');
+    if (wnum) {
+      wnum.textContent = '$' + (run.cash >= 10 ? Math.round(run.cash) : run.cash.toFixed(1)) + 'B';
+      const wchip = this.el('wealth-chip');
+      if (wchip) {
+        wchip.classList.toggle('started', (run.assets || []).length > 0);
+        wchip.classList.toggle('full', run.cash >= AD.wealthGoal(run));
+      }
+    }
     const chip = this.el('const-chip');
     const cn = AD.clauseCount(run);
     chip.innerHTML = '<span class="chip-ico">' + AD.icon('constitution') + '</span>' +

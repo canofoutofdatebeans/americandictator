@@ -1440,7 +1440,7 @@ html[data-motion="off"] .rs-terrible{animation:none}
   display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:6px;
 }
 .chip-row .const-chip{
-  margin-top:0;height:auto;min-height:56px;padding:8px 6px 7px;
+  margin-top:0;height:56px;padding:7px 5px 6px;
   position:relative;display:flex;flex-direction:column;
   align-items:center;justify-content:center;gap:4px;
   background:linear-gradient(180deg,#16203a,#0f1728);
@@ -1563,3 +1563,72 @@ html[data-motion="off"] .rs-terrible{animation:none}
 .mkt-foot b{color:var(--paper2);font-weight:700}
 .mkt-foot .up{color:#8fd0a0}
 .mkt-foot .dn{color:#e0857c}
+
+/* ═══════════════════════════════════════════════════════════════
+   THE SITUATION ROOM, unified                        (build 114)
+   The five power centres and the seven management rooms are now the
+   same size and the same shape, so the main screen reads as one
+   board of destinations rather than two unrelated strips.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ---- the five power centres, sized to match the room tiles ---- */
+.factions{
+  display:grid;grid-template-columns:repeat(5,1fr);gap:6px;
+  padding:0;background:none;border:0;border-radius:0;
+}
+.facade{box-shadow:none;border-radius:0;overflow:visible}
+.fac{
+  position:relative;height:56px;padding:6px 4px 9px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+  background:linear-gradient(180deg,#16203a,#0f1728);
+  border:1px solid #26324e;border-radius:11px;
+  transition:border-color .18s,background .18s,transform .12s;
+}
+.fac.has-screen{cursor:pointer}
+.fac.has-screen:hover{
+  background:linear-gradient(180deg,#1b2748,#121b30);
+  border-color:#3d5488;transform:translateY(-1px);
+}
+.fac-fig{height:20px;display:flex;align-items:center;justify-content:center}
+.fac-fig svg{width:19px;height:19px}
+.fac-val{font-size:13px;font-weight:800;line-height:1;color:var(--paper)}
+.fac-name{
+  font-size:7.5px;letter-spacing:1px;font-weight:700;
+  color:var(--paper2);text-transform:uppercase;line-height:1.1;
+}
+/* the meter itself, as a hairline along the bottom edge of the tile */
+.fac-bar{
+  position:absolute;left:7px;right:7px;bottom:4px;
+  height:3px;margin:0;border-radius:99px;background:#0a1120;overflow:hidden;
+}
+.fac.locked{border-color:#5c4a15;background:linear-gradient(180deg,#1c1608,#12100a)}
+.fac.locked .fac-name{color:#f2dd8a}
+.fac.danger{border-color:#5a2030;background:linear-gradient(180deg,#25101a,#170b0f)}
+.fac.danger .fac-val{color:#f0a0a6}
+.fac .lock{top:3px;right:5px;font-size:8px}
+.fac-delta{font-size:10px}
+
+/* ---- seven rooms now, so the grid flows rather than locking to 3 ---- */
+.chip-row{grid-template-columns:repeat(4,1fr)}
+@media (max-width:359px){
+  .chip-row{grid-template-columns:repeat(3,1fr)}
+  .factions{gap:4px}
+}
+
+/* Private Interests: the second win condition, on the board. */
+.wealth-chip .chip-name{font-size:7.5px}
+.wealth-chip b{color:#9ec9a5 !important}
+.wealth-chip.started{border-color:#2f5138}
+.wealth-chip.started .chip-name{color:#a8d4b0}
+.wealth-chip.full{
+  background:linear-gradient(180deg,#1c1608,#12100a) !important;
+  border-color:var(--gold-soft) !important;
+}
+.wealth-chip.full .chip-name,.wealth-chip.full b{color:#f2dd8a !important}
+
+/* ---- a pause button that reads as one ---- */
+.pause-btn{
+  font-size:15px;line-height:1;
+  display:flex;align-items:center;justify-content:center;
+}
+.pause-btn:hover{border-color:var(--gold);background:#1b2748}
