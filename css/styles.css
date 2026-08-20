@@ -1942,3 +1942,18 @@ html[data-motion="off"] .potus-line{animation:none}
 
 /* A free build simply has fewer tiles; the grid reflows on its own. */
 html[data-tier="free"] .board-h em::after{content:''}
+
+/* ---- the address book (the Phone's front screen) ---- */
+.ctile{gap:2px}
+.ctile .natile-flag{font-size:20px}
+.ctile-note{
+  font-size:8.5px;line-height:1.3;color:var(--muted);font-style:italic;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+}
+.ctile.cat-ally{border-color:#2f5138}
+.ctile.cat-ally .natile-state{color:#a8d4b0}
+.ctile.cat-press{border-color:#26324e}
+.ctile.cat-press .natile-state{color:#9db6d6}
+.ctile.cat-enemy{border-color:#5a2030}
+.ctile.cat-enemy .natile-state{color:#f0a0a6}
+.natile-pip.big{color:#f2dd8a;text-shadow:0 0 6px rgba(242,221,138,.6)}

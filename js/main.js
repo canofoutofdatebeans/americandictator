@@ -1055,6 +1055,9 @@ AD.Game = {
       // Private Interests: switch between the permanent catalogue, the
       // rotating market and the Board of Peace.
       /* Front-screen pickers: an empty value goes back to the grid. */
+      const cpk = e.target.closest('[data-callpick]');
+      if (cpk) { AD.UI.callPick = cpk.dataset.callpick || null; AD.UI.renderCall(); return; }
+
       const dpick = e.target.closest('[data-diplopick]');
       if (dpick) { AD.UI.diploPick = dpick.dataset.diplopick || null; AD.UI.renderDiplomacy(); return; }
       const dbloc = e.target.closest('[data-diplobloc]');
@@ -1098,7 +1101,7 @@ AD.Game = {
       if (streetact && !streetact.disabled) { this.streetAction(streetact.dataset.city, streetact.dataset.streetact); return; }
 
       const calltab = e.target.closest('[data-calltab]');
-      if (calltab) { AD.UI.callTab = calltab.dataset.calltab; AD.UI.renderCall(); return; }
+      if (calltab) { AD.UI.callTab = calltab.dataset.calltab; AD.UI.callPick = null; AD.UI.renderCall(); return; }
 
       const callsay = e.target.closest('[data-callopt]');
       if (callsay && !callsay.disabled) { this.makeCall(callsay.dataset.callwho, callsay.dataset.callopt); return; }
@@ -1242,7 +1245,7 @@ AD.Game = {
 
       case 'call':
         if (U.current !== 'game' || !AD.Engine.run || AD.Engine.run.over) break;
-        U.pauseTimer(); U.renderCall(); U.overlay('call', true); break;
+        U.callPick = null; U.pauseTimer(); U.renderCall(); U.overlay('call', true); break;
       case 'call-close':
         U.overlay('call', false);
         if (AD.Engine.card && !U.el('card').hidden) U.resumeTimer();

@@ -1514,7 +1514,34 @@ AD.UI = {
 
     const list = AD.CALL_BOOK.filter(t => t.cat === this.callTab);
     const disabled = left <= 0 ? 'disabled' : '';
-    this.el('call-list').innerHTML = list.map(t => {
+
+    /* THE FRONT SCREEN: the address book, so you can see who you can call at a
+       glance rather than scrolling past everybody's full option list. Picking
+       a name opens just that person's calls. */
+    if (!this.callPick) {
+      const catIcon = { ally: '\u{1F91D}', press: '\u{1F4F0}', enemy: '\u{1F5E1}\u{FE0F}' };
+      const tiles = list.map(t => {
+        const majors = (t.opts || []).filter(o => o.major).length;
+        return `<button class="natile ctile cat-${t.cat}" data-callpick="${t.id}" title="${AD.clean(t.note || '', this.settings.clean)}">
+          <span class="natile-flag">${catIcon[t.cat] || '\u{1F4DE}'}</span>
+          <span class="natile-name">${t.name}</span>
+          <span class="ctile-note">${AD.clean(t.note || '', this.settings.clean)}</span>
+          <span class="natile-state">${(t.opts || []).length} option${(t.opts || []).length === 1 ? '' : 's'}</span>
+          ${majors ? '<span class="natile-pip big" title="' + majors + ' big-swing call' + (majors === 1 ? '' : 's') + '">\u26A1</span>' : ''}
+        </button>`;
+      }).join('');
+      this.el('call-list').innerHTML =
+        `<div class="natile-grid citile-grid">${tiles}</div>` +
+        `<div class="deal-window">${left > 0
+          ? '<b>' + left + '</b> call' + (left === 1 ? '' : 's') + ' left this month. Pick somebody.'
+          : 'No calls left this month. The phone goes back in the drawer until the clock turns over.'}
+          The \u26A1 ones are the big swings: they move the Boredometer hardest and can blow up hardest.</div>`;
+      return;
+    }
+
+    this.el('call-list').innerHTML =
+      '<button class="backpick" data-callpick="">\u2190 The address book</button>' +
+      list.filter(t => t.id === this.callPick).map(t => {
       // Each person has their OWN bespoke options now; a MAJOR one is flagged.
       const buttons = (t.opts || []).map((o, i) =>
         this.actBtnHTML({
