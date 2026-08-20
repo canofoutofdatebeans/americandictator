@@ -77,6 +77,7 @@ AD.STREET_ACTIONS = [
     run (run, c) {
       c.unrest = AD.clamp(c.unrest - 35, 0, 100);
       c.occupied = 3;
+      if (AD.remember) AD.remember(run, 'city', { where: c.name }, 14);
       return { street: 6, base: 5, courts: -5, press: -4, auth: 3 };
     }
   },
@@ -86,6 +87,8 @@ AD.STREET_ACTIONS = [
     run (run, c) {
       c.unrest = AD.clamp(c.unrest - 55, 0, 100);
       c.occupied = 4;
+      // A city remembers who sent them (see memory.js).
+      if (AD.remember) AD.remember(run, 'city', { where: c.name }, 12);
       return { street: 8, base: 8, courts: -9, press: -7, congress: -3, auth: 4 };
     }
   },

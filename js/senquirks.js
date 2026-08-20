@@ -90,6 +90,8 @@ AD.SEN_QUIRK_TABLE = {
       blurb: 'They are thinking about legacy. Give them one in concrete, while they can still see it.',
       run (run, sn) {
         sn.loyalty = AD.clamp(sn.loyalty + 24, 0, 100);
+        // Files a memory: the bridge comes back (see memory.js).
+        if (AD.remember) AD.remember(run, 'bridge', { who: 'Sen. ' + sn.last }, 14);
         return { congress: 4, press: 1, street: 2, cash: -0.03, auth: 1,
           res: 'A bridge in their home state takes their name. They attend the ribbon-cutting, weep openly, and vote with you on everything for the remainder of their natural life.' };
       }
@@ -116,6 +118,7 @@ AD.SEN_QUIRK_TABLE = {
       blurb: 'There is a police report with their name on it. There does not have to be.',
       run (run, sn) {
         sn.loyalty = AD.clamp(sn.loyalty + 38, 0, 100);
+        if (AD.remember) AD.remember(run, 'person', { who: 'Sen. ' + sn.last, what: 'the sealed report' }, 12);
         return { congress: 5, press: -4, courts: -4, street: -2, auth: 3,
           res: 'A county sheriff’s report is reclassified and sealed. They know exactly what you did, exactly why, and exactly what happens if they ever forget.' };
       }

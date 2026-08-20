@@ -415,6 +415,8 @@ AD.doSummit = function (run, nationId, index) {
   AD.ensureEconomy(run);
   const a = list[index];
   run.summits = AD.summitsLeft(run) - 1;
+  // An insult to a foreign government comes back, quoted, months later.
+  if (a.insult && AD.remember) AD.remember(run, 'foreign', { nation: n.name }, 13);
   const eff = Object.assign({}, a.eff);
   if (eff.cayHeat && AD.bumpHeat) { AD.bumpHeat(run, eff.cayHeat); delete eff.cayHeat; }
   // Boredom: the bombastic, base-thrilling summit play is fun; sober diplomacy bores him.

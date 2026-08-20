@@ -128,6 +128,7 @@ AD.JUDGE_MOVES = {
     blurb: 'Justice Ambry has always wanted one. It will not appear on any form.',
     run (run, j) {
       j.align = AD.clamp(j.align + 26, 0, 100);
+      if (AD.remember) AD.remember(run, 'person', { who: 'Justice Ambry', what: 'the motor home' }, 13);
       return { courts: 6, press: -5, congress: -3, auth: 2,
         res: 'A luxury motor home changes hands and appears on no disclosure anywhere. Justice Ambry describes it, when finally asked, as "a loan between friends of long standing."' };
     }
@@ -182,6 +183,7 @@ AD.JUDGE_MOVES = {
     blurb: 'A very understanding rate, from a very understanding institution.',
     run (run, j) {
       j.align = AD.clamp(j.align + 28, 0, 100);
+      if (AD.remember) AD.remember(run, 'person', { who: 'Judge Hale', what: 'the mortgage' }, 13);
       return { courts: 6, press: -4, congress: -2, auth: 2,
         res: 'A bank with business before his court offers Judge Hale a rate no human being has ever been offered. He takes it. The paperwork is immaculate and means nothing.' };
     }
@@ -297,6 +299,7 @@ AD.OUTLET_MOVES = {
     blurb: 'Do not fight the investigations desk. Find out who is feeding it.',
     run (run, o) {
       o.stance = AD.clamp(o.stance - 4, 0, 100);
+      if (AD.remember) AD.remember(run, 'record', { what: 'the leak inquiry file' }, 15);
       return { press: -4, base: 5, courts: -6, congress: -4, street: -2, auth: 4,
         res: 'A leak investigation identifies a mid-level official with a mortgage and two children. The Gazette’s pipeline dries up inside a week. So does everyone else’s.' };
     }

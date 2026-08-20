@@ -52,6 +52,7 @@ AD.Engine = {
     if (!run.pardoned) run.pardoned = [];    // pre-pardon saves
     if (!run.doctrineOffered) run.doctrineOffered = [];
     if (!run.wounded) run.wounded = {};
+    if (!run.memories) run.memories = [];   // pre-callback saves
 
     this.run = run;
     this.card = null;
@@ -101,6 +102,13 @@ AD.Engine = {
 
     const scripted = AD.scriptedFor(run);
     if (scripted) { this.card = scripted; return this.card; }
+
+    // A due CALLBACK, something you did months ago coming back with your own
+    // words attached, outranks the random deck. See memory.js.
+    if (AD.callbackFor) {
+      const cb = AD.callbackFor(run);
+      if (cb) { this.card = cb; return this.card; }
+    }
 
     // A subsystem in an extreme state generates its own bespoke crisis.
     const reactive = AD.reactiveFor(run);
@@ -293,6 +301,14 @@ AD.Engine = {
     // Reactive/system cards can carry a side effect that mutates a subsystem
     // directly (purge the named rebel senator, start the deflection war, etc.).
     if (typeof choice.act === 'function') { try { choice.act(run); } catch (e) {} }
+
+    /* THE GAME REMEMBERS. A choice carrying `remember` files a memory that
+       comes back months later as its own crisis, naming what you actually did.
+       See memory.js. */
+    if (choice.remember && AD.remember) {
+      const rm = choice.remember;
+      AD.remember(run, rm.type, rm.data || {}, rm.delay);
+    }
     if (choice.queue) choice.queue.forEach(id => {
       const c = AD.CARDS.find(x => x.id === id);
       if (c) run.queue.push(c);
