@@ -787,32 +787,6 @@ OUT.forEach(row => {
   AD.WAR_TARGETS.push(row);
 });
 
-/* ---------- flags ----------
-   The front screen is a grid of a hundred tiles; a flag is the only label that
-   survives being three centimetres wide on a phone. */
-const FLAGS = {
-  germany: '🇩🇪', uk: '🇬🇧', france: '🇫🇷', italy: '🇮🇹', spain: '🇪🇸',
-  netherlands: '🇳🇱', belgium: '🇧🇪', switzerland: '🇨🇭', sweden: '🇸🇪', norway: '🇳🇴',
-  ireland: '🇮🇪', austria: '🇦🇹', poland: '🇵🇱', denmark: '🇩🇰', finland: '🇫🇮',
-  greece: '🇬🇷', portugal: '🇵🇹', hungary: '🇭🇺', poland2: '🇱🇹', serbia: '🇷🇸',
-  belarus: '🇧🇾', iceland: '🇮🇸', luxembourg: '🇱🇺', malta: '🇲🇹', vatican: '🇻🇦',
-  sanmarino: '🇸🇲', czechia: '🇨🇿', romania: '🇷🇴', turkey: '🇹🇷',
-  mexico: '🇲🇽', brazil: '🇧🇷', argentina: '🇦🇷', venezuela: '🇻🇪', cuba: '🇨🇺',
-  colombia: '🇨🇴', panama2: '🇵🇦', guatemala: '🇬🇹', haiti: '🇭🇹', elsalvador: '🇸🇻',
-  nicaragua: '🇳🇮', bahamas: '🇧🇸', chile: '🇨🇱', peru: '🇵🇪',
-  japan: '🇯🇵', india: '🇮🇳', skorea: '🇰🇷', australia: '🇦🇺', indonesia: '🇮🇩',
-  taiwan: '🇹🇼', thailand: '🇹🇭', vietnam: '🇻🇳', philippines: '🇵🇭', singapore: '🇸🇬',
-  malaysia: '🇲🇾', cambodia: '🇰🇭', nzealand: '🇳🇿', pakistan: '🇵🇰', bangladesh: '🇧🇩',
-  afghanistan: '🇦🇫', myanmar: '🇲🇲', mongolia: '🇲🇳', srilanka: '🇱🇰', kazakhstan: '🇰🇿',
-  uzbekistan: '🇺🇿', tuvalu: '🇹🇻', penguin2: '🐧',
-  saudi: '🇸🇦', uae: '🇦🇪', israel: '🇮🇱', syria: '🇸🇾', iraq: '🇮🇶',
-  jordan: '🇯🇴', lebanon: '🇱🇧', yemen: '🇾🇪', egypt: '🇪🇬', libya: '🇱🇾',
-  nigeria: '🇳🇬', kenya: '🇰🇪', ethiopia: '🇪🇹', southafrica: '🇿🇦', rwanda: '🇷🇼',
-  somalia: '🇸🇴', drc: '🇨🇩', morocco: '🇲🇦', tunisia: '🇹🇳', ghana: '🇬🇭',
-  zimbabwe: '🇿🇼', azerbaijan: '🇦🇿', armenia: '🇦🇲', georgia2: '🇬🇪'
-};
-AD.FLAG = AD.FLAG || {};
-Object.keys(FLAGS).forEach(k => { if (!AD.FLAG[k]) AD.FLAG[k] = FLAGS[k]; });
 
 /* Regions, in the order the front-screen filter shows them. */
 /* Labels are kept SHORT because the tab strip sits on a 375px phone and a

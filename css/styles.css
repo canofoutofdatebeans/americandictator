@@ -809,6 +809,19 @@ body::before{
 .war-badge.sigb{color:#ffcf8b;border-color:#6a4a12;background:rgba(255,180,60,.14);font-weight:800}
 .act.war-sig{border-color:#7a5310;background:linear-gradient(180deg,rgba(255,180,60,.16),rgba(255,180,60,.05))}
 .act.war-sig .act-lab{color:#ffd79a}
+/* The silly calls are the Boredometer lever (see callbook2.js): marked so they
+   read as a deliberate choice against the big swings, not as filler. */
+.act.call-silly{border-color:#2f5a4a;background:linear-gradient(180deg,rgba(80,220,170,.12),rgba(80,220,170,.03))}
+.act.call-silly .act-lab{color:#9fe6cd}
+.natile-pip.silly{right:auto;left:6px}
+/* The Economy front page (see econmoves.js): same grid as the War Room, tinted
+   by whether a tariff is live, spent, or not yet lit. */
+.etile-lit{border-color:#7a4a12;background:linear-gradient(180deg,rgba(255,150,40,.14),rgba(255,150,40,.03))}
+.etile-fired{border-color:#6a2020;background:linear-gradient(180deg,rgba(220,60,60,.13),rgba(220,60,60,.03))}
+.econ-sub{margin:10px 0 4px;font-size:11px;letter-spacing:1.2px;text-transform:uppercase;color:var(--paper2);opacity:.75}
+.econ-fuse{color:#ffbe6b}
+.act.econ-move{border-color:#2a4d70;background:linear-gradient(180deg,rgba(90,170,255,.13),rgba(90,170,255,.03))}
+.act.econ-move .act-lab{color:#a8d4ff}
 .sen-acts{display:flex;gap:5px;flex-wrap:wrap}
 .sen-act{flex:1 1 calc(50% - 3px);min-width:0;padding:7px 6px;font:inherit;font-size:11.5px;
   border-radius:7px;border:1px solid var(--edge);background:var(--ink3);color:var(--paper2);

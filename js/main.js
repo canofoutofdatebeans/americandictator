@@ -768,6 +768,24 @@ AD.Game = {
     if (collapse.ending) { AD.Engine.finish(collapse.ending); this.pending = []; setTimeout(() => this.showEnding(AD.Engine.lastScore), 900); }
   },
 
+  /* A bespoke economic operation against one country (econmoves.js). Routes
+     through AD.doEconMove, which touches relations, the market, the Treasury
+     and boredom as well as the meters. */
+  econMove (nationId, index) {
+    const run = AD.Engine.run;
+    if (!run || run.over) return;
+    const r = AD.doEconMove(run, nationId, index);
+    if (!r || !r.ok) return;
+    AD.saveRun(run);
+    AD.Audio.play(r.move.purse > 0 ? 'good' : 'bad');
+    const line = '<b>' + r.move.label + ', ' + r.nation.name + '.</b> ' +
+                 AD.clean(r.move.res, AD.UI.settings.clean);
+    AD.UI.renderEconomy({ line });
+    AD.UI.renderHUD();
+    const collapse = AD.Engine.checkCollapse();
+    if (collapse.ending) { AD.Engine.finish(collapse.ending); this.pending = []; setTimeout(() => this.showEnding(AD.Engine.lastScore), 900); }
+  },
+
   econSummit (nationId, index) {
     const run = AD.Engine.run;
     if (!run || run.over) return;
@@ -1074,6 +1092,13 @@ AD.Game = {
       const ppick = e.target.closest('[data-presspick]');
       if (ppick) { AD.UI.pressPick = ppick.dataset.presspick || null; AD.UI.renderPress(); return; }
 
+      const epick = e.target.closest('[data-econpick]');
+      if (epick) { AD.UI.econPick = epick.dataset.econpick || null; AD.UI.renderEconomy(); return; }
+      const ereg = e.target.closest('[data-econregion]');
+      if (ereg) { AD.UI.econRegion = ereg.dataset.econregion; AD.UI.renderEconomy(); return; }
+      const emove = e.target.closest('[data-econmove]');
+      if (emove && !emove.disabled) { this.econMove(emove.dataset.nation, +emove.dataset.econmove); return; }
+
       const ctab = e.target.closest('[data-corrtab]');
       if (ctab) { AD.UI.corrTab = ctab.dataset.corrtab; AD.UI.renderCorruption(); return; }
 
@@ -1279,7 +1304,7 @@ AD.Game = {
 
       case 'economy':
         if (U.current !== 'game' || !AD.Engine.run || AD.Engine.run.over) break;
-        U.pauseTimer(); U.renderEconomy(); U.overlay('economy', true); break;
+        U.econPick = null; U.pauseTimer(); U.renderEconomy(); U.overlay('economy', true); break;
       case 'economy-close':
         U.overlay('economy', false);
         if (AD.Engine.card && !U.el('card').hidden) U.resumeTimer();

@@ -81,7 +81,37 @@ AD.FLAG = {
   northland: '\u{1F1E8}\u{1F1E6}',
   baldoro:   '\u{1F1F5}\u{1F1E6}',
   qadira:    '\u{1F1F6}\u{1F1E6}',
-  penguin:   '\u{1F427}'
+  penguin:   '\u{1F427}',
+  /* The State Department and the Economy key the SAME countries off the
+     economy roster's ids, which differ from the war ids for these nine
+     (saved games key alliances off the war ids, so neither can be renamed).
+     Both of those front screens are flag grids, so both sets live here. */
+  china:   '\u{1F1E8}\u{1F1F3}', russia: '\u{1F1F7}\u{1F1FA}', nkorea: '\u{1F1F0}\u{1F1F5}',
+  ukraine: '\u{1F1FA}\u{1F1E6}', canada: '\u{1F1E8}\u{1F1E6}', panama: '\u{1F1F5}\u{1F1E6}',
+  qatar:   '\u{1F1F6}\u{1F1E6}', heard:  '\u{1F427}',
+  /* And the other ninety, shared by both grids. These live here rather
+     than in wartargets.js because the free edition omits that file but
+     still ships thirty-five of these countries in the Economy room: the
+     flags are not the paid content, the operations are. */
+  germany: '🇩🇪', uk: '🇬🇧', france: '🇫🇷', italy: '🇮🇹', spain: '🇪🇸',
+  netherlands: '🇳🇱', belgium: '🇧🇪', switzerland: '🇨🇭', sweden: '🇸🇪', norway: '🇳🇴',
+  ireland: '🇮🇪', austria: '🇦🇹', poland: '🇵🇱', denmark: '🇩🇰', finland: '🇫🇮',
+  greece: '🇬🇷', portugal: '🇵🇹', hungary: '🇭🇺', poland2: '🇱🇹', serbia: '🇷🇸',
+  belarus: '🇧🇾', iceland: '🇮🇸', luxembourg: '🇱🇺', malta: '🇲🇹', vatican: '🇻🇦',
+  sanmarino: '🇸🇲', czechia: '🇨🇿', romania: '🇷🇴', turkey: '🇹🇷',
+  mexico: '🇲🇽', brazil: '🇧🇷', argentina: '🇦🇷', venezuela: '🇻🇪', cuba: '🇨🇺',
+  colombia: '🇨🇴', panama2: '🇵🇦', guatemala: '🇬🇹', haiti: '🇭🇹', elsalvador: '🇸🇻',
+  nicaragua: '🇳🇮', bahamas: '🇧🇸', chile: '🇨🇱', peru: '🇵🇪',
+  japan: '🇯🇵', india: '🇮🇳', skorea: '🇰🇷', australia: '🇦🇺', indonesia: '🇮🇩',
+  taiwan: '🇹🇼', thailand: '🇹🇭', vietnam: '🇻🇳', philippines: '🇵🇭', singapore: '🇸🇬',
+  malaysia: '🇲🇾', cambodia: '🇰🇭', nzealand: '🇳🇿', pakistan: '🇵🇰', bangladesh: '🇧🇩',
+  afghanistan: '🇦🇫', myanmar: '🇲🇲', mongolia: '🇲🇳', srilanka: '🇱🇰', kazakhstan: '🇰🇿',
+  uzbekistan: '🇺🇿', tuvalu: '🇹🇻', penguin2: '🐧',
+  saudi: '🇸🇦', uae: '🇦🇪', israel: '🇮🇱', syria: '🇸🇾', iraq: '🇮🇶',
+  jordan: '🇯🇴', lebanon: '🇱🇧', yemen: '🇾🇪', egypt: '🇪🇬', libya: '🇱🇾',
+  nigeria: '🇳🇬', kenya: '🇰🇪', ethiopia: '🇪🇹', southafrica: '🇿🇦', rwanda: '🇷🇼',
+  somalia: '🇸🇴', drc: '🇨🇩', morocco: '🇲🇦', tunisia: '🇹🇳', ghana: '🇬🇭',
+  zimbabwe: '🇿🇼', azerbaijan: '🇦🇿', armenia: '🇦🇲', georgia2: '🇬🇪'
 };
 
 

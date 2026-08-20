@@ -65,6 +65,13 @@ nothing, a number that looks wrong, anything that made you go "huh?"
 - **The War Room** now has a hundred countries behind region tabs, and every
   one of them has a **signature operation nobody else offers**, usable once.
   Try Panama, El Salvador, Finland and the Holy See, in that order.
+- **The Phone** now has forty contacts, and every single one has a **silly**
+  call (marked in green). They barely move the ratings and they are the best
+  thing in the game for a bored President. Try the caddy, the UN, and Volkov.
+- **The Economy** has the same front page as the War Room now, and every
+  country has **two operations nobody else offers** plus its own retaliation.
+  Nothing in that room is only economic: every action moves relations, the
+  market, and the Treasury the War Room spends. Try Taiwan, then Switzerland.
 - **The Board of Peace** (Private Interests) — invite countries to join for
   $1B. Try inviting Canada, then try Qatar.
 - The **bright orange** complexion in the character creator.

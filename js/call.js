@@ -17,6 +17,12 @@
    is a STYLE, not a person, every name in the address book is
    fictional, like everything else in the game.
 
+   EVERY CONTACT HAS A SILLY ONE (`silly: true`). The phone is the
+   Boredometer lever, and a book of nothing but threats and leaks is
+   not what this President actually enjoys. The silly options move the
+   meters barely at all and move BOREDOM hard, so they are a genuine
+   choice against the big swings rather than set dressing.
+
    Calls are free but rationed: three a month (AD.CALLS_PER_MONTH),
    refilled each time the clock ticks, so the phone is a monthly
    decision and not a base-farming button. Effects on the METERS are
@@ -49,7 +55,9 @@ AD.CALL_BOOK = [
       { label: 'Threaten to Drop Him from the Ticket', icon: '⚠️', major: true, eff: { base: 6, congress: -8, press: -2, auth: 2 },
         line: '"Just, casually, mention there\'s a lot of interest in other names for the ticket, keeps him sharp, very sharp, nothing personal, probably."' },
       { label: 'Give Him a Real Assignment', icon: '📋', eff: { congress: 2, courts: 1, base: 1 },
-        line: '"Tell him to go handle the border, or the deficit, whatever, put him to work, real work, historic work."' }
+        line: '"Tell him to go handle the border, or the deficit, whatever, put him to work, real work, historic work."' },
+      { label: 'Make Him Guess Why You Called', icon: '🤫', silly: true, eff: { congress: -1, base: 1, press: -1, fun: 10 },
+        line: 'Nine minutes of pleasant conversation with no stated purpose. He tries the border, the deficit, then the ticket, and finally just says "sir?" You say "good talk" and hang up.' }
     ]
   },
   {
@@ -60,7 +68,9 @@ AD.CALL_BOOK = [
       { label: 'Tell Him to Leak Something Flattering', icon: '🤫', eff: { press: 3, base: 1 },
         line: '"Get a story out there, background only, about what a genius this whole thing has been, my idea, all of it."' },
       { label: 'Order a Staff Purge', icon: '🔥', major: true, eff: { base: 7, congress: -5, press: -3, auth: 3 },
-        line: '"Clean house, fire somebody, fire everybody, doesn\'t matter who, we need loyalty, total loyalty, starting today."' }
+        line: '"Clean house, fire somebody, fire everybody, doesn\'t matter who, we need loyalty, total loyalty, starting today."' },
+      { label: 'Have Him Read the Good Poll Again', icon: '📻', silly: true, eff: { congress: 1, base: 2, fun: 10 },
+        line: 'Same poll. Fourth time today. You ask him to do the crosstabs part again, slower, and to sound happier about it this time.' }
     ]
   },
   {
@@ -71,7 +81,9 @@ AD.CALL_BOOK = [
       { label: 'Tell Him to Cut Something Small', icon: '✂️', eff: { base: 3, street: -2, cash: 0.3 },
         line: '"Cut it, whatever it is, some little department nobody has heard of, big savings, the biggest, people will be thrilled."' },
       { label: 'Unleash Him on a Whole Department', icon: '🪓', major: true, eff: { base: 7, street: -4, congress: -2, cash: 0.5, auth: 2 },
-        line: '"Go in there and gut the whole thing, top to bottom, the most efficient operation anybody has ever seen, historic, honestly."' }
+        line: '"Go in there and gut the whole thing, top to bottom, the most efficient operation anybody has ever seen, historic, honestly."' },
+      { label: 'Put Him on a Magazine Auto-Renewal', icon: '🧾', silly: true, eff: { base: 2, congress: -1, fun: 10 },
+        line: 'You deploy the most feared cost-cutter in the federal government against a thirty-four dollar gardening subscription. He is on hold for fifty minutes. He does not cancel it. He escalates it.' }
     ]
   },
   {
@@ -82,7 +94,9 @@ AD.CALL_BOOK = [
       { label: 'Have Him Pray for Your Enemies, Loudly', icon: '😇', eff: { base: 2, press: -1, street: 1 },
         line: '"Pray for them, real loud, real public, let everybody hear how much they need it, they need it badly."' },
       { label: 'Send Him to Court the Churches', icon: '⛪', major: true, eff: { base: 7, street: 4, press: -3, courts: 2 },
-        line: '"Get out there and lock down every church in the country, tell them I\'m the most religious President anybody has ever had, ever."' }
+        line: '"Get out there and lock down every church in the country, tell them I\'m the most religious President anybody has ever had, ever."' },
+      { label: 'Ask Which Bible Sells Best', icon: '📖', silly: true, eff: { base: 3, press: -2, fun: 10 },
+        line: 'A theological consultation that becomes, within ninety seconds, a conversation about retail margins, gilt edging, and whether the leather one moves better at rallies.' }
     ]
   },
   {
@@ -93,7 +107,9 @@ AD.CALL_BOOK = [
       { label: 'Ask Him to Go Easy on a Story', icon: '🙈', eff: { press: 2, courts: -1, base: 1 },
         line: '"Bury it, just a little, doesn\'t have to lead, doesn\'t have to lead at all actually, you know what I like."' },
       { label: 'Have Him Run a Primetime Special on You', icon: '📺', major: true, eff: { base: 8, press: 5, congress: 2, auth: 2 },
-        line: '"One hour, prime time, all about me, the greatest story ever told, and Brick, you\'re the only one who can tell it right."' }
+        line: '"One hour, prime time, all about me, the greatest story ever told, and Brick, you\'re the only one who can tell it right."' },
+      { label: 'Direct His Show Live, By Phone', icon: '🎬', silly: true, eff: { press: 1, base: 3, fun: 10 },
+        line: 'One hour of camera angles, chyron wording and tie notes delivered in real time into an earpiece. The show is unwatchable. Everybody involved calls it the best hour of television all year.' }
     ]
   },
   {
@@ -104,7 +120,9 @@ AD.CALL_BOOK = [
       { label: 'Compare Notes on Handling the Press', icon: '🗞️', eff: { base: 3, press: -3 },
         line: '"He tells me how he deals with reporters over there, very effective, very, very effective, I\'m taking notes, good notes."' },
       { label: 'Announce a Big New Deal With Him', icon: '🤝', major: true, eff: { base: 7, congress: -4, press: -3, courts: -2, cash: 0.5, auth: 1 },
-        line: '"We\'re making a deal, a big one, the biggest, nobody thought two strong guys could get this done, we got it done."' }
+        line: '"We\'re making a deal, a big one, the biggest, nobody thought two strong guys could get this done, we got it done."' },
+      { label: 'Ask How Tall He Actually Is', icon: '📏', silly: true, eff: { base: 2, press: -1, fun: 10 },
+        line: 'A former intelligence officer with a nuclear arsenal is asked, twice, to confirm his height. He gives a number. You say "in shoes?" There is a very long pause on a very expensive line.' }
     ]
   },
   {
@@ -115,7 +133,9 @@ AD.CALL_BOOK = [
       { label: 'Send Him Out to the Rally Crowd', icon: '🎤', eff: { base: 3, street: 2, press: -1 },
         line: '"Get out there and warm them up, tell them about your father, the greatest father, the crowd will go wild for you, wild."' },
       { label: 'Let Him Announce His Own Business Venture', icon: '💼', major: true, eff: { base: 5, cash: 0.5, press: -4, courts: -3, auth: 1 },
-        line: '"Fine, fine, go ahead, announce it, tremendous business, the best business, we\'ll deal with the lawyers later, probably."' }
+        line: '"Fine, fine, go ahead, announce it, tremendous business, the best business, we\'ll deal with the lawyers later, probably."' },
+      { label: 'Ask Him to Rate Your Golf Swing, Honestly', icon: '⛳', silly: true, eff: { base: 2, street: 1, fun: 10 },
+        line: 'You ask for the honest answer. He gives the honest answer. You explain, for six minutes, why the honest answer is wrong, and he agrees, warmly, that it is.' }
     ]
   },
 
@@ -128,7 +148,9 @@ AD.CALL_BOOK = [
       { label: 'Dangle an Exclusive', icon: '🎁', eff: { press: 3, base: -1 },
         line: '"Tell you what, you get the exclusive, the big one, first, before anybody, see, I can be very generous, very generous."' },
       { label: 'Threaten Their Broadcast Licence', icon: '📡', major: true, eff: { press: -6, courts: -4, base: 5, auth: 3 },
-        line: '"Somebody should look at that licence of theirs, very carefully, very, very carefully, a disgrace what they put on the air."' }
+        line: '"Somebody should look at that licence of theirs, very carefully, very, very carefully, a disgrace what they put on the air."' },
+      { label: 'Dictate a Correction to a True Story', icon: '✍️', silly: true, eff: { base: 3, press: -2, fun: 10 },
+        line: 'Four hundred words of correction, composed live, for an article with nothing wrong in it. The editor takes it all down. It runs in full, as a letter, under your name.' }
     ]
   },
   {
@@ -139,7 +161,9 @@ AD.CALL_BOOK = [
       { label: 'Offer a Softball Interview', icon: '🎙️', eff: { press: 3, base: 1 },
         line: '"Come on in, sit down, easy questions only, we\'ll get those ratings up together, you\'ll thank me later, believe me."' },
       { label: 'Call Their Advertisers', icon: '☎️', major: true, eff: { press: -5, cash: 0.3, courts: -3, base: 4, auth: 2 },
-        line: '"Somebody should tell their advertisers what a mess that show is, a total mess, they\'d be smart to pull out, very smart."' }
+        line: '"Somebody should tell their advertisers what a mess that show is, a total mess, they\'d be smart to pull out, very smart."' },
+      { label: 'Do the Whole Interview in the Third Person', icon: '🗣️', silly: true, eff: { base: 3, press: -1, fun: 10 },
+        line: 'Twenty-two minutes of a President describing a President. The anchor never once breaks. Neither do you. It is the most disciplined either of you has ever been.' }
     ]
   },
   {
@@ -150,7 +174,9 @@ AD.CALL_BOOK = [
       { label: 'Offer Them First Access', icon: '🎫', eff: { press: 3, courts: 1 },
         line: '"You\'ll be first in the room from now on, first, ahead of everybody, that\'s how we do things when people are fair to us."' },
       { label: 'Cut Off Their Press Pool Access', icon: '🚫', major: true, eff: { press: -5, courts: -3, base: 5, street: 1, auth: 3 },
-        line: '"They\'re out, out of the pool, out of the briefing room, until they learn to report the truth, the real truth, my truth."' }
+        line: '"They\'re out, out of the pool, out of the briefing room, until they learn to report the truth, the real truth, my truth."' },
+      { label: 'Spell Your Own Name for Them, Slowly', icon: '🔤', silly: true, eff: { base: 2, press: -1, fun: 10 },
+        line: 'Letter by letter, twice, with a word for each letter, to a desk that has been publishing your name daily for eleven years. They thank you. They mean it sarcastically. You do not notice.' }
     ]
   },
   {
@@ -161,7 +187,9 @@ AD.CALL_BOOK = [
       { label: 'Hint at a Buyer Who\'d Treat You Better', icon: '💰', eff: { press: -2, cash: 0.2, base: 2 },
         line: '"I know some people, very rich people, who\'d love to buy that paper and finally run it fairly, very fairly, for once."' },
       { label: 'Sue Them for Everything', icon: '⚖️', major: true, eff: { press: -5, courts: -5, cash: -0.4, base: 6, auth: 2 },
-        line: '"We\'re suing, the biggest lawsuit anybody has ever filed against a newspaper, they\'ll regret ever printing a word about me."' }
+        line: '"We\'re suing, the biggest lawsuit anybody has ever filed against a newspaper, they\'ll regret ever printing a word about me."' },
+      { label: 'Order Forty Copies to Prove Nobody Reads It', icon: '📰', silly: true, eff: { base: 3, press: -1, fun: 10 },
+        line: 'You personally buy forty copies of a failing newspaper in order to demonstrate that nobody buys it. Circulation, that day, is up. They print that.' }
     ]
   },
   {
@@ -172,7 +200,9 @@ AD.CALL_BOOK = [
       { label: 'Ask for an Algorithm Favour', icon: '⚙️', eff: { press: 3, base: 1 },
         line: '"Just a little boost, in the algorithm, nothing crazy, put my posts up top where they belong, where people can see genius."' },
       { label: 'Threaten a Regulatory Crackdown', icon: '🏛️', major: true, eff: { press: -5, courts: -2, cash: -0.3, base: 6, auth: 3 },
-        line: '"Somebody in this government should regulate that company into the ground, into the absolute ground, total menace to society."' }
+        line: '"Somebody in this government should regulate that company into the ground, into the absolute ground, total menace to society."' },
+      { label: 'Ask Them to Make Your Font Bigger', icon: '🔠', silly: true, eff: { base: 2, press: -1, fun: 10 },
+        line: 'Not more reach. Not better placement. A bigger typeface, for your posts specifically, so the words land harder. Four engineers are pulled off a security fix to explain why not.' }
     ]
   },
   {
@@ -183,7 +213,9 @@ AD.CALL_BOOK = [
       { label: 'Leak Them a Friendly Story', icon: '✉️', eff: { press: 3, base: 1 },
         line: '"I\'m going to give you something good, something big, print it exactly how I tell it and we\'ll get along just fine."' },
       { label: 'Threaten to Cut Off White House Access', icon: '🔒', major: true, eff: { press: -5, courts: -2, base: 5, auth: 3 },
-        line: '"No more briefings, no more access, none, not until they learn some respect, real respect, for this office."' }
+        line: '"No more briefings, no more access, none, not until they learn some respect, real respect, for this office."' },
+      { label: 'Cancel a Subscription You Never Had', icon: '✂️', silly: true, eff: { base: 3, press: -1, fun: 10 },
+        line: 'You dramatically cancel a subscription that has never existed, to a magazine you have never bought, in a call you asked them to record. They record it.' }
     ]
   },
 
@@ -196,7 +228,9 @@ AD.CALL_BOOK = [
       { label: 'Offer a Backroom Deal', icon: '🤐', eff: { congress: 3, base: -2 },
         line: '"Just between us, off the record, I could make this whole thing a lot easier for both of us, a lot easier, think about it."' },
       { label: 'Threaten to Primary His Whole Caucus', icon: '🎯', major: true, eff: { base: 7, congress: -5, press: -3, auth: 3 },
-        line: '"Every single one of them, gone, primaried out, replaced with people who actually love this country, real Americans."' }
+        line: '"Every single one of them, gone, primaried out, replaced with people who actually love this country, real Americans."' },
+      { label: 'Put Him on Hold and Play the Rally Music', icon: '🎵', silly: true, eff: { base: 4, congress: -2, fun: 10 },
+        line: 'Six minutes of hold music, which is your walk-on music, at volume. He waits the entire six minutes, which tells you a great deal about the state of the opposition.' }
     ]
   },
   {
@@ -207,7 +241,9 @@ AD.CALL_BOOK = [
       { label: 'Offer Federal Aid, Publicly, With Strings', icon: '📦', eff: { street: 3, cash: -0.3, congress: 1 },
         line: '"I\'ll send federal money, a lot of it, the most anybody\'s ever sent, but she\'s going to have to say thank you, on camera."' },
       { label: 'Threaten to Federalize Her National Guard', icon: '🪖', major: true, eff: { base: 7, street: -4, courts: -3, auth: 4 },
-        line: '"If she can\'t handle her own state I\'ll send in the Guard myself, federalize the whole thing, somebody has to be in charge."' }
+        line: '"If she can\'t handle her own state I\'ll send in the Guard myself, federalize the whole thing, somebody has to be in charge."' },
+      { label: 'Ask Her to Turn the Wind Down', icon: '🌬️', silly: true, eff: { base: 3, street: -1, press: -1, fun: 10 },
+        line: 'You call a sitting Governor about the weather in her state as though it has a dial. She explains that it does not. You suggest she look into it. She says she will look into it.' }
     ]
   },
   {
@@ -218,13 +254,15 @@ AD.CALL_BOOK = [
       { label: 'Question His Impartiality on TV', icon: '📺', eff: { base: 3, courts: -2 },
         line: '"How can anybody trust a ruling from a man like that, biased, totally biased, everybody can see it, everybody."' },
       { label: 'Hint at Impeachment', icon: '⚡', major: true, eff: { base: 6, courts: -5, congress: -2, press: -2, auth: 3 },
-        line: '"Maybe it\'s time somebody in Congress looked into impeaching that judge, seriously looked into it, he has left us no choice."' }
+        line: '"Maybe it\'s time somebody in Congress looked into impeaching that judge, seriously looked into it, he has left us no choice."' },
+      { label: 'Ask What He Wears Under the Robe', icon: '👔', silly: true, eff: { base: 3, courts: -1, fun: 10 },
+        line: 'A genuine question, asked in genuine curiosity, of a federal judge presiding over a case involving you. He declines to answer. Your counsel, listening in, ages visibly.' }
     ]
   },
   {
     id: 'chen', cat: 'enemy', name: 'Chairman Chen', note: 'of China; very tough',
     opts: [
-      { label: 'Call and Just Breathe', icon: '😤', eff: { base: 1, press: 1 },
+      { label: 'Call and Just Breathe', icon: '😤', silly: true, eff: { base: 1, press: 1, fun: 10 },
         line: 'Forty seconds of silence on an open line, just breathing, to let him know who he\'s dealing with. Nobody is quite sure what it accomplished.' },
       { label: 'Flatter Him Toward a Deal', icon: '🐉', eff: { press: 2, base: -2, cash: 0.3 },
         line: '"Very brilliant man, very tough, we respect each other, and I think, I really think, we can make a deal, a beautiful deal."' },
@@ -242,7 +280,9 @@ AD.CALL_BOOK = [
       { label: 'Offer Backchannel Talks', icon: '🕊️', eff: { press: 2, base: -2, courts: 1 },
         line: '"Quietly, just to see, maybe there\'s a deal in there somewhere, I make the best deals, everybody knows that about me."' },
       { label: 'Threaten Military Action', icon: '💥', major: true, eff: { base: 8, street: -4, press: -3, cash: -0.5, auth: 3 },
-        line: '"Tell him our military is the strongest it has ever been, the strongest anywhere, and it is ready, more ready than it has ever been."' }
+        line: '"Tell him our military is the strongest it has ever been, the strongest anywhere, and it is ready, more ready than it has ever been."' },
+      { label: 'Misdial and Order a Pizza', icon: '🍕', silly: true, eff: { base: 2, press: -1, fun: 10 },
+        line: 'A secure line to a hostile capital is used to order a large pepperoni to an address in Georgetown. Two intelligence services transcribe it. One of them requests clarification, in writing.' }
     ]
   },
   {
@@ -253,7 +293,9 @@ AD.CALL_BOOK = [
       { label: 'Call Him a Nobody, By Name', icon: '👎', eff: { base: 3, press: -1 },
         line: '"He\'s a nobody, everybody knows he\'s a nobody, why does anybody still put him on television, it\'s a mystery, honestly."' },
       { label: 'Try to Get Him Taken Off the Air', icon: '📴', major: true, eff: { press: -5, courts: -3, base: 6, auth: 3 },
-        line: '"Somebody at that network should cancel him, cancel the whole show, do the country a favour, a real favour."' }
+        line: '"Somebody at that network should cancel him, cancel the whole show, do the country a favour, a real favour."' },
+      { label: 'Fact-Check Him Into His Own Voicemail', icon: '📼', silly: true, eff: { base: 4, press: -1, fun: 10 },
+        line: 'Eleven minutes of rebuttal delivered to an answering machine, with citations, none of which exist. He plays the whole thing on air the next night. Ratings are up for both of you.' }
     ]
   },
   {
@@ -264,7 +306,9 @@ AD.CALL_BOOK = [
       { label: 'Offer Him a Photo-Op Truce', icon: '📸', eff: { congress: 2, base: -1 },
         line: '"Come to the Oval, we\'ll shake hands, get a nice picture, show everybody we can work together, very statesmanlike of me."' },
       { label: 'Threaten to Primary His District', icon: '🗳️', major: true, eff: { base: 7, congress: -6, press: -2, auth: 3 },
-        line: '"Tell his district I\'ll be there personally, campaigning against him, in his own backyard, they deserve so much better than him."' }
+        line: '"Tell his district I\'ll be there personally, campaigning against him, in his own backyard, they deserve so much better than him."' },
+      { label: 'Ask Him to Hold for a Better Call', icon: '⏸️', silly: true, eff: { base: 4, congress: -2, fun: 10 },
+        line: 'You put the Speaker of the House on hold, take no other call, count to ninety, and come back. He is still there. That is the entire point of the exercise.' }
     ]
   }
 ];

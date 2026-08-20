@@ -52,6 +52,9 @@ const FREE_OMIT = [
   // edition keeps the ten hand-built countries in war.js, which is a complete
   // War Room on its own; the region tabs simply do not appear.
   'js/wartargets.js',
+  // the per-country economy layer and the second half of the address book
+  'js/econmoves.js',
+  'js/callbook2.js',
   // the rotating market and the Board of Peace (additive to the shop)
   'js/interests.js',
   'js/boardofpeace.js',

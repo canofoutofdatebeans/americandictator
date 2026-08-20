@@ -1528,6 +1528,7 @@ AD.UI = {
           <span class="ctile-note">${AD.clean(t.note || '', this.settings.clean)}</span>
           <span class="natile-state">${(t.opts || []).length} option${(t.opts || []).length === 1 ? '' : 's'}</span>
           ${majors ? '<span class="natile-pip big" title="' + majors + ' big-swing call' + (majors === 1 ? '' : 's') + '">\u26A1</span>' : ''}
+          ${(t.opts || []).some(o => o.silly) ? '<span class="natile-pip silly" title="Has a silly call">\u{1F921}</span>' : ''}
         </button>`;
       }).join('');
       this.el('call-list').innerHTML =
@@ -1535,7 +1536,9 @@ AD.UI = {
         `<div class="deal-window">${left > 0
           ? '<b>' + left + '</b> call' + (left === 1 ? '' : 's') + ' left this month. Pick somebody.'
           : 'No calls left this month. The phone goes back in the drawer until the clock turns over.'}
-          The \u26A1 ones are the big swings: they move the Boredometer hardest and can blow up hardest.</div>`;
+          The \u26A1 ones are the big swings: they move the Boredometer hardest and can blow up hardest.
+          The \u{1F921} ones are the silly ones: they barely move the ratings and they are the best thing
+          in this room for a bored President.</div>`;
       return;
     }
 
@@ -1545,8 +1548,9 @@ AD.UI = {
       // Each person has their OWN bespoke options now; a MAJOR one is flagged.
       const buttons = (t.opts || []).map((o, i) =>
         this.actBtnHTML({
-          cls: 'call-opt' + (o.major ? ' call-major' : ''), icon: o.icon, label: o.label,
-          cost: o.major ? 'major' : '',
+          cls: 'call-opt' + (o.major ? ' call-major' : o.silly ? ' call-silly' : ''),
+          icon: o.icon, label: o.label,
+          cost: o.major ? 'major' : o.silly ? 'silly' : '',
           blurb: AD.clean(o.line, this.settings.clean),
           ok: !disabled, reason: 'No calls left this month.',
           data: 'data-callwho="' + t.id + '" data-callopt="' + i + '"'
@@ -1964,9 +1968,15 @@ AD.UI = {
     // the S&P-alike index against its starting level, recentred on 50.
     (function (self) {
       const run = AD.Engine.run;
-      const h = (run && run.market && run.market.sp) || null;
+      // The room has no meter of its own, so the banner reads the live market:
+      // the index against where it opened, recentred on 50. (This used to read
+      // run.market, which has never existed, so it was pinned at 50 forever.)
+      const h = (run && run.marketHistory) || null;
       let v = 50;
-      if (h && h.length) v = AD.clamp(50 + (h[h.length - 1] - h[0]) * 1.6, 0, 100);
+      if (h && h.length > 1) {
+        const pct = (h[h.length - 1].sp - h[0].sp) / (h[0].sp || 1);
+        v = AD.clamp(50 + pct * 160, 0, 100);
+      }
       self.paintRoomStatus('economy', v);
     })(this);
     const run = AD.Engine.run;
@@ -1982,34 +1992,112 @@ AD.UI = {
     const note = this.el('econ-note');
     if (result && result.line) { note.className = 'corr-note bought'; note.innerHTML = result.line; }
     else { note.className = 'corr-note'; note.textContent = this.econTab === 'tariffs'
-      ? 'Tariffs feel like winning: an instant surge for the base. Then, a couple of months later, they backfire. Raise one for a bigger spike and a worse crash; lift it to dodge the crash and look like you caved.'
+      ? 'Nothing in here is only economic. Every action moves relations with that country, which bleeds into Congress, the Press, the Base and the Street every month afterwards; every action shocks the market and moves the Treasury the War Room spends. Tariffs feel like winning and then backfire, differently in every country. And every country has two operations nobody else offers.'
       : 'Pick a leader and pick your approach. The bombastic plays thrill the base and horrify everyone else; the one normal option is dull and actually works. Good relations soften that country\u2019s tariff backfire.'; }
 
     if (this.econTab === 'tariffs') {
       const active = (run.tariffs || []).length;
       this.el('econ-head').innerHTML =
         `<div class="corr-cash">Tariffs Active <b>${active}</b></div>` +
-        `<div>Market <b class="${active >= 3 ? 'hot' : ''}">${active >= 3 ? 'Shaking' : active ? 'Nervy' : 'Calm'}</b></div>`;
-      const rows = AD.ECON_NATIONS.map(n => {
+        `<div>Market <b class="${active >= 3 ? 'hot' : ''}">${active >= 3 ? 'Shaking' : active ? 'Nervy' : 'Calm'}</b></div>` +
+        `<div>Treasury <b>${AD.fmtCash(AD.purse(run))}</b></div>`;
+
+      /* One row per country describing where that country stands right now:
+         tariffed or not, the fuse still lit or already blown, how they feel
+         about you, and whether their two bespoke operations are still on the
+         table. Shared by the tiles and the detail header. */
+      const stateOf = n => {
         const t = AD.tariffOn(run, n.id);
-        const rel = AD.relations(run, n.id);
-        let status = 'No tariff';
-        if (t) status = t.fired ? 'In effect (backfired)' : 'Fuse lit \u00b7 rate ' + t.rate;
-        const buttons = t
-          ? (t.fired
-              ? `<button class="sen-act econ-lift" data-econtariff="lift" data-nation="${n.id}">Lift the tariff</button>`
-              : `<button class="sen-act econ-raise" data-econtariff="raise" data-nation="${n.id}">Double Down</button>
-                 <button class="sen-act econ-lift" data-econtariff="lift" data-nation="${n.id}">Back Off</button>`)
-          : `<button class="sen-act econ-impose" data-econtariff="impose" data-nation="${n.id}">Impose Tariff</button>`;
-        return `<div class="sen-row econ-row ${t && !t.fired ? 'lit' : t ? 'fired' : ''}">
-          <div class="sen-top"><span class="sen-dot"></span><b>${n.name}</b><i>${n.blurb}</i>
-            <span class="sen-mood">${status}</span></div>
-          <div class="sen-acts">${buttons}</div></div>`;
+        if (t && !t.fired) return { key: 'lit', label: 'FUSE LIT' };
+        if (t) return { key: 'fired', label: 'BACKFIRED' };
+        return { key: 'open', label: 'NO TARIFF' };
+      };
+
+      /* FRONT PAGE. Same shape as the War Room: a grid you can read in one
+         look, filtered by region because a hundred tiles is not a screen. */
+      if (!this.econPick) {
+        const regions = AD.ECON_REGIONS || [];
+        const reg = this.econRegion || 'all';
+        const shown = (AD.ECON_NATIONS || []).filter(n =>
+          reg === 'all' || (n.region || 'world') === reg);
+        const tiles = shown.map(n => {
+          const st = stateOf(n);
+          const rel = AD.relations(run, n.id);
+          const movesLeft = (AD.econMovesFor ? AD.econMovesFor(n) : [])
+            .filter((m, i) => !AD.econMoveUsed(run, n.id, i)).length;
+          return `<button class="natile etile etile-${st.key}" data-econpick="${n.id}" title="${AD.clean(n.good || n.blurb, this.settings.clean)}">
+            <span class="natile-flag">${AD.FLAG[n.id] || '\u{1F3F3}\u{FE0F}'}</span>
+            <span class="natile-name">${n.name}</span>
+            <span class="citile-num">${rel}</span>
+            <span class="citile-bar"><i style="width:${rel}%"></i></span>
+            <span class="natile-state">${st.label}</span>
+            ${movesLeft ? '<span class="natile-pip own" title="' + movesLeft + ' bespoke option' + (movesLeft === 1 ? '' : 's') + ' left">\u2605</span>' : ''}
+          </button>`;
+        }).join('');
+
+        const tabs = regions.length ? `<div class="sen-tabs">${regions.map(r =>
+          `<button class="sen-tab ${reg === r[0] ? 'on' : ''}" data-econregion="${r[0]}">${r[1]}</button>`).join('')}</div>` : '';
+
+        this.el('econ-list').innerHTML =
+          `<div class="sen-row econ-libday"><div class="sen-top"><b>\u{1F1FA}\u{1F1F8} Liberation Day</b>
+            <i>Tariff the entire world at once</i></div>
+            <div class="sen-acts"><button class="sen-act econ-libday-btn" data-econtariff="libday" data-nation="all">Tariff Everyone</button></div></div>` +
+          tabs + `<div class="natile-grid citile-grid">${tiles}</div>` +
+          `<div class="deal-window">${(AD.ECON_NATIONS || []).length} countries, and not one of them answers the same way.
+            The number on each tile is how they feel about you, which softens or sharpens what they do when a tariff
+            matures. The \u2605 ones still have <b>operations nobody else offers</b>. <b>Pick a country.</b></div>`;
+        return;
+      }
+
+      /* DETAIL. One country: the tariff ladder, and its own two operations. */
+      const n = AD.econNation(this.econPick);
+      if (!n) { this.econPick = null; return this.renderEconomy(); }
+      const t = AD.tariffOn(run, n.id);
+      const st = stateOf(n);
+      const rel = AD.relations(run, n.id);
+      const lb = AD.relLabel ? AD.relLabel(rel) : { key: 'ok', label: '' };
+
+      const ladder = t
+        ? (t.fired
+            ? [this.actBtnHTML({ cls: 'econ-lift', icon: '\u{1F54A}\u{FE0F}', label: 'Lift the Tariff',
+                blurb: 'The damage is done. Ending it now costs nothing and buys a little quiet.',
+                ok: true, data: 'data-econtariff="lift" data-nation="' + n.id + '"' })]
+            : [this.actBtnHTML({ cls: 'econ-raise', icon: '\u{1F4C8}', label: 'Double Down',
+                blurb: 'A bigger spike now, a worse crash sooner, and they will remember the number.',
+                ok: true, data: 'data-econtariff="raise" data-nation="' + n.id + '"' }),
+               this.actBtnHTML({ cls: 'econ-lift', icon: '\u{1F6D1}', label: 'Back Off',
+                blurb: 'Dodge the crash entirely. The base watches you blink.',
+                ok: true, data: 'data-econtariff="lift" data-nation="' + n.id + '"' })])
+        : [this.actBtnHTML({ cls: 'econ-impose', icon: '\u{1F6A2}', label: 'Impose Tariff',
+            blurb: 'An instant surge and a fuse. ' + (n.good ? 'They sell you ' + n.good + '.' : ''),
+            ok: true, data: 'data-econtariff="impose" data-nation="' + n.id + '"' })];
+
+      const moves = (AD.econMovesFor ? AD.econMovesFor(n) : []).map((mv, i) => {
+        const avail = AD.econMoveAvailable(run, n, i);
+        const cost = mv.purse < 0 ? AD.fmtCash(-mv.purse) : mv.purse > 0 ? '+' + AD.fmtCash(mv.purse) : '';
+        return this.actBtnHTML({
+          cls: 'econ-move', icon: mv.icon, label: mv.label, cost: cost,
+          blurb: AD.clean(mv.blurb, this.settings.clean),
+          ok: avail.ok, reason: avail.reason,
+          data: 'data-econmove="' + i + '" data-nation="' + n.id + '"'
+        });
       }).join('');
-      const libday = `<div class="sen-row econ-libday"><div class="sen-top"><b>\ud83c\uddfa\ud83c\uddf8 Liberation Day</b>
-        <i>Tariff the entire world at once</i></div>
-        <div class="sen-acts"><button class="sen-act econ-libday-btn" data-econtariff="libday" data-nation="all">Tariff Everyone</button></div></div>`;
-      this.el('econ-list').innerHTML = libday + rows;
+
+      const fuse = t && !t.fired
+        ? `<div class="sen-tell econ-fuse">Fuse lit at rate ${t.rate}. It matures in month ${t.backfireAt}.</div>` : '';
+
+      this.el('econ-list').innerHTML =
+        '<button class="backpick" data-econpick="">\u2190 All countries</button>' +
+        `<div class="sen-row econ-row ${st.key === 'lit' ? 'lit' : st.key === 'fired' ? 'fired' : ''} mood-${lb.key}">
+          <div class="sen-top"><span class="sen-dot"></span>
+            <b>${AD.FLAG[n.id] || ''} ${n.name}</b><i>${n.leader}</i>
+            <span class="sen-mood">${st.label}</span></div>
+          <div class="sen-loywrap"><div class="sen-loy" style="width:${rel}%"></div></div>
+          <div class="sen-tell">${AD.clean(n.blurb, this.settings.clean)}${n.good ? ' <b>They sell you ' + AD.clean(n.good, this.settings.clean) + '.</b>' : ''}</div>
+          ${fuse}
+          <div class="sen-acts econ-acts">${ladder.join('')}</div>
+          ${moves ? '<div class="econ-sub">Only against ' + n.name + '</div><div class="sen-acts econ-acts">' + moves + '</div>' : ''}
+        </div>`;
     } else {
       const left = AD.summitsLeft(run);
       this.el('econ-head').innerHTML =

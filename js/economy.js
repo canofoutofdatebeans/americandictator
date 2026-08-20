@@ -151,6 +151,80 @@ function econRng (seed) {
   };
 }
 
+/* ---------- the one applier ----------------------------------------------
+   EVERY economic action goes through here, which is what makes this room
+   connected rather than a spreadsheet. A single call moves:
+
+     the meters + Authority   via the shared AD.applySenateEffect
+     RELATIONS                with that country, which then bleeds into
+                              Congress, the Press, the Base and the Street
+                              every month (AD.diplomacyTick) and hardens or
+                              softens that country's own retaliation
+     the MARKET               an immediate shock to the S&P and, at higher
+                              beta, to the President's personal business index
+     the TREASURY             which is what pays for the War Room
+     BOREDOM                  a trade war is television; a swap line is not
+
+   So squeezing Taiwan is never only about Taiwan: the Diplomacy room gets
+   worse, the market drops, the Treasury moves, and four meters bleed for the
+   rest of the term. */
+AD.econImpact = function (run, nationId, eff, extra) {
+  AD.ensureEconomy(run);
+  const x = extra || {};
+  const e = Object.assign({}, eff);
+  if (e.fun == null) e.fun = (x.fun == null ? 2 : x.fun);
+  const deltas = AD.applySenateEffect(run, e);
+
+  // relations, the thread into the Diplomacy room
+  if (x.rel && nationId) {
+    const before = AD.relations(run, nationId);
+    run.relations[nationId] = AD.clamp(before + x.rel, 0, 100);
+    if (run.relations[nationId] !== before) deltas.rel = run.relations[nationId] - before;
+  }
+  // the Treasury, which the War Room spends
+  if (x.purse) { AD.movePurse(run, x.purse); deltas.purse = x.purse; }
+  // and the market, immediately rather than at the month tick
+  if (x.mkt) {
+    const before = run.sp500;
+    run.sp500 = Math.max(600, Math.round(run.sp500 * (1 + x.mkt / 100)));
+    run.biz = Math.max(5, Math.round(run.biz * (1 + (x.mkt * 1.5) / 100) * 10) / 10);
+    const h = run.marketHistory;
+    if (h && h.length) { h[h.length - 1].sp = run.sp500; h[h.length - 1].biz = run.biz; }
+    deltas.mkt = run.sp500 - before;
+  }
+  return deltas;
+};
+
+/* ---------- the bespoke moves ----------
+   econmoves.js hangs two operations off every nation, written for that
+   country's actual economic relationship. Once per term each, so they are a
+   decision rather than a button you farm, tracked on run.econUsed. */
+AD.econMovesFor = n => (n && n.moves) || [];
+AD.econMoveUsed = (run, id, i) => !!(run.econUsed && run.econUsed[id + ':' + i]);
+
+AD.econMoveAvailable = function (run, n, i) {
+  const mv = AD.econMovesFor(n)[i];
+  if (!mv) return { ok: false, reason: 'Not an option here.' };
+  if (AD.econMoveUsed(run, n.id, i)) return { ok: false, reason: 'Already done.' };
+  if (mv.purse < 0 && AD.purse(run) < -mv.purse) return { ok: false, reason: 'The Treasury cannot afford it.' };
+  return { ok: true };
+};
+
+AD.doEconMove = function (run, nationId, i) {
+  const n = AD.econNation(nationId);
+  if (!n) return { ok: false, reason: 'No such country.' };
+  const avail = AD.econMoveAvailable(run, n, i);
+  if (!avail.ok) return avail;
+  const mv = AD.econMovesFor(n)[i];
+  run.econUsed = run.econUsed || {};
+  run.econUsed[nationId + ':' + i] = true;
+  const deltas = AD.econImpact(run, nationId, mv.eff,
+    { rel: mv.rel, purse: mv.purse, mkt: mv.mkt, fun: mv.fun });
+  run.stats = run.stats || {};
+  run.stats.econMoves = (run.stats.econMoves || 0) + 1;
+  return { ok: true, nation: n, move: mv, deltas, line: mv.res, res: mv.res, action: 'move' };
+};
+
 /* ---------- tariffs ---------- */
 AD.imposeTariff = function (run, id) {
   const n = AD.econNation(id);
@@ -159,12 +233,14 @@ AD.imposeTariff = function (run, id) {
   const prof = AD.TARIFF_PROFILE[n.kind];
   const rng = econRng((run.seed || 'X') + id + run.month);
   const eff = Object.assign({}, prof.impose);
-  eff.fun = 2;             // a trade war is entertaining television
-  const deltas = AD.applySenateEffect(run, eff);
-  AD.movePurse(run, 18);   // customs revenue flows into the Treasury
+  /* Routed through AD.econImpact rather than applied directly, so even the
+     generic tariff button costs relations, shocks the market and pays the
+     Treasury, the same as everything else in this room. */
+  const deltas = AD.econImpact(run, id, eff, { rel: -11, purse: 18, mkt: -2, fun: 2 });
   run.tariffs.push({ id, rate: 1, backfireAt: run.month + 2 + Math.floor(rng() * 2), fired: false });
   run.stats = run.stats || {}; run.stats.tariffs = (run.stats.tariffs || 0) + 1;
-  return { ok: true, nation: n, deltas, action: 'impose' };
+  return { ok: true, nation: n, deltas, action: 'impose',
+           line: 'Tariff imposed on ' + n.name + (n.good ? ': ' + n.good + ', all of it, at once.' : '.') };
 };
 
 AD.raiseTariff = function (run, id) {
@@ -173,7 +249,8 @@ AD.raiseTariff = function (run, id) {
   t.rate++;
   const rng = econRng((run.seed || 'X') + id + 'r' + run.month);
   t.backfireAt = run.month + 1 + Math.floor(rng() * 1);   // sooner
-  const deltas = AD.applySenateEffect(run, { base: 6, press: -3, courts: -2, auth: 3, fun: 3 });
+  const deltas = AD.econImpact(run, id, { base: 6, press: -3, courts: -2, auth: 3 },
+    { rel: -9, purse: 6, mkt: -3, fun: 3 });
   return { ok: true, nation: n, deltas, action: 'raise' };
 };
 
@@ -183,8 +260,8 @@ AD.liftTariff = function (run, id) {
   run.tariffs = run.tariffs.filter(x => x.id !== id);
   // Chickening out before the crash costs face; lifting a spent one is a mild win.
   const deltas = t.fired
-    ? AD.applySenateEffect(run, { press: 3, street: 2, fun: -2 })
-    : AD.applySenateEffect(run, { base: -6, press: 2, congress: 2, fun: -2 });
+    ? AD.econImpact(run, id, { press: 3, street: 2 }, { rel: 6, mkt: 2, fun: -2 })
+    : AD.econImpact(run, id, { base: -6, press: 2, congress: 2 }, { rel: 9, mkt: 3, fun: -2 });
   return { ok: true, nation: n, deltas, action: 'lift', caved: !t.fired };
 };
 
@@ -212,20 +289,31 @@ AD.economyTick = function (run) {
     if (t.fired || run.month < t.backfireAt) return;
     const n = AD.econNation(t.id);
     const prof = AD.TARIFF_PROFILE[n.kind];
+    /* THE BITE. econmoves.js writes a retaliation for each of the hundred
+       countries, because Germany does not answer like Guatemala. Nations with
+       no bespoke bite fall back to the seven shared `kind` profiles. */
+    const bite = n.bite || null;
+    const src = bite ? bite.eff : prof.backfire;
+    const hit = bite ? bite.line : prof.hit;
     // relations soften the retaliation; a raised tariff hits harder
     const rel = AD.relations(run, t.id);
     const relMult = AD.clamp(1.3 - (rel / 100) * 0.6, 0.7, 1.3);
     const rateMult = 1 + (t.rate - 1) * 0.35;
     const eff = {};
-    Object.keys(prof.backfire).forEach(k => {
-      eff[k] = (k === 'cash') ? Math.round(prof.backfire[k] * relMult * rateMult * 100) / 100
-                              : Math.round(prof.backfire[k] * relMult * rateMult);
+    Object.keys(src).forEach(k => {
+      if (k === 'mkt' || k === 'purse') return;               // handled below
+      eff[k] = (k === 'cash') ? Math.round(src[k] * relMult * rateMult * 100) / 100
+                              : Math.round(src[k] * relMult * rateMult);
     });
-    const deltas = AD.applySenateEffect(run, eff);
-    AD.movePurse(run, -Math.round(35 * relMult * rateMult));   // the crash guts customs revenue
+    const deltas = AD.econImpact(run, t.id, eff, {
+      rel: 0,                                                  // the damage is done
+      purse: -Math.round((src.purse ? -src.purse : 35) * relMult * rateMult),
+      mkt: Math.round((src.mkt || -3) * relMult * rateMult * 10) / 10,
+      fun: -3                                                  // a backfire is not entertaining
+    });
     t.fired = true;
     out.backfires.push({ nation: n, deltas, libday: !!t.libday,
-      hit: prof.hit, res: 'The tariff on ' + n.name + ' has backfired: ' + prof.hit });
+      hit: hit, res: 'The tariff on ' + n.name + ' has backfired: ' + hit });
   });
   // when several backfire the same month, that IS the market crash
   out.crash = out.backfires.length >= 3;
