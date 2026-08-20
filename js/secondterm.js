@@ -150,6 +150,169 @@ AD.SECOND_TERM_BEATS = [
           res: 'You decline, on principle, and the payments stop the same week, and the principle costs you a line item you will feel every month for the rest of the term.' }
       ]
     })
+  },
+
+  /* ---- the wealth is now the whole story ---- */
+  {
+    id: 'st-fortune',
+    when: run => ((run.stats && run.stats.peakCash) || 0) >= 8,
+    card: run => ({
+      id: 'st-fortune', title: 'The Fortune Is the Story', who: E.treas, tags: ['money', 'press'],
+      text: 'Lyle has the disclosure, and it is a phone book. The money you made in the first term is no longer a ' +
+            'side plot, it is the plot. Every policy now gets read backward from who profited, and the answer, ' +
+            'increasingly, is a company with your name over the door. "Sir, past a certain number," he says, "the ' +
+            'country stops asking what you are doing and starts asking what you are charging for it."',
+      choices: [
+        { label: 'Charge more. They already think it, so bank it.',
+          eff: { base: 3, press: -6, courts: -5, congress: -4, cash: 0.6, auth: 1 },
+          res: 'You lean all the way in. The venture posts a record quarter the same week three committees open files, and both facts are, technically, about you.' },
+        { label: 'Move it into a "blind" trust run by the family.',
+          eff: { base: 1, press: -3, courts: -2, cash: 0.2 },
+          res: 'The trust is called blind. The trustees are your children. Everyone involved can see perfectly, and that arrangement is now, somehow, federal policy.' },
+        { label: 'Divest, loudly, for the optics. Keep the good parts.',
+          eff: { base: -2, press: 5, courts: 3, cash: -0.3, auth: -1 },
+          res: 'You announce a divestiture and hold a signing, and quietly retain everything that actually pays. The headline is clean. The footnotes are a second headline nobody runs.' }
+      ]
+    })
+  },
+
+  /* ---- a war you started is now a place you own ---- */
+  {
+    id: 'st-war',
+    when: run => ((run.stats && run.stats.wars) || 0) >= 1 || (run.warLog || []).length > 0,
+    card: run => {
+      const w = (run.warLog || [])[0];
+      const where = (w && w.name) || 'the country you invaded';
+      return {
+        id: 'st-war', title: 'The Occupation', who: E.gen, tags: ['power', 'street'],
+        text: 'The war photographed beautifully in the first term. The second term is the part they never put on the ' +
+              'poster: you still hold ' + where + ', and holding a place is a bill that arrives every single month, ' +
+              'in money and in boys, and it does not stop arriving because you have stopped mentioning it. Mick lays ' +
+              'the map flat. "We can leave, sir, and lose it on the news. Or we can stay, and lose it slowly, off the news."',
+        choices: [
+          { label: 'Stay. Winning is not leaving.',
+            eff: { base: 2, street: -6, congress: -4, courts: -2, cash: -0.3, auth: 2 },
+            res: 'You commit to holding ' + where + ' indefinitely, which is a policy with no last page, and the cost of it moves quietly into every budget you sign for the rest of the term.' },
+          { label: 'Declare victory and leave overnight.', wild: true,
+            eff: { base: 5, street: -3, press: -4, congress: -3, auth: 1 },
+            res: 'You announce a total victory and pull out in a weekend. What you leave behind is on the news within the month, under a different word than victory, and it is your word now.' },
+          { label: 'Hand it to a "coalition" and stop reading the cables.',
+            eff: { base: -1, press: 3, congress: 2, auth: -1 },
+            res: 'You transfer the mess to a coalition assembled specifically to be blamed. It is the responsible option and the cowardly one at once, which is the only kind the second term offers.' }
+        ]
+      };
+    }
+  },
+
+  /* ---- the trade war compounds ---- */
+  {
+    id: 'st-trade',
+    when: run => ((run.stats && run.stats.tariffs) || 0) >= 3 || !!(run.flags && run.flags.liberationDay),
+    card: run => ({
+      id: 'st-trade', title: 'The Bill for the Trade War', who: E.treas, tags: ['money', 'street'],
+      text: 'The tariffs felt like winning, every one of them, and they have spent the gap between the terms doing ' +
+            'the thing tariffs do: arriving at the checkout. Prices are up, the retaliation has found the exact farm ' +
+            'counties that put you here, and the countries you hit have quietly built the supply chains that route ' +
+            'around you for good. "The tax was always going to be paid by someone, sir," Lyle says. "It turned out to be us."',
+      choices: [
+        { label: 'Double every rate. Never let them see you fold.',
+          eff: { base: 5, street: -6, press: -4, congress: -3, cash: -0.2, auth: 3 },
+          res: 'You raise everything, on principle, and the checkout gets more expensive and the base gets more thrilled, and those two lines cross somewhere around the midterms.' },
+        { label: 'Quietly grant "exemptions" to everyone who complains.',
+          eff: { base: -3, street: 4, press: 3, congress: 2, cash: -0.2 },
+          res: 'You keep the tariffs on paper and exempt anyone who calls, so the policy still exists and no longer does anything, which is the most honest a trade war ever gets.' }
+      ]
+    })
+  },
+
+  /* ---- the media you bought now shapes you ---- */
+  {
+    id: 'st-media',
+    when: run => (run.assets || []).some(id => { const a = AD.assetById && AD.assetById(id); return a && a.cat === 'media'; }),
+    card: run => ({
+      id: 'st-media', title: 'The Megaphone Turns', who: E.social, tags: ['press', 'base'],
+      text: 'You bought the megaphone so it would never point the wrong way, and for a term it did not. But an ' +
+            'audience that will believe anything you say will also believe anything the NEXT person says into the same ' +
+            'microphone, and the microphone has noticed it no longer strictly needs you. Brayden scrolls, thumb ' +
+            'flicking. "Sir, the base is more loyal to the feed than to you now. We built that. It was the whole plan."',
+      choices: [
+        { label: 'Purge the network. Remind them who owns the signal.',
+          eff: { base: -4, press: -5, courts: -3, congress: -2, auth: 3 },
+          res: 'You fire the people who forgot, on air, as an example. The signal survives the purge, as signals do, and quietly files you under content.' },
+        { label: 'Feed it harder. Out-crazy your own algorithm.',
+          eff: { base: 6, press: -6, street: -4, courts: -3, auth: 2 },
+          res: 'You give the machine exactly what it rewards, at volume, and it rewards you back, and somewhere in the loop the question of who is steering whom stops having an answer.' }
+      ]
+    })
+  },
+
+  /* ---- Saint Ambrose would not sink ---- */
+  {
+    id: 'st-scandal',
+    when: run => (AD.cayHeat ? AD.cayHeat(run) : 0) >= 4,
+    card: run => ({
+      id: 'st-scandal', title: 'The Island That Would Not Sink', who: E.press, tags: ['press', 'courts'],
+      text: 'The Saint Ambrose story survived the whole first term and got healthier doing it. Four years of denials ' +
+            'turn out to be four years of footage, and someone has cut them together. There is a documentary now. ' +
+            'There is a phrase everyone uses that you accidentally coined. Kaylee does not sit down. "Sir, we cannot ' +
+            'kill it. We have tried everything that kills a story and it has eaten all of it and asked for the next one."',
+      choices: [
+        { label: 'Declare total victory over a story you cannot name.', wild: true,
+          eff: { base: 4, press: -7, courts: -4, congress: -3, auth: 1 },
+          res: 'You hold a press conference to announce the hoax is finished, which requires describing it, which is the one thing that keeps it alive, which you have now done again, on camera, in a suit.' },
+        { label: 'Bury it under a bigger, louder scandal of your choosing.',
+          eff: { base: 5, press: -5, street: -4, courts: -2, auth: 2 },
+          res: 'You start a fire in a different building to draw the cameras off this one. It works for nine days. Then there are two fires, and the second one is also yours.' },
+        { label: 'Settle it quietly. Pay whatever the silence costs.',
+          eff: { base: -2, press: 3, courts: -2, cash: -0.5 },
+          res: 'You buy the silence, in full, on a Friday. The silence holds, which is worse in its way, because a bought silence is a receipt, and receipts keep.' }
+      ]
+    })
+  },
+
+  /* ---- the constitutional theory is now load-bearing ---- */
+  {
+    id: 'st-doctrine',
+    when: run => (run.doctrines || []).length >= 1,
+    card: run => ({
+      id: 'st-doctrine', title: 'The Load-Bearing Theory', who: E.cj, tags: ['power', 'courts'],
+      text: 'The legal theory you adopted to get through the first term was supposed to be a door. It has become a ' +
+            'wall the whole building now leans on. Winifred Stone has come in person, which she does not do. "The ' +
+            'trouble with a theory that lets the President do anything," she says, evenly, "is that it is now the only ' +
+            'thing holding the roof up, and everyone can see it, and a thing everyone can see is a thing someone tests."',
+      choices: [
+        { label: 'Push the theory further. A wall is stronger than a door.',
+          eff: { base: 4, courts: -7, press: -5, congress: -4, auth: 4 },
+          res: 'You extend the doctrine to cover the next three things, and the roof holds, and the load on that one wall goes up by exactly the weight of everyone now standing on it.' },
+        { label: 'Let the Chief Justice write the limiting version.',
+          eff: { base: -5, courts: 6, press: 5, congress: 3, auth: -3 },
+          res: 'You allow her to draft the sentence that says how far it goes. It is a real limit, honestly written, and it is the first time in two terms that the word "cannot" has applied to you and stuck.' }
+      ]
+    })
+  },
+
+  /* ---- the movement is now bigger than the man ---- */
+  {
+    id: 'st-movement',
+    when: run => run.meters.base >= 78 || (AD.hasDoctrine && AD.hasDoctrine(run, 'cult')),
+    card: run => ({
+      id: 'st-movement', title: 'The Movement Outgrew You', who: E.social, tags: ['base', 'power'],
+      text: 'The base is enormous now, bigger than any one rally, bigger than the party, and, the thing nobody will ' +
+            'say to your face, bigger than you. It has a life. It has purity tests you would fail. It has, at the ' +
+            'edges, a preferred successor who is louder than you and asks for nothing, which is the one thing you ' +
+            'cannot out-bid. "They love the movement, sir," Brayden says, carefully. "You are just where it started."',
+      choices: [
+        { label: 'Get out ahead of it. Be more extreme than the extreme.',
+          eff: { base: 4, press: -6, street: -5, courts: -4, congress: -3, auth: 2 },
+          res: 'You sprint to the front of a parade that was leaving without you, and you reach the front, and the parade is still not yours, it just has you at the front of it now.' },
+        { label: 'Name a loyal successor before the crowd names one.',
+          eff: { base: -3, congress: 3, press: 2, auth: -2 },
+          res: 'You anoint someone safe and grateful, which the crowd receives the way a crowd receives being told who to love, which is to say it begins, quietly, shopping.' },
+        { label: 'Remind them the movement has your name on it.',
+          eff: { base: 6, press: -3, congress: -2, auth: 3 },
+          res: 'You reassert ownership of the thing, at a rally, at volume, and it roars for you, and the roar is real, and it is also exactly the roar it would give the next person to stand there.' }
+      ]
+    })
   }
 ];
 
@@ -214,11 +377,22 @@ AD.legacyOpener = function (run) {
 };
 
 /* Pick the applicable beats for this run's record, capped, and return them as a
-   card queue for the start of term two. */
+   card queue for the start of term two. With twelve beats and most runs
+   qualifying for more than three, the selection is SHUFFLED deterministically by
+   the run's seed, so a given save always sees the same reckoning but two
+   different runs that did the same things still get a different gauntlet. */
+AD.SECOND_TERM_MAX = 3;
 AD.secondTermReckoning = function (run) {
+  const seed = String(run.seed || 'X');
+  const rank = id => {
+    let h = 2166136261; const s = seed + '|' + id;
+    for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); }
+    return h >>> 0;
+  };
   return AD.SECOND_TERM_BEATS
     .filter(b => { try { return b.when(run); } catch (e) { return false; } })
-    .slice(0, 3)
+    .sort((a, b) => rank(a.id) - rank(b.id))
+    .slice(0, AD.SECOND_TERM_MAX)
     .map(b => b.card(run));
 };
 
