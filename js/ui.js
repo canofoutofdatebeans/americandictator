@@ -1005,7 +1005,28 @@ AD.UI = {
   senTab: 'attention',
   /* Drop the five-step state-of-the-room banner into whichever room asked for
      it. A room that has no slot in the markup is simply skipped. */
+  /* One action button, laid out so you can actually read it: the verb and its
+     price on the first line, what it will DO on the second. Bespoke moves (the
+     option only this city/judge/outlet offers) get a marked-out treatment. */
+  actBtnHTML (opts) {
+    const spent = opts.spent;
+    const dis = spent || !opts.ok;
+    const cls = ['sen-act', opts.cls || ''];
+    if (opts.bespoke) cls.push('act-bespoke');
+    const lock = (!opts.ok && !spent && opts.reason)
+      ? '<span class="act-lock">' + AD.reasonBadge(opts.reason) + '</span>' : '';
+    const note = spent ? '<span class="act-lock">USED</span>' : lock;
+    const sub = spent ? 'Already used on this one.' : (opts.ok ? (opts.blurb || '') : (opts.reason || ''));
+    return '<button class="' + cls.join(' ') + '" ' + (opts.data || '') + (dis ? ' disabled' : '') +
+      ' title="' + String(sub).replace(/"/g, '&quot;') + '">' +
+      '<span class="act-top"><span class="act-lab">' + opts.icon + ' ' + opts.label + '</span>' +
+      (opts.cost ? '<em class="act-cost">' + opts.cost + '</em>' : '') + note + '</span>' +
+      '<span class="act-sub">' + sub + '</span>' +
+      '</button>';
+  },
+
   paintRoomStatus (key, value, invert) {
+
     const slot = this.el('rs-' + key);
     if (!slot || !AD.roomStatusHTML) return;
     slot.innerHTML = AD.roomStatusHTML(key, value, invert);
@@ -1102,12 +1123,18 @@ AD.UI = {
     const order = run.press.slice().sort((a, b) => a.stance - b.stance);
     this.el('press-list').innerHTML = order.map(o => {
       const st = AD.pressStance(o);
-      const buttons = AD.PRESS_ACTIONS.map(act => {
-        const avail = AD.pressActionAvailable(run, o, act);
-        const c = AD.pressCostFor(run, o, act);
-        const cost = c ? ` <em>${AD.fmtCash(c)}</em>` : '';
-        const tip = avail.ok ? act.blurb : avail.reason;
-        return `<button class="sen-act press-${act.id}" data-outlet="${o.id}" data-pressact="${act.id}" ${avail.ok ? '' : 'disabled'} title="${tip}">${act.icon} ${act.label}${cost}${avail.ok ? '' : ' <span class="act-lock">' + AD.reasonBadge(avail.reason) + '</span>'}</button>`;
+      const buttons = AD.movesFor('outlet', o).map(act => {
+        const spent = act.bespoke && act.once && AD.moveSpent(o, act.id);
+        const c = act.bespoke ? (act.cost || 0) : AD.pressCostFor(run, o, act);
+        const avail = act.bespoke
+          ? (c && run.cash < c ? { ok: false, reason: 'Not enough cash.' } : { ok: true })
+          : AD.pressActionAvailable(run, o, act);
+        return this.actBtnHTML({
+          cls: 'press-' + act.id, icon: act.icon, label: act.label,
+          cost: c ? AD.fmtCash(c) : '',
+          blurb: act.blurb, ok: avail.ok, reason: avail.reason, spent: spent, bespoke: act.bespoke,
+          data: 'data-outlet="' + o.id + '" data-pressact="' + act.id + '"'
+        });
       }).join('');
       const tell = o.tell ? `<div class="sen-tell">${o.tell}</div>` : '';
       return `<div class="sen-row press-mood-${st.key}">
@@ -1148,10 +1175,17 @@ AD.UI = {
     const order = run.streets.slice().sort((a, b) => b.unrest - a.unrest);
     this.el('street-list').innerHTML = order.map(c => {
       const heat = AD.cityHeat(c);
-      const buttons = AD.STREET_ACTIONS.map(act => {
-        const avail = AD.streetActionAvailable(run, c, act);
-        const cost = act.cost ? ` <em>$${act.cost}B</em>` : '';
-        return `<button class="sen-act street-${act.id}" data-city="${c.id}" data-streetact="${act.id}" ${avail.ok ? '' : 'disabled'} title="${avail.ok ? act.blurb : avail.reason}">${act.icon} ${act.label}${cost}${avail.ok ? '' : ' <span class="act-lock">' + AD.reasonBadge(avail.reason) + '</span>'}</button>`;
+      const buttons = AD.movesFor('city', c).map(act => {
+        const spent = act.bespoke && act.once && AD.moveSpent(c, act.id);
+        const avail = act.bespoke
+          ? (act.cost && run.cash < act.cost ? { ok: false, reason: 'Not enough cash.' } : { ok: true })
+          : AD.streetActionAvailable(run, c, act);
+        return this.actBtnHTML({
+          cls: 'street-' + act.id, icon: act.icon, label: act.label,
+          cost: act.cost ? '$' + act.cost + 'B' : '',
+          blurb: act.blurb, ok: avail.ok, reason: avail.reason, spent: spent, bespoke: act.bespoke,
+          data: 'data-city="' + c.id + '" data-streetact="' + act.id + '"'
+        });
       }).join('');
       return `<div class="sen-row street-heat-${heat.key}">
         <div class="sen-top"><span class="sen-dot"></span>
@@ -1290,11 +1324,18 @@ AD.UI = {
     const order = run.judges.slice().sort((a, b) => a.align - b.align);
     this.el('courts-list').innerHTML = order.map(j => {
       const st = AD.judgeStance(j);
-      const buttons = AD.COURT_ACTIONS.map(act => {
-        const avail = AD.courtActionAvailable(run, j, act);
-        const c = AD.courtCostFor(run, j, act);
-        const cost = c ? ` <em>${AD.fmtCash(c)}</em>` : '';
-        return `<button class="sen-act court-${act.id}" data-judge="${j.id}" data-courtact="${act.id}" ${avail.ok ? '' : 'disabled'} title="${avail.ok ? act.blurb : avail.reason}">${act.icon} ${act.label}${cost}${avail.ok ? '' : ' <span class="act-lock">' + AD.reasonBadge(avail.reason) + '</span>'}</button>`;
+      const buttons = AD.movesFor('judge', j).map(act => {
+        const spent = act.bespoke && act.once && AD.moveSpent(j, act.id);
+        const c = act.bespoke ? (act.cost || 0) : AD.courtCostFor(run, j, act);
+        const avail = act.bespoke
+          ? (c && run.cash < c ? { ok: false, reason: 'Not enough cash.' } : { ok: true })
+          : AD.courtActionAvailable(run, j, act);
+        return this.actBtnHTML({
+          cls: 'court-' + act.id, icon: act.icon, label: act.label,
+          cost: c ? AD.fmtCash(c) : '',
+          blurb: act.blurb, ok: avail.ok, reason: avail.reason, spent: spent, bespoke: act.bespoke,
+          data: 'data-judge="' + j.id + '" data-courtact="' + act.id + '"'
+        });
       }).join('');
       const tell = j.tell ? `<div class="sen-tell">${j.tell}</div>` : '';
       return `<div class="sen-row court-mood-${st.key}">

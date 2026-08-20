@@ -1481,3 +1481,57 @@ html[data-motion="off"] .rs-terrible{animation:none}
   width:5px;height:5px;border-radius:50%;
   background:#e0575f;box-shadow:0 0 6px rgba(224,87,95,.9);
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   READABLE ACTION BUTTONS                            (build 111)
+   Every option in a management room now says, on the button, what
+   it will actually do. Two lines: the verb and its price, then the
+   consequence. No more guessing from a four-word label.
+   ═══════════════════════════════════════════════════════════════ */
+.sen-acts{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+@media (max-width:430px){.sen-acts{grid-template-columns:1fr}}
+
+.sen-act{
+  display:flex;flex-direction:column;align-items:stretch;gap:3px;
+  width:100%;text-align:left;padding:7px 9px 8px;
+  background:linear-gradient(180deg,#141d33,#0f1626);
+  border:1px solid #26324e;border-radius:9px;
+  color:var(--paper);font:inherit;cursor:pointer;
+  transition:border-color .16s,background .16s,transform .1s;
+  white-space:normal;                 /* labels wrap instead of clipping */
+}
+.sen-act:hover:not(:disabled){border-color:#3d5488;background:linear-gradient(180deg,#1a2848,#121b30)}
+.sen-act:active:not(:disabled){transform:translateY(1px)}
+.sen-act:disabled{opacity:.42;cursor:not-allowed}
+
+.act-top{display:flex;align-items:baseline;gap:6px;flex-wrap:wrap}
+.act-lab{
+  flex:1;min-width:0;font-size:12px;font-weight:700;
+  letter-spacing:.2px;line-height:1.25;color:var(--paper);
+}
+.act-cost{
+  flex:0 0 auto;font-style:normal;font-size:10.5px;font-weight:700;
+  color:#9ec9a5;white-space:nowrap;
+}
+.act-sub{
+  font-size:10.5px;line-height:1.35;color:var(--muted);
+  display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;
+}
+.sen-act .act-lock{
+  flex:0 0 auto;font-size:8px;letter-spacing:1px;font-weight:800;
+  color:#e0857c;border:1px solid #4a2723;border-radius:4px;
+  padding:1px 4px;white-space:nowrap;
+}
+
+/* The move only THIS city / judge / outlet offers. */
+.sen-act.act-bespoke{
+  border-color:#4a3c14;
+  background:linear-gradient(180deg,#1c1608,#12100a);
+}
+.sen-act.act-bespoke:hover:not(:disabled){border-color:var(--gold-soft);background:linear-gradient(180deg,#241d0b,#16130c)}
+.sen-act.act-bespoke .act-lab{color:#f2dd8a}
+.sen-act.act-bespoke::before{
+  content:'SIGNATURE MOVE';
+  font-size:7px;letter-spacing:1.6px;font-weight:800;
+  color:#c9a227;opacity:.85;margin-bottom:1px;
+}

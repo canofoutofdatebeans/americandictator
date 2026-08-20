@@ -598,7 +598,19 @@ AD.Game = {
   courtAction (judgeId, actionId) {
     const run = AD.Engine.run;
     if (!run || run.over) return;
-    const r = AD.doCourtAction(run, judgeId, actionId);
+    // A bespoke move (the option only this one offers, see moves.js) is not in
+    // the shared action table, so it resolves through its own runner first.
+    const ent = AD.judgeById(run, judgeId);
+    const bespoke = (AD.movesFor('judge', ent) || []).find(a => a.bespoke && a.id === actionId);
+    let r;
+    if (bespoke) {
+      if (bespoke.once && AD.moveSpent(ent, bespoke.id)) return;
+      if (bespoke.cost && run.cash < bespoke.cost) return;
+      if (bespoke.cost) run.cash = Math.round((run.cash - bespoke.cost) * 100) / 100;
+      r = AD.runBespoke(run, ent, bespoke);
+    } else {
+      r = AD.doCourtAction(run, judgeId, actionId);
+    }
     if (!r.ok) return;
     AD.saveRun(run);
     AD.Audio.play(actionId === 'sack' ? 'gavel' : actionId === 'buy' ? 'money' : 'bad');
@@ -687,7 +699,19 @@ AD.Game = {
   pressAction (outletId, actionId) {
     const run = AD.Engine.run;
     if (!run || run.over) return;
-    const r = AD.doPressAction(run, outletId, actionId);
+    // A bespoke move (the option only this one offers, see moves.js) is not in
+    // the shared action table, so it resolves through its own runner first.
+    const ent = AD.outletById(run, outletId);
+    const bespoke = (AD.movesFor('outlet', ent) || []).find(a => a.bespoke && a.id === actionId);
+    let r;
+    if (bespoke) {
+      if (bespoke.once && AD.moveSpent(ent, bespoke.id)) return;
+      if (bespoke.cost && run.cash < bespoke.cost) return;
+      if (bespoke.cost) run.cash = Math.round((run.cash - bespoke.cost) * 100) / 100;
+      r = AD.runBespoke(run, ent, bespoke);
+    } else {
+      r = AD.doPressAction(run, outletId, actionId);
+    }
     if (!r.ok) return;
     AD.saveRun(run);
     AD.Audio.play(actionId === 'settle' || actionId === 'install' ? 'money' : actionId === 'attack' ? 'bad' : 'stamp');
@@ -726,7 +750,19 @@ AD.Game = {
   streetAction (cityId, actionId) {
     const run = AD.Engine.run;
     if (!run || run.over) return;
-    const r = AD.doStreetAction(run, cityId, actionId);
+    // A bespoke move (the option only this one offers, see moves.js) is not in
+    // the shared action table, so it resolves through its own runner first.
+    const ent = AD.cityById(run, cityId);
+    const bespoke = (AD.movesFor('city', ent) || []).find(a => a.bespoke && a.id === actionId);
+    let r;
+    if (bespoke) {
+      if (bespoke.once && AD.moveSpent(ent, bespoke.id)) return;
+      if (bespoke.cost && run.cash < bespoke.cost) return;
+      if (bespoke.cost) run.cash = Math.round((run.cash - bespoke.cost) * 100) / 100;
+      r = AD.runBespoke(run, ent, bespoke);
+    } else {
+      r = AD.doStreetAction(run, cityId, actionId);
+    }
     if (!r.ok) return;
     AD.saveRun(run);
     AD.Audio.play(actionId === 'sweep' ? 'stamp' : actionId === 'negotiate' ? 'good' : 'bad');
