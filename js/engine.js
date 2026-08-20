@@ -110,6 +110,12 @@ AD.Engine = {
       if (cb) { this.card = cb; return this.card; }
     }
 
+    // A bored President stops waiting and does something himself.
+    if (AD.wanderFor) {
+      const w = AD.wanderFor(run);
+      if (w) { this.card = w; return this.card; }
+    }
+
     // A subsystem in an extreme state generates its own bespoke crisis.
     const reactive = AD.reactiveFor(run);
     if (reactive) { this.card = reactive; return this.card; }
@@ -212,6 +218,10 @@ AD.Engine = {
        and BEFORE the meters land, so the amplified figure is what the crowd
        actually feels and what the resolution reports. */
     AD.applyBaseAppetite(eff, choice);
+
+    /* THE BASE MISREADS YOU. Occasionally the restrained, correct choice is
+       received as devastating strength and helps you anyway. See misread.js. */
+    if (AD.applyMisread) AD.applyMisread(run, choice, eff, out);
 
     /* THE SPECTACLE. The wild, silly option keeps the easily-bored President
        entertained; every other, more sober choice is another dull afternoon that

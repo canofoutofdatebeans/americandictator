@@ -554,6 +554,14 @@ AD.UI = {
       if (d.cash) chips.push(`<span class="delta ${d.cash > 0 ? 'pos' : 'neg'}">$ ${d.cash > 0 ? '+' : ''}${d.cash}B</span>`);
       this.el('res-deltas').innerHTML = chips.join('');
 
+      /* THE BASE MISREAD YOU, and it helped. Shown above the President's line
+         because it is what actually happened; his reaction comes after. */
+      const mr = this.el('misread-line');
+      if (mr) {
+        if (out.misread) { mr.textContent = AD.clean(out.misread, this.settings.clean); mr.hidden = false; }
+        else mr.hidden = true;
+      }
+
       /* THE PRESIDENT REACTS. One line, chosen by what actually happened, that
          reveals he has understood none of it. See voice.js. */
       const pl = this.el('potus-line');
@@ -1351,7 +1359,9 @@ AD.UI = {
   callTab: 'ally',
   renderCall (result) {
     const run = AD.Engine.run;
-    this.paintRoomStatus('call', run.meters.congress);
+    // The Phone is the Boredometer lever, so its banner reads boredom rather
+    // than a power centre. Inverted: low boredom is a good state.
+    this.paintRoomStatus('call', AD.boredom(run), true);
     const left = AD.callsLeft(run);
     const leftEl = this.el('call-left');
     leftEl.textContent = left;
@@ -1363,8 +1373,13 @@ AD.UI = {
       note.innerHTML = `<b>Calling ${result.target.name}.</b> ${AD.clean(result.line, this.settings.clean)}`;
     } else {
       note.className = 'corr-note';
-      note.textContent = 'Get somebody on the line and give them a piece of your mind. Pick who; pick what to say. ' +
-        'Two calls a month. Everything you say moves the ratings.';
+      const bored = AD.boredom(run), ceil = AD.boredCeiling(run);
+      note.textContent = 'Executive time. The one part of the job he actually enjoys, which makes this the ' +
+        'main way to bring the Boredometer down: a big-swing call is worth roughly a dozen dull afternoons. ' +
+        AD.CALLS_PER_MONTH + ' calls a month, and everything you say moves the ratings too. ' +
+        (bored > ceil
+          ? 'Boredom is at ' + bored + ' against a ceiling of ' + ceil + '. Get on the phone.'
+          : 'Boredom is at ' + bored + ', under the ' + ceil + ' ceiling. Keep it there.');
     }
 
     const tabs = [['ally', 'Allies'], ['press', 'The Press'], ['enemy', 'Enemies']];

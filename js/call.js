@@ -17,13 +17,21 @@
    is a STYLE, not a person, every name in the address book is
    fictional, like everything else in the game.
 
-   Calls are free but rationed: two a month (AD.CALLS_PER_MONTH),
+   Calls are free but rationed: three a month (AD.CALLS_PER_MONTH),
    refilled each time the clock ticks, so the phone is a monthly
-   decision and not a base-farming button. Effects are smaller than a
-   policy card's, it is a phone call, not an executive order.
+   decision and not a base-farming button. Effects on the METERS are
+   smaller than a policy card's, it is a phone call, not an executive
+   order.
+
+   THE PHONE IS THE BOREDOMETER LEVER. Executive time is the one thing
+   the President actually enjoys: working the phones, picking fights,
+   being flattered, being listened to. So calls are the primary way to
+   bring boredom back down, and a big-swing call is worth several dull
+   afternoons of governing. If the Boredometer is climbing, this is the
+   room you are meant to come to.
    ============================================================ */
 
-AD.CALLS_PER_MONTH = 2;
+AD.CALLS_PER_MONTH = 3;
 
 /* Fictional address book. `cat`: 'ally' | 'press' | 'enemy'.
    Each entry carries `opts`, an array of 3 (occasionally 4) bespoke
@@ -274,10 +282,12 @@ AD.doCall = function (run, targetId, optIndex) {
   if (!opt) return { ok: false, reason: 'Wrong number.' };
   if (AD.callsLeft(run) <= 0) return { ok: false, reason: 'No more calls this month.' };
   run.calls = AD.callsLeft(run) - 1;
-  // Boredom: the President loves the phone. A big-swing call is a genuine thrill;
-  // even a routine one beats a briefing.
+  /* THE BOREDOMETER LEVER. The President loves the phone more than he loves
+     any other part of the job, so this is where boredom actually comes down.
+     A big-swing call is worth roughly a dozen dull afternoons; even a routine
+     one clears several. Positive `fun` reduces boredom (see AD.moveFun). */
   const ceff = Object.assign({}, opt.eff);
-  if (ceff.fun == null) ceff.fun = opt.major ? 3 : 1;
+  if (ceff.fun == null) ceff.fun = opt.major ? 14 : 7;
   const deltas = AD.applySenateEffect(run, ceff);
   run.stats = run.stats || {}; run.stats.calls = (run.stats.calls || 0) + 1;
   return { ok: true, target: t, opt: opt, deltas: deltas, line: opt.line };

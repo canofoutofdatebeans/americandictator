@@ -180,6 +180,10 @@ AD.Game = {
       <b>silly, loud, wild</b> options (the fourth choice on a card, the rallies, the stunts) bring it back down.
       To actually <b>win</b>, it must be at or below the ceiling at the end, <b>50 / 30 / 10</b> by difficulty.
       Have the whole country in your grip and a bored President, and he simply loses interest and wanders off.</p>
+      <p><b>The Phone is your main lever on it.</b> Executive time is the one part of the job he genuinely enjoys,
+      so <b>3 calls a month</b> is the fastest way to bring boredom back down: a big-swing call is worth roughly a
+      dozen dull afternoons. Let it climb too far and he stops waiting for you, does something himself, and you
+      inherit it as a crisis.</p>
 
       <h4>Two Purses</h4>
       <p>Money comes in two pools, shown top-right. <b>💰 Personal Wealth</b> is your private

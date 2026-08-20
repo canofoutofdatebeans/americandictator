@@ -80,6 +80,14 @@ AD.ROOM_STATUS = {
     terrible: { art: '\u{1F4C9}\u{2620}\u{FE0F}', line: 'A full-blown crash. Somebody on television is saying the word "unprecedented" and for once they are not exaggerating.' }
   },
 
+  call: {
+    great:    { art: '\u{1F4DE}\u{1F604}', line: 'He is having the time of his life. Three calls today, two of them fights, one of them to somebody who did not know who was calling.' },
+    good:     { art: '\u{1F4DE}\u{1F642}', line: 'Engaged, entertained, and dialling. This is the version of him that gets things done, roughly by accident.' },
+    ok:       { art: '\u{1F4DE}\u{1F610}', line: 'He is fine. He has taken a couple of calls and enjoyed about half of one. Do not let it slide.' },
+    bad:      { art: '\u{1F4DE}\u{1F971}', line: 'He is drifting. Meetings are being described to him rather than attended by him. Get him on the phone to somebody he can shout at.' },
+    terrible: { art: '\u{1F4DE}\u{1F634}', line: 'He has stopped asking what is on the schedule. This is the state that loses you the whole thing at the final whistle, and it is entirely fixable from this room.' }
+  },
+
   war: {
     great:    { art: '\u{1F396}\u{FE0F}\u{1F54A}\u{FE0F}', line: 'The generals salute, the wars are short, and the footage is spectacular. Somebody has floated a Nobel, unprompted, probably.' },
     good:     { art: '\u{1F396}\u{FE0F}\u{1F642}', line: 'The Joint Chiefs disagree with you privately and execute anyway, which is the whole arrangement.' },
