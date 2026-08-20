@@ -1279,7 +1279,35 @@ AD.UI = {
     }
 
     const order = run.press.slice().sort((a, b) => a.stance - b.stance);
-    this.el('press-list').innerHTML = order.map(o => {
+
+    /* THE FRONT SCREEN. Twelve mastheads and where each one stands, readable in
+       one look; picking one opens just that outlet's options. */
+    const pressPick = this.pressPick;
+    if (!pressPick) {
+      const tiles = order.map(o => {
+        const st = AD.pressStance(o);
+        return `<button class="natile ptile mood-${st.key}" data-presspick="${o.id}"
+                  title="${o.name}: ${st.label}">
+          <span class="ptile-type">${o.type}</span>
+          <span class="natile-name">${o.name}</span>
+          <span class="citile-num">${o.stance}<em>%</em></span>
+          <span class="citile-bar"><i style="width:${o.stance}%"></i></span>
+          <span class="natile-state">${st.label}</span>
+          ${o.owned ? '<span class="natile-pip own" title="Yours">\u{1F4B0}</span>'
+                    : o.sued ? '<span class="natile-pip sued" title="Being sued">\u2696\u{FE0F}</span>' : ''}
+        </button>`;
+      }).join('');
+      this.el('press-list').innerHTML =
+        `<div class="natile-grid citile-grid">${tiles}</div>` +
+        `<div class="deal-window">Twelve mastheads, sorted from most hostile to most friendly. Money works on
+          some of them and turns the rest into martyrs with a prize. <b>Pick an outlet</b> to see what is on
+          the table there, including the one move that only works on that particular newsroom.</div>`;
+      return;
+    }
+
+    this.el('press-list').innerHTML =
+      '<button class="backpick" data-presspick="">\u2190 All outlets</button>' +
+      order.filter(o => o.id === pressPick).map(o => {
       const st = AD.pressStance(o);
       const buttons = AD.movesFor('outlet', o).map(act => {
         const spent = act.bespoke && act.once && AD.moveSpent(o, act.id);
@@ -1331,7 +1359,33 @@ AD.UI = {
     }
 
     const order = run.streets.slice().sort((a, b) => b.unrest - a.unrest);
-    this.el('street-list').innerHTML = order.map(c => {
+
+    /* THE FRONT SCREEN. Ten cities, their unrest and their state, readable in
+       one look; picking one opens just that city's options. */
+    const cityPick = this.cityPick;
+    if (!cityPick) {
+      const tiles = order.map(c => {
+        const heat = AD.cityHeat(c);
+        return `<button class="natile citile heat-${heat.key}" data-citypick="${c.id}"
+                  title="${c.name}: unrest ${c.unrest}%">
+          <span class="natile-name">${c.name}</span>
+          <span class="citile-num">${c.unrest}<em>%</em></span>
+          <span class="citile-bar"><i style="width:${c.unrest}%"></i></span>
+          <span class="natile-state">${heat.label}</span>
+          ${c.occupied ? '<span class="natile-pip occ" title="Force parked">\u{1F69A}</span>' : ''}
+        </button>`;
+      }).join('');
+      this.el('street-list').innerHTML =
+        `<div class="natile-grid citile-grid">${tiles}</div>` +
+        `<div class="deal-window">Ten cities, sorted by how hot they are. Unrest climbs on its own and
+          climbs faster where you have already sent force. <b>Pick a city</b> to see what you can do there,
+          including the one thing that only works in that particular place.</div>`;
+      return;
+    }
+
+    this.el('street-list').innerHTML =
+      '<button class="backpick" data-citypick="">\u2190 All cities</button>' +
+      order.filter(c => c.id === cityPick).map(c => {
       const heat = AD.cityHeat(c);
       const buttons = AD.movesFor('city', c).map(act => {
         const spent = act.bespoke && act.once && AD.moveSpent(c, act.id);
@@ -1438,7 +1492,32 @@ AD.UI = {
           <span class="sen-mood">Ongoing</span></div></div>`;
     }).join('');
 
-    const targets = AD.WAR_TARGETS.map(t => {
+    /* THE FRONT SCREEN. A flag grid you can read in one look; picking a country
+       opens only that country's operations. `warPick` null means show the grid. */
+    const picked = this.warPick;
+    if (!picked) {
+      const tiles = AD.WAR_TARGETS.map(t => {
+        const annexed = AD.isConquered(run, t.id);
+        const allied = AD.isAlly(run, t.id);
+        const atWar = AD.atWarWith(run, t.id);
+        const state = annexed ? 'annexed' : allied ? 'allied' : atWar ? 'atwar' : 'open';
+        const label = annexed ? 'ANNEXED' : allied ? 'ALLIED' : atWar ? 'AT WAR' : strengthLabel(t).toUpperCase();
+        return `<button class="natile natile-${state}" data-warpick="${t.id}" title="${t.tell || ''}">
+          <span class="natile-flag">${AD.FLAG[t.id] || '\u{1F3F3}\u{FE0F}'}</span>
+          <span class="natile-name">${t.name}</span>
+          <span class="natile-state">${label}</span>
+          ${t.nukes ? '<span class="natile-pip nuke" title="Nuclear">\u2622\u{FE0F}</span>' : ''}
+        </button>`;
+      }).join('');
+      this.el('war-list').innerHTML = ongoing +
+        `<div class="natile-grid">${tiles}</div>` +
+        `<div class="deal-window">Ten countries, and every one of them answers differently. Rattle the sabre at
+          the ones who will fold, strike the weak, and never gamble a strike on a nuclear power unless you can
+          afford the fallout. <b>Pick a country</b> to see what is actually on the table there.</div>`;
+      return;
+    }
+
+    const targets = AD.WAR_TARGETS.filter(t => t.id === picked).map(t => {
       const atWar = AD.atWarWith(run, t.id);
       const allied = AD.isAlly(run, t.id);
       const annexed = AD.isConquered(run, t.id);
@@ -1472,7 +1551,10 @@ AD.UI = {
       </div>`;
     }).join('');
 
-    this.el('war-list').innerHTML = (ongoing ? ongoing + '<div class="war-sep">Choose your target and your method</div>' : '') + targets;
+    this.el('war-list').innerHTML =
+      '<button class="backpick" data-warpick="">\u2190 All countries</button>' + ongoing + targets;
+    return;
+
   },
 
   /* ---------- the bench (courts) ---------- */

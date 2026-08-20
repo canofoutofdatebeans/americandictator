@@ -954,6 +954,14 @@ AD.Game = {
 
       // Private Interests: switch between the permanent catalogue, the
       // rotating market and the Board of Peace.
+      /* Front-screen pickers: an empty value goes back to the grid. */
+      const wpick = e.target.closest('[data-warpick]');
+      if (wpick) { AD.UI.warPick = wpick.dataset.warpick || null; AD.UI.renderWar(); return; }
+      const cpick = e.target.closest('[data-citypick]');
+      if (cpick) { AD.UI.cityPick = cpick.dataset.citypick || null; AD.UI.renderStreet(); return; }
+      const ppick = e.target.closest('[data-presspick]');
+      if (ppick) { AD.UI.pressPick = ppick.dataset.presspick || null; AD.UI.renderPress(); return; }
+
       const ctab = e.target.closest('[data-corrtab]');
       if (ctab) { AD.UI.corrTab = ctab.dataset.corrtab; AD.UI.renderCorruption(); return; }
 
@@ -1104,7 +1112,7 @@ AD.Game = {
 
       case 'press':
         if (U.current !== 'game' || !AD.Engine.run || AD.Engine.run.over) break;
-        U.pauseTimer(); U.renderPress(); U.overlay('press', true); break;
+        U.pressPick = null; U.pauseTimer(); U.renderPress(); U.overlay('press', true); break;
       case 'press-close':
         U.overlay('press', false);
         if (AD.Engine.card && !U.el('card').hidden) U.resumeTimer();
@@ -1112,7 +1120,7 @@ AD.Game = {
 
       case 'street':
         if (U.current !== 'game' || !AD.Engine.run || AD.Engine.run.over) break;
-        U.pauseTimer(); U.renderStreet(); U.overlay('street', true); break;
+        U.cityPick = null; U.pauseTimer(); U.renderStreet(); U.overlay('street', true); break;
       case 'street-close':
         U.overlay('street', false);
         if (AD.Engine.card && !U.el('card').hidden) U.resumeTimer();
@@ -1128,7 +1136,7 @@ AD.Game = {
 
       case 'war':
         if (U.current !== 'game' || !AD.Engine.run || AD.Engine.run.over) break;
-        U.pauseTimer(); U.renderWar(); U.overlay('war', true); break;
+        U.warPick = null; U.pauseTimer(); U.renderWar(); U.overlay('war', true); break;
       case 'war-close':
         U.overlay('war', false);
         if (AD.Engine.card && !U.el('card').hidden) U.resumeTimer();

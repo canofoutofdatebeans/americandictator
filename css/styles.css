@@ -1769,3 +1769,85 @@ html[data-motion="off"] .potus-line{animation:none}
   display:block;font-style:normal;font-size:7.5px;letter-spacing:2px;
   font-weight:800;color:var(--gold-soft);margin-bottom:3px;
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   FRONT SCREENS                                      (build 125)
+   The War Room, Public Order and the Press Room used to open into a
+   long list of fully-expanded entries. They now open on a grid you
+   can read in one look; pick one to see its options.
+   ═══════════════════════════════════════════════════════════════ */
+.natile-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));
+  gap:7px;margin-bottom:12px;
+}
+.citile-grid{grid-template-columns:repeat(auto-fill,minmax(112px,1fr))}
+
+.natile{
+  position:relative;display:flex;flex-direction:column;align-items:center;
+  gap:3px;padding:10px 7px 9px;
+  background:linear-gradient(180deg,#16203a,#0f1728);
+  border:1px solid #26324e;border-radius:12px;
+  color:var(--paper);font:inherit;cursor:pointer;text-align:center;
+  transition:border-color .18s,background .18s,transform .12s;
+}
+.natile:hover{background:linear-gradient(180deg,#1b2748,#121b30);border-color:#3d5488;transform:translateY(-2px)}
+.natile:active{transform:translateY(0)}
+.natile-flag{font-size:25px;line-height:1}
+.natile-name{
+  font-size:11px;font-weight:700;line-height:1.2;color:var(--paper);
+  overflow:hidden;text-overflow:ellipsis;width:100%;
+}
+.natile-state{
+  font-size:7.5px;letter-spacing:1.2px;font-weight:800;
+  color:var(--muted);text-transform:uppercase;
+}
+.natile-pip{position:absolute;top:4px;right:5px;font-size:10px;line-height:1}
+
+/* war states */
+.natile-atwar{border-color:#5a2030;background:linear-gradient(180deg,#25101a,#170b0f)}
+.natile-atwar .natile-state{color:#f0a0a6}
+.natile-allied{border-color:#2f5138;background:linear-gradient(180deg,#14231a,#101a13)}
+.natile-allied .natile-state{color:#a8d4b0}
+.natile-annexed{border-color:#5c4a15;background:linear-gradient(180deg,#1c1608,#12100a)}
+.natile-annexed .natile-state{color:#f2dd8a}
+
+/* cities and outlets carry a number and a bar */
+.citile-num{font-size:17px;font-weight:800;line-height:1;font-variant-numeric:tabular-nums}
+.citile-num em{font-style:normal;font-size:9px;opacity:.6;margin-left:1px}
+.citile-bar{
+  width:100%;height:3px;border-radius:99px;background:#0a1120;overflow:hidden;margin:1px 0 1px;
+}
+.citile-bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#3d5488,#7f9fd0)}
+.ptile-type{font-size:7px;letter-spacing:1.4px;font-weight:700;color:#4a5573;text-transform:uppercase}
+
+/* city heat */
+.heat-boiling  {border-color:#5a2030;background:linear-gradient(180deg,#25101a,#170b0f)}
+.heat-boiling   .citile-num,.heat-boiling .natile-state{color:#f0a0a6}
+.heat-boiling   .citile-bar i{background:linear-gradient(90deg,#8d1d28,#e0575f)}
+.heat-unrest   {border-color:#5a3020}
+.heat-unrest    .citile-num,.heat-unrest .natile-state{color:#e0b07a}
+.heat-unrest    .citile-bar i{background:linear-gradient(90deg,#b3701f,#e0b07a)}
+.heat-held,.heat-quiet{border-color:#2f5138}
+.heat-held      .citile-num,.heat-quiet .citile-num,
+.heat-held      .natile-state,.heat-quiet .natile-state{color:#a8d4b0}
+.heat-held      .citile-bar i,.heat-quiet .citile-bar i{background:linear-gradient(90deg,#4f9160,#8fd0a0)}
+
+/* press mood */
+.ptile.mood-hostile  {border-color:#5a2030}
+.ptile.mood-hostile  .natile-state{color:#f0a0a6}
+.ptile.mood-hostile  .citile-bar i{background:linear-gradient(90deg,#8d1d28,#e0575f)}
+.ptile.mood-critical {border-color:#5a3020}
+.ptile.mood-critical .natile-state{color:#e0b07a}
+.ptile.mood-friendly,.ptile.mood-captured{border-color:#2f5138}
+.ptile.mood-friendly .natile-state,.ptile.mood-captured .natile-state{color:#a8d4b0}
+.ptile.mood-friendly .citile-bar i,.ptile.mood-captured .citile-bar i{background:linear-gradient(90deg,#4f9160,#8fd0a0)}
+
+/* back to the grid */
+.backpick{
+  display:inline-flex;align-items:center;gap:5px;
+  margin-bottom:10px;padding:6px 12px;border-radius:8px;
+  border:1px solid var(--edge2);background:var(--ink3);
+  color:var(--paper2);font:inherit;font-size:11px;font-weight:700;cursor:pointer;
+  transition:var(--fx);
+}
+.backpick:hover{border-color:var(--gold);background:#1b2748;color:var(--paper)}

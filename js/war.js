@@ -68,6 +68,23 @@ AD.isConquered = (run, id) => !!(run.conquests && run.conquests[id]);
 
 AD.warTargetById = id => AD.WAR_TARGETS.find(t => t.id === id);
 
+/* Flags for the War Room front screen. Keyed by war-target id (which differs
+   from the economy roster's ids), so the picker can show a country at a glance
+   rather than as another line of text. */
+AD.FLAG = {
+  cathay:    '\u{1F1E8}\u{1F1F3}',
+  rus:       '\u{1F1F7}\u{1F1FA}',
+  iran:      '\u{1F1EE}\u{1F1F7}',
+  hermit:    '\u{1F1F0}\u{1F1F5}',
+  ukrania:   '\u{1F1FA}\u{1F1E6}',
+  greenland: '\u{1F1EC}\u{1F1F1}',
+  northland: '\u{1F1E8}\u{1F1E6}',
+  baldoro:   '\u{1F1F5}\u{1F1E6}',
+  qadira:    '\u{1F1F6}\u{1F1E6}',
+  penguin:   '\u{1F427}'
+};
+
+
 AD.ensureWars = function (run) { if (!run.wars) run.wars = []; return run.wars; };
 AD.atWarWith = (run, targetId) => (run.wars || []).some(w => w.target === targetId && !w.done);
 
