@@ -599,6 +599,9 @@ AD.UI = {
 
   /* ---------- private interests (corruption) ---------- */
   renderCorruption (justBought) {
+    // Private Interests is judged on the money, not a meter: how close the
+    // personal fortune is to the target that wins the other game.
+    this.paintRoomStatus('corruption', AD.clamp((AD.Engine.run.cash / AD.wealthGoal(AD.Engine.run)) * 100, 0, 100));
     const run = AD.Engine.run;
     const p = AD.passives(run);
     this.el('corr-cash').textContent = '$' + run.cash.toFixed(2) + 'B';
@@ -670,6 +673,7 @@ AD.UI = {
 
   /* ---------- the pardon power ---------- */
   renderPardons (result) {
+    this.paintRoomStatus('pardon', AD.Engine.run.meters.courts);
     const run = AD.Engine.run;
     run.pardoned = run.pardoned || [];
     const sum = AD.pardonSummary(run);
@@ -1212,6 +1216,7 @@ AD.UI = {
   callTab: 'ally',
   renderCall (result) {
     const run = AD.Engine.run;
+    this.paintRoomStatus('call', run.meters.congress);
     const left = AD.callsLeft(run);
     const leftEl = this.el('call-left');
     leftEl.textContent = left;
@@ -1236,7 +1241,13 @@ AD.UI = {
     this.el('call-list').innerHTML = list.map(t => {
       // Each person has their OWN bespoke options now; a MAJOR one is flagged.
       const buttons = (t.opts || []).map((o, i) =>
-        `<button class="sen-act call-opt${o.major ? ' call-major' : ''}" data-callwho="${t.id}" data-callopt="${i}" ${disabled} title="${AD.clean(o.line, this.settings.clean)}">${o.icon} ${o.label}${o.major ? ' <em>major</em>' : ''}</button>`
+        this.actBtnHTML({
+          cls: 'call-opt' + (o.major ? ' call-major' : ''), icon: o.icon, label: o.label,
+          cost: o.major ? 'major' : '',
+          blurb: AD.clean(o.line, this.settings.clean),
+          ok: !disabled, reason: 'No calls left this month.',
+          data: 'data-callwho="' + t.id + '" data-callopt="' + i + '"'
+        })
       ).join('');
       return `<div class="sen-row call-cat-${t.cat}">
         <div class="sen-top"><span class="sen-dot"></span>
@@ -1287,7 +1298,11 @@ AD.UI = {
         const avail = AD.warOpAvailable(run, t, op);
         const c = AD.warOpCostFor(run, t, op);
         const cost = c ? ` <em>${AD.fmtCash(c)}</em>` : '';
-        return `<button class="sen-act war-${op.id}" data-wartarget="${t.id}" data-warop="${op.id}" ${avail.ok ? '' : 'disabled'} title="${avail.ok ? op.blurb : avail.reason}">${op.icon} ${op.label}${cost}${avail.ok ? '' : ' <span class="act-lock">' + AD.reasonBadge(avail.reason) + '</span>'}</button>`;
+        return this.actBtnHTML({
+          cls: 'war-' + op.id, icon: op.icon, label: op.label, cost: cost.replace(/<\/?em>/g, '').trim(),
+          blurb: op.blurb, ok: avail.ok, reason: avail.reason,
+          data: 'data-wartarget="' + t.id + '" data-warop="' + op.id + '"'
+        });
       }).join('');
       const badges = (t.nukes ? '<span class="war-badge nuke">☢️ nuclear</span>' : '') +
                      (annexed ? `<span class="war-badge rich">🗺️ annexed +$${run.conquests[t.id]}B/mo</span>`
