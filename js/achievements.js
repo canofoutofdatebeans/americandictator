@@ -131,7 +131,12 @@ AD.ACHIEVEMENTS = [
 
   { id: 'struck-down', name: 'Blocked, Nationwide, Effective Immediately',
     desc: 'Have three of your own Executive Orders struck down in one term.',
-    test: (r, s) => (s && s.eoStruck || 0) >= 3 }
+    test: (r, s) => (s && s.eoStruck || 0) >= 3 },
+
+  { id: 'the-hue', name: 'A Bold Choice At The Mirror',
+    desc: 'Serve a full term in the brightest complexion available.',
+    secret: true,
+    test: r => r.portrait && r.portrait.skin === (AD.PORTRAIT.skin.length - 1) && r.month >= 40 }
 ];
 
 AD.loadAchievements = () => AD.store.read(AD.ACH_KEY, []);

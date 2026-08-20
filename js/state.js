@@ -5,7 +5,7 @@
    ============================================================ */
 
 window.AD = window.AD || {};
-AD.BUILD = '117';   // bumped every deploy; shown on the title so a stale cache is obvious
+AD.BUILD = '118';   // bumped every deploy; shown on the title so a stale cache is obvious
 
 /* ---------- Factions ------------------------------------------------------
    Five power centres. Four of them are CAPTURABLE: drive one to 100 and it
@@ -359,7 +359,9 @@ AD.applyMutators = function (run, ids) {
 
 AD.PORTRAIT = {
   hair: ['#e8c766', '#d9d3c4', '#8a6a3c', '#3c3128', '#b5442e', '#f2ead6'],
-  skin: ['#e8a86b', '#f0c9a0', '#c98650', '#8d5a34', '#5e3a22', '#ffbd63'],
+  /* The last entry is not a human skin tone and is not meant to be. It is
+     the shade a man arrives at after a decade of committing to a bit. */
+  skin: ['#e8a86b', '#f0c9a0', '#c98650', '#8d5a34', '#5e3a22', '#ffbd63', '#ff8a1f'],
   tie:  ['#c8342f', '#2d5fa8', '#e0b33a', '#2f7a52', '#6b3f8f', '#1b1b1b'],
   suit: ['#1c2230', '#2b2b2b', '#31384a', '#43301f', '#0f2a24', '#4a1f27'],
   build: [0.82, 0.91, 1.0, 1.13, 1.28],   // horizontal body scale: slim -> large (default idx 2)
