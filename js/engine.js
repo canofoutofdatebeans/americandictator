@@ -70,6 +70,12 @@ AD.Engine = {
     AD.FKEYS.forEach(k => {
       if (inh.mods[k]) run.meters[k] = AD.clamp(run.meters[k] + inh.mods[k], 8, 100);
     });
+    // Dramatize the inheritance as the first crisis, so the cross-run legacy is
+    // felt rather than silently baked into the opening bars (see secondterm.js).
+    if (AD.legacyOpener) {
+      const opener = AD.legacyOpener(run);
+      if (opener) run.queue.push(opener);
+    }
   },
 
   diff () { return AD.DIFFS[this.run.difficulty] || AD.DIFFS.standard; },
@@ -434,7 +440,13 @@ AD.Engine = {
     run.termPressureBonus = 1;      // every institution now pushes back permanently harder
     run.seen = [];                  // the deck reopens for a second term
     run.flags.lastAddress = null;
-    run.queue = [AD.EVENTS.secondTermOpener];
+    // Term two is its own act: the Second Inaugural, then a gauntlet of beats
+    // built from YOUR first-term record (see secondterm.js) - the precedent you
+    // set, the branch you took, the VP you let rise, the crooks you pardoned,
+    // the foreign patrons you took money from, each now a problem with your name
+    // on it.
+    run.queue = [AD.EVENTS.secondTermOpener]
+      .concat(AD.secondTermReckoning ? AD.secondTermReckoning(run) : []);
 
     AD.saveRun(run);
     return {
@@ -796,6 +808,30 @@ AD.monthBrief = function (run, pre, eng) {
   if (eng.lastUpkeep && eng.lastUpkeep.arrears) causes.push('the Residence bills came due');
   if (eng.lastTick && eng.lastTick.cash > 0.001) causes.push('holdings paid out');
 
+  /* THE RIPPLES, made legible. These systems all move your meters or money in
+     the background; naming them is how the player learns that a summit insult
+     in month 4 is still costing them Congress in month 30, that a tariff shocks
+     the market, and that an empire abroad pays a salary at home. */
+  if (eng.lastDiplo && eng.lastDiplo.notes && eng.lastDiplo.notes.length) {
+    causes.push(eng.lastDiplo.notes[0]);                 // e.g. "isolated, and covered as isolated"
+  }
+  if (eng.lastWar && eng.lastWar.income) {
+    causes.push('your alliances and conquests paid $' + eng.lastWar.income + 'B into the Treasury');
+  }
+  if (eng.lastLeak && eng.lastLeak.leak) {
+    causes.push('Saint Ambrose leaked again');
+  }
+  // the market, read off its own history so a tariff/war shock is felt as news
+  const mh = run.marketHistory;
+  if (mh && mh.length >= 2) {
+    const a = mh[mh.length - 2].sp, b = mh[mh.length - 1].sp;
+    if (a > 0) {
+      const pct = Math.round((b - a) / a * 100);
+      if (pct <= -3) causes.push('the market fell ' + Math.abs(pct) + '% ');
+      else if (pct >= 4) causes.push('the market rallied ' + pct + '%');
+    }
+  }
+
   if (!Object.keys(drift).length && !causes.length) return null;
-  return { drift, causes: causes.slice(0, 3) };
+  return { drift, causes: causes.slice(0, 4) };
 };

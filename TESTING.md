@@ -75,6 +75,14 @@ nothing, a number that looks wrong, anything that made you go "huh?"
 - **The Board of Peace** (Private Interests) — invite countries to join for
   $1B. Try inviting Canada, then try Qatar.
 - The **bright orange** complexion in the character creator.
+- **Win a term and start another** (or lose and start again): the country you
+  inherit now opens with a crisis naming what the last administration left you.
+- **Reach a second term**: the opening months are now a gauntlet built from YOUR
+  first-term record - the precedent you set, the branch you captured, the VP you
+  let rise, the crooks you pardoned. Different every run.
+- **The "since last month" brief** now names the ripples: a diplomacy feud
+  bleeding your Congress, a tariff backfiring, the market moving, foreign money
+  arriving. Watch whether the cause-and-effect actually reads.
 
 ---
 
