@@ -37,7 +37,13 @@ AD.Engine = {
     if (!run.streets || !run.streets.length) run.streets = AD.makeStreet(); // pre-street saves
     if (!run.wars) run.wars = [];           // pre-war saves
     if (typeof run.purse !== 'number') run.purse = AD.START_PURSE;   // pre-treasury saves
-    if (typeof run.fun !== 'number') run.fun = AD.FUN_START;          // pre-Spectacle saves
+    // Boredometer migration. Pre-flip saves stored run.fun = ENTERTAINMENT
+    // (high was good); the meter is now run.bored = BOREDOM (low is good), so an
+    // old save's value is carried across inverted rather than reset.
+    if (typeof run.bored !== 'number') {
+      run.bored = (typeof run.fun === 'number') ? AD.clamp(100 - run.fun, 0, 100) : AD.BORED_START;
+      delete run.fun;
+    }
     if (!run.allies) run.allies = {};       // pre-alliance saves
     if (!run.conquests) run.conquests = {}; // pre-conquest saves
     if (!run.judges || !run.judges.length) run.judges = AD.makeCourts(); // pre-courts saves
@@ -201,10 +207,14 @@ AD.Engine = {
     /* THE SPECTACLE. The wild, silly option keeps the easily-bored President
        entertained; every other, more sober choice is another dull afternoon that
        bores him a little. Feeding the base hard also amuses him. He must stay
-       above the boredom floor by the end, or he loses interest and wanders off. */
+       AT OR BELOW the boredom ceiling by the end, or he loses interest and
+       wanders off. Low Boredometer is good. */
     if (AD.moveFun) {
       const spice = choice.wild ? 6 : ((eff.base || 0) >= 6 ? 1 : -1);
-      out.funDelta = AD.moveFun(run, spice) - (run._funBefore == null ? run.fun : run._funBefore);
+      const beforeBored = AD.boredom(run);
+      AD.moveFun(run, spice);                       // positive spice = LESS bored
+      const bd = AD.boredom(run) - beforeBored;
+      if (bd) out.deltas.bored = bd;                // surfaces as a 🥱 delta chip
     }
 
     /* --- Apply to meters --- */
@@ -212,6 +222,12 @@ AD.Engine = {
       if (run.locked[k]) return;                 // captured pillars are frozen
       const before = run.meters[k];
       let delta = eff[k] || 0;
+
+      /* THE BASE MOVES IN INCHES (see AD.BASE_GAIN_SCALE). Every base delta,
+         up or down, is scaled so a headline +7 lands as well under a point.
+         Scaling BOTH directions keeps the base economy proportional: if only
+         gains shrank, the unscaled losses would crater the movement. */
+      if (k === 'base' && delta) delta = delta * AD.BASE_GAIN_SCALE;
 
       /* INSTITUTIONAL RESISTANCE, the last stretch of a capture is the
          hardest. A branch that is already mostly yours resists each further

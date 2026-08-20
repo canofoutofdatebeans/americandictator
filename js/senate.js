@@ -322,6 +322,8 @@ AD.applySenateEffect = function (run, eff) {
   AD.FKEYS.forEach(k => {
     let v = eff[k] || 0;
     if (!v || run.locked[k]) return;
+    // The base moves in inches here too, see AD.BASE_GAIN_SCALE.
+    if (k === 'base') v = v * AD.BASE_GAIN_SCALE;
     // owned shields still blunt incoming institutional damage from a purge
     if (v < 0 && p[k + 'Shield']) v = Math.ceil(v * (1 - p[k + 'Shield']));
     // the base creeps, never jumps, even a rally or a Liberation Day is capped
@@ -342,9 +344,10 @@ AD.applySenateEffect = function (run, eff) {
   // the sober diplomatic ones bore him. So every action in the game moves boredom,
   // not just the five meters.
   if (typeof eff.fun === 'number' && AD.moveFun) {
-    const b = run.fun;
-    AD.moveFun(run, eff.fun);
-    if (run.fun !== b) deltas.fun = run.fun - b;
+    const b = AD.boredom(run);
+    AD.moveFun(run, eff.fun);                       // positive charge = LESS bored
+    const after = AD.boredom(run);
+    if (after !== b) deltas.bored = after - b;
   }
   // A directed crisis (see objectives.js) polls its own success condition right
   // here, since nearly every management screen's action routes through this one

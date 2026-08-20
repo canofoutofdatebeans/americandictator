@@ -174,12 +174,12 @@ AD.Game = {
       whatever ending you reach. It upgrades a win, and it <em>converts a loss into a win</em>.
       You can be removed from office and still come out ahead.</p>
 
-      <h4>The Boredometer (do not get bored)</h4>
-      <p>The President is easily bored. The <b>🥱 Boredometer</b> under Authority is how entertained he
-      is, out of 100: the <b>silly, loud, wild</b> options (the fourth choice on a card, the rallies, the stunts) keep
-      him engaged, while sober, sensible governing bores him rigid, a point at a time. To actually <b>win</b>,
-      the Spectacle must be above the floor at the end, <b>50 / 70 / 90</b> by difficulty. Have the whole
-      country in your grip and a bored President, and he simply loses interest and wanders off.</p>
+      <h4>The Boredometer (keep it LOW)</h4>
+      <p>The President is easily bored. The <b>🥱 Boredometer</b> under Authority is how <b>bored</b> he
+      is, out of 100, and <b>low is good</b>: sober, sensible governing runs it up a point at a time, while the
+      <b>silly, loud, wild</b> options (the fourth choice on a card, the rallies, the stunts) bring it back down.
+      To actually <b>win</b>, it must be at or below the ceiling at the end, <b>50 / 30 / 10</b> by difficulty.
+      Have the whole country in your grip and a bored President, and he simply loses interest and wanders off.</p>
 
       <h4>Two Purses</h4>
       <p>Money comes in two pools, shown top-right. <b>💰 Personal Wealth</b> is your private

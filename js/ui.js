@@ -234,18 +234,19 @@ AD.UI = {
         `<span class="vt-help">?</span>`;
     }
 
-    // The Spectacle meter: how entertained the President is, against the floor he
-    // must clear to actually win.
+    // The BOREDOMETER: how bored the President is, against the ceiling he must
+    // stay at or below to actually win. LOW IS GOOD, so the bar fills toward
+    // danger and the 'ok' state is the one under the marker.
     const spec = this.el('spectacle');
     if (spec) {
-      const fun = run.fun == null ? AD.FUN_START : run.fun;
-      const floor = AD.funThreshold(run);
-      const ok = fun >= floor;
+      const bored = AD.boredom(run);
+      const ceil = AD.boredCeiling(run);
+      const ok = bored <= ceil;
       spec.className = 'spectacle' + (ok ? ' ok' : ' bored');
       spec.innerHTML =
         `<span class="spec-lab">🥱 ${AD.t('hud.boredometer')}</span>` +
-        `<span class="spec-bar"><i style="width:${fun}%"></i><b style="left:${floor}%" title="Win floor ${floor}"></b></span>` +
-        `<span class="spec-num">${fun}<em>/100</em></span>`;
+        `<span class="spec-bar"><i style="width:${bored}%"></i><b style="left:${ceil}%" title="Stay at or below ${ceil}"></b></span>` +
+        `<span class="spec-num">${bored}<em>/100</em></span>`;
     }
 
     this.renderFactions(run);
@@ -270,7 +271,10 @@ AD.UI = {
     AD.FACTIONS.forEach(f => {
       const tile = wrap.querySelector('.fac[data-fk="' + f.key + '"]');
       if (!tile) return;
-      const v = run.meters[f.key];
+      // The Base is stored as a float (it creeps in fractions of a point); every
+      // meter is shown rounded, so a run of small gains visibly ticks the number
+      // up every card or two instead of showing "62.4".
+      const v = Math.round(run.meters[f.key]);
       const locked = !!run.locked[f.key];
       const danger = !locked && v <= 18;
       const cb = this.settings && this.settings.cb;
@@ -466,8 +470,13 @@ AD.UI = {
       AD.FKEYS.forEach(k => {
         if (!d[k]) return;
         const f = AD.faction(k);
-        chips.push(`<span class="delta ${d[k] > 0 ? 'pos' : 'neg'}">${f.icon} ${f.short} ${d[k] > 0 ? '+' : ''}${d[k]}</span>`);
+        // One decimal, trailing .0 stripped: the Base reports "+0.7" honestly
+        // rather than rounding a real gain away to "+1" or "+0".
+        const n = Math.round(d[k] * 10) / 10;
+        if (!n) return;
+        chips.push(`<span class="delta ${n > 0 ? 'pos' : 'neg'}">${f.icon} ${f.short} ${n > 0 ? '+' : ''}${n}</span>`);
       });
+      if (d.bored) chips.push(`<span class="delta ${d.bored > 0 ? 'neg' : 'pos'}">🥱 BOREDOM ${d.bored > 0 ? '+' : ''}${Math.round(d.bored * 10) / 10}</span>`);
       if (d.auth) chips.push(`<span class="delta a">⚑ AUTHORITY ${d.auth > 0 ? '+' : ''}${d.auth}</span>`);
       else if (out.authCapped) chips.push(`<span class="delta">⚑ CAPPED AT ${AD.SOFT_CAP}, TAKE A BRANCH</span>`);
       if (d.cash) chips.push(`<span class="delta ${d.cash > 0 ? 'pos' : 'neg'}">$ ${d.cash > 0 ? '+' : ''}${d.cash}B</span>`);

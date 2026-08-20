@@ -5,7 +5,7 @@
    ============================================================ */
 
 window.AD = window.AD || {};
-AD.BUILD = '108';   // bumped every deploy; shown on the title so a stale cache is obvious
+AD.BUILD = '109';   // bumped every deploy; shown on the title so a stale cache is obvious
 
 /* ---------- Factions ------------------------------------------------------
    Five power centres. Four of them are CAPTURABLE: drive one to 100 and it
@@ -148,17 +148,33 @@ AD.wealthGoal = run => (run && run.wealthGoal) || AD.WEALTH_GOAL;
 AD.CARDS_PER_MONTH = 3;
 
 /* ---------- THE SPECTACLE (the President's boredom) -----------------------
-   The President is easily bored. run.fun (0-100) is how ENTERTAINED he is: the
-   dumb, loud, silly, transgressive moves keep him engaged; sober, sensible
-   governing bores him rigid. Governing bleaks a point of it every card. To WIN,
-   the Spectacle must be above the difficulty floor at the end, otherwise the
-   President loses interest, wanders off, and simply does not finish the job. */
-AD.FUN_START = 50;
-AD.BOREDOM_WIN = { rookie: 50, standard: 70, historic: 90 };
-AD.funThreshold = run => AD.BOREDOM_WIN[(run && run.difficulty)] || 70;
-AD.entertained = run => (run.fun || 0) >= AD.funThreshold(run);
-/* Nudge it, clamped. Positive = a bit of fun; negative = another dull afternoon. */
-AD.moveFun = function (run, d) { run.fun = AD.clamp((run.fun == null ? AD.FUN_START : run.fun) + d, 0, 100); return run.fun; };
+   The President is easily bored. run.bored (0-100) is HOW BORED he is: sober,
+   sensible governing runs it up; the dumb, loud, silly, transgressive moves
+   bring it back down. LOW IS GOOD. To WIN, the Boredometer must be at or below
+   the difficulty ceiling at the end, otherwise the President loses interest,
+   wanders off, and simply does not finish the job. */
+AD.BORED_START = 50;
+/* The ceiling you must be AT OR BELOW when the term ends. Harder difficulty
+   tolerates less boredom. (These mirror the old entertainment floors: an
+   entertainment floor of F is exactly a boredom ceiling of 100 - F.) */
+AD.BOREDOM_MAX = { rookie: 50, standard: 30, historic: 10 };
+AD.boredCeiling = run => {
+  const v = AD.BOREDOM_MAX[(run && run.difficulty)];
+  return typeof v === 'number' ? v : 30;
+};
+AD.boredom = run => (run && typeof run.bored === 'number') ? run.bored : AD.BORED_START;
+AD.entertained = run => AD.boredom(run) <= AD.boredCeiling(run);
+
+/* Move the BOREDOMETER directly. Positive = MORE bored (bad). */
+AD.moveBored = function (run, d) {
+  run.bored = AD.clamp(AD.boredom(run) + d, 0, 100);
+  return run.bored;
+};
+/* The entertainment-facing alias every content file already calls: a positive
+   `fun` charge means "this amused him", which LOWERS the Boredometer. Keeping
+   this wrapper means none of the several dozen `eff.fun` charges scattered
+   through the management screens had to flip sign when the meter was flipped. */
+AD.moveFun = function (run, d) { return AD.moveBored(run, -d); };
 
 /* The revolving cabinet door, tallied so the Dossier/Front Page can name a
    number ("your 4th Secretary of Homeland Security this term"). Tracked
@@ -188,13 +204,22 @@ AD.movePurse = function (run, delta) {
   return run.purse;
 };
 
-AD.BASE_DECAY = -3;      // a movement that isn't fed every month cools off
+/* THE BASE MOVES IN INCHES. Every base delta a card or action produces is
+   multiplied by this before it lands, so a headline +7 becomes well under a
+   point. Building a movement is the work of a whole term, rally by rally,
+   never a two-card spike. The Base is stored as a FLOAT and only rounded for
+   display, so a run of +0.6s genuinely accumulates instead of rounding to 0. */
+AD.BASE_GAIN_SCALE = 0.13;
+
+AD.BASE_DECAY = -0.4;    // a movement that isn't fed every month cools off
 
 /* The base CREEPS, it never jumps. No single action, card, rally, pardon,
    tariff, war, may raise the Base by more than this in one go. A movement is
-   built rally by rally, not seized in an afternoon; combined with the −3/mo
-   decay it makes a maxed base a term-long project, not a two-card spike. */
-AD.BASE_RISE_CAP = 5;
+   built rally by rally, not seized in an afternoon; combined with the decay
+   above it makes a maxed base a term-long project, not a two-card spike.
+   After BASE_GAIN_SCALE this is the hard per-action ceiling: one single point,
+   and most actions land between 0.3 and 1.0. */
+AD.BASE_RISE_CAP = 1;
 
 /* A term now always runs its full course to an ELECTION, instead of ending the
    moment a meter hits zero. A power centre that collapses is floored here and
@@ -372,7 +397,7 @@ AD.newRun = function (opts) {
     locked: {},                 // key -> true once captured
     cash: d.startCash,                            // personal wealth (the fortune)
     purse: AD.START_PURSE,                         // national treasury (wars, tariffs)
-    fun: AD.FUN_START,                             // the Spectacle: how entertained the President is
+    bored: AD.BORED_START,                         // the Boredometer: how BORED he is (low is good)
     sp500: 5000,                                   // the market index, tracked monthly
     biz: 100,                                       // the President's own business index
     marketHistory: [{ m: 0, sp: 5000, biz: 100 }], // for the Economy trading chart
