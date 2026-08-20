@@ -774,7 +774,19 @@ AD.Game = {
   senateAction (senId, actionId) {
     const run = AD.Engine.run;
     if (!run || run.over) return;
-    const r = AD.doSenateAction(run, senId, actionId);
+    // A senator's quirk move (see senquirks.js) is not in the shared action
+    // table, so it resolves through its own runner first.
+    const sn = AD.senatorById(run, senId);
+    const bespoke = AD.senatorMoveById ? AD.senatorMoveById(sn, actionId) : null;
+    let r;
+    if (bespoke) {
+      if (bespoke.once && AD.moveSpent(sn, bespoke.id)) return;
+      if (bespoke.cost && run.cash < bespoke.cost) return;
+      if (bespoke.cost) run.cash = Math.round((run.cash - bespoke.cost) * 100) / 100;
+      r = AD.runBespoke(run, sn, bespoke);
+    } else {
+      r = AD.doSenateAction(run, senId, actionId);
+    }
     if (!r.ok) return;
     AD.saveRun(run);
     AD.Audio.play(actionId === 'sack' ? 'gavel' : actionId === 'humiliate' ? 'betray' : 'good');

@@ -1076,13 +1076,24 @@ AD.UI = {
 
     this.el('sen-list').innerHTML = list.map(s => {
       const mood = AD.senMood(s);
-      const buttons = AD.SENATE_ACTIONS.map(act => {
-        const avail = AD.senateActionAvailable(run, s, act);
-        const c = AD.senateCostFor(run, s, act);
-        const cost = c ? ` <em>${AD.fmtCash(c)}</em>` : '';
-        return `<button class="sen-act act-${act.id}" data-sen="${s.id}" data-senact="${act.id}" ${avail.ok ? '' : 'disabled'} title="${avail.ok ? act.blurb : avail.reason}">${act.icon} ${act.label}${cost}${avail.ok ? '' : ' <span class="act-lock">' + AD.reasonBadge(avail.reason) + '</span>'}</button>`;
+      const buttons = AD.senatorMoves(s).map(act => {
+        const spent = act.bespoke && act.once && AD.moveSpent(s, act.id);
+        const c = act.bespoke ? (act.cost || 0) : AD.senateCostFor(run, s, act);
+        const avail = act.bespoke
+          ? (c && run.cash < c ? { ok: false, reason: 'Not enough cash.' } : { ok: true })
+          : AD.senateActionAvailable(run, s, act);
+        return this.actBtnHTML({
+          cls: 'act-' + act.id, icon: act.icon, label: act.label,
+          cost: c ? AD.fmtCash(c) : '',
+          blurb: act.blurb, ok: avail.ok, reason: avail.reason, spent: spent, bespoke: act.bespoke,
+          data: 'data-sen="' + s.id + '" data-senact="' + act.id + '"'
+        });
       }).join('');
-      const tell = AD.SEN_TELLS[s.temperament];
+      // The temperament tell says how they answer the shared verbs; the quirk
+      // tell says what they personally want, which is what the signature move
+      // is built on. Both, so the row reads as a person rather than a stat line.
+      const q = AD.senQuirk(s);
+      const tell = AD.SEN_TELLS[s.temperament] + (q ? ' ' + q.tell : '');
       return `<div class="sen-row mood-${mood.key} party-${s.party}">
         <div class="sen-top">
           <span class="sen-dot"></span>

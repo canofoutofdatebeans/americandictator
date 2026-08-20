@@ -136,6 +136,10 @@ AD.makeSenate = function (run) {
       temperament,
       suePrice,
       gripe: own && loyalty < 70 ? pick(AD.SEN_GRIPES) : null,
+      // A personal angle, drawn once and fixed for the run. It is what makes
+      // THIS senator's option list different from the next one's: each quirk
+      // carries its own signature move (see AD.SENATOR_QUIRKS in moves.js).
+      quirk: pick(own ? AD.SEN_QUIRKS_OWN : AD.SEN_QUIRKS_OPP),
       sued: false,
       gone: false,
       appointee: false                   // true once they replaced a sacked seat
