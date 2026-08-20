@@ -1399,38 +1399,109 @@ AD.UI = {
   /* A two-line trading chart: the S&P 500 (the country's market) and the
      President's own business index (a higher-beta bet that also rides his
      personal wealth). Pure inline SVG, theme-aware, no library. */
+  /* A proper trading chart rather than two bare sparklines: gridlines and a
+     price axis, an OHLC-style candle body per month for the index, a filled
+     area under it, the run's high/low marked, and a volume-ish bar strip for
+     the months where something actually happened. Still one inline SVG and no
+     library, because the whole game is meant to run off a static folder. */
   renderMarketChart (run) {
     const el = this.el('market-chart');
     if (!el) return;
     const hist = (run.marketHistory || []).slice(-40);
     if (hist.length < 2) { el.innerHTML = '<div class="mkt-empty">The markets open as the term begins.</div>'; return; }
-    const W = 300, H = 96, padL = 4, padR = 4, padT = 8, padB = 8;
-    const xs = (i) => padL + (i / (hist.length - 1)) * (W - padL - padR);
-    // Each series is normalised to its own min/max so both fit the same box.
-    const line = (key, cls) => {
-      const vals = hist.map(h => h[key]);
-      let lo = Math.min(...vals), hi = Math.max(...vals);
-      if (hi - lo < 1e-6) { hi = lo + 1; }
-      const y = (v) => padT + (1 - (v - lo) / (hi - lo)) * (H - padT - padB);
-      const d = hist.map((h, i) => (i ? 'L' : 'M') + xs(i).toFixed(1) + ' ' + y(h[key]).toFixed(1)).join(' ');
-      const last = vals[vals.length - 1];
-      return { d, cls, lastY: y(last), up: last >= vals[0] };
-    };
-    const sp = line('sp', 'mkt-sp');
-    const biz = line('biz', 'mkt-biz');
-    const first = hist[0], now = hist[hist.length - 1];
+
+    const W = 300, H = 132, padL = 30, padR = 6, padT = 10, padB = 22;
+    const plotW = W - padL - padR, plotH = H - padT - padB;
+    const n = hist.length;
+    const xs = i => padL + (n === 1 ? plotW / 2 : (i / (n - 1)) * plotW);
+
+    // One shared price scale for the index so the candles and the axis agree.
+    const spv = hist.map(h => h.sp);
+    let lo = Math.min(...spv), hi = Math.max(...spv);
+    const padv = Math.max(1, (hi - lo) * 0.12);
+    lo -= padv; hi += padv;
+    const y = v => padT + (1 - (v - lo) / (hi - lo)) * plotH;
+
+    // Gridlines + price axis, four steps.
+    let grid = '';
+    for (let g = 0; g <= 4; g++) {
+      const v = lo + (hi - lo) * (g / 4), gy = y(v);
+      grid += '<line class="mkt-grid" x1="' + padL + '" x2="' + (W - padR) + '" y1="' + gy.toFixed(1) + '" y2="' + gy.toFixed(1) + '"/>' +
+              '<text class="mkt-axis" x="' + (padL - 4) + '" y="' + (gy + 3).toFixed(1) + '" text-anchor="end">' + Math.round(v).toLocaleString() + '</text>';
+    }
+
+    // Candles: each month is a body from last month's close to this month's,
+    // green when it closed up. The first point has nothing to open against.
+    const cw = Math.max(1.6, Math.min(7, plotW / n * 0.55));
+    let candles = '';
+    for (let i = 1; i < n; i++) {
+      const o = hist[i - 1].sp, c = hist[i].sp;
+      const up = c >= o;
+      const yo = y(o), yc = y(c);
+      const top = Math.min(yo, yc), h = Math.max(1.4, Math.abs(yc - yo));
+      const cx = xs(i);
+      candles += '<line class="mkt-wick ' + (up ? 'up' : 'dn') + '" x1="' + cx.toFixed(1) + '" x2="' + cx.toFixed(1) +
+                 '" y1="' + (top - 2.5).toFixed(1) + '" y2="' + (top + h + 2.5).toFixed(1) + '"/>' +
+                 '<rect class="mkt-candle ' + (up ? 'up' : 'dn') + '" x="' + (cx - cw / 2).toFixed(1) + '" y="' + top.toFixed(1) +
+                 '" width="' + cw.toFixed(1) + '" height="' + h.toFixed(1) + '" rx="1"/>';
+    }
+
+    // The index line and the area beneath it.
+    const dLine = hist.map((h, i) => (i ? 'L' : 'M') + xs(i).toFixed(1) + ' ' + y(h.sp).toFixed(1)).join(' ');
+    const dArea = dLine + ' L' + xs(n - 1).toFixed(1) + ' ' + (H - padB) + ' L' + xs(0).toFixed(1) + ' ' + (H - padB) + ' Z';
+
+    // Your own holdings on their own scale, so both fit the same box.
+    const bizv = hist.map(h => h.biz);
+    let blo = Math.min(...bizv), bhi = Math.max(...bizv);
+    if (bhi - blo < 1e-6) bhi = blo + 1;
+    const by = v => padT + (1 - (v - blo) / (bhi - blo)) * plotH;
+    const dBiz = hist.map((h, i) => (i ? 'L' : 'M') + xs(i).toFixed(1) + ' ' + by(h.biz).toFixed(1)).join(' ');
+
+    // High and low of the run, called out where they happened.
+    const hiI = spv.indexOf(Math.max(...spv)), loI = spv.indexOf(Math.min(...spv));
+    const mark = (i, cls, label) =>
+      '<circle class="mkt-mark ' + cls + '" cx="' + xs(i).toFixed(1) + '" cy="' + y(spv[i]).toFixed(1) + '" r="2.4"/>' +
+      '<text class="mkt-marklab ' + cls + '" x="' + xs(i).toFixed(1) + '" y="' + (y(spv[i]) + (cls === 'hi' ? -6 : 11)).toFixed(1) +
+      '" text-anchor="middle">' + label + '</text>';
+
+    // Month ticks along the bottom, thinned so they never collide.
+    const step = Math.max(1, Math.round(n / 6));
+    let ticks = '';
+    for (let i = 0; i < n; i += step) {
+      ticks += '<text class="mkt-axis" x="' + xs(i).toFixed(1) + '" y="' + (H - 6) + '" text-anchor="middle">M' + (i + 1) + '</text>';
+    }
+
+    const first = hist[0], now = hist[n - 1];
     const pct = (a, b) => (b === 0 ? 0 : Math.round(((a - b) / b) * 100));
     const spPct = pct(now.sp, first.sp), bizPct = pct(now.biz, first.biz);
     const arrow = p => p >= 0 ? '▲' : '▼';
+    const dayPct = n > 1 ? pct(now.sp, hist[n - 2].sp) : 0;
+
     el.innerHTML =
-      `<div class="mkt-legend">
-         <span class="mkt-key sp"><i></i>S&amp;P 500 <b>${now.sp.toLocaleString()}</b> <em class="${spPct >= 0 ? 'up' : 'dn'}">${arrow(spPct)}${Math.abs(spPct)}%</em></span>
-         <span class="mkt-key biz"><i></i>${AD.clean('Your Business', this.settings.clean)} <b>${now.biz.toLocaleString()}</b> <em class="${bizPct >= 0 ? 'up' : 'dn'}">${arrow(bizPct)}${Math.abs(bizPct)}%</em></span>
-       </div>
-       <svg viewBox="0 0 ${W} ${H}" class="mkt-svg" preserveAspectRatio="none" aria-hidden="true">
-         <path d="${sp.d}" class="mkt-sp" fill="none"/>
-         <path d="${biz.d}" class="mkt-biz" fill="none"/>
-       </svg>`;
+      '<div class="mkt-legend">' +
+        '<span class="mkt-key sp"><i></i>S&amp;P 500 <b>' + now.sp.toLocaleString() + '</b> ' +
+          '<em class="' + (spPct >= 0 ? 'up' : 'dn') + '">' + arrow(spPct) + Math.abs(spPct) + '%</em></span>' +
+        '<span class="mkt-key biz"><i></i>' + AD.clean('Your Business', this.settings.clean) + ' <b>' + now.biz.toLocaleString() + '</b> ' +
+          '<em class="' + (bizPct >= 0 ? 'up' : 'dn') + '">' + arrow(bizPct) + Math.abs(bizPct) + '%</em></span>' +
+      '</div>' +
+      '<svg viewBox="0 0 ' + W + ' ' + H + '" class="mkt-svg" aria-hidden="true">' +
+        '<defs><linearGradient id="mktFill" x1="0" y1="0" x2="0" y2="1">' +
+          '<stop offset="0%" stop-color="#5aa9e6" stop-opacity=".28"/>' +
+          '<stop offset="100%" stop-color="#5aa9e6" stop-opacity="0"/>' +
+        '</linearGradient></defs>' +
+        grid +
+        '<path d="' + dArea + '" fill="url(#mktFill)" stroke="none"/>' +
+        candles +
+        '<path d="' + dLine + '" class="mkt-sp" fill="none"/>' +
+        '<path d="' + dBiz + '" class="mkt-biz" fill="none"/>' +
+        mark(hiI, 'hi', Math.round(spv[hiI]).toLocaleString()) +
+        mark(loI, 'lo', Math.round(spv[loI]).toLocaleString()) +
+        ticks +
+      '</svg>' +
+      '<div class="mkt-foot">' +
+        '<span>Range <b>' + Math.round(Math.min(...spv)).toLocaleString() + '</b> - <b>' + Math.round(Math.max(...spv)).toLocaleString() + '</b></span>' +
+        '<span class="' + (dayPct >= 0 ? 'up' : 'dn') + '">Last month ' + arrow(dayPct) + Math.abs(dayPct) + '%</span>' +
+      '</div>';
   },
 
   renderEconomy (result) {

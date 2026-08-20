@@ -1535,3 +1535,31 @@ html[data-motion="off"] .rs-terrible{animation:none}
   font-size:7px;letter-spacing:1.6px;font-weight:800;
   color:#c9a227;opacity:.85;margin-bottom:1px;
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   THE TRADING CHART                                  (build 111)
+   Gridlines, a price axis, candles, an area fill and the run's
+   high/low. Still one inline SVG and no charting library.
+   ═══════════════════════════════════════════════════════════════ */
+.mkt-svg{width:100%;height:auto;display:block;overflow:visible}
+.mkt-grid{stroke:rgba(255,255,255,.07);stroke-width:1;vector-effect:non-scaling-stroke}
+.mkt-axis{fill:#5b6880;font-size:7px;font-variant-numeric:tabular-nums}
+.mkt-candle.up{fill:#4f9160;opacity:.85}
+.mkt-candle.dn{fill:#b3202b;opacity:.85}
+.mkt-wick{stroke-width:1;vector-effect:non-scaling-stroke}
+.mkt-wick.up{stroke:#4f9160;opacity:.6}
+.mkt-wick.dn{stroke:#b3202b;opacity:.6}
+.mkt-mark{stroke:#0a1120;stroke-width:1.2}
+.mkt-mark.hi{fill:#8fd0a0}
+.mkt-mark.lo{fill:#e0857c}
+.mkt-marklab{font-size:7px;font-weight:700;font-variant-numeric:tabular-nums}
+.mkt-marklab.hi{fill:#8fd0a0}
+.mkt-marklab.lo{fill:#e0857c}
+.mkt-foot{
+  display:flex;justify-content:space-between;gap:8px;
+  margin-top:5px;font-size:9.5px;color:var(--muted);
+  font-variant-numeric:tabular-nums;
+}
+.mkt-foot b{color:var(--paper2);font-weight:700}
+.mkt-foot .up{color:#8fd0a0}
+.mkt-foot .dn{color:#e0857c}
