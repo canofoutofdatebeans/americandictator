@@ -226,17 +226,17 @@
            (icons.js) already exists exactly to replace text like this. -->
       <div class="chip-row">
         <button class="const-chip" id="const-chip" data-act="constitution"
-                title="THE CONSTITUTION — The Ledger of Broken Clauses"><b>0/16</b></button>
+                title="THE CONSTITUTION"><b>0/16</b></button>
         <button class="const-chip reno-chip" id="reno-chip" data-act="renovations"
-                title="THE RESIDENCE — improvements to the White House"><b>0/13</b></button>
+                title="THE RESIDENCE"><b>0/13</b></button>
         <button class="const-chip call-chip" id="call-chip" data-act="call"
-                data-i18n-title="chip.phone" title="THE PHONE"><span class="chip-ico" id="ico-phone"></span></button>
+                data-i18n-title="chip.phone" title="THE PHONE"><span class="chip-ico" id="ico-phone"></span><span class="chip-name">The Phone</span></button>
         <button class="const-chip war-chip" id="war-chip" data-act="war"
-                data-i18n-title="chip.war" title="THE WAR ROOM"><span class="chip-ico" id="ico-war"></span></button>
+                data-i18n-title="chip.war" title="THE WAR ROOM"><span class="chip-ico" id="ico-war"></span><span class="chip-name">War Room</span></button>
         <button class="const-chip econ-chip" id="econ-chip" data-act="economy"
-                data-i18n-title="chip.economy" title="THE ECONOMY"><span class="chip-ico" id="ico-econ"></span></button>
+                data-i18n-title="chip.economy" title="THE ECONOMY"><span class="chip-ico" id="ico-econ"></span><span class="chip-name">Economy</span></button>
         <button class="const-chip pardon-chip" id="pardon-chip" data-act="pardon"
-                data-i18n-title="chip.pardons" title="THE PARDONS"><span class="chip-ico" id="ico-pardon"></span></button>
+                data-i18n-title="chip.pardons" title="THE PARDONS"><span class="chip-ico" id="ico-pardon"></span><span class="chip-name">Pardons</span></button>
       </div>
     </div>
 
@@ -336,6 +336,7 @@
   <div class="overlay" id="ov-corruption" hidden role="dialog" aria-modal="true">
     <div class="panel narrow scroll">
       <h2 class="panel-h" data-i18n="room.private">Private Interests</h2>
+      <div class="room-status" id="rs-corruption"></div>
       <div class="corr-head">
         <div class="corr-cash">Available <b id="corr-cash">$3.0B</b></div>
         <div class="corr-income">Monthly <b id="corr-income">$0M</b></div>
@@ -352,6 +353,7 @@
   <div class="overlay" id="ov-press" hidden role="dialog" aria-modal="true">
     <div class="panel narrow scroll">
       <h2 class="panel-h" data-i18n="room.pressroom">The Press Room</h2>
+      <div class="room-status" id="rs-press"></div>
       <div class="corr-head sen-head">
         <div class="corr-cash">Friendly <b id="press-friendly">0</b></div>
         <div>Hostile <b id="press-hostile">0</b></div>
@@ -367,6 +369,7 @@
   <div class="overlay" id="ov-street" hidden role="dialog" aria-modal="true">
     <div class="panel narrow scroll">
       <h2 class="panel-h" data-i18n="room.publicorder">Public Order</h2>
+      <div class="room-status" id="rs-street"></div>
       <div class="corr-head sen-head">
         <div class="corr-cash">National Unrest <b id="street-nat">0%</b></div>
         <div>Boiling <b id="street-boiling">0</b></div>
@@ -382,6 +385,7 @@
   <div class="overlay" id="ov-courts" hidden role="dialog" aria-modal="true">
     <div class="panel narrow scroll">
       <h2 class="panel-h" data-i18n="room.bench">The Bench</h2>
+      <div class="room-status" id="rs-courts"></div>
       <div class="corr-head sen-head">
         <div class="corr-cash">Favourable <b id="courts-friendly">0</b></div>
         <div>Hostile <b id="courts-hostile">0</b></div>
@@ -397,6 +401,7 @@
   <div class="overlay" id="ov-basepop" hidden role="dialog" aria-modal="true">
     <div class="panel narrow scroll">
       <h2 class="panel-h" data-i18n="room.rally">The Rally</h2>
+      <div class="room-status" id="rs-basepop"></div>
       <div class="corr-head sen-head">
         <div class="corr-cash">Rallies Left <b id="rally-left">2</b></div>
         <div>This Month <b id="rally-note-h">Red meat</b></div>
@@ -411,6 +416,7 @@
   <div class="overlay" id="ov-economy" hidden role="dialog" aria-modal="true">
     <div class="panel narrow scroll">
       <h2 class="panel-h" data-i18n="room.economy">The Economy</h2>
+      <div class="room-status" id="rs-economy"></div>
       <div class="market-chart" id="market-chart"></div>
       <div class="sen-tabs" id="econ-tabs"></div>
       <div class="corr-head sen-head" id="econ-head"></div>
@@ -423,6 +429,7 @@
   <div class="overlay" id="ov-war" hidden role="dialog" aria-modal="true">
     <div class="panel narrow scroll">
       <h2 class="panel-h" data-i18n="room.war">The War Room</h2>
+      <div class="room-status" id="rs-war"></div>
       <div class="corr-head sen-head">
         <div class="corr-cash">Wars Ongoing <b id="war-active">0</b></div>
         <div>This Month <b id="war-note-h">Declare one</b></div>
@@ -438,6 +445,7 @@
   <div class="overlay" id="ov-call" hidden role="dialog" aria-modal="true">
     <div class="panel narrow scroll">
       <h2 class="panel-h" data-i18n="room.phone">The Phone</h2>
+      <div class="room-status" id="rs-call"></div>
       <div class="corr-head sen-head">
         <div class="corr-cash">Calls Left <b id="call-left">2</b></div>
         <div>This Month <b id="call-note-h">Executive time</b></div>
@@ -453,6 +461,7 @@
   <div class="overlay" id="ov-pardon" hidden role="dialog" aria-modal="true">
     <div class="panel narrow scroll">
       <h2 class="panel-h" data-i18n="room.pardon">The Pardon Power</h2>
+      <div class="room-status" id="rs-pardon"></div>
       <div class="corr-head">
         <div class="corr-cash">Pardons <b id="pardon-count">0</b></div>
         <div>Cronies <b id="pardon-crooks">0</b></div>
@@ -469,6 +478,7 @@
   <div class="overlay" id="ov-senate" hidden role="dialog" aria-modal="true">
     <div class="panel narrow scroll">
       <h2 class="panel-h" data-i18n="room.caucus">The Caucus</h2>
+      <div class="room-status" id="rs-senate"></div>
       <div class="corr-head sen-head">
         <div class="corr-cash">Your Party <b id="sen-own">53</b></div>
         <div>Avg Loyalty <b id="sen-avg">--</b></div>
@@ -689,6 +699,7 @@
 <script src="js/events.js?v=110"></script>
 <script src="js/endings.js?v=110"></script>
 <script src="js/engine.js?v=110"></script>
+<script src="js/status.js?v=110"></script>
 <script src="js/ui.js?v=110"></script>
 <script src="js/main.js?v=110"></script>
 </body>

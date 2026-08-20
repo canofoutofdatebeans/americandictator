@@ -1377,3 +1377,107 @@ html[data-cb="on"] .fac.danger .fac-val{color:#93c5fd}
 }
 .desk-sub{margin:0 0 8px;font-size:13px;line-height:1.5;color:var(--paper2)}
 .desk-hint{font-size:11.5px;line-height:1.5;color:var(--muted);font-style:italic}
+
+/* ═══════════════════════════════════════════════════════════════
+   STATE OF THE ROOM banner (js/status.js)            (build 110)
+   Five steps, one look, a different scene per room per step.
+   ═══════════════════════════════════════════════════════════════ */
+.room-status{margin:0 0 11px}
+.rs{
+  display:flex;align-items:center;gap:11px;
+  padding:10px 12px;border-radius:12px;
+  border:1px solid var(--edge);
+  background:linear-gradient(180deg,#141d33,#0f1626);
+}
+.rs-art{
+  flex:0 0 auto;font-size:27px;line-height:1;
+  filter:drop-shadow(0 2px 4px rgba(0,0,0,.5));
+  white-space:nowrap;
+}
+.rs-body{flex:1;min-width:0}
+.rs-tag{
+  display:flex;align-items:baseline;gap:7px;
+  font-size:10px;letter-spacing:2.4px;font-weight:800;margin-bottom:3px;
+}
+.rs-pct{
+  font-size:12px;letter-spacing:0;font-weight:700;
+  color:var(--paper2);font-variant-numeric:tabular-nums;opacity:.85;
+}
+.rs-pct::after{content:'/100';font-size:8.5px;opacity:.6;margin-left:1px}
+.rs-line{font-size:11.5px;line-height:1.45;color:var(--paper2)}
+.rs-bar{
+  height:4px;border-radius:99px;background:#0a1120;
+  overflow:hidden;margin-top:7px;
+}
+.rs-bar i{display:block;height:100%;border-radius:99px;transition:width .5s cubic-bezier(.2,.8,.25,1)}
+
+/* the five states */
+.rs-great   {border-color:#5c4a15;background:linear-gradient(180deg,#1c1608,#12100a)}
+.rs-great   .rs-tag{color:#f2dd8a}
+.rs-great   .rs-bar i{background:linear-gradient(90deg,#c9a227,#f2dd8a)}
+.rs-good    {border-color:#2f5138;background:linear-gradient(180deg,#14231a,#101a13)}
+.rs-good    .rs-tag{color:#a8d4b0}
+.rs-good    .rs-bar i{background:linear-gradient(90deg,#4f9160,#8fd0a0)}
+.rs-ok      {border-color:#26324e}
+.rs-ok      .rs-tag{color:#9db6d6}
+.rs-ok      .rs-bar i{background:linear-gradient(90deg,#3d5488,#7f9fd0)}
+.rs-bad     {border-color:#5a3020;background:linear-gradient(180deg,#241408,#170f0a)}
+.rs-bad     .rs-tag{color:#e0b07a}
+.rs-bad     .rs-bar i{background:linear-gradient(90deg,#b3701f,#e0b07a)}
+.rs-terrible{border-color:#5a2030;background:linear-gradient(180deg,#25101a,#170b0f);
+             animation:rsPulse 2.6s ease-in-out infinite}
+.rs-terrible .rs-tag{color:#f0a0a6}
+.rs-terrible .rs-bar i{background:linear-gradient(90deg,#8d1d28,#e0575f)}
+@keyframes rsPulse{0%,100%{border-color:#5a2030}50%{border-color:#8d2d3d}}
+html[data-motion="off"] .rs-terrible{animation:none}
+
+/* ═══════════════════════════════════════════════════════════════
+   THE SITUATION ROOM: the management-room buttons     (build 110)
+   With the crisis card moved into a pop-up there is finally space
+   to make these read as real destinations rather than a token strip.
+   ═══════════════════════════════════════════════════════════════ */
+.chip-row{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:6px;
+}
+.chip-row .const-chip{
+  margin-top:0;height:auto;min-height:56px;padding:8px 6px 7px;
+  position:relative;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:4px;
+  background:linear-gradient(180deg,#16203a,#0f1728);
+  border:1px solid #26324e;border-radius:11px;
+  letter-spacing:.4px;
+  transition:border-color .18s,background .18s,transform .12s;
+}
+.chip-row .const-chip:hover{
+  background:linear-gradient(180deg,#1b2748,#121b30);
+  border-color:#3d5488;transform:translateY(-1px);
+}
+.chip-row .const-chip:active{transform:translateY(0)}
+.chip-row .chip-ico{margin:0;display:flex;opacity:.95}
+.chip-row .chip-ico svg{width:22px;height:22px}
+/* the room's name, on the button, legibly */
+.chip-name{
+  font-size:8.5px;letter-spacing:1.1px;font-weight:700;
+  color:var(--paper2);text-transform:uppercase;
+  text-align:center;line-height:1.15;
+  max-width:100%;overflow:hidden;
+}
+/* the count badge, top-right, out of the way of the label */
+.chip-row .const-chip b{
+  position:absolute;top:4px;right:6px;
+  font-size:8.5px;letter-spacing:0;font-weight:800;
+  color:var(--gold-soft);font-variant-numeric:tabular-nums;
+}
+.chip-row .const-chip.started{border-color:#4a3c14}
+.chip-row .const-chip.started .chip-name{color:#d8c58a}
+.chip-row .const-chip.full{
+  background:linear-gradient(180deg,#2a1016,#1c0b0f);border-color:#8d2d3d;
+}
+.chip-row .const-chip.full .chip-name,
+.chip-row .const-chip.full b{color:#f0a0a6}
+/* a room that needs attention right now gets a quiet pip */
+.chip-row .const-chip.attn::after{
+  content:'';position:absolute;top:5px;left:6px;
+  width:5px;height:5px;border-radius:50%;
+  background:#e0575f;box-shadow:0 0 6px rgba(224,87,95,.9);
+}

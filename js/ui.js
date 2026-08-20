@@ -184,14 +184,16 @@ AD.UI = {
     const dico = this.el('ico-pardon'); if (dico && !dico.innerHTML) dico.innerHTML = AD.icon('pardon');
     const chip = this.el('const-chip');
     const cn = AD.clauseCount(run);
-    chip.innerHTML = '<span class="chip-ico">' + AD.icon('constitution') + '</span><b>' + cn + '/' + AD.CLAUSES.length + '</b>';
+    chip.innerHTML = '<span class="chip-ico">' + AD.icon('constitution') + '</span>' +
+      '<span class="chip-name">Constitution</span><b>' + cn + '/' + AD.CLAUSES.length + '</b>';
     chip.classList.toggle('full', AD.allClausesBroken(run));
     chip.classList.toggle('started', cn > 0);
     chip.title = AD.t('chip.constitution') + ' — ' + cn + '/' + AD.CLAUSES.length;
 
     const rchip = this.el('reno-chip');
     const rn = (run.renos || []).length;
-    rchip.innerHTML = '<span class="chip-ico">' + AD.icon('residence') + '</span><b>' + rn + '/' + AD.RENOS.length + '</b>';
+    rchip.innerHTML = '<span class="chip-ico">' + AD.icon('residence') + '</span>' +
+      '<span class="chip-name">Residence</span><b>' + rn + '/' + AD.RENOS.length + '</b>';
     rchip.classList.toggle('started', rn > 0);
     rchip.classList.toggle('full', rn === AD.RENOS.length);
     rchip.title = AD.t('chip.residence') + ' — ' + rn + '/' + AD.RENOS.length;
@@ -1001,8 +1003,17 @@ AD.UI = {
 
   /* ---------- the caucus (senate) ---------- */
   senTab: 'attention',
+  /* Drop the five-step state-of-the-room banner into whichever room asked for
+     it. A room that has no slot in the markup is simply skipped. */
+  paintRoomStatus (key, value, invert) {
+    const slot = this.el('rs-' + key);
+    if (!slot || !AD.roomStatusHTML) return;
+    slot.innerHTML = AD.roomStatusHTML(key, value, invert);
+  },
+
   renderSenate (result) {
     const run = AD.Engine.run;
+    this.paintRoomStatus('senate', run.meters.congress);
     AD.ensureSenate(run);
     const sum = AD.senateSummary(run);
     this.el('sen-own').textContent = sum.own;
@@ -1068,6 +1079,7 @@ AD.UI = {
 
   /* ---------- the press room ---------- */
   renderPress (result) {
+    this.paintRoomStatus('press', AD.Engine.run.meters.press);
     const run = AD.Engine.run;
     AD.ensurePress(run);
     const sum = AD.pressSummary(run);
@@ -1111,6 +1123,7 @@ AD.UI = {
 
   /* ---------- public order (street) ---------- */
   renderStreet (result) {
+    this.paintRoomStatus('street', AD.Engine.run.meters.street);
     const run = AD.Engine.run;
     AD.ensureStreet(run);
     const sum = AD.streetSummary(run);
@@ -1190,6 +1203,7 @@ AD.UI = {
 
   /* ---------- the war room ---------- */
   renderWar (result) {
+    this.paintRoomStatus('war', AD.Engine.run.meters.street);
     const run = AD.Engine.run;
     AD.ensureWars(run);
     const st = AD.warStatus(run);
@@ -1253,6 +1267,7 @@ AD.UI = {
 
   /* ---------- the bench (courts) ---------- */
   renderCourts (result) {
+    this.paintRoomStatus('courts', AD.Engine.run.meters.courts);
     const run = AD.Engine.run;
     AD.ensureCourts(run);
     const sum = AD.courtsSummary(run);
@@ -1295,6 +1310,7 @@ AD.UI = {
 
   /* ---------- the rally (base) ---------- */
   renderBasepop (result) {
+    this.paintRoomStatus('basepop', AD.Engine.run.meters.base);
     const run = AD.Engine.run;
     const left = AD.ralliesLeft(run);
     const leftEl = this.el('rally-left');
@@ -1366,6 +1382,15 @@ AD.UI = {
   },
 
   renderEconomy (result) {
+    // No single meter owns the economy, so the banner reads the live market:
+    // the S&P-alike index against its starting level, recentred on 50.
+    (function (self) {
+      const run = AD.Engine.run;
+      const h = (run && run.market && run.market.sp) || null;
+      let v = 50;
+      if (h && h.length) v = AD.clamp(50 + (h[h.length - 1] - h[0]) * 1.6, 0, 100);
+      self.paintRoomStatus('economy', v);
+    })(this);
     const run = AD.Engine.run;
     AD.ensureEconomy(run);
     this.renderMarketChart(run);
