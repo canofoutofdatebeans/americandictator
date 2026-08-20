@@ -287,13 +287,26 @@ AD.buyAsset = function (run, id) {
    corruption stays clearly worth using without doubling your odds. */
 AD.EXPOSURE_PER = 4;
 
-AD.exposure = run => Math.floor((run.assets || []).length / AD.EXPOSURE_PER);
+AD.exposure = function (run) {
+  const holdings = Math.floor((run.assets || []).length / AD.EXPOSURE_PER);
+  // Board of Peace seats carry their own, separately-scaled exposure: a Board
+  // full of nobody-in-particular is its own kind of paper trail.
+  return holdings + (AD.boardExposure ? AD.boardExposure(run) : 0);
+};
 
 /* Monthly tick: income, drips, settlements, exposure. From Engine.advance(). */
 AD.corruptionTick = function (run) {
   const p = AD.passives(run);
   const out = { cash: 0, deltas: {}, settled: false };
-  if (!run.assets || !run.assets.length) return out;
+  const hasBoard = AD.boardMembers && AD.boardMembers(run).length;
+  if ((!run.assets || !run.assets.length) && !hasBoard) return out;
+
+  // Board dues land first, so they show up in the same monthly line as the
+  // rest of the private income.
+  if (AD.boardTick) {
+    const bi = AD.boardTick(run);
+    if (bi) out.cash += bi;
+  }
 
   const exp = AD.exposure(run);
   if (exp) {

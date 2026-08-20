@@ -11,15 +11,15 @@
 
 <!-- Installable-app metadata (PWA + iOS home screen). The native shells get
      their icons from capacitor assets; this covers the web build. -->
-<link rel="manifest" href="manifest.json?v=115">
-<link rel="icon" type="image/svg+xml" href="icon.svg?v=115">
-<link rel="apple-touch-icon" href="icon.svg?v=115">
+<link rel="manifest" href="manifest.json?v=116">
+<link rel="icon" type="image/svg+xml" href="icon.svg?v=116">
+<link rel="apple-touch-icon" href="icon.svg?v=116">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Am. Dictator">
 
-<link rel="stylesheet" href="css/styles.css?v=115">
+<link rel="stylesheet" href="css/styles.css?v=116">
 </head>
 <body>
 
@@ -346,6 +346,7 @@
       </div>
       <p class="corr-note" id="corr-note">Holdings never grant Authority. They buy the machine that
         takes it, shields, multipliers, monthly drip and the income to buy more of all three.</p>
+      <div class="sen-tabs" id="corr-tabs"></div>
       <div class="corr-list" id="corr-list"></div>
       <div id="corr-heist"></div>
       <button class="btn wide" data-act="corruption-close">Back to Governing</button>
@@ -631,81 +632,83 @@
 </div>
 
 <!-- state.js creates the AD namespace, so it must load first. -->
-<script src="js/state.js?v=115"></script>
-<script src="js/i18n.js?v=115"></script>
-<script src="js/i18n/cards.js?v=115"></script>
-<script src="js/i18n/cs.js?v=115"></script>
-<script src="js/i18n/de.js?v=115"></script>
-<script src="js/i18n/es.js?v=115"></script>
-<script src="js/i18n/fr.js?v=115"></script>
-<script src="js/i18n/it.js?v=115"></script>
-<script src="js/i18n/nl.js?v=115"></script>
-<script src="js/i18n/pl.js?v=115"></script>
-<script src="js/i18n/pt.js?v=115"></script>
-<script src="js/i18n/ru.js?v=115"></script>
-<script src="js/i18n/zh.js?v=115"></script>
-<script src="js/i18n/rooms.js?v=115"></script>
-<script src="js/icons.js?v=115"></script>
-<script src="js/portraits.js?v=115"></script>
-<script src="js/seed.js?v=115"></script>
-<script src="js/audio.js?v=115"></script>
-<script src="js/music.js?v=115"></script>
-<script src="js/doctrines.js?v=115"></script>
-<script src="js/corruption.js?v=115"></script>
-<script src="js/renovations.js?v=115"></script>
-<script src="js/objectives.js?v=115"></script>
-<script src="js/senate.js?v=115"></script>
-<script src="js/press.js?v=115"></script>
-<script src="js/street.js?v=115"></script>
-<script src="js/call.js?v=115"></script>
-<script src="js/war.js?v=115"></script>
-<script src="js/courts.js?v=115"></script>
-<script src="js/basepop.js?v=115"></script>
-<script src="js/economy.js?v=115"></script>
-<script src="js/pardons.js?v=115"></script>
-<script src="js/dossier.js?v=115"></script>
-<script src="js/constitution.js?v=115"></script>
-<script src="js/tutorial.js?v=115"></script>
-<script src="js/achievements.js?v=115"></script>
-<script src="js/briefings.js?v=115"></script>
-<script src="js/cards.js?v=115"></script>
+<script src="js/state.js?v=116"></script>
+<script src="js/i18n.js?v=116"></script>
+<script src="js/i18n/cards.js?v=116"></script>
+<script src="js/i18n/cs.js?v=116"></script>
+<script src="js/i18n/de.js?v=116"></script>
+<script src="js/i18n/es.js?v=116"></script>
+<script src="js/i18n/fr.js?v=116"></script>
+<script src="js/i18n/it.js?v=116"></script>
+<script src="js/i18n/nl.js?v=116"></script>
+<script src="js/i18n/pl.js?v=116"></script>
+<script src="js/i18n/pt.js?v=116"></script>
+<script src="js/i18n/ru.js?v=116"></script>
+<script src="js/i18n/zh.js?v=116"></script>
+<script src="js/i18n/rooms.js?v=116"></script>
+<script src="js/icons.js?v=116"></script>
+<script src="js/portraits.js?v=116"></script>
+<script src="js/seed.js?v=116"></script>
+<script src="js/audio.js?v=116"></script>
+<script src="js/music.js?v=116"></script>
+<script src="js/doctrines.js?v=116"></script>
+<script src="js/corruption.js?v=116"></script>
+<script src="js/renovations.js?v=116"></script>
+<script src="js/objectives.js?v=116"></script>
+<script src="js/senate.js?v=116"></script>
+<script src="js/press.js?v=116"></script>
+<script src="js/street.js?v=116"></script>
+<script src="js/call.js?v=116"></script>
+<script src="js/war.js?v=116"></script>
+<script src="js/courts.js?v=116"></script>
+<script src="js/basepop.js?v=116"></script>
+<script src="js/economy.js?v=116"></script>
+<script src="js/pardons.js?v=116"></script>
+<script src="js/dossier.js?v=116"></script>
+<script src="js/constitution.js?v=116"></script>
+<script src="js/tutorial.js?v=116"></script>
+<script src="js/achievements.js?v=116"></script>
+<script src="js/briefings.js?v=116"></script>
+<script src="js/cards.js?v=116"></script>
 <!-- Content packs. Each pushes onto AD.CARDS, so adding a deck is adding a
      file, no engine changes. Order does not matter. -->
-<script src="js/packs/pack-a-honeymoon.js?v=115"></script>
-<script src="js/packs/pack-b-machinery.js?v=115"></script>
-<script src="js/packs/pack-c-consolidation.js?v=115"></script>
-<script src="js/packs/pack-d-evergreen.js?v=115"></script>
-<script src="js/packs/pack-e-secondterm.js?v=115"></script>
-<script src="js/packs/pack-f-record.js?v=115"></script>
-<script src="js/packs/pack-g-record.js?v=115"></script>
-<script src="js/packs/pack-h-frontier.js?v=115"></script>
-<script src="js/packs/pack-i-geopolitics.js?v=115"></script>
-<script src="js/packs/pack-j-cabinet.js?v=115"></script>
-<script src="js/packs/pack-k-family.js?v=115"></script>
-<script src="js/packs/pack-l-culturewar.js?v=115"></script>
-<script src="js/packs/pack-m-tech.js?v=115"></script>
-<script src="js/packs/pack-n-disasters.js?v=115"></script>
-<script src="js/packs/pack-o-health.js?v=115"></script>
-<script src="js/packs/pack-p-grift.js?v=115"></script>
-<script src="js/packs/pack-q-faithful.js?v=115"></script>
-<script src="js/packs/pack-r-laworder.js?v=115"></script>
+<script src="js/packs/pack-a-honeymoon.js?v=116"></script>
+<script src="js/packs/pack-b-machinery.js?v=116"></script>
+<script src="js/packs/pack-c-consolidation.js?v=116"></script>
+<script src="js/packs/pack-d-evergreen.js?v=116"></script>
+<script src="js/packs/pack-e-secondterm.js?v=116"></script>
+<script src="js/packs/pack-f-record.js?v=116"></script>
+<script src="js/packs/pack-g-record.js?v=116"></script>
+<script src="js/packs/pack-h-frontier.js?v=116"></script>
+<script src="js/packs/pack-i-geopolitics.js?v=116"></script>
+<script src="js/packs/pack-j-cabinet.js?v=116"></script>
+<script src="js/packs/pack-k-family.js?v=116"></script>
+<script src="js/packs/pack-l-culturewar.js?v=116"></script>
+<script src="js/packs/pack-m-tech.js?v=116"></script>
+<script src="js/packs/pack-n-disasters.js?v=116"></script>
+<script src="js/packs/pack-o-health.js?v=116"></script>
+<script src="js/packs/pack-p-grift.js?v=116"></script>
+<script src="js/packs/pack-q-faithful.js?v=116"></script>
+<script src="js/packs/pack-r-laworder.js?v=116"></script>
 <!-- cay.js reads AD.CAST, so it must load after cards.js -->
-<script src="js/scandals.js?v=115"></script>
-<script src="js/scandals-isle.js?v=115"></script>
-<script src="js/scandals-file.js?v=115"></script>
-<script src="js/scandals-mix.js?v=115"></script>
-<script src="js/cay.js?v=115"></script>
-<script src="js/reactive.js?v=115"></script>
-<script src="js/sections.js?v=115"></script>
-<script src="js/popups.js?v=115"></script>
-<script src="js/events.js?v=115"></script>
-<script src="js/endings.js?v=115"></script>
-<script src="js/engine.js?v=115"></script>
-<script src="js/status.js?v=115"></script>
-<script src="js/moves.js?v=115"></script>
-<script src="js/senquirks.js?v=115"></script>
-<script src="js/nations.js?v=115"></script>
-<script src="js/ui.js?v=115"></script>
-<script src="js/main.js?v=115"></script>
+<script src="js/scandals.js?v=116"></script>
+<script src="js/scandals-isle.js?v=116"></script>
+<script src="js/scandals-file.js?v=116"></script>
+<script src="js/scandals-mix.js?v=116"></script>
+<script src="js/cay.js?v=116"></script>
+<script src="js/reactive.js?v=116"></script>
+<script src="js/sections.js?v=116"></script>
+<script src="js/popups.js?v=116"></script>
+<script src="js/events.js?v=116"></script>
+<script src="js/endings.js?v=116"></script>
+<script src="js/engine.js?v=116"></script>
+<script src="js/status.js?v=116"></script>
+<script src="js/moves.js?v=116"></script>
+<script src="js/senquirks.js?v=116"></script>
+<script src="js/nations.js?v=116"></script>
+<script src="js/interests.js?v=116"></script>
+<script src="js/boardofpeace.js?v=116"></script>
+<script src="js/ui.js?v=116"></script>
+<script src="js/main.js?v=116"></script>
 </body>
 </html>

@@ -624,7 +624,11 @@ AD.UI = {
     this.el('corr-exposure').className = exp >= 3 ? 'exposed' : '';
 
     const note = this.el('corr-note');
-    if (justBought) {
+    if (this.boardMsg) {
+      note.className = 'corr-note bought' + (this.boardMsg.joined ? '' : ' refused');
+      note.innerHTML = AD.clean(this.boardMsg.text, this.settings.clean);
+      this.boardMsg = null;
+    } else if (justBought) {
       note.className = 'corr-note bought';
       note.innerHTML = `<b>${justBought.name} acquired.</b> ` +
         AD.clean(justBought.flavour, this.settings.clean);
@@ -659,8 +663,36 @@ AD.UI = {
       }
     }
 
-    this.el('corr-list').innerHTML = AD.ASSET_CATS.map(cat => {
-      const items = AD.ASSETS.filter(a => a.cat === cat.id);
+    /* Three views now: the structural holdings that never go away, the
+       rotating deals that turn over every couple of months, and the Board. */
+    const tab = this.corrTab || 'holdings';
+    const nBoard = AD.boardMembers ? AD.boardMembers(AD.Engine.run).length : 0;
+    this.el('corr-tabs').innerHTML = [
+      ['holdings', 'Holdings'],
+      ['deals',    'On the Market'],
+      ['board',    'Board of Peace' + (nBoard ? ' (' + nBoard + ')' : '')]
+    ].map(t => `<button class="sen-tab ${tab === t[0] ? 'on' : ''}" data-corrtab="${t[0]}">${t[1]}</button>`).join('');
+
+    if (tab === 'board') { this.renderBoard(run); return; }
+
+    const cats = tab === 'deals'
+      ? AD.ASSET_CATS.filter(c => ['hospitality', 'appointments', 'licensing', 'ventures'].indexOf(c.id) !== -1)
+      : AD.ASSET_CATS.filter(c => ['media', 'lawfare', 'influence', 'enrichment'].indexOf(c.id) !== -1);
+
+    // On the Market shows only what is offered THIS window; Holdings shows the
+    // permanent catalogue.
+    const offered = (tab === 'deals' && AD.offeredInterests) ? AD.offeredInterests(run) : null;
+    const inScope = a => offered ? offered.some(o => o.id === a.id) : true;
+
+    const head = tab === 'deals'
+      ? `<div class="deal-window">The market turns over in
+           <b>${AD.monthsToRefresh(run)} month${AD.monthsToRefresh(run) === 1 ? '' : 's'}</b>.
+           These are the deals on the table right now; miss them and the next lot will be different.</div>`
+      : '';
+
+    this.el('corr-list').innerHTML = head + cats.map(cat => {
+      const items = AD.ASSETS.filter(a => a.cat === cat.id && (AD.owns(run, a.id) || inScope(a)));
+      if (!items.length) return '';
       const rows = items.map(a => {
         const owned = AD.owns(run, a.id);
         const locked = !!(a.req && !a.req(run));
@@ -669,7 +701,7 @@ AD.UI = {
         return `<div class="asset ${cls}">
           <div class="asset-top">
             <b>${a.name}</b>
-            <span class="asset-cost">${owned ? 'OWNED' : '$' + a.cost.toFixed(1) + 'B'}</span>
+            <span class="asset-cost">${owned ? 'OWNED' : '$' + a.cost.toFixed(a.cost < 1 ? 2 : 1) + 'B'}</span>
           </div>
           <i class="asset-blurb">${AD.clean(a.blurb, this.settings.clean)}</i>
           <div class="asset-effect">${a.effect}</div>
@@ -681,6 +713,51 @@ AD.UI = {
       return `<div class="asset-cat"><div class="asset-cat-h">${cat.icon} ${cat.name}</div>
         <p class="asset-cat-b">${cat.blurb}</p>${rows}</div>`;
     }).join('');
+  },
+
+  /* THE BOARD OF PEACE. Membership is a billion dollars. The countries whose
+     endorsement would mean something decline and say why; the ones that accept
+     are buying something. The Board therefore fills up with exactly the
+     membership that makes it worthless, which is the joke and the mechanic. */
+  renderBoard (run) {
+    const members = AD.boardMembers(run);
+    const refused = run.boardRefused || [];
+    const cands = AD.boardCandidates(run);
+    const inc = Math.round(AD.boardIncome(run) * 1000);
+
+    const card = (n, state) => {
+      const nat = AD.econNation(n);
+      if (!nat) return '';
+      const canAfford = run.cash >= AD.BOARD_FEE;
+      return `<div class="asset ${state === 'in' ? 'owned' : state === 'no' ? 'locked' : (canAfford ? 'buyable' : 'poor')}">
+        <div class="asset-top"><b>${nat.name}</b>
+          <span class="asset-cost">${state === 'in' ? 'MEMBER' : state === 'no' ? 'DECLINED' : '$' + AD.BOARD_FEE.toFixed(0) + 'B'}</span></div>
+        <i class="asset-blurb">${AD.clean(nat.blurb, this.settings.clean)}</i>
+        ${state === 'open'
+          ? `<button class="btn asset-buy" data-board="${nat.id}" ${canAfford ? '' : 'disabled'}>Send the Invitation</button>`
+          : `<div class="asset-effect">${state === 'in'
+              ? 'Pays $' + Math.round(AD.BOARD_DUES * 1000) + 'M a month in dues.'
+              : AD.clean(AD.boardReason(nat), this.settings.clean)}</div>`}
+      </div>`;
+    };
+
+    this.el('corr-list').innerHTML =
+      `<div class="deal-window">A prestigious international body, founded by you, chaired by you,
+        headquartered in one of your own buildings. A seat costs <b>$${AD.BOARD_FEE}B</b>, payable to a
+        foundation whose accounts are not public. Members pay
+        <b>$${Math.round(AD.BOARD_DUES * 1000)}M a month</b> in dues.
+        ${members.length ? `Currently <b>${members.length}</b> member${members.length === 1 ? '' : 's'},
+          <b>$${inc}M/mo</b>.` : 'Currently nobody has joined.'}
+        An invitation that is refused costs you nothing but the afternoon.</div>` +
+      (members.length ? `<div class="asset-cat"><div class="asset-cat-h">\u{1F54A}\u{FE0F} Members</div>
+        <p class="asset-cat-b">Every one of them wanted something, and every one of them got it.</p>
+        ${members.map(m => card(m, 'in')).join('')}</div>` : '') +
+      `<div class="asset-cat"><div class="asset-cat-h">\u{1F4E8} Invitations</div>
+        <p class="asset-cat-b">The ones worth having will say no. Send it anyway; it is only a phone call.</p>
+        ${cands.slice(0, 24).map(n => card(n.id, 'open')).join('')}</div>` +
+      (refused.length ? `<div class="asset-cat"><div class="asset-cat-h">\u{1F6AB} Declined</div>
+        <p class="asset-cat-b">They will not be asked again.</p>
+        ${refused.map(m => card(m, 'no')).join('')}</div>` : '');
   },
 
   /* ---------- the pardon power ---------- */

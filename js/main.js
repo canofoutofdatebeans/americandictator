@@ -526,6 +526,23 @@ AD.Game = {
   },
 
   /* ---------- corruption ---------- */
+  /* Send a Board of Peace invitation. A refusal costs nothing but the
+     afternoon, so the interesting decision is who you are willing to be seen
+     asking, not whether you can afford it. */
+  inviteBoard (nationId) {
+    const run = AD.Engine.run;
+    if (!run || run.over) return;
+    const r = AD.inviteToBoard(run, nationId);
+    if (!r.ok) return;
+    AD.saveRun(run);
+    AD.Audio.play(r.joined ? 'money' : 'bad');
+    // The refusal IS the payoff, so it has to be shown. It lands in the same
+    // note banner an acquisition uses.
+    AD.UI.boardMsg = { joined: r.joined, text: r.res };
+    AD.UI.renderCorruption();
+    AD.UI.renderHUD();
+  },
+
   buyAsset (id) {
     const run = AD.Engine.run;
     if (!run || run.over) return;
@@ -906,6 +923,14 @@ AD.Game = {
 
       const buy = e.target.closest('[data-buy]');
       if (buy && !buy.disabled) { this.buyAsset(buy.dataset.buy); return; }
+
+      // Private Interests: switch between the permanent catalogue, the
+      // rotating market and the Board of Peace.
+      const ctab = e.target.closest('[data-corrtab]');
+      if (ctab) { AD.UI.corrTab = ctab.dataset.corrtab; AD.UI.renderCorruption(); return; }
+
+      const invite = e.target.closest('[data-board]');
+      if (invite && !invite.disabled) { this.inviteBoard(invite.dataset.board); return; }
 
       const build = e.target.closest('[data-build]');
       if (build && !build.disabled) { this.buildReno(build.dataset.build); return; }
