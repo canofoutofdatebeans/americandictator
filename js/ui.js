@@ -149,17 +149,32 @@ AD.UI = {
       (run.term > 1 ? ' · 2nd Term' : '') +
       ' · ' + (((run.cardInMonth || 0) % AD.CARDS_PER_MONTH) + 1) + '/' + AD.CARDS_PER_MONTH;
     this.el('hud-rank').textContent = AD.rankFor(run.authority);
+    /* THE FORTUNE, one half of the hero. Shows the money, the target, how far
+       along the track it is, and what the holdings pay per month. */
     const inc = AD.passives(run).income || 0;
+    const goal = AD.wealthGoal(run);
     const cashEl = this.el('hud-cash');
     const prevCash = this._hudCash; this._hudCash = run.cash;
-    cashEl.innerHTML = '💰 $<span class="hud-cash-n">' + run.cash.toFixed(1) + '</span>B' +
-      (inc ? '<em>+' + Math.round(inc * 1000) + 'M</em>' : '');
+    cashEl.innerHTML = '$<span class="hud-cash-n">' + run.cash.toFixed(1) + '</span>B';
     if (prevCash != null && prevCash !== run.cash)
       this.rollNum(cashEl.querySelector('.hud-cash-n'), prevCash, run.cash, v => v.toFixed(1));
-    cashEl.classList.toggle('rich', run.cash >= AD.wealthGoal(run));
-    cashEl.title = run.cash >= AD.wealthGoal(run)
-      ? 'Personal wealth. The fortune is secured.'
-      : `Personal wealth, $${(AD.wealthGoal(run) - run.cash).toFixed(1)}B short of the fortune`;
+
+    const cashGoalEl = this.el('cash-goal');
+    if (cashGoalEl) cashGoalEl.textContent = '/ $' + goal + 'B' + (inc ? '  +$' + Math.round(inc * 1000) + 'M/mo' : '');
+    const cashFill = this.el('cash-fill');
+    if (cashFill) cashFill.style.width = AD.clamp((run.cash / goal) * 100, 0, 100) + '%';
+
+    const cashPath = this.el('path-cash');
+    if (cashPath) {
+      const cashWon = run.cash >= goal;
+      cashPath.classList.toggle('won', cashWon);
+      cashPath.classList.toggle('near', !cashWon && run.cash >= goal * 0.6);
+      cashPath.title = cashWon
+        ? 'The fortune is secured. Whatever else happens, you have already won the other game.'
+        : 'Personal wealth, $' + (goal - run.cash).toFixed(1) + 'B short of the fortune.';
+      const foot = this.el('cash-foot');
+      if (foot) foot.textContent = cashWon ? 'SECURED' : 'the money';
+    }
 
     // The national treasury, a separate pool that funds wars and moves with tariffs.
     const purseEl = this.el('hud-purse');
@@ -177,6 +192,22 @@ AD.UI = {
     this.rollNum(this.el('auth-num'), prevAuth, run.authority);
     this.el('auth-fill').style.width = run.authority + '%';
     this.el('auth-cap').style.left = AD.SOFT_CAP + '%';
+
+    /* THE COUNTRY, the other half of the hero. The single lesson players miss
+       is that decisions alone stop at the cap, so the footer counts the
+       branches still needed rather than just repeating the number. */
+    const authPath = this.el('path-auth');
+    if (authPath) {
+      const heldNow = Object.keys(run.locked || {}).length;
+      const needed = Math.max(1, Math.ceil((100 - AD.SOFT_CAP) / (AD.Engine.diff().pillarValue || 22)));
+      const authWon = run.authority >= 100;
+      authPath.classList.toggle('won', authWon);
+      authPath.classList.toggle('near', !authWon && heldNow >= needed - 1);
+      const af = this.el('auth-foot');
+      if (af) af.textContent = authWon ? 'TAKEN'
+        : heldNow >= needed ? heldNow + ' of ' + needed + ' branches'
+        : (needed - heldNow) + ' more branch' + ((needed - heldNow) === 1 ? '' : 'es');
+    }
 
     const pico = this.el('ico-phone'); if (pico && !pico.innerHTML) pico.innerHTML = AD.icon('phone');
     const wico = this.el('ico-war');   if (wico && !wico.innerHTML) wico.innerHTML = AD.icon('war');

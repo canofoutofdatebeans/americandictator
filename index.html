@@ -11,15 +11,15 @@
 
 <!-- Installable-app metadata (PWA + iOS home screen). The native shells get
      their icons from capacitor assets; this covers the web build. -->
-<link rel="manifest" href="manifest.json?v=116">
-<link rel="icon" type="image/svg+xml" href="icon.svg?v=116">
-<link rel="apple-touch-icon" href="icon.svg?v=116">
+<link rel="manifest" href="manifest.json?v=117">
+<link rel="icon" type="image/svg+xml" href="icon.svg?v=117">
+<link rel="apple-touch-icon" href="icon.svg?v=117">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Am. Dictator">
 
-<link rel="stylesheet" href="css/styles.css?v=116">
+<link rel="stylesheet" href="css/styles.css?v=117">
 </head>
 <body>
 
@@ -188,13 +188,45 @@
         <div class="month-line"><span id="hud-date">January, Year One</span></div>
         <div class="rank-line" id="hud-rank">Duly Elected President</div>
       </div>
-      <div class="hud-money">
-        <button class="hud-cash" id="hud-cash" data-act="corruption"
-                title="Personal wealth, your private fortune">💰 $<span>3.0</span>B</button>
-        <button class="hud-purse" id="hud-purse" data-act="economy"
-                title="The Treasury, the national coffers that fund wars and move with tariffs">🏛️ $<span>500</span>B</button>
-      </div>
+      <button class="hud-purse" id="hud-purse" data-act="economy"
+              title="The Treasury, the national coffers that fund wars and move with tariffs">🏛️ $<span>500</span>B</button>
     </header>
+
+    <!-- THE TWO WAYS TO WIN, side by side and always visible. Take the country
+         (Authority 100) or take the money (a personal fortune). The game has
+         always had both; only one of them used to be on the screen. -->
+    <div class="paths">
+      <button class="path path-auth" id="path-auth" data-act="howto" title="Authority: decisions cap at the white line. Only captured Pillars go past it.">
+        <span class="path-lab">AUTHORITY</span>
+        <span class="path-num" id="auth-num">0</span>
+        <span class="path-of">/ 100</span>
+        <span class="authority-bar">
+          <span class="authority-fill" id="auth-fill"></span>
+          <i class="tick" style="left:25%"></i><i class="tick" style="left:50%"></i>
+          <i class="tick cap" id="auth-cap" title="Decisions alone stop here. Pillars go past it."></i>
+        </span>
+        <span class="path-foot" id="auth-foot">the country</span>
+      </button>
+
+      <button class="path path-cash" id="path-cash" data-act="corruption" title="The Fortune: your own money, the other way to win.">
+        <span class="path-lab">THE FORTUNE</span>
+        <span class="path-num" id="hud-cash">$3.0B</span>
+        <span class="path-of" id="cash-goal">/ $15B</span>
+        <span class="authority-bar"><span class="authority-fill cash-fill" id="cash-fill"></span></span>
+        <span class="path-foot" id="cash-foot">the money</span>
+      </button>
+    </div>
+
+    <!-- Pillars and the Boredometer: the two things that decide whether a
+         winning position actually converts. One line, under the hero. -->
+    <div class="statusline">
+      <div class="pillar-block">
+        <span class="sl-lab" data-i18n-title="hud.pillars" title="Pillars of the Regime, capture three">PILLARS</span>
+        <div class="pillar-row" id="pillar-row"></div>
+      </div>
+      <div class="spectacle" id="spectacle" data-i18n-title="hud.boredometerTip"
+           title="The Boredometer: keep it LOW. A bored President wanders off."></div>
+    </div>
 
     <!-- NEXT-CRISIS COUNTDOWN. The gap between crises is deliberate breathing
          room to go and work the management rooms; this says how much of it is
@@ -206,24 +238,14 @@
       <button class="nb-skip" data-act="skip-wait">Skip</button>
     </div>
 
-    <div class="authority-wrap">
-      <div class="authority-label"><span data-i18n="hud.authority">AUTHORITY</span> <span id="auth-num">0</span>/100</div>
-      <div class="authority-bar"><div class="authority-fill" id="auth-fill"></div>
-        <i class="tick" style="left:25%"></i><i class="tick" style="left:50%"></i>
-        <i class="tick cap" id="auth-cap" title="Decisions alone stop here. Pillars go past it."></i>
-      </div>
-      <div class="pillar-row" id="pillar-row" data-i18n-title="hud.pillars" title="Pillars of the Regime, capture three"></div>
-
-      <!-- The Spectacle: how entertained the easily-bored President is. Must be
-           above the difficulty floor at the end, or he loses interest. -->
-      <div class="spectacle" id="spectacle" data-i18n-title="hud.boredometerTip" title="The Boredometer: keep the President entertained (above the floor) or he wanders off"></div>
-
-      <!-- The five power centres sit directly under Authority, above the rooms. -->
+    <!-- THE BOARD. Twelve destinations in two labelled groups: the five power
+         centres you are trying to capture, and the seven rooms you use to do
+         it. Same tile, same size, so it reads as one dashboard. -->
+    <div class="board">
+      <div class="board-h">POWER CENTRES <em>capture three to win</em></div>
       <div class="factions" id="factions" role="group" aria-label="Power centres"></div>
 
-      <!-- Icon-only strip on mobile so the whole HUD fits one screen; each button
-           carries its full name in the title tooltip, and the bespoke icon set
-           (icons.js) already exists exactly to replace text like this. -->
+      <div class="board-h">THE ROOMS <em>where the work happens</em></div>
       <div class="chip-row">
         <button class="const-chip" id="const-chip" data-act="constitution"
                 title="THE CONSTITUTION"><b>0/16</b></button>
@@ -632,83 +654,83 @@
 </div>
 
 <!-- state.js creates the AD namespace, so it must load first. -->
-<script src="js/state.js?v=116"></script>
-<script src="js/i18n.js?v=116"></script>
-<script src="js/i18n/cards.js?v=116"></script>
-<script src="js/i18n/cs.js?v=116"></script>
-<script src="js/i18n/de.js?v=116"></script>
-<script src="js/i18n/es.js?v=116"></script>
-<script src="js/i18n/fr.js?v=116"></script>
-<script src="js/i18n/it.js?v=116"></script>
-<script src="js/i18n/nl.js?v=116"></script>
-<script src="js/i18n/pl.js?v=116"></script>
-<script src="js/i18n/pt.js?v=116"></script>
-<script src="js/i18n/ru.js?v=116"></script>
-<script src="js/i18n/zh.js?v=116"></script>
-<script src="js/i18n/rooms.js?v=116"></script>
-<script src="js/icons.js?v=116"></script>
-<script src="js/portraits.js?v=116"></script>
-<script src="js/seed.js?v=116"></script>
-<script src="js/audio.js?v=116"></script>
-<script src="js/music.js?v=116"></script>
-<script src="js/doctrines.js?v=116"></script>
-<script src="js/corruption.js?v=116"></script>
-<script src="js/renovations.js?v=116"></script>
-<script src="js/objectives.js?v=116"></script>
-<script src="js/senate.js?v=116"></script>
-<script src="js/press.js?v=116"></script>
-<script src="js/street.js?v=116"></script>
-<script src="js/call.js?v=116"></script>
-<script src="js/war.js?v=116"></script>
-<script src="js/courts.js?v=116"></script>
-<script src="js/basepop.js?v=116"></script>
-<script src="js/economy.js?v=116"></script>
-<script src="js/pardons.js?v=116"></script>
-<script src="js/dossier.js?v=116"></script>
-<script src="js/constitution.js?v=116"></script>
-<script src="js/tutorial.js?v=116"></script>
-<script src="js/achievements.js?v=116"></script>
-<script src="js/briefings.js?v=116"></script>
-<script src="js/cards.js?v=116"></script>
+<script src="js/state.js?v=117"></script>
+<script src="js/i18n.js?v=117"></script>
+<script src="js/i18n/cards.js?v=117"></script>
+<script src="js/i18n/cs.js?v=117"></script>
+<script src="js/i18n/de.js?v=117"></script>
+<script src="js/i18n/es.js?v=117"></script>
+<script src="js/i18n/fr.js?v=117"></script>
+<script src="js/i18n/it.js?v=117"></script>
+<script src="js/i18n/nl.js?v=117"></script>
+<script src="js/i18n/pl.js?v=117"></script>
+<script src="js/i18n/pt.js?v=117"></script>
+<script src="js/i18n/ru.js?v=117"></script>
+<script src="js/i18n/zh.js?v=117"></script>
+<script src="js/i18n/rooms.js?v=117"></script>
+<script src="js/icons.js?v=117"></script>
+<script src="js/portraits.js?v=117"></script>
+<script src="js/seed.js?v=117"></script>
+<script src="js/audio.js?v=117"></script>
+<script src="js/music.js?v=117"></script>
+<script src="js/doctrines.js?v=117"></script>
+<script src="js/corruption.js?v=117"></script>
+<script src="js/renovations.js?v=117"></script>
+<script src="js/objectives.js?v=117"></script>
+<script src="js/senate.js?v=117"></script>
+<script src="js/press.js?v=117"></script>
+<script src="js/street.js?v=117"></script>
+<script src="js/call.js?v=117"></script>
+<script src="js/war.js?v=117"></script>
+<script src="js/courts.js?v=117"></script>
+<script src="js/basepop.js?v=117"></script>
+<script src="js/economy.js?v=117"></script>
+<script src="js/pardons.js?v=117"></script>
+<script src="js/dossier.js?v=117"></script>
+<script src="js/constitution.js?v=117"></script>
+<script src="js/tutorial.js?v=117"></script>
+<script src="js/achievements.js?v=117"></script>
+<script src="js/briefings.js?v=117"></script>
+<script src="js/cards.js?v=117"></script>
 <!-- Content packs. Each pushes onto AD.CARDS, so adding a deck is adding a
      file, no engine changes. Order does not matter. -->
-<script src="js/packs/pack-a-honeymoon.js?v=116"></script>
-<script src="js/packs/pack-b-machinery.js?v=116"></script>
-<script src="js/packs/pack-c-consolidation.js?v=116"></script>
-<script src="js/packs/pack-d-evergreen.js?v=116"></script>
-<script src="js/packs/pack-e-secondterm.js?v=116"></script>
-<script src="js/packs/pack-f-record.js?v=116"></script>
-<script src="js/packs/pack-g-record.js?v=116"></script>
-<script src="js/packs/pack-h-frontier.js?v=116"></script>
-<script src="js/packs/pack-i-geopolitics.js?v=116"></script>
-<script src="js/packs/pack-j-cabinet.js?v=116"></script>
-<script src="js/packs/pack-k-family.js?v=116"></script>
-<script src="js/packs/pack-l-culturewar.js?v=116"></script>
-<script src="js/packs/pack-m-tech.js?v=116"></script>
-<script src="js/packs/pack-n-disasters.js?v=116"></script>
-<script src="js/packs/pack-o-health.js?v=116"></script>
-<script src="js/packs/pack-p-grift.js?v=116"></script>
-<script src="js/packs/pack-q-faithful.js?v=116"></script>
-<script src="js/packs/pack-r-laworder.js?v=116"></script>
+<script src="js/packs/pack-a-honeymoon.js?v=117"></script>
+<script src="js/packs/pack-b-machinery.js?v=117"></script>
+<script src="js/packs/pack-c-consolidation.js?v=117"></script>
+<script src="js/packs/pack-d-evergreen.js?v=117"></script>
+<script src="js/packs/pack-e-secondterm.js?v=117"></script>
+<script src="js/packs/pack-f-record.js?v=117"></script>
+<script src="js/packs/pack-g-record.js?v=117"></script>
+<script src="js/packs/pack-h-frontier.js?v=117"></script>
+<script src="js/packs/pack-i-geopolitics.js?v=117"></script>
+<script src="js/packs/pack-j-cabinet.js?v=117"></script>
+<script src="js/packs/pack-k-family.js?v=117"></script>
+<script src="js/packs/pack-l-culturewar.js?v=117"></script>
+<script src="js/packs/pack-m-tech.js?v=117"></script>
+<script src="js/packs/pack-n-disasters.js?v=117"></script>
+<script src="js/packs/pack-o-health.js?v=117"></script>
+<script src="js/packs/pack-p-grift.js?v=117"></script>
+<script src="js/packs/pack-q-faithful.js?v=117"></script>
+<script src="js/packs/pack-r-laworder.js?v=117"></script>
 <!-- cay.js reads AD.CAST, so it must load after cards.js -->
-<script src="js/scandals.js?v=116"></script>
-<script src="js/scandals-isle.js?v=116"></script>
-<script src="js/scandals-file.js?v=116"></script>
-<script src="js/scandals-mix.js?v=116"></script>
-<script src="js/cay.js?v=116"></script>
-<script src="js/reactive.js?v=116"></script>
-<script src="js/sections.js?v=116"></script>
-<script src="js/popups.js?v=116"></script>
-<script src="js/events.js?v=116"></script>
-<script src="js/endings.js?v=116"></script>
-<script src="js/engine.js?v=116"></script>
-<script src="js/status.js?v=116"></script>
-<script src="js/moves.js?v=116"></script>
-<script src="js/senquirks.js?v=116"></script>
-<script src="js/nations.js?v=116"></script>
-<script src="js/interests.js?v=116"></script>
-<script src="js/boardofpeace.js?v=116"></script>
-<script src="js/ui.js?v=116"></script>
-<script src="js/main.js?v=116"></script>
+<script src="js/scandals.js?v=117"></script>
+<script src="js/scandals-isle.js?v=117"></script>
+<script src="js/scandals-file.js?v=117"></script>
+<script src="js/scandals-mix.js?v=117"></script>
+<script src="js/cay.js?v=117"></script>
+<script src="js/reactive.js?v=117"></script>
+<script src="js/sections.js?v=117"></script>
+<script src="js/popups.js?v=117"></script>
+<script src="js/events.js?v=117"></script>
+<script src="js/endings.js?v=117"></script>
+<script src="js/engine.js?v=117"></script>
+<script src="js/status.js?v=117"></script>
+<script src="js/moves.js?v=117"></script>
+<script src="js/senquirks.js?v=117"></script>
+<script src="js/nations.js?v=117"></script>
+<script src="js/interests.js?v=117"></script>
+<script src="js/boardofpeace.js?v=117"></script>
+<script src="js/ui.js?v=117"></script>
+<script src="js/main.js?v=117"></script>
 </body>
 </html>

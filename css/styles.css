@@ -1643,3 +1643,83 @@ html[data-motion="off"] .rs-terrible{animation:none}
 .corr-note.refused{
   color:#e0a0a6;background:#20101a;border-color:#4a2030;
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   THE SITUATION ROOM                                 (build 117)
+   The crisis card used to own two-thirds of this screen. With every
+   crisis now a pop-up, the screen is rebuilt around the thing the
+   game is actually about: the two ways to win, then the board of
+   destinations you use to chase them.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ---- header: slimmer, treasury only ---- */
+.hud{gap:9px;padding-bottom:0}
+.hud .hud-purse{align-self:center}
+
+/* ---- THE TWO PATHS ---- */
+.paths{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:8px 0 0;flex:0 0 auto}
+.path{
+  position:relative;display:flex;flex-direction:column;align-items:flex-start;
+  gap:1px;padding:9px 11px 10px;text-align:left;
+  background:linear-gradient(180deg,#16203a,#0f1728);
+  border:1px solid #26324e;border-radius:13px;
+  color:var(--paper);font:inherit;cursor:pointer;
+  transition:border-color .2s,background .2s,transform .12s;
+  overflow:hidden;
+}
+.path:hover{border-color:#3d5488;background:linear-gradient(180deg,#1b2748,#121b30);transform:translateY(-1px)}
+.path:active{transform:translateY(0)}
+.path-lab{font-size:8px;letter-spacing:2.2px;font-weight:800;color:var(--muted)}
+.path-num{
+  font-size:27px;font-weight:800;line-height:1.05;letter-spacing:-.6px;
+  font-variant-numeric:tabular-nums;
+}
+.path-of{font-size:9.5px;color:var(--muted);font-variant-numeric:tabular-nums;margin-top:-2px}
+.path .authority-bar{display:block;width:100%;margin-top:7px}
+.path-foot{
+  font-size:8.5px;letter-spacing:1.6px;text-transform:uppercase;
+  color:#4a5573;margin-top:5px;font-weight:700;
+}
+
+/* Authority reads gold-into-red; the fortune reads money-green. */
+.path-auth .path-num{color:#f2dd8a}
+.path-auth.near{border-color:#5c4a15;background:linear-gradient(180deg,#1c1608,#12100a)}
+.path-cash .path-num{color:#9ec9a5}
+.path-cash .cash-fill{background:linear-gradient(90deg,#4f9160,#8fd0a0);box-shadow:0 0 14px rgba(79,145,96,.45)}
+.path-cash.near{border-color:#2f5138;background:linear-gradient(180deg,#14231a,#101a13)}
+/* A path that is actually complete lights up properly. */
+.path.won{border-color:var(--gold-soft);box-shadow:0 0 0 1px var(--gold-soft),0 0 22px rgba(201,162,39,.25)}
+.path.won .path-foot{color:#f2dd8a}
+
+/* ---- pillars + boredometer, one line ---- */
+.statusline{
+  display:flex;align-items:center;gap:9px;margin-top:7px;flex:0 0 auto;
+  padding:7px 10px;border-radius:11px;
+  border:1px solid var(--edge);background:var(--ink2);
+}
+.pillar-block{display:flex;align-items:center;gap:7px;flex:1;min-width:0}
+.sl-lab{
+  font-size:8px;letter-spacing:1.8px;font-weight:800;color:var(--muted);
+  white-space:nowrap;flex:0 0 auto;
+}
+.statusline .pillar-row{margin-top:0;flex:1;min-width:0}
+.statusline .spectacle{margin:0;flex:0 0 auto;width:47%;gap:5px}
+@media (max-width:400px){
+  .statusline{flex-direction:column;align-items:stretch;gap:6px}
+  .statusline .spectacle{width:100%}
+}
+
+/* ---- the board, in two labelled groups ---- */
+.board{margin-top:8px;flex:0 0 auto}
+.board-h{
+  display:flex;align-items:baseline;gap:6px;
+  font-size:8px;letter-spacing:2.4px;font-weight:800;color:#4a5573;
+  margin:0 0 5px;text-transform:uppercase;
+}
+.board-h:not(:first-child){margin-top:9px}
+.board-h em{
+  font-style:italic;font-size:8.5px;letter-spacing:.4px;
+  text-transform:none;color:#3f4a63;font-weight:500;
+}
+.board .factions{margin:0}
+.board .chip-row{margin-top:0}
