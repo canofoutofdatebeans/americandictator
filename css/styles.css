@@ -1300,3 +1300,80 @@ html[data-cb="on"] .fac.danger .fac-val{color:#93c5fd}
 .end-cell.got.win b{color:#8fd6a0}
 .end-cell.locked b{color:var(--muted);letter-spacing:2px}
 .end-cell i{display:block;font-size:10px;color:var(--muted);font-style:normal;margin-top:2px;line-height:1.3}
+
+/* ═══════════════════════════════════════════════════════════════
+   THE CRISIS POP-UP + THE GAP BETWEEN CRISES            (build 110)
+   Every story card is now a modal. Between them the player gets a
+   countdown's worth of quiet to go and work the management rooms.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* The pop-up itself. Scrolls internally on a small phone so a long crisis
+   never pushes the choices off-screen. */
+.ov-crisis{
+  padding:10px;
+  align-items:flex-start;
+  background:rgba(4,6,12,.82);
+  backdrop-filter:blur(4px);
+}
+.crisis-wrap{
+  width:100%;max-width:520px;margin:auto 0;
+  max-height:calc(100vh - 20px);overflow-y:auto;overscroll-behavior:contain;
+}
+.ov-crisis .card{animation:crisisIn .34s cubic-bezier(.2,.9,.25,1) both}
+@keyframes crisisIn{
+  from{opacity:0;transform:translateY(26px) scale(.96)}
+  to{opacity:1;transform:none}
+}
+
+/* ---------- the next-crisis countdown strip ---------- */
+.nextbar{
+  display:flex;align-items:center;gap:8px;
+  margin:6px 0 0;padding:6px 9px;border-radius:9px;
+  border:1px solid #26324e;
+  background:linear-gradient(180deg,#141d33,#0f1626);
+  flex:0 0 auto;
+}
+.nb-lab{
+  font-size:8.5px;letter-spacing:1.8px;color:var(--muted);
+  font-weight:700;white-space:nowrap;flex:0 0 auto;
+}
+.nb-track{
+  flex:1;min-width:0;height:6px;border-radius:99px;overflow:hidden;
+  background:#0a1120;box-shadow:inset 0 1px 3px rgba(0,0,0,.6);
+}
+.nb-track i{
+  display:block;height:100%;width:0%;border-radius:99px;
+  background:linear-gradient(90deg,var(--blue-hot),var(--gold-soft));
+  transition:width .2s linear;
+}
+.nb-num{
+  font-size:11px;font-weight:700;color:var(--gold-soft);
+  font-variant-numeric:tabular-nums;white-space:nowrap;flex:0 0 auto;min-width:30px;text-align:right;
+}
+.nb-skip{
+  flex:0 0 auto;padding:5px 11px;border-radius:7px;
+  border:1px solid var(--edge2);background:var(--ink3);
+  color:var(--paper);font:inherit;font-size:11px;font-weight:700;cursor:pointer;
+  transition:var(--fx);
+}
+.nb-skip:hover{border-color:var(--gold);background:#1b2748}
+.nb-skip:active{transform:translateY(1px)}
+
+/* A crisis that came due while a room was open waits at the door. */
+.nextbar.held{border-color:#5c4a15;background:linear-gradient(180deg,#1c1608,#12100a)}
+.nextbar.held .nb-track i{background:linear-gradient(90deg,#c9a227,#f2dd8a)}
+.nextbar.held .nb-num{color:#f2dd8a}
+
+/* ---------- the between-crises desk ---------- */
+.desk{
+  margin:auto 0;text-align:center;padding:16px 14px;
+  border:1px dashed #232f49;border-radius:14px;
+  background:linear-gradient(180deg,rgba(20,29,51,.35),rgba(13,19,34,.2));
+}
+.desk-seal{font-size:30px;line-height:1;opacity:.5;margin-bottom:6px}
+.desk-h{
+  font-size:10px;letter-spacing:3px;color:#4a5573;
+  text-transform:uppercase;font-weight:700;margin-bottom:6px;
+}
+.desk-sub{margin:0 0 8px;font-size:13px;line-height:1.5;color:var(--paper2)}
+.desk-hint{font-size:11.5px;line-height:1.5;color:var(--muted);font-style:italic}

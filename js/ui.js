@@ -250,6 +250,33 @@ AD.UI = {
     }
 
     this.renderFactions(run);
+    this.renderDesk(run);
+  },
+
+  /* The between-crises panel. Rather than an empty stage, it names the single
+     most useful thing the player could be doing with the gap: whichever meter
+     is closest to the edge, or the nearest branch to capture. */
+  renderDesk (run) {
+    const sub = this.el('desk-sub'), hint = this.el('desk-hint');
+    if (!sub || !hint) return;
+
+    const live = AD.FACTIONS.filter(f => !run.locked[f.key]);
+    const worst = live.slice().sort((a, b) => run.meters[a.key] - run.meters[b.key])[0];
+    const close = live.filter(f => f.capturable)
+                      .sort((a, b) => run.meters[b.key] - run.meters[a.key])[0];
+    const room = k => ({ congress: 'the Caucus', press: 'the Press Room', street: 'Public Order',
+                         courts: 'the Bench', base: 'the Rally' }[k] || 'that room');
+
+    if (worst && run.meters[worst.key] <= 25) {
+      sub.textContent = worst.icon + ' ' + worst.name + ' is about to go.';
+      hint.textContent = 'Open ' + room(worst.key) + ' and put a hand on it before the next crisis lands.';
+    } else if (close && run.meters[close.key] >= 70) {
+      sub.textContent = close.icon + ' ' + close.name + ' is within reach of capture.';
+      hint.textContent = 'One good run at ' + room(close.key) + ' could turn it into a Pillar.';
+    } else {
+      sub.textContent = 'Nothing is on fire this second. Use it.';
+      hint.textContent = 'The rooms below keep working whether you visit them or not. Mostly not.';
+    }
   },
 
   /* The faction tiles are built ONCE and then updated in place, so the meter

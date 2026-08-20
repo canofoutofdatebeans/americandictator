@@ -5,7 +5,7 @@
    ============================================================ */
 
 window.AD = window.AD || {};
-AD.BUILD = '109';   // bumped every deploy; shown on the title so a stale cache is obvious
+AD.BUILD = '110';   // bumped every deploy; shown on the title so a stale cache is obvious
 
 /* ---------- Factions ------------------------------------------------------
    Five power centres. Four of them are CAPTURABLE: drive one to 100 and it
@@ -146,6 +146,11 @@ AD.wealthGoal = run => (run && run.wealthGoal) || AD.WEALTH_GOAL;
 /* Each calendar month of the presidency is THREE cards: the clock (and every
    monthly tick, decay, the market, war resolution) advances only on the third. */
 AD.CARDS_PER_MONTH = 3;
+
+/* The deliberate quiet between crises. Every story card is a pop-up, and this
+   is how long the player gets to go and actually work the management rooms
+   before the next one lands. Skippable from the countdown bar. */
+AD.CRISIS_GAP_MS = 30000;
 
 /* ---------- THE SPECTACLE (the President's boredom) -----------------------
    The President is easily bored. run.bored (0-100) is HOW BORED he is: sober,

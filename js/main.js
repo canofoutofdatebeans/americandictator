@@ -291,16 +291,87 @@ AD.Game = {
   enterGame () {
     AD.UI.show('game');
     AD.UI.renderHUD();
-    this.nextCard();
+    this.dealNow();            // the first crisis of a term lands at once
     // First term ever: teach before the clock starts.
     setTimeout(() => AD.Tutorial.start(false), 260);
   },
 
+  /* ---------- the gap between crises -------------------------------------
+     Every crisis is a pop-up now, and they are deliberately spaced: after one
+     resolves you get AD.CRISIS_GAP_MS of quiet to actually go and work the
+     management rooms before the next one lands. nextCard() therefore SCHEDULES
+     rather than deals, so every existing caller (advance, continueTurn, the
+     second-term opener) inherits the pause for free. dealNow() is the immediate
+     path, used by the countdown, the Skip button, and the very first card. */
   nextCard () {
+    this.scheduleCard(AD.CRISIS_GAP_MS);
+  },
+
+  scheduleCard (ms) {
+    this.clearCrisisTimer();
+    if (!AD.Engine.run || AD.Engine.run.over) return;
+    if (!ms) { this.dealNow(); return; }
+    this._waitUntil = Date.now() + ms;
+    this._waitTotal = ms;
+    this.paintNextBar();
+    this._crisisTick = setInterval(() => {
+      if (Date.now() >= this._waitUntil) { this.dealNow(); return; }
+      this.paintNextBar();
+    }, 200);
+  },
+
+  clearCrisisTimer () {
+    if (this._crisisTick) { clearInterval(this._crisisTick); this._crisisTick = null; }
+    this._waitUntil = 0;
+    const bar = AD.UI.el('nextbar'); if (bar) bar.hidden = true;
+  },
+
+  paintNextBar () {
+    const bar = AD.UI.el('nextbar');
+    if (!bar) return;
+    const left = Math.max(0, this._waitUntil - Date.now());
+    const total = this._waitTotal || AD.CRISIS_GAP_MS;
+    bar.hidden = false;
+    bar.classList.toggle('held', !!this._heldByOverlay);
+    const fill = AD.UI.el('nb-fill');
+    if (fill) fill.style.width = (100 - (left / total) * 100) + '%';
+    const num = AD.UI.el('nb-num');
+    if (num) num.textContent = this._heldByOverlay ? 'WAITING' : Math.ceil(left / 1000) + 's';
+  },
+
+  /* True while any management overlay is open. A crisis that comes due while
+     the player is mid-action in a room waits for them to close it rather than
+     yanking them out of it. */
+  roomOpen () {
+    const ovs = document.querySelectorAll('.overlay:not(#ov-crisis)');
+    for (let i = 0; i < ovs.length; i++) if (!ovs[i].hidden) return true;
+    return false;
+  },
+
+  dealNow () {
+    if (!AD.Engine.run || AD.Engine.run.over) { this.clearCrisisTimer(); return; }
+    // Hold the crisis at the door while a room is open, and keep ticking so the
+    // bar can say so; it fires the moment they come back out.
+    if (this.roomOpen()) {
+      this._heldByOverlay = true;
+      this._waitUntil = Date.now();
+      this.paintNextBar();
+      if (!this._crisisTick) this._crisisTick = setInterval(() => this.dealNow(), 300);
+      return;
+    }
+    this._heldByOverlay = false;
+    this.clearCrisisTimer();
     const card = AD.Engine.draw();
     if (!card) { this.finishRun('merely-president'); return; }
     AD.UI.renderCard(card);
     AD.UI.showBrief(AD.Engine.lastDrift);   // what the passing month did on its own
+    AD.UI.overlay('crisis', true);
+  },
+
+  skipWait () {
+    if (!this._waitUntil) return;
+    this._waitUntil = Date.now();
+    this.dealNow();
   },
 
   /* ---------- a decision ---------- */
@@ -873,7 +944,11 @@ AD.Game = {
       case 'title':    this.refreshTitle(); U.show('title'); break;
       case 'language': U.show('language'); break;
       // Play out any front pages / doctrine unlocks before the month ticks.
-      case 'next':     this.continueTurn(); break;
+      case 'next':
+        AD.UI.overlay('crisis', false);
+        this.continueTurn();
+        break;
+      case 'skip-wait': this.skipWait(); break;
 
       case 'mute':     this.toggleMute(); break;
       case 'pause':    U.overlay('pause', true); U.pauseTimer(); break;
