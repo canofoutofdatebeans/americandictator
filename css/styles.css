@@ -1851,3 +1851,58 @@ html[data-motion="off"] .potus-line{animation:none}
   transition:var(--fx);
 }
 .backpick:hover{border-color:var(--gold);background:#1b2748;color:var(--paper)}
+
+/* ═══════════════════════════════════════════════════════════════
+   THE RECEIPTS                                       (build 127)
+   The last thing you read. Deliberately quiet: no red, no alarm,
+   no animation. A ledger, in the same typeface as everything else,
+   that simply does not stop.
+   ═══════════════════════════════════════════════════════════════ */
+.reckon{
+  width:100%;max-width:520px;margin:auto 0;
+  max-height:calc(100vh - 24px);overflow-y:auto;overscroll-behavior:contain;
+  padding:18px 16px 16px;border-radius:14px;
+  background:linear-gradient(180deg,#12161f,#0b0e14);
+  border:1px solid #26324e;
+  box-shadow:0 24px 60px rgba(0,0,0,.7);
+}
+.reckon-head{text-align:center;margin-bottom:16px}
+.reckon-kick{
+  font-size:8px;letter-spacing:3.4px;font-weight:800;color:#4a5573;margin-bottom:6px;
+}
+.reckon-head h2{
+  margin:0 0 6px;font-size:25px;font-weight:800;letter-spacing:-.4px;color:var(--paper);
+}
+.reckon-sub{margin:0;font-size:11.5px;line-height:1.5;color:var(--muted);font-style:italic}
+
+.reckon-cols{
+  display:grid;grid-template-columns:1fr 1fr;gap:10px;
+  padding:0 2px 5px;margin-bottom:2px;
+  border-bottom:1px solid #1c2537;
+}
+.reckon-cols span{
+  font-size:7.5px;letter-spacing:2px;font-weight:800;color:#3f4a63;
+}
+.reckon-cols span:last-child{color:#5b6880}
+
+.reckon-row{
+  display:grid;grid-template-columns:1fr 1fr;gap:10px;
+  padding:10px 2px;border-bottom:1px solid #161d2b;
+}
+.reckon-gain{font-size:11.5px;line-height:1.5;color:#8fa3bd}
+.reckon-cost{font-size:11.5px;line-height:1.5;color:var(--paper2)}
+@media (max-width:400px){
+  .reckon-cols{display:none}
+  .reckon-row{grid-template-columns:1fr;gap:4px}
+  .reckon-gain::before{content:'GOT  ';font-size:7.5px;letter-spacing:1.6px;font-weight:800;color:#3f4a63}
+  .reckon-cost::before{content:'COST  ';font-size:7.5px;letter-spacing:1.6px;font-weight:800;color:#5b6880}
+}
+
+.reckon-close{
+  margin-top:16px;padding:13px 14px;border-radius:11px;
+  border:1px solid #2a3a5c;background:rgba(20,29,51,.4);
+  font-size:13px;line-height:1.6;color:var(--paper);
+}
+.reckon-close b{color:#9ec9a5;font-weight:700}
+.reckon .dos-actions{margin-top:14px}
+.btn-reckon{border-color:#2a3a5c}

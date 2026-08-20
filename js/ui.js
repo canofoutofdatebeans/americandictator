@@ -2032,11 +2032,39 @@ AD.UI = {
       <div class="end-actions">
         <button class="btn btn-primary" data-act="dossier">Read Your Dossier</button>
         <button class="btn" data-act="read-paper">The Front Page</button>
+        <button class="btn btn-reckon" data-act="reckoning">The Receipts</button>
         <button class="btn" data-act="new">New President</button>
         <button class="btn btn-ghost" data-act="library">Presidential Library</button>
         <button class="btn btn-ghost" data-act="title">Main Menu</button>
       </div>`;
     this.show('ending');
+  },
+
+  /* ---------- the receipts ----------
+     What the term cost the country, in two columns, addressed to the player.
+     The gain column is honest; the ledger does not work otherwise. */
+  renderReckoning (score) {
+    const r = AD.buildReckoning(score);
+    const cln = s => AD.clean(s, this.settings.clean);
+    this.el('reckon-body').innerHTML =
+      '<div class="reckon-head">' +
+        '<div class="reckon-kick">THE RECEIPTS</div>' +
+        '<h2>What It Cost</h2>' +
+        '<p class="reckon-sub">Everything below happened in your term, to the country you were running.</p>' +
+      '</div>' +
+      (r.rows.length
+        ? '<div class="reckon-cols"><span>WHAT YOU GOT</span><span>WHAT IT COST</span></div>' +
+          r.rows.map(row =>
+            '<div class="reckon-row">' +
+              '<div class="reckon-gain">' + cln(row.gain) + '</div>' +
+              '<div class="reckon-cost">' + cln(row.cost) + '</div>' +
+            '</div>').join('')
+        : '') +
+      '<div class="reckon-close">' + cln(r.close) + '</div>' +
+      '<div class="dos-actions">' +
+        '<button class="btn btn-ghost" data-act="reckoning-close">Close</button>' +
+      '</div>';
+    this.overlay('reckoning', true);
   },
 
   /* ---------- the front page (personalised term recap) ---------- */

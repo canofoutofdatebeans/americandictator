@@ -1262,6 +1262,10 @@ AD.Game = {
         if (AD.Engine.lastScore) U.renderFrontPage(AD.Engine.lastScore);
         break;
       case 'paper-close': U.overlay('paper', false); break;
+      case 'reckoning':
+        if (AD.Engine.lastScore) U.renderReckoning(AD.Engine.lastScore);
+        break;
+      case 'reckoning-close': U.overlay('reckoning', false); break;
       case 'paper-copy': this.copyFrontPage(); break;
     }
   }

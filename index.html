@@ -11,15 +11,15 @@
 
 <!-- Installable-app metadata (PWA + iOS home screen). The native shells get
      their icons from capacitor assets; this covers the web build. -->
-<link rel="manifest" href="manifest.json?v=126">
-<link rel="icon" type="image/svg+xml" href="icon.svg?v=126">
-<link rel="apple-touch-icon" href="icon.svg?v=126">
+<link rel="manifest" href="manifest.json?v=127">
+<link rel="icon" type="image/svg+xml" href="icon.svg?v=127">
+<link rel="apple-touch-icon" href="icon.svg?v=127">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Am. Dictator">
 
-<link rel="stylesheet" href="css/styles.css?v=126">
+<link rel="stylesheet" href="css/styles.css?v=127">
 </head>
 <body>
 
@@ -339,6 +339,12 @@
 
   <div class="overlay" id="ov-paper" hidden role="dialog" aria-modal="true">
     <div class="frontpage" id="paper-body"></div>
+  </div>
+
+  <!-- THE RECEIPTS. What the term cost the country, addressed to the player.
+       See reckoning.js. -->
+  <div class="overlay" id="ov-reckoning" hidden role="dialog" aria-modal="true">
+    <div class="reckon" id="reckon-body"></div>
   </div>
 
   <div class="overlay" id="ov-dossier" hidden role="dialog" aria-modal="true">
@@ -675,87 +681,88 @@
 </div>
 
 <!-- state.js creates the AD namespace, so it must load first. -->
-<script src="js/state.js?v=126"></script>
-<script src="js/i18n.js?v=126"></script>
-<script src="js/i18n/cards.js?v=126"></script>
-<script src="js/i18n/cs.js?v=126"></script>
-<script src="js/i18n/de.js?v=126"></script>
-<script src="js/i18n/es.js?v=126"></script>
-<script src="js/i18n/fr.js?v=126"></script>
-<script src="js/i18n/it.js?v=126"></script>
-<script src="js/i18n/nl.js?v=126"></script>
-<script src="js/i18n/pl.js?v=126"></script>
-<script src="js/i18n/pt.js?v=126"></script>
-<script src="js/i18n/ru.js?v=126"></script>
-<script src="js/i18n/zh.js?v=126"></script>
-<script src="js/i18n/rooms.js?v=126"></script>
-<script src="js/icons.js?v=126"></script>
-<script src="js/portraits.js?v=126"></script>
-<script src="js/seed.js?v=126"></script>
-<script src="js/audio.js?v=126"></script>
-<script src="js/music.js?v=126"></script>
-<script src="js/doctrines.js?v=126"></script>
-<script src="js/corruption.js?v=126"></script>
-<script src="js/renovations.js?v=126"></script>
-<script src="js/objectives.js?v=126"></script>
-<script src="js/senate.js?v=126"></script>
-<script src="js/press.js?v=126"></script>
-<script src="js/street.js?v=126"></script>
-<script src="js/call.js?v=126"></script>
-<script src="js/war.js?v=126"></script>
-<script src="js/courts.js?v=126"></script>
-<script src="js/basepop.js?v=126"></script>
-<script src="js/economy.js?v=126"></script>
-<script src="js/pardons.js?v=126"></script>
-<script src="js/dossier.js?v=126"></script>
-<script src="js/constitution.js?v=126"></script>
-<script src="js/tutorial.js?v=126"></script>
-<script src="js/achievements.js?v=126"></script>
-<script src="js/briefings.js?v=126"></script>
-<script src="js/cards.js?v=126"></script>
+<script src="js/state.js?v=127"></script>
+<script src="js/i18n.js?v=127"></script>
+<script src="js/i18n/cards.js?v=127"></script>
+<script src="js/i18n/cs.js?v=127"></script>
+<script src="js/i18n/de.js?v=127"></script>
+<script src="js/i18n/es.js?v=127"></script>
+<script src="js/i18n/fr.js?v=127"></script>
+<script src="js/i18n/it.js?v=127"></script>
+<script src="js/i18n/nl.js?v=127"></script>
+<script src="js/i18n/pl.js?v=127"></script>
+<script src="js/i18n/pt.js?v=127"></script>
+<script src="js/i18n/ru.js?v=127"></script>
+<script src="js/i18n/zh.js?v=127"></script>
+<script src="js/i18n/rooms.js?v=127"></script>
+<script src="js/icons.js?v=127"></script>
+<script src="js/portraits.js?v=127"></script>
+<script src="js/seed.js?v=127"></script>
+<script src="js/audio.js?v=127"></script>
+<script src="js/music.js?v=127"></script>
+<script src="js/doctrines.js?v=127"></script>
+<script src="js/corruption.js?v=127"></script>
+<script src="js/renovations.js?v=127"></script>
+<script src="js/objectives.js?v=127"></script>
+<script src="js/senate.js?v=127"></script>
+<script src="js/press.js?v=127"></script>
+<script src="js/street.js?v=127"></script>
+<script src="js/call.js?v=127"></script>
+<script src="js/war.js?v=127"></script>
+<script src="js/courts.js?v=127"></script>
+<script src="js/basepop.js?v=127"></script>
+<script src="js/economy.js?v=127"></script>
+<script src="js/pardons.js?v=127"></script>
+<script src="js/dossier.js?v=127"></script>
+<script src="js/constitution.js?v=127"></script>
+<script src="js/tutorial.js?v=127"></script>
+<script src="js/achievements.js?v=127"></script>
+<script src="js/briefings.js?v=127"></script>
+<script src="js/cards.js?v=127"></script>
 <!-- Content packs. Each pushes onto AD.CARDS, so adding a deck is adding a
      file, no engine changes. Order does not matter. -->
-<script src="js/packs/pack-a-honeymoon.js?v=126"></script>
-<script src="js/packs/pack-b-machinery.js?v=126"></script>
-<script src="js/packs/pack-c-consolidation.js?v=126"></script>
-<script src="js/packs/pack-d-evergreen.js?v=126"></script>
-<script src="js/packs/pack-e-secondterm.js?v=126"></script>
-<script src="js/packs/pack-f-record.js?v=126"></script>
-<script src="js/packs/pack-g-record.js?v=126"></script>
-<script src="js/packs/pack-h-frontier.js?v=126"></script>
-<script src="js/packs/pack-i-geopolitics.js?v=126"></script>
-<script src="js/packs/pack-j-cabinet.js?v=126"></script>
-<script src="js/packs/pack-k-family.js?v=126"></script>
-<script src="js/packs/pack-l-culturewar.js?v=126"></script>
-<script src="js/packs/pack-m-tech.js?v=126"></script>
-<script src="js/packs/pack-n-disasters.js?v=126"></script>
-<script src="js/packs/pack-o-health.js?v=126"></script>
-<script src="js/packs/pack-p-grift.js?v=126"></script>
-<script src="js/packs/pack-q-faithful.js?v=126"></script>
-<script src="js/packs/pack-r-laworder.js?v=126"></script>
+<script src="js/packs/pack-a-honeymoon.js?v=127"></script>
+<script src="js/packs/pack-b-machinery.js?v=127"></script>
+<script src="js/packs/pack-c-consolidation.js?v=127"></script>
+<script src="js/packs/pack-d-evergreen.js?v=127"></script>
+<script src="js/packs/pack-e-secondterm.js?v=127"></script>
+<script src="js/packs/pack-f-record.js?v=127"></script>
+<script src="js/packs/pack-g-record.js?v=127"></script>
+<script src="js/packs/pack-h-frontier.js?v=127"></script>
+<script src="js/packs/pack-i-geopolitics.js?v=127"></script>
+<script src="js/packs/pack-j-cabinet.js?v=127"></script>
+<script src="js/packs/pack-k-family.js?v=127"></script>
+<script src="js/packs/pack-l-culturewar.js?v=127"></script>
+<script src="js/packs/pack-m-tech.js?v=127"></script>
+<script src="js/packs/pack-n-disasters.js?v=127"></script>
+<script src="js/packs/pack-o-health.js?v=127"></script>
+<script src="js/packs/pack-p-grift.js?v=127"></script>
+<script src="js/packs/pack-q-faithful.js?v=127"></script>
+<script src="js/packs/pack-r-laworder.js?v=127"></script>
 <!-- cay.js reads AD.CAST, so it must load after cards.js -->
-<script src="js/scandals.js?v=126"></script>
-<script src="js/scandals-isle.js?v=126"></script>
-<script src="js/scandals-file.js?v=126"></script>
-<script src="js/scandals-mix.js?v=126"></script>
-<script src="js/cay.js?v=126"></script>
-<script src="js/reactive.js?v=126"></script>
-<script src="js/sections.js?v=126"></script>
-<script src="js/popups.js?v=126"></script>
-<script src="js/events.js?v=126"></script>
-<script src="js/endings.js?v=126"></script>
-<script src="js/engine.js?v=126"></script>
-<script src="js/status.js?v=126"></script>
-<script src="js/moves.js?v=126"></script>
-<script src="js/senquirks.js?v=126"></script>
-<script src="js/nations.js?v=126"></script>
-<script src="js/interests.js?v=126"></script>
-<script src="js/boardofpeace.js?v=126"></script>
-<script src="js/memory.js?v=126"></script>
-<script src="js/voice.js?v=126"></script>
-<script src="js/misread.js?v=126"></script>
-<script src="js/diplomacy.js?v=126"></script>
-<script src="js/ui.js?v=126"></script>
-<script src="js/main.js?v=126"></script>
+<script src="js/scandals.js?v=127"></script>
+<script src="js/scandals-isle.js?v=127"></script>
+<script src="js/scandals-file.js?v=127"></script>
+<script src="js/scandals-mix.js?v=127"></script>
+<script src="js/cay.js?v=127"></script>
+<script src="js/reactive.js?v=127"></script>
+<script src="js/sections.js?v=127"></script>
+<script src="js/popups.js?v=127"></script>
+<script src="js/events.js?v=127"></script>
+<script src="js/endings.js?v=127"></script>
+<script src="js/engine.js?v=127"></script>
+<script src="js/status.js?v=127"></script>
+<script src="js/moves.js?v=127"></script>
+<script src="js/senquirks.js?v=127"></script>
+<script src="js/nations.js?v=127"></script>
+<script src="js/interests.js?v=127"></script>
+<script src="js/boardofpeace.js?v=127"></script>
+<script src="js/memory.js?v=127"></script>
+<script src="js/voice.js?v=127"></script>
+<script src="js/misread.js?v=127"></script>
+<script src="js/diplomacy.js?v=127"></script>
+<script src="js/reckoning.js?v=127"></script>
+<script src="js/ui.js?v=127"></script>
+<script src="js/main.js?v=127"></script>
 </body>
 </html>

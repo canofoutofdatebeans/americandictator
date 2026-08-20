@@ -319,6 +319,18 @@ AD.scoreRun = function (run, endingId) {
     cabinetChurn: (run.stats && run.stats.cabinetChurn) || 0,
     truthIndex: (run.stats && run.stats.truthIndex != null) ? run.stats.truthIndex : 50,
     eoStruck: (run.stats && run.stats.eoStruck) || 0,
+    // --- what the Reckoning needs (see reckoning.js) ---
+    boardSeats: (run.boardMembers || []).length,
+    boardRefusals: (run.boardRefused || []).length,
+    citiesOccupied: (run.streets || []).filter(c => c.occupied > 0).length,
+    citiesBoiling: (run.streets || []).filter(c => c.unrest >= 75).length,
+    avgUnrest: (run.streets || []).length
+      ? Math.round((run.streets || []).reduce((a, c) => a + c.unrest, 0) / run.streets.length) : 0,
+    callbacksFired: (run.memories || []).filter(m => m.spent).length,
+    memoriesPending: (run.memories || []).filter(m => !m.spent).length,
+    holdings: (run.assets || []).length,
+    peakCash: (run.stats && run.stats.peakCash) || run.cash,
+    purseLeft: AD.purse ? AD.purse(run) : null,
     score: score,
     stamp: Date.now()
   };
