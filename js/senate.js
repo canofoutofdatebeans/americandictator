@@ -373,6 +373,9 @@ AD.doSenateAction = function (run, senId, actionId) {
   if (cost) run.cash = Math.round((run.cash - cost) * 100) / 100;
   const eff = action.run(run, s) || {};
   const res = eff.res; delete eff.res;
+  // A bespoke quirk move is perturbed by the individual senator so two senators
+  // sharing a quirk never resolve to the same numbers (see AD.varyBySenator).
+  if (action.bespoke && AD.varyBySenator) AD.varyBySenator(eff, s);
   // Boredom: humiliating and purging are theatre; a quiet favour is a chore.
   if (eff.fun == null) eff.fun = { acknowledge: -2, humiliate: 3, sue: 2, sack: 3 }[action.id] || 1;
   const deltas = AD.applySenateEffect(run, eff);

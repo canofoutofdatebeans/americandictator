@@ -50,7 +50,7 @@ const MORE = [
       line: '"Give her the opioid crisis too, and government reform, she can handle it, she can handle anything, tremendous natural ability."' },
     { label: 'Put Her in Charge of the Peace Process', icon: '\u{1F54A}\u{FE0F}', major: true, eff: { base: 7, press: -6, congress: -6, courts: -4, auth: 2 },
       line: '"She’s doing the Middle East, the whole thing, thousands of years nobody could solve it, and honestly, she’s very close, very close."' },
-    { label: 'Ask Which of Your Children Is the Best', icon: '\u{1F3C6}', silly: true, eff: { base: 2, fun: 10 },
+    { label: 'Ask Which of Your Children Is the Best', icon: '\u{1F3C6}', silly: true, eff: { base: 2, press: -1, fun: 10 },
       line: 'You ask, sincerely, for a ranking. She gives one. It is herself, then a sibling, then a long pause, then a different sibling. You say that is exactly what you had, which is true.' }
   ]
 },
@@ -76,7 +76,7 @@ const MORE = [
       line: '"Do another one, a new one, call it something patriotic, they’ll go crazy for it, and Dax, keep my percentage clean this time."' },
     { label: 'Put the Coin in the Strategic Reserve', icon: '\u{1F3E6}', major: true, eff: { base: 5, cash: 1.6, congress: -8, courts: -7, press: -6, auth: 3 },
       line: '"The United States government is going to hold it, officially, in the reserve, like gold, better than gold, this is the future, believe me."' },
-    { label: 'Ask Him to Explain the Blockchain Again', icon: '\u{1F9E9}', silly: true, eff: { base: 1, fun: 10 },
+    { label: 'Ask Him to Explain the Blockchain Again', icon: '\u{1F9E9}', silly: true, eff: { base: 1, congress: -1, fun: 10 },
       line: 'Fourth attempt. He gets ninety seconds in before you interrupt to ask whether it is a building. He says no. You ask where it is kept. He says everywhere. You say that sounds like a scam, which is the single most perceptive thing you say all month.' }
   ]
 },
@@ -89,7 +89,7 @@ const MORE = [
       line: '"Hypothetically, purely hypothetically, if we had to, which one folds fastest, don’t write it down, just tell me the name."' },
     { label: 'Order the Troops into an American City', icon: '\u{1FA96}', major: true, eff: { base: 8, street: -9, courts: -6, press: -5, congress: -4, auth: 5 },
       line: '"Send them in, our own cities, restore order, total order, these people have no idea what’s about to hit them, and it’s about time."' },
-    { label: 'Ask Him to Say "Sir, Yes Sir" Once More', icon: '\u{1F5E3}\u{FE0F}', silly: true, eff: { base: 3, fun: 10 },
+    { label: 'Ask Him to Say "Sir, Yes Sir" Once More', icon: '\u{1F5E3}\u{FE0F}', silly: true, eff: { base: 3, street: 1, fun: 10 },
       line: 'He says it. You ask for it louder. He says it louder. You put the phone on speaker and have him do it for the room, and a four-star general obliges, twice, because this is where everybody ended up.' }
   ]
 },
@@ -130,7 +130,7 @@ const MORE = [
       line: '"Do a segment on him, a long one, the guys can really dig, and their listeners, believe me, their listeners do not forget."' },
     { label: 'Give Them the Only Interview This Month', icon: '\u{1F3A4}', major: true, eff: { base: 9, press: -8, congress: -3, courts: -2, auth: 2 },
       line: '"No networks, none, they get nothing, the Bros get everything, and honestly, they ask better questions, much better questions."' },
-    { label: 'Ask Them What a Podcast Is', icon: '\u{1F914}', silly: true, eff: { base: 2, fun: 10 },
+    { label: 'Ask Them What a Podcast Is', icon: '\u{1F914}', silly: true, eff: { base: 2, street: 1, fun: 10 },
       line: 'You are ninety minutes into recording one. You ask, on air, whether this is radio. They say it is a podcast. You ask what channel it is on. It becomes the clip. It becomes the merchandise.' }
   ]
 },
@@ -156,7 +156,7 @@ const MORE = [
       line: '"Retract it, in full, front page, same size type, and an apology, a real one, not one of those weasel apologies they do."' },
     { label: 'Fact-Check the Fact-Checkers, Officially', icon: '\u{1F3DB}\u{FE0F}', major: true, eff: { base: 7, press: -7, courts: -6, congress: -4, auth: 5 },
       line: '"We’re setting up our own, inside the government, official, the real facts, and theirs will be, I don’t know, whatever theirs are."' },
-    { label: 'Ask How Many Noses Is a Good Score', icon: '\u{1F443}', silly: true, eff: { base: 2, fun: 10 },
+    { label: 'Ask How Many Noses Is a Good Score', icon: '\u{1F443}', silly: true, eff: { base: 2, press: -2, fun: 10 },
       line: 'You ask, in good faith, whether four is the top. They explain that four is the worst. You say you have four more than anybody in history, which is true, and you say it like a man collecting them.' }
   ]
 },
@@ -195,7 +195,7 @@ const MORE = [
       line: '"Let me tell you about your country, I know it very well, better than you do actually, and it is not doing well, not doing well at all."' },
     { label: 'Revoke Their Correspondents’ Visas', icon: '\u{1F6C2}', major: true, eff: { base: 7, press: -9, courts: -6, congress: -4, street: -3, auth: 5 },
       line: '"They’re out, all of them, visas cancelled, go report from somewhere else, this is a privilege and they abused it, badly."' },
-    { label: 'Ask Them to Say "Aluminium" Again', icon: '\u{1F5E3}\u{FE0F}', silly: true, eff: { base: 2, fun: 10 },
+    { label: 'Ask Them to Say "Aluminium" Again', icon: '\u{1F5E3}\u{FE0F}', silly: true, eff: { base: 1, press: -1, street: 1, fun: 10 },
       line: 'The correspondent says it. You laugh for eleven seconds of live international broadcast. You ask for "schedule". They oblige. Two hundred million people watch a superpower fail to move on.' }
   ]
 },

@@ -128,6 +128,11 @@ AD.doStreetAction = function (run, cityId, actionId) {
   if (!avail.ok) return avail;
   if (action.cost) run.cash = Math.round((run.cash - action.cost) * 100) / 100;
   const eff = action.run(run, c) || {};
+  /* BOREDOM. Public order was the only room whose actions never moved the
+     Boredometer. A televised crackdown is a spectacle he enjoys; sitting down
+     to negotiate is another dull afternoon of governing. Only supplied when the
+     action did not already carry its own charge. */
+  if (eff.fun == null) eff.fun = { force: 3, sweep: 4, curfew: 2, negotiate: -2 }[action.id] || 1;
   const deltas = AD.applySenateEffect(run, eff);
   run.stats = run.stats || {};
   run.stats.streetActions = (run.stats.streetActions || 0) + 1;

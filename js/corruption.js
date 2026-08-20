@@ -271,7 +271,10 @@ AD.buyAsset = function (run, id) {
     if (run.meters[k] !== before) deltas[k] = run.meters[k] - before;
   });
   // Boredom: acquiring an empire (a network, a coin, a bank) is a mild thrill.
-  if (AD.moveFun) { const bf = AD.boredom(run); AD.moveFun(run, 1); const af = AD.boredom(run); if (af !== bf) deltas.bored = af - bf; }
+  // A per-asset boredom override (a.fun) lets a holding whose whole point is
+  // entertainment, e.g. the trading cards, actually deliver it; the rest get the
+  // flat +1 thrill of acquiring another piece of the empire.
+  if (AD.moveFun) { const bf = AD.boredom(run); AD.moveFun(run, (a.fun == null ? 1 : a.fun)); const af = AD.boredom(run); if (af !== bf) deltas.bored = af - bf; }
   return { ok: true, asset: a, deltas };
 };
 

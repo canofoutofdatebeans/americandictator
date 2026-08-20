@@ -236,6 +236,43 @@ AD.SEN_QUIRKS_OPP = ['retiring', 'homestate', 'ethics', 'crusader', 'dealmaker',
 
 AD.senQuirk = sn => (sn && sn.quirk) ? AD.SEN_QUIRK_TABLE[sn.quirk] : null;
 
+/* ---------- per-senator variation --------------------------------------
+   There are sixteen quirks but a hundred senators, so several senators share
+   a quirk. To keep the rule that NO TWO PEOPLE resolve a move identically,
+   the bespoke quirk effect is perturbed by the individual senator: a stable
+   hash of their name and state gives a small deterministic jitter, and their
+   temperament scales how hard the favour lands (a careerist commits; a
+   maverick wavers). Same quirk, never the same numbers. Called from
+   AD.doSenateAction for bespoke actions only. */
+AD.SEN_TEMPER_CLOUT = { loyalist: 1.15, careerist: 1.1, coward: 0.9, maverick: 0.8,
+                        zealot: 0.85, opportunist: 1.05 };
+AD.varyBySenator = function (eff, sn) {
+  if (!eff || !sn) return eff;
+  const key = String(sn.first || '') + (sn.last || '') + (sn.st || '');
+  let h = 2166136261;
+  for (let i = 0; i < key.length; i++) { h ^= key.charCodeAt(i); h = Math.imul(h, 16777619); }
+  const clout = AD.SEN_TEMPER_CLOUT[sn.temperament] || 1;
+  let bit = h >>> 0;
+  ['congress', 'courts', 'press', 'street', 'base', 'cash', 'auth'].forEach(k => {
+    if (!eff[k]) return;
+    const scaled = eff[k] * clout;
+    const jitter = ((bit % 3) - 1) * (k === 'cash' ? 0.01 : k === 'auth' ? 0 : 1);  // -1..+1 (symmetric)
+    bit = Math.floor(bit / 3);
+    let v = (k === 'cash') ? Math.round((scaled + jitter) * 100) / 100
+                           : Math.round(scaled) + jitter;
+    // never let the jitter cross a nonzero effect through zero (keeps sign/meaning)
+    if (eff[k] > 0 && v < 1) v = 1;
+    if (eff[k] < 0 && v > -1 && k !== 'auth') v = -1;
+    eff[k] = v;
+  });
+  // and the loyalty the favour actually buys varies a little too
+  if (typeof sn.loyalty === 'number') {
+    const extra = ((bit % 7) - 3);           // -3..+3 (symmetric)
+    if (extra) sn.loyalty = AD.clamp(sn.loyalty + extra, 0, 100);
+  }
+  return eff;
+};
+
 /* A senator's bespoke move is found by QUIRK rather than by id, so this is the
    senate's equivalent of AD.movesFor. */
 AD.senatorMoves = function (sn) {

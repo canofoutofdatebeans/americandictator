@@ -64,14 +64,14 @@ AD.VOICE = {
   cost: [
     'That cost HOW much? For that? I have bought aircraft for that.',
     'We are paying for this? Us? Why are we paying for this. Find out who agreed to that and then do not tell me, actually.',
-    'Fine. Take it out of something nobody likes.'
+    'Fine. Take it out of something nobody likes. The weather service. Do we need our own weather?'
   ],
 
   /* authority went up */
   power: [
     'So I can just do that now. Whenever I want. Nobody has to say yes.',
     'That is more power than the last guy had. Considerably more. Nobody talks about that.',
-    'And this is all completely normal, historically. I have been told it is very normal.'
+    'And this is all completely normal, historically. I asked the lawyers if it was normal and they went very quiet, which is a yes.'
   ],
 
   /* the Boredometer went the wrong way */
@@ -80,6 +80,16 @@ AD.VOICE = {
     'Are there any more of these today? Be honest with me.',
     'Somebody get me something to sign. Anything. I do not care what it says.',
     'I am going to be honest with you, I stopped listening about a paragraph ago.'
+  ],
+
+  /* a whole branch just became a Pillar (captured a power centre). The biggest
+     thing that can happen in a term, and he has understood it as a compliment. */
+  pillar: [
+    'So that whole branch works for me now? All of it? That was always the deal, I just did not know who to ask.',
+    'One down. How many are there, four? Three? Nobody will give me a straight answer on how many branches there are.',
+    'They folded. I knew they would fold. Everybody folds, it is just a question of what you offer and how loud.',
+    'Is this the part where it becomes permanent, or is there more paperwork? There is always more paperwork with the good stuff.',
+    'Write down the date. This is a date they are going to teach. Not right away. But eventually, once the right people are teaching.'
   ],
 
   /* things got worse across the board */
@@ -98,7 +108,8 @@ AD.presidentLine = function (run, out) {
   const roll = (AD.reactRoll ? AD.reactRoll(run) : Math.random());
 
   let bucket;
-  if (out && out.wasWild)                          bucket = 'wild';
+  if (out && out.pillar)                           bucket = 'pillar';
+  else if (out && out.wasWild)                     bucket = 'wild';
   else if ((d.base || 0) >= 0.6)                   bucket = 'crowd';
   else if ((d.cash || 0) >= 0.3)                   bucket = 'money';
   else if ((d.cash || 0) <= -0.3)                  bucket = 'cost';

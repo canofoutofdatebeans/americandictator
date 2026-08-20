@@ -126,34 +126,34 @@ const D = [
 
 /* ---------------- LICENSING: rent the name ---------------- */
 ['lic-steaks','licensing','The Steaks',0.1,'Put the name on a mail-order meat business.',
- 'Income +$15M/mo.',{income:0.015},{press:-3},
+ 'Income +$15M/mo. The base eats it up.',{income:0.015},{press:-3,base:2,street:-1},
  'They are sold through a catalogue retailer for two months and then quietly are not.'],
 ['lic-water','licensing','The Bottled Water',0.08,'A branded water, served exclusively at your own properties.',
- 'Income +$12M/mo.',{income:0.012},{press:-2},
+ 'Income +$12M/mo. Served at your own properties.',{income:0.012},{press:-2,base:1,courts:-1},
  'It is the same water. The bottle costs more than the water and the label costs more than the bottle.'],
 ['lic-bible','licensing','The Patriot Edition',0.12,'A bible with the founding documents bound in the back.',
  'Income +$20M/mo. +1 Base every month.',{income:0.02,basePerMonth:1},{press:-5,street:-3},
  'It retails at fifty-nine dollars and ninety-nine cents. Two separate denominations issue statements. Sales double.'],
 ['lic-sneakers','licensing','The Gold High-Tops',0.09,'A limited sneaker drop announced at a trade show.',
- 'Income +$14M/mo.',{income:0.014},{press:-3},
+ 'Income +$14M/mo. A genuine culture-cross.',{income:0.014},{press:-3,base:3,street:1},
  'One thousand pairs, gold, announced to a crowd that boos and then buys every pair inside two hours.'],
 ['lic-cologne','licensing','The Fragrance',0.07,'A cologne named after a legal concept.',
- 'Income +$10M/mo.',{income:0.01},{press:-2},
+ 'Income +$10M/mo.',{income:0.01},{press:-2,base:1,congress:-1},
  'The notes are listed as leather, cedar and "victory." It smells, according to every review, of a rental car.'],
 ['lic-university','licensing','The Leadership Institute',0.3,'An unaccredited school selling seminars.',
  'Income +$40M/mo.',{income:0.04},{press:-7,courts:-6},
  'Attendees pay thirty-five thousand dollars to be photographed beside a cardboard version of you. The lawsuit takes six years.'],
 ['lic-guitar','licensing','The Signature Guitar',0.06,'A commemorative instrument in three finishes.',
- 'Income +$9M/mo.',{income:0.009},{press:-2},
+ 'Income +$9M/mo. Rally merch.',{income:0.009},{press:-2,base:2,street:1},
  'It is playable, technically, in the way that a shoe is technically a hammer.'],
 ['lic-watches','licensing','The Timepiece Collection',0.11,'A gold watch with your signature on the face.',
- 'Income +$18M/mo.',{income:0.018},{press:-3},
+ 'Income +$18M/mo.',{income:0.018},{press:-3,base:1,courts:-2},
  'Priced at a hundred thousand dollars. The movement inside costs eleven.'],
 ['lic-cards','licensing','The Digital Trading Cards',0.05,'Collectible cards of you as an astronaut, a cowboy, a superhero.',
- 'Income +$8M/mo. Boredometer improves.',{income:0.008},{press:-4},
- 'Forty-five thousand of them sell in twelve hours. In one you are a fighter pilot. In one you are, inexplicably, a chef.'],
+ 'Income +$8M/mo. The base cannot get enough, and neither can he.',{income:0.008},{press:-4,base:3},
+ 'Forty-five thousand of them sell in twelve hours. In one you are a fighter pilot. In one you are, inexplicably, a chef.',6],
 ['lic-anthem','licensing','The Patriot Anthem',0.04,'A recorded anthem sold as a download.',
- 'Income +$6M/mo. +1 Base every month.',{income:0.006,basePerMonth:1},{press:-3},
+ 'Income +$6M/mo. +1 Base every month.',{income:0.006,basePerMonth:1},{press:-3,base:1,street:1},
  'It charts. It is performed by a choir of people awaiting sentencing, which the sleeve notes describe as "moving."'],
 
 /* ---------------- VENTURES: serious financial products ---------------- */
@@ -183,7 +183,7 @@ const D = [
  'It draws more electricity than the county it sits in. Residential bills rise eleven per cent and the operation is declared a jobs miracle.'],
 ['ven-nft','ventures','The Second Card Drop',0.15,
  'Another card series, this time with a physical piece of a suit.',
- 'Income +$22M/mo.',{income:0.022},{press:-4},
+ 'Income +$22M/mo.',{income:0.022},{press:-4,base:2,courts:-1},
  'Each card contains a swatch allegedly cut from a suit you wore. The suit would need to have been roughly the size of a barn.'],
 ['ven-bank','ventures','The Friendly Bank',0.8,
  'A controlling interest in a bank that keeps lending to you.',
@@ -197,7 +197,7 @@ const D = [
 
 AD.ROTATING_ASSETS = D.map(d => ({
   id: d[0], cat: d[1], name: d[2], cost: d[3], blurb: d[4], effect: d[5],
-  passive: d[6], buy: d[7], flavour: '"' + d[8] + '"', rotating: true
+  passive: d[6], buy: d[7], flavour: '"' + d[8] + '"', fun: d[9], rotating: true
 }));
 
 /* Everything in the shop, structural + rotating. */

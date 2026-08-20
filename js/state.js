@@ -5,7 +5,7 @@
    ============================================================ */
 
 window.AD = window.AD || {};
-AD.BUILD = '135';   // bumped every deploy; shown on the title so a stale cache is obvious
+AD.BUILD = '136';   // bumped every deploy; shown on the title so a stale cache is obvious
 
 /* ---------- Factions ------------------------------------------------------
    Five power centres. Four of them are CAPTURABLE: drive one to 100 and it
@@ -330,11 +330,29 @@ AD.MUTATORS = [
     blurb: 'You won by forty points. The whole country starts warmer to you.',
     mods: { base: 10, congress: 8, courts: 6, street: 6, press: 4 } },
   { id: 'recession', label: 'Recession', glyph: '📉',
-    blurb: 'The economy is in freefall the day you arrive. Less cash, angrier streets.',
-    mods: { street: -10, congress: -6 }, cash: -1.5, flag: 'mutRecession' },
+    blurb: 'The economy is in freefall the day you arrive. A crashed market, and it keeps sinking for a while.',
+    mods: { street: -10, congress: -6 }, cash: -1.5, flag: 'mutRecession',
+    /* The market opens well down and keeps dragging for the first stretch of
+       the term, easing off as `recession` counts down in AD.marketTick. */
+    onStart (run) {
+      run.sp500 = 3400; run.biz = 68; run.recession = 14;
+      run.marketHistory = [{ m: run.month - 1 || 0, sp: run.sp500, biz: run.biz }];
+    } },
   { id: 'wartime', label: 'Wartime', glyph: '💥',
-    blurb: 'You inherit a shooting war. The base rallies; the institutions do not.',
-    mods: { base: 8, street: -6, congress: -8, courts: -4 }, flag: 'mutWartime' },
+    blurb: 'You inherit a shooting war on day one. The base rallies to the flag; the institutions do not.',
+    mods: { base: 8, street: -6, congress: -8, courts: -4 }, flag: 'mutWartime',
+    /* Actually starts the war, so it is live in the War Room and resolves over
+       the coming months like any other. The opening meter hit is the `mods`
+       above; this only creates the ongoing conflict, it does not re-charge them. */
+    onStart (run) {
+      if (!AD.ensureWars || !AD.WAR_TARGETS) return;
+      const t = AD.warTargetById ? (AD.warTargetById('rus') || AD.WAR_TARGETS.find(x => x.strength >= 2)) : null;
+      if (!t) return;
+      AD.ensureWars(run);
+      run.wars.push({ target: t.id, months: 0, done: false, loot: true, inherited: true });
+      run.warLog = (run.warLog || []).concat([{ name: t.name, won: null }]);
+      run.stats = run.stats || {}; run.stats.wars = (run.stats.wars || 0) + 1;
+    } },
   { id: 'scandal', label: 'Scandal-Plagued', glyph: '🗞️',
     blurb: 'Saint Ambrose is already leaking on day one. The press is hunting from the start.',
     mods: { press: -8, base: 4 }, heat: 6, flag: 'mutScandal' },
@@ -353,6 +371,9 @@ AD.applyMutators = function (run, ids) {
     if (m.cash) run.cash = Math.max(0, Math.round((run.cash + m.cash) * 100) / 100);
     if (m.heat && AD.bumpHeat) AD.bumpHeat(run, m.heat);
     if (m.flag) { run.flags = run.flags || {}; run.flags[m.flag] = true; }
+    /* The two modifiers whose blurb promises an ONGOING state deliver it here,
+       rather than only shifting the opening meters. */
+    if (m.onStart) m.onStart(run);
   });
   run.mutators = (ids || []).slice();
 };

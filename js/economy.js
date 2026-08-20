@@ -125,6 +125,9 @@ AD.marketTick = function (run) {
   spPct -= (run.tariffs || []).filter(t => !t.fired).length * 0.006;
   spPct -= (run.wars || []).filter(w => !w.done).length * 0.012;
   spPct += (((run.meters && run.meters.street) || 50) - 50) * 0.0004;
+  /* THE RECESSION MODIFIER. A run that started in freefall (see AD.MUTATORS)
+     keeps sinking for a while, the drag easing month by month until it lifts. */
+  if (run.recession > 0) { spPct -= 0.012 + run.recession * 0.0015; run.recession--; }
   spPct += (rng() - 0.5) * 0.05;                            // noise / volatility
   run.sp500 = Math.max(600, Math.round(run.sp500 * (1 + spPct)));
 
@@ -226,13 +229,34 @@ AD.doEconMove = function (run, nationId, i) {
 };
 
 /* ---------- tariffs ---------- */
+/* Same-kind nations shared an identical instant tariff effect (the per-kind
+   AD.TARIFF_PROFILE). The bespoke RETALIATION already differs per country
+   (n.bite); this makes the instant hit differ too, by a small deterministic
+   per-nation jitter, so no two countries react to the button the same way. */
+AD.varyByNation = function (eff, n) {
+  if (!eff || !n) return eff;
+  let h = 2166136261;
+  const key = String(n.id || n.name || '');
+  for (let i = 0; i < key.length; i++) { h ^= key.charCodeAt(i); h = Math.imul(h, 16777619); }
+  let bit = h >>> 0;
+  ['base', 'press', 'courts', 'congress', 'street', 'auth'].forEach(k => {
+    if (!eff[k]) return;
+    const jitter = (bit % 3) - 1;             // -1..+1 (symmetric)
+    bit = Math.floor(bit / 3);
+    let v = eff[k] + jitter;
+    if (eff[k] > 0 && v < 1) v = 1;           // keep sign and meaning
+    if (eff[k] < 0 && v > -1) v = -1;
+    eff[k] = v;
+  });
+  return eff;
+};
 AD.imposeTariff = function (run, id) {
   const n = AD.econNation(id);
   if (!n || AD.tariffOn(run, id)) return { ok: false, reason: 'Already tariffed.' };
   AD.ensureEconomy(run);
   const prof = AD.TARIFF_PROFILE[n.kind];
   const rng = econRng((run.seed || 'X') + id + run.month);
-  const eff = Object.assign({}, prof.impose);
+  const eff = AD.varyByNation(Object.assign({}, prof.impose), n);
   /* Routed through AD.econImpact rather than applied directly, so even the
      generic tariff button costs relations, shocks the market and pays the
      Treasury, the same as everything else in this room. */
