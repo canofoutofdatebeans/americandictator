@@ -69,6 +69,35 @@ AD.UI = {
     });
   },
 
+  /* Remove everything this edition does not include, once, at boot. Rooms are
+     REMOVED rather than padlocked: a lock you can see and cannot use is an
+     advert, and an advert in the middle of a joke kills the joke. */
+  applyTier () {
+    if (!AD.has) return;
+    [['war', 'war-chip'], ['diplomacy', 'diplo-chip'], ['economy', 'econ-chip'],
+     ['corruption', 'wealth-chip'], ['pardon', 'pardon-chip'], ['renovations', 'reno-chip']
+    ].forEach(([room, id]) => {
+      if (AD.has('room.' + room)) return;
+      const el = this.el(id);
+      if (el && el.parentNode) el.parentNode.removeChild(el);
+    });
+    // The treasury button opens the Economy, so it goes with it.
+    if (!AD.has('room.economy')) {
+      const purse = this.el('hud-purse');
+      if (purse && purse.parentNode) purse.parentNode.removeChild(purse);
+    }
+    // Difficulty and modifiers are a full-edition choice.
+    if (!AD.has('difficulty.all')) {
+      const mut = this.el('mutators');
+      if (mut && mut.parentNode) {
+        const field = mut.closest('.field') || mut.parentNode;
+        if (field && field.parentNode) field.parentNode.removeChild(field);
+      }
+      document.querySelectorAll('[data-diff="historic"]').forEach(b => b.remove());
+    }
+    document.documentElement.setAttribute('data-tier', AD.TIER || 'full');
+  },
+
   /* ---------- portrait ---------- */
   portraitSVG (p, party) {
     const P = AD.PORTRAIT;
@@ -240,19 +269,25 @@ AD.UI = {
     }
     const chip = this.el('const-chip');
     const cn = AD.clauseCount(run);
-    chip.innerHTML = '<span class="chip-ico">' + AD.icon('constitution') + '</span>' +
-      '<span class="chip-name">Constitution</span><b>' + cn + '/' + AD.CLAUSES.length + '</b>';
-    chip.classList.toggle('full', AD.allClausesBroken(run));
-    chip.classList.toggle('started', cn > 0);
-    chip.title = AD.t('chip.constitution') + ' — ' + cn + '/' + AD.CLAUSES.length;
+    if (chip) {
+      chip.innerHTML = '<span class="chip-ico">' + AD.icon('constitution') + '</span>' +
+        '<span class="chip-name">Constitution</span><b>' + cn + '/' + AD.CLAUSES.length + '</b>';
+      chip.classList.toggle('full', AD.allClausesBroken(run));
+      chip.classList.toggle('started', cn > 0);
+      chip.title = AD.t('chip.constitution') + ' — ' + cn + '/' + AD.CLAUSES.length;
+    }
 
+    // A tile this edition does not include has been removed from the board by
+    // applyTier, so every tile write here has to tolerate its absence.
     const rchip = this.el('reno-chip');
-    const rn = (run.renos || []).length;
-    rchip.innerHTML = '<span class="chip-ico">' + AD.icon('residence') + '</span>' +
-      '<span class="chip-name">Residence</span><b>' + rn + '/' + AD.RENOS.length + '</b>';
-    rchip.classList.toggle('started', rn > 0);
-    rchip.classList.toggle('full', rn === AD.RENOS.length);
-    rchip.title = AD.t('chip.residence') + ' — ' + rn + '/' + AD.RENOS.length;
+    if (rchip) {
+      const rn = (run.renos || []).length;
+      rchip.innerHTML = '<span class="chip-ico">' + AD.icon('residence') + '</span>' +
+        '<span class="chip-name">Residence</span><b>' + rn + '/' + (AD.RENOS ? AD.RENOS.length : 0) + '</b>';
+      rchip.classList.toggle('started', rn > 0);
+      rchip.classList.toggle('full', AD.RENOS && rn === AD.RENOS.length);
+      rchip.title = AD.t('chip.residence') + ' — ' + rn + '/' + (AD.RENOS ? AD.RENOS.length : 0);
+    }
 
     const warns = AD.Engine.warnings();
     this.el('warnings').innerHTML = warns.map(w =>
@@ -734,24 +769,30 @@ AD.UI = {
        rotating deals that turn over every couple of months, and the Board. */
     const tab = this.corrTab || 'holdings';
     const nBoard = AD.boardMembers ? AD.boardMembers(AD.Engine.run).length : 0;
-    this.el('corr-tabs').innerHTML = [
-      ['holdings', 'Holdings'],
-      ['deals',    'On the Market'],
-      ['board',    'Board of Peace' + (nBoard ? ' (' + nBoard + ')' : '')]
-    ].map(t => `<button class="sen-tab ${tab === t[0] ? 'on' : ''}" data-corrtab="${t[0]}">${t[1]}</button>`).join('');
+    // The rotating market and the Board are separate files; a build that did
+    // not ship them simply does not offer the tabs.
+    const hasDeals = !!AD.offeredInterests;
+    const hasBoard = !!AD.boardMembers;
+    const tabDefs = [['holdings', 'Holdings']];
+    if (hasDeals) tabDefs.push(['deals', 'On the Market']);
+    if (hasBoard) tabDefs.push(['board', 'Board of Peace' + (nBoard ? ' (' + nBoard + ')' : '')]);
+    const tab2 = tabDefs.some(t => t[0] === tab) ? tab : 'holdings';
+    this.el('corr-tabs').innerHTML = tabDefs
+      .map(t => `<button class="sen-tab ${tab2 === t[0] ? 'on' : ''}" data-corrtab="${t[0]}">${t[1]}</button>`).join('');
+    this.el('corr-tabs').hidden = tabDefs.length < 2;
 
-    if (tab === 'board') { this.renderBoard(run); return; }
+    if (tab2 === 'board') { this.renderBoard(run); return; }
 
-    const cats = tab === 'deals'
+    const cats = tab2 === 'deals'
       ? AD.ASSET_CATS.filter(c => ['hospitality', 'appointments', 'licensing', 'ventures'].indexOf(c.id) !== -1)
       : AD.ASSET_CATS.filter(c => ['media', 'lawfare', 'influence', 'enrichment'].indexOf(c.id) !== -1);
 
     // On the Market shows only what is offered THIS window; Holdings shows the
     // permanent catalogue.
-    const offered = (tab === 'deals' && AD.offeredInterests) ? AD.offeredInterests(run) : null;
+    const offered = (tab2 === 'deals' && AD.offeredInterests) ? AD.offeredInterests(run) : null;
     const inScope = a => offered ? offered.some(o => o.id === a.id) : true;
 
-    const head = tab === 'deals'
+    const head = tab2 === 'deals'
       ? `<div class="deal-window">The market turns over in
            <b>${AD.monthsToRefresh(run)} month${AD.monthsToRefresh(run) === 1 ? '' : 's'}</b>.
            These are the deals on the table right now; miss them and the next lot will be different.</div>`
@@ -2029,12 +2070,18 @@ AD.UI = {
       ${score.clausesBroken ? `<div class="end-kicker" style="margin:-6px 0 14px">
         ${score.clausesBroken}/${AD.CLAUSES.length} CONSTITUTIONAL CLAUSES BROKEN${score.fullSet ? ' · THE FULL SET' : ''}</div>` : ''}
       ${score.seed ? `<div class="end-seed">SEED <b>${score.seed}</b><br><em>same seed, same term, send it to somebody</em></div>` : ''}
+      ${AD.isFree && AD.isFree() ? `<div class="upsell">
+        <div class="upsell-kick">${AD.UPGRADE.kicker}</div>
+        <h4>${AD.UPGRADE.head}</h4>
+        <ul>${AD.UPGRADE.lines.map(l => '<li>' + l + '</li>').join('')}</ul>
+        <p class="upsell-foot">${AD.UPGRADE.foot}</p>
+      </div>` : ''}
       <div class="end-actions">
         <button class="btn btn-primary" data-act="dossier">Read Your Dossier</button>
         <button class="btn" data-act="read-paper">The Front Page</button>
-        <button class="btn btn-reckon" data-act="reckoning">The Receipts</button>
+        ${AD.has('reckoning') ? '<button class="btn btn-reckon" data-act="reckoning">The Receipts</button>' : ''}
         <button class="btn" data-act="new">New President</button>
-        <button class="btn btn-ghost" data-act="library">Presidential Library</button>
+        ${AD.has('library') ? '<button class="btn btn-ghost" data-act="library">Presidential Library</button>' : ''}
         <button class="btn btn-ghost" data-act="title">Main Menu</button>
       </div>`;
     this.show('ending');

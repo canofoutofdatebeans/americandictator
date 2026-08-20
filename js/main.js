@@ -21,6 +21,7 @@ AD.Game = {
     this.buildLanguageScreen();
     this.buildSetupScreen();
     this.buildHowTo();
+    AD.UI.applyTier();          // strip whatever this edition does not include
     AD.UI.installOverlayCloses();
     this.wire();
 
@@ -282,6 +283,12 @@ AD.Game = {
       difficulty: s.difficulty, legacy: s.legacy, mutators: s.mutators,
       seed: typed || undefined
     });
+    /* The free edition plays a complete but shorter term: a real beginning,
+       middle and end inside two years, rather than a full term cut off. */
+    if (AD.has && !AD.has('terms.second') && AD.FREE_MAX_MONTHS) {
+      run.maxMonths = Math.min(run.maxMonths, AD.FREE_MAX_MONTHS);
+      run.termLength = Math.min(run.termLength, AD.FREE_MAX_MONTHS);
+    }
     AD.Seed.set(run.seed);                 // same seed + same choices = same term
     AD.Engine.start(run);
     AD.Engine.applyInheritance(run);    // start the term in the country you were left
@@ -1120,6 +1127,12 @@ AD.Game = {
   },
 
   act (what) {
+    /* A room this edition does not include is not openable. The tiles are
+       removed from the board too (see UI.applyTier), so this is a backstop
+       for stale handlers and keyboard shortcuts rather than the main gate. */
+    if (AD.has && /^(war|diplomacy|economy|corruption|pardon|renovations)$/.test(what)
+        && !AD.has('room.' + what)) return;
+
     const U = AD.UI;
     switch (what) {
       case 'new':

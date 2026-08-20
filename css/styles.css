@@ -1906,3 +1906,39 @@ html[data-motion="off"] .potus-line{animation:none}
 .reckon-close b{color:#9ec9a5;font-weight:700}
 .reckon .dos-actions{margin-top:14px}
 .btn-reckon{border-color:#2a3a5c}
+
+/* ═══════════════════════════════════════════════════════════════
+   THE UPGRADE OFFER                                  (build 129)
+   Free edition only, on the ending screen, once, after the player
+   has finished a term and knows whether they liked it. Deliberately
+   nowhere near a crisis: being sold to inside a joke kills the joke.
+   ═══════════════════════════════════════════════════════════════ */
+.upsell{
+  margin:18px 0 4px;padding:14px 15px 13px;
+  border-radius:13px;border:1px solid #4a3c14;
+  background:linear-gradient(180deg,#1c1608,#12100a);
+  text-align:left;
+}
+.upsell-kick{
+  font-size:7.5px;letter-spacing:2.6px;font-weight:800;
+  color:var(--gold-soft);margin-bottom:4px;
+}
+.upsell h4{
+  margin:0 0 9px;font-size:19px;font-weight:800;letter-spacing:-.3px;color:#f2dd8a;
+}
+.upsell ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px}
+.upsell li{
+  position:relative;padding-left:15px;
+  font-size:11.5px;line-height:1.45;color:var(--paper2);
+}
+.upsell li::before{
+  content:'';position:absolute;left:2px;top:6px;
+  width:5px;height:5px;border-radius:50%;background:var(--gold-soft);
+}
+.upsell-foot{
+  margin:10px 0 0;font-size:11px;line-height:1.45;
+  color:var(--muted);font-style:italic;
+}
+
+/* A free build simply has fewer tiles; the grid reflows on its own. */
+html[data-tier="free"] .board-h em::after{content:''}
