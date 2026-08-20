@@ -1339,6 +1339,11 @@ AD.Game = {
         break;
       case 'reckoning-close': U.overlay('reckoning', false); break;
       case 'paper-copy': this.copyFrontPage(); break;
+      case 'paper-image':
+        if (AD.Engine.lastScore && AD.shareFrontPageImage) {
+          AD.shareFrontPageImage(AD.Engine.lastScore, document.querySelector('[data-act="paper-image"]'));
+        }
+        break;
     }
   }
 };

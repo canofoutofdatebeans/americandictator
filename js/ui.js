@@ -2128,7 +2128,8 @@ AD.UI = {
       <div class="fp-story">${f.story.map(p => `<p>${cln(p)}</p>`).join('')}</div>
       <div class="fp-verdict">${cln(f.verdict)}</div>
       <div class="dos-actions">
-        <button class="btn btn-primary" data-act="paper-copy">Copy the Front Page</button>
+        ${AD.has('share.image') ? '<button class="btn btn-primary" data-act="paper-image">Save as Image</button>' : ''}
+        <button class="btn" data-act="paper-copy">Copy Text</button>
         <button class="btn btn-ghost" data-act="paper-close">Close</button>
       </div>`;
     this._frontPageShare = f.share;
