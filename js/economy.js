@@ -529,7 +529,9 @@ AD.doSummit = function (run, nationId, index) {
   run.summits = AD.summitsLeft(run) - 1;
   // An insult to a foreign government comes back, quoted, months later.
   if (a.insult && AD.remember) AD.remember(run, 'foreign', { nation: n.name }, 13);
-  const eff = Object.assign({}, a.eff);
+  // Many nations share a summit effect template; jitter per nation+option so no
+  // two countries resolve a summit identically (see AD.jitterEff).
+  const eff = AD.jitterEff(Object.assign({}, a.eff), nationId + ':' + index);
   if (eff.cayHeat && AD.bumpHeat) { AD.bumpHeat(run, eff.cayHeat); delete eff.cayHeat; }
   // Boredom: the bombastic, base-thrilling summit play is fun; sober diplomacy bores him.
   if (eff.fun == null) eff.fun = ((a.eff && (a.eff.base || 0) >= 4)) ? 2 : -1;

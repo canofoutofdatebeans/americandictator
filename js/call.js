@@ -330,7 +330,9 @@ AD.doCall = function (run, targetId, optIndex) {
      any other part of the job, so this is where boredom actually comes down.
      A big-swing call is worth roughly a dozen dull afternoons; even a routine
      one clears several. Positive `fun` reduces boredom (see AD.moveFun). */
-  const ceff = Object.assign({}, opt.eff);
+  // Two contacts can share an effect template; jitter it per contact+option so
+  // no two people resolve identically (see AD.jitterEff).
+  const ceff = AD.jitterEff(Object.assign({}, opt.eff), targetId + ':' + optIndex);
   if (ceff.fun == null) ceff.fun = opt.major ? 14 : 7;
   const deltas = AD.applySenateEffect(run, ceff);
   run.stats = run.stats || {}; run.stats.calls = (run.stats.calls || 0) + 1;

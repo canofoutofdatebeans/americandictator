@@ -20,6 +20,15 @@ AD.UI = {
     const o = this.el('ov-' + id);
     if (!o) return;
     o.hidden = !on;
+    if (on) {
+      // ROOM-USAGE INSTRUMENTATION: count which management rooms get opened, so
+      // the end-of-term dossier can show what was used and what was ignored.
+      const run = AD.Engine && AD.Engine.run;
+      if (run && AD.ROOM_IDS && AD.ROOM_IDS[id]) {
+        run.roomVisits = run.roomVisits || {};
+        run.roomVisits[id] = (run.roomVisits[id] || 0) + 1;
+      }
+    }
     // Move focus into the dialog on open so screen-reader and keyboard users
     // land on its title rather than being stranded behind it.
     if (on) {
@@ -2198,6 +2207,25 @@ AD.UI = {
   },
 
   /* ---------- ending ---------- */
+  /* The loss-explainer / coaching card (see AD.lossLesson). Diagnostic, not
+     scolding: what beat you, how close you were, one thing to do next time. */
+  lessonHTML (L) {
+    if (!L) return '';
+    const cln = t => AD.clean(t, this.settings.clean);
+    if (L.win) {
+      if (!L.lines || !L.lines.length) return '';
+      return '<div class="end-lesson win"><div class="lesson-h">STILL ON THE TABLE</div>' +
+        L.lines.map(x => '<p>' + cln(x) + '</p>').join('') + '</div>';
+    }
+    return '<div class="end-lesson"><div class="lesson-h">WHAT BEAT YOU</div>' +
+      '<p class="lesson-why">' + cln(L.verdict) + '</p>' +
+      (L.closest ? '<p class="lesson-close">Closest to capture: <b>' + L.closest.name + '</b>, ' +
+        L.closest.gap + ' point' + (L.closest.gap === 1 ? '' : 's') + ' short of Pillar ' + L.closest.pillar + '.</p>' : '') +
+      '<p class="lesson-tip"><b>Next time:</b> ' + cln(L.tip) + '</p>' +
+      (L.roomNote ? '<p class="lesson-room">' + cln(L.roomNote) + '</p>' : '') +
+      '</div>';
+  },
+
   renderEnding (score) {
     const e = AD.ENDINGS[score.endingId];
     const doctrines = score.doctrines.map(id => AD.doctrineById(id)).filter(Boolean);
@@ -2212,6 +2240,7 @@ AD.UI = {
         <div class="stat"><b>${score.pillars}/4</b><i>Pillars</i></div>
         <div class="stat"><b>${score.score.toLocaleString()}</b><i>Final Score</i></div>
       </div>
+      ${this.lessonHTML(score.lesson)}
       ${fresh.length ? `<div class="end-ach"><div class="end-ach-h">ACHIEVEMENTS UNLOCKED</div>
         ${fresh.map(a => `<div class="ach got"><b>🏅 ${a.name}</b><i>${a.desc}</i></div>`).join('')}</div>` : ''}
       ${score.pillarNames.length ? `<div class="end-pillars">${score.pillarNames.map(p => `<span>${p}</span>`).join('')}</div>` : ''}

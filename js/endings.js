@@ -262,6 +262,69 @@ AD.ENDINGS = {
 AD.zeroEnding = key => 'zero-' + key;
 
 /* Build the final scorecard shown on the ending screen. */
+/* ---------- THE LESSON (explain my loss) ---------------------------------
+   A defeat should teach, not just sting. Given the final run state, this returns
+   a short coaching card: what actually beat you, how close you came, and the one
+   concrete thing to do differently. It reads live state (branches, rooms opened,
+   boredom) at the moment the term ends. Wins get a lighter "what is left" note.
+   Purely diagnostic, never scolding. */
+AD.lossLesson = function (run, endingId) {
+  const e = AD.ENDINGS[endingId] || {};
+  const cap = (AD.Engine && AD.Engine.diff && AD.Engine.diff().capture) || 100;
+  const need = Math.max(1, Math.ceil((100 - AD.SOFT_CAP) / ((AD.Engine && AD.Engine.diff && AD.Engine.diff().pillarValue) || 22)));
+  const held = Object.keys(run.locked || {}).length;
+  const roomsUsed = Object.keys(run.roomVisits || {}).length;
+
+  // the branch you were closest to capturing but did not
+  const live = AD.FACTIONS.filter(f => f.capturable && !run.locked[f.key]);
+  let close = null;
+  live.forEach(f => { if (!close || run.meters[f.key] > run.meters[close.key]) close = f; });
+  const closeGap = close ? Math.max(0, cap - Math.round(run.meters[close.key])) : null;
+
+  // ---- WIN: a lighter "what is still on the table" ----
+  if (e.win) {
+    const bits = [];
+    if (endingId !== 'the-full-set' && endingId !== 'the-fortune' && run.cash < AD.wealthGoal(run)) {
+      bits.push('You took the country but not the money. $' + AD.wealthGoal(run) + 'B in personal wealth is a second, separate win, cashed at any ending. The Corruption room is how.');
+    }
+    if (held < 4) bits.push('You left ' + (4 - held) + ' branch' + (4 - held === 1 ? '' : 'es') + ' uncaptured. A clean sweep of all four is the hardest flex in the game.');
+    return { win: true, verdict: 'You won. Most presidents in this chair do not.', lines: bits.slice(0, 2) };
+  }
+
+  // ---- LOSS: what beat you ----
+  let verdict, tip;
+  if (/^zero-(congress|courts|press|street)$/.test(endingId)) {
+    const k = endingId.slice(5);
+    verdict = 'You let ' + AD.faction(k).name + ' bleed to zero. A power centre at zero is a lost term, and it never happens in one turn, it is months of neglect.';
+    tip = 'When a meter dips under 25, open its room and put a hand on it BEFORE the next crisis. Background drains never kill you in a single month; ignoring them for six does.';
+  } else if (endingId === 'zero-base') {
+    verdict = 'The base walked, and a president without the base is primaried out. You stopped feeding them.';
+    tip = 'The base cools on its own every month. Red meat, rallies and the wild option keep it warm; a term of sober governing starves it.';
+  } else if (endingId === 'bored') {
+    verdict = 'He got bored and wandered off with the prize in reach. Boredom over ' + AD.BORED_DANGER + ' for three months ends it, and it climbs on its own every month.';
+    tip = 'The Phone is the cure: three calls a month, and the silly ones are worth the most. Visit it whenever boredom clears half way to the line.';
+  } else if (/(count|standoff|refusal)/.test(endingId)) {
+    verdict = 'You tried to seize a second term you did not win outright, and the machinery to force it, the Courts and Congress, was not yours to command.';
+    tip = 'The contested path only works if you CAPTURED the Courts and Congress first. If you are going to steal it, build the instruments during the term, not on election night.';
+  } else {           // two-terms / merely-president / peaceful-transfer: ran out of runway
+    verdict = 'You served your time and left. You governed hard but never took enough of the government to make it permanent, that is the difference between a strongman and a president having a good year.';
+    tip = held >= need
+      ? 'You had the branches. The last step is Authority 100, which means holding them AND pressing your advantage every month, not coasting.'
+      : 'A win needs ' + need + ' captured branches (decisions alone cap at Authority ' + AD.SOFT_CAP + '). ' +
+        (close ? 'You were ' + closeGap + ' points off capturing ' + AD.faction(close.key).name + ', which would have been Pillar ' + (held + 1) + '. Focus ONE branch to ' + cap + ' rather than nudging all four.'
+               : 'Pick one branch and drive it to ' + cap + '; spreading thin is how you stall at Authority ' + AD.SOFT_CAP + ' forever.');
+  }
+
+  // a room-usage nudge, since not opening the rooms is the number-one reason a
+  // player stalls (they are where branches are actually captured)
+  const roomNote = roomsUsed <= 2
+    ? 'You opened ' + roomsUsed + ' of the ' + Object.keys(AD.ROOM_IDS || {}).length + ' management rooms all term. The rooms are where branches get captured; the crisis cards alone cannot win it.'
+    : null;
+
+  return { win: false, verdict, tip, roomNote,
+           closest: close ? { name: AD.faction(close.key).name, gap: closeGap, pillar: held + 1 } : null };
+};
+
 AD.scoreRun = function (run, endingId) {
   // THE BOREDOM GATE. A win only counts if the easily-bored President was still
   // entertained at the end (run.fun above the difficulty floor). Fall below it
@@ -331,6 +394,12 @@ AD.scoreRun = function (run, endingId) {
     holdings: (run.assets || []).length,
     peakCash: (run.stats && run.stats.peakCash) || run.cash,
     purseLeft: AD.purse ? AD.purse(run) : null,
+    lesson: AD.lossLesson(run, endingId),
+    // ROOM-USAGE INSTRUMENTATION: which management rooms got opened, and how
+    // often (see AD.ROOM_IDS / AD.UI.overlay). Persisted so a term's ledger and
+    // the loss-explainer can name what you leaned on and what you never touched.
+    roomVisits: Object.assign({}, run.roomVisits || {}),
+    roomsUsed: Object.keys(run.roomVisits || {}).length,
     score: score,
     stamp: Date.now()
   };

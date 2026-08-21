@@ -548,6 +548,13 @@ AD.Engine = {
       AD.recomputeAuthority(run);
     }
 
+    // TIME IS BORING. Boredom drifts up on its own every month (see
+    // AD.BORED_DRIFT), so a president who only governs, and never picks up the
+    // phone or does something wild, climbs toward the resignation line without
+    // any single card being to blame. The phone and the wild options push it
+    // back down. Applied before the base decay so the month's drift is banked.
+    if (AD.BORED_DRIFT && AD.moveBored) AD.moveBored(run, AD.BORED_DRIFT);
+
     // A movement that is not fed every single month cools off on its own.
     // NB: deliberately NOT harsher in term two, 95 months of accelerated
     // decay made zero-base swallow 40% of all endings.
