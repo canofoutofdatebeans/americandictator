@@ -55,7 +55,7 @@ AD.ACHIEVEMENTS = [
     test: r => r.stats.peakCash > 6 },
 
   { id: 'the-fortune', name: 'Ten Figures', desc: 'Reach your personal fortune goal (scales with difficulty).',
-    test: r => r.cash >= AD.wealthGoal(r) || (r.stats && r.stats.peakCash >= AD.wealthGoal(r)) },
+    test: r => AD.fortune(r) >= AD.wealthGoal(r) || (r.stats && (r.stats.peakFortune >= AD.wealthGoal(r) || r.stats.peakCash >= AD.wealthGoal(r))) },
 
   { id: 'full-set', name: 'The Country And The Money', desc: 'Finish with Authority 100 and $10B.',
     secret: true, test: r => r.endingId === 'the-full-set' },

@@ -23,9 +23,12 @@ AD.buildDossier = function (score) {
   const num = n => n && n.toLocaleString ? n.toLocaleString() : n;
 
   /* ---- the headline: name the presidency by what defined it ---- */
+  // The total fortune (cash + holdings) drives the money verdicts; old score
+  // cards without a portfolio fall back to the plain cash figure.
+  const fortune = (s.fortune != null ? s.fortune : s.cash);
   let headline;
   if (s.fullSet)                     headline = 'PAID IN FULL';
-  else if (s.cash >= AD.wealthGoal(s)) headline = 'THE BILLION-DOLLAR TERM';
+  else if (fortune >= AD.wealthGoal(s)) headline = 'THE BILLION-DOLLAR TERM';
   else if (s.judgesPacked >= 3)      headline = 'THE PACKED BENCH';
   else if (s.outletsOwned >= 3)      headline = 'THE PRESS PRESIDENT';
   else if (s.warsDeclared >= 2)      headline = 'THE WAR PRESIDENT';
@@ -95,8 +98,8 @@ AD.buildDossier = function (score) {
   }
 
   paras.push(win
-    ? 'Final Authority ' + s.authority + '. Personal fortune $' + s.cash + 'B. The office is a shape it did not have before.'
-    : 'Left office worth $' + s.cash + 'B' + (s.cash >= AD.wealthGoal(s) ? ', which, on the only scoreboard that clears, is a win.' : '.'));
+    ? 'Final Authority ' + s.authority + '. Personal fortune $' + fortune + 'B. The office is a shape it did not have before.'
+    : 'Left office worth $' + fortune + 'B' + (fortune >= AD.wealthGoal(s) ? ', which, on the only scoreboard that clears, is a win.' : '.'));
 
   /* ---- the verdict: one authorial line ---- */
   const e = AD.ENDINGS[s.endingId] || {};
@@ -159,7 +162,7 @@ AD.buildFrontPage = function (score) {
 
   if (score.hasCasino) story.push(`The White House itself now trades as a casino bearing the President's own name in neon, visible from the far bank of the river.`);
 
-  const fortune = score.cash;
+  const fortune = (score.fortune != null ? score.fortune : score.cash);
   if (fortune >= AD.wealthGoal({ wealthGoal: score.wealthGoal })) {
     story.push(`The personal fortune, disclosed on a form and never disputed, stands at <b>$${fortune}bn</b>, larger than the budgets of eleven federal agencies combined.`);
   } else {

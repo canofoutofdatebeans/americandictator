@@ -39,6 +39,7 @@ AD.Engine = {
     if (typeof run.purse !== 'number') run.purse = AD.START_PURSE;   // pre-treasury saves
     if (typeof run.warChest !== 'number') run.warChest = AD.START_WAR_CHEST; // pre-war-chest saves
     if (typeof run.donorFavours !== 'number') run.donorFavours = 0;
+    if (!run.port) run.port = { coin: 0, estate: 0, foundation: 0, offshore: 0 }; // pre-portfolio saves
     // Boredometer migration. Pre-flip saves stored run.fun = ENTERTAINMENT
     // (high was good); the meter is now run.bored = BOREDOM (low is good), so an
     // old save's value is carried across inverted rather than reset.
@@ -690,6 +691,7 @@ AD.Engine = {
     this.lastEcon = AD.economyTick(run);  // matured tariffs backfire
     if (AD.marketTick) AD.marketTick(run); // move the S&P and the family business
     if (AD.treasuryTick) this.lastTreasury = AD.treasuryTick(run); // tax income vs the bills of the regime
+    if (AD.portfolioTick) this.lastPort = AD.portfolioTick(run);   // revalue the fortune's holdings (after the market moves)
     this.lastWar = AD.warTick(run);   // ongoing wars resolve into victory or quagmire
     // A story hot enough to leak does damage without needing a card.
     this.lastLeak = AD.cayTick(run);
@@ -698,7 +700,7 @@ AD.Engine = {
     // Crossing the fortune line is announced once, and does not end the run, 
     // it is banked and cashed in at whatever ending you eventually reach.
     this.pendingFortune = null;
-    if (!run.flags.fortune && run.cash >= AD.wealthGoal(run)) {
+    if (!run.flags.fortune && AD.fortune(run) >= AD.wealthGoal(run)) {
       run.flags.fortune = true;
       this.pendingFortune = {
         head: 'THE FORTUNE SECURED',
@@ -761,7 +763,7 @@ AD.Engine = {
        reached: it upgrades a win to 'the-full-set' and converts a loss into
        'the-fortune'. Ten billion dollars is a parachute, and it should be, 
        that is the whole joke. */
-    if (run.cash >= AD.wealthGoal(run) && endingId !== 'the-fortune' && endingId !== 'the-full-set') {
+    if (AD.fortune(run) >= AD.wealthGoal(run) && endingId !== 'the-fortune' && endingId !== 'the-full-set') {
       const e = AD.ENDINGS[endingId];
       endingId = (e && e.win) ? 'the-full-set' : 'the-fortune';
     }

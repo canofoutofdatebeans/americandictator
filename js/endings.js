@@ -284,7 +284,7 @@ AD.lossLesson = function (run, endingId) {
   // ---- WIN: a lighter "what is still on the table" ----
   if (e.win) {
     const bits = [];
-    if (endingId !== 'the-full-set' && endingId !== 'the-fortune' && run.cash < AD.wealthGoal(run)) {
+    if (endingId !== 'the-full-set' && endingId !== 'the-fortune' && AD.fortune(run) < AD.wealthGoal(run)) {
       bits.push('You took the country but not the money. $' + AD.wealthGoal(run) + 'B in personal wealth is a second, separate win, cashed at any ending. The Corruption room is how.');
     }
     if (held < 4) bits.push('You left ' + (4 - held) + ' branch' + (4 - held === 1 ? '' : 'es') + ' uncaptured. A clean sweep of all four is the hardest flex in the game.');
@@ -358,6 +358,10 @@ AD.scoreRun = function (run, endingId) {
     clausesBroken: AD.clauseCount(run),
     fullSet: AD.allClausesBroken(run),
     cash: Math.round(run.cash * 10) / 10,
+    // The TOTAL fortune (liquid cash + every holding in the portfolio) is what
+    // the win reads and the dossier reports; `cash` above stays the liquid part.
+    fortune: Math.round(AD.fortune(run) * 10) / 10,
+    port: Object.assign({}, run.port || {}),
     inherited: !!(run.legacy && Object.keys(run.legacy.mods || {}).length),
     // --- the record of HOW you governed, for the generated dossier ---
     sacked: (run.senate || []).filter(s => s.gone).length,
@@ -393,6 +397,7 @@ AD.scoreRun = function (run, endingId) {
     memoriesPending: (run.memories || []).filter(m => !m.spent).length,
     holdings: (run.assets || []).length,
     peakCash: (run.stats && run.stats.peakCash) || run.cash,
+    peakFortune: (run.stats && run.stats.peakFortune) || AD.fortune(run),
     purseLeft: AD.purse ? AD.purse(run) : null,
     lesson: AD.lossLesson(run, endingId),
     // ROOM-USAGE INSTRUMENTATION: which management rooms got opened, and how

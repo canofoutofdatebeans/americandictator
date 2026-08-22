@@ -5,7 +5,7 @@
    ============================================================ */
 
 window.AD = window.AD || {};
-AD.BUILD = '153';   // bumped every deploy; shown on the title so a stale cache is obvious
+AD.BUILD = '154';   // bumped every deploy; shown on the title so a stale cache is obvious
 
 /* ---------- Factions ------------------------------------------------------
    Five power centres. Four of them are CAPTURABLE: drive one to 100 and it
@@ -136,6 +136,23 @@ AD.DECISION_FLOOR = 8;
 AD.WEALTH_GOAL = 15;   // fallback; the live target is per-run, see AD.wealthGoal
 /* The fortune target scales with difficulty: rookie 12, standard 15, historic 20. */
 AD.wealthGoal = run => (run && run.wealthGoal) || AD.WEALTH_GOAL;
+
+/* ---------- the fortune, as a portfolio -----------------------------------
+   run.cash is the LIQUID fortune. Money parked in a holding, the coin, real
+   estate, the foundation, offshore, lives in run.port and is NOT liquid: it
+   revalues every month (see AD.portfolioTick), so the fortune can now GROW or
+   SHRINK and become something you defend rather than a counter that only rises.
+   The total fortune, what the win and the endings read, is the two combined.
+   A player who never allocates keeps everything liquid and behaves exactly as
+   before, so the portfolio is pure opt-in risk. */
+AD.PORT_KEYS = ['coin', 'estate', 'foundation', 'offshore'];
+AD.portValue = function (run) {
+  if (!run || !run.port) return 0;
+  return AD.PORT_KEYS.reduce((s, k) => s + (run.port[k] || 0), 0);
+};
+AD.fortune = function (run) {
+  return Math.round((((run && run.cash) || 0) + AD.portValue(run)) * 100) / 100;
+};
 
 /* ---------- two purses ----------------------------------------------------
    run.cash is the President's PERSONAL WEALTH (the fortune goal, and what pays
@@ -569,6 +586,7 @@ AD.newRun = function (opts) {
     purse: AD.START_PURSE,                         // national treasury (wars, tariffs)
     warChest: AD.START_WAR_CHEST,                 // donor/campaign money (PACs, primaries, re-election)
     donorFavours: 0,                               // favours owed to megadonors; each bleeds monthly
+    port: { coin: 0, estate: 0, foundation: 0, offshore: 0 }, // the fortune portfolio (illiquid, revalues monthly)
     bored: AD.BORED_START,                         // the Boredometer: how BORED he is (low is good)
     sp500: 5000,                                   // the market index, tracked monthly
     biz: 100,                                       // the President's own business index

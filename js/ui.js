@@ -724,10 +724,13 @@ AD.UI = {
   renderCorruption (justBought) {
     // Private Interests is judged on the money, not a meter: how close the
     // personal fortune is to the target that wins the other game.
-    this.paintRoomStatus('corruption', AD.clamp((AD.Engine.run.cash / AD.wealthGoal(AD.Engine.run)) * 100, 0, 100));
+    this.paintRoomStatus('corruption', AD.clamp((AD.fortune(AD.Engine.run) / AD.wealthGoal(AD.Engine.run)) * 100, 0, 100));
     const run = AD.Engine.run;
     const p = AD.passives(run);
-    this.el('corr-cash').textContent = '$' + run.cash.toFixed(2) + 'B';
+    // The headline figure is now the TOTAL fortune (liquid cash + every holding);
+    // the portfolio panel below breaks down where it lives.
+    const held = AD.portValue ? AD.portValue(run) : 0;
+    this.el('corr-cash').textContent = '$' + AD.fortune(run).toFixed(2) + 'B' + (held >= 0.01 ? ' (\u{1F4A7} $' + run.cash.toFixed(1) + 'B)' : '');
     this.el('corr-income').textContent = '$' + Math.round((p.income || 0) * 1000) + 'M';
     const exp = AD.exposure(run);
     this.el('corr-exposure').innerHTML = exp
@@ -797,7 +800,35 @@ AD.UI = {
           <div class="sen-acts">${campBtns}</div>
         </div>`;
       }
-      heistSlot.innerHTML = skimHTML + campHTML;
+      // WHERE THE MONEY LIVES, the fortune portfolio: liquid cash vs holdings
+      // that revalue every month, so the fortune can grow, shrink, and be lost.
+      let portHTML = '';
+      if (AD.PORT_VEHICLES) {
+        const liq = run.cash;
+        const rows = AD.PORT_VEHICLES.map(v => {
+          const val = (run.port && run.port[v.id]) || 0;
+          return `<div class="port-veh">
+            <div class="port-vh"><b>${v.short}</b><span class="port-val">${AD.fmtCash(val)}</span></div>
+            <div class="sen-acts">` +
+            this.actBtnHTML({ cls: 'port-in', icon: '\u{1F4E5}', label: 'Invest',
+              cost: '$' + AD.PORT_CHUNK + 'B', blurb: AD.clean(v.blurb, this.settings.clean),
+              ok: liq >= 0.01, reason: 'No liquid cash to invest.',
+              data: 'data-portfolio="' + v.id + '" data-dir="1"' }) +
+            this.actBtnHTML({ cls: 'port-out', icon: '\u{1F4E4}', label: 'Cash Out',
+              blurb: 'Move it back to liquid cash.', ok: val >= 0.01, reason: 'Nothing here.',
+              data: 'data-portfolio="' + v.id + '" data-dir="-1"' }) +
+            `</div></div>`;
+        }).join('');
+        portHTML = `<div class="heist port">
+          <div class="heist-top"><b>Where the Money Lives</b>
+            <span class="heist-take">Liquid ${AD.fmtCash(liq)} &middot; Fortune ${AD.fmtCash(AD.fortune(run))}</span></div>
+          <i class="heist-blurb">Liquid cash earns nothing. Parked, it grows and it bites: the coin swings with the
+            market, real estate is visible, the foundation launders, offshore hides but can leak. De-risk before the
+            final ballot, or watch a crash take the fortune with it.</i>
+          <div class="port-list">${rows}</div>
+        </div>`;
+      }
+      heistSlot.innerHTML = skimHTML + campHTML + portHTML;
     }
 
     /* Three views now: the structural holdings that never go away, the

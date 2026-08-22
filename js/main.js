@@ -746,6 +746,19 @@ AD.Game = {
     }
   },
 
+  /* THE FORTUNE PORTFOLIO. Move liquid cash into a holding (dir +1) or cash a
+     holding back out to liquid (dir -1). Purely a reallocation, no turn passes. */
+  portfolio (id, dir) {
+    const run = AD.Engine.run;
+    if (!run || run.over) return;
+    const r = AD.movePortfolio(run, id, dir);
+    if (!r || !r.ok) return;
+    AD.Audio.play('money');
+    AD.saveRun(run);
+    AD.UI.renderCorruption();
+    AD.UI.renderHUD();
+  },
+
   /* CAMPAIGN FINANCE. Fill the War Chest (donor money) or clear a favour owed. */
   campaign (id) {
     const run = AD.Engine.run;
@@ -1199,6 +1212,9 @@ AD.Game = {
 
       const campBtn = e.target.closest('[data-campaign]');
       if (campBtn && !campBtn.disabled) { this.campaign(campBtn.dataset.campaign); return; }
+
+      const portBtn = e.target.closest('[data-portfolio]');
+      if (portBtn && !portBtn.disabled) { this.portfolio(portBtn.dataset.portfolio, +portBtn.dataset.dir); return; }
 
       const econtab = e.target.closest('[data-econtab]');
       if (econtab) { AD.UI.econTab = econtab.dataset.econtab; AD.UI.renderEconomy(); return; }

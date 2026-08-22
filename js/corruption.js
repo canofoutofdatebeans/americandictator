@@ -304,9 +304,13 @@ AD.exposure = function (run) {
   // Owing megadonors is its own visible drag: the optics of being bought bleed
   // the press and courts a little every month the favours stand.
   const owed = Math.floor(AD.donorFavours(run) / 2);
+  // Where the fortune is parked cuts both ways: visible real estate adds to the
+  // trail, the foundation and offshore accounts hide it (see AD.portExposure).
+  const port = AD.portExposure ? AD.portExposure(run) : 0;
   // Board of Peace seats carry their own, separately-scaled exposure: a Board
   // full of nobody-in-particular is its own kind of paper trail.
-  return holdings + skim + owed + (AD.boardExposure ? AD.boardExposure(run) : 0);
+  const total = holdings + skim + owed + port + (AD.boardExposure ? AD.boardExposure(run) : 0);
+  return Math.max(0, total);
 };
 
 /* ============================================================
@@ -446,6 +450,111 @@ AD.doCampaign = function (run, id) {
   deltas.warChest = take;
   run.stats.raised = Math.round(((run.stats.raised || 0) + take) * 100) / 100;
   return { ok: true, action: a, take, deltas, line: a.line, favour: a.favour || 0 };
+};
+
+/* ============================================================
+   THE FORTUNE PORTFOLIO, where the money lives.
+
+   Liquid cash earns nothing and hides nothing. Parked in a holding it works,
+   and it bites back. Four vehicles, each a different bet:
+
+     the coin    wild swings on the market, the big upside and the big wipeout
+     real estate slow, dependable growth, but VISIBLE, it raises your exposure
+     foundation  modest growth, and a clean face that LAUNDERS down exposure
+     offshore    quiet growth, HIDDEN from the auditors, but it can LEAK
+
+   Money moves between liquid cash and these freely; every month they revalue,
+   so the fortune finally has downside, and defending it, de-risking before the
+   final ballot, moving out of the coin before a crash, is now part of the
+   game. */
+AD.PORT_VEHICLES = [
+  { id: 'coin', name: '$PREZ Holdings', short: 'The Coin',
+    blurb: 'Park it in your own token. It moves with the market, only more so, both ways.' },
+  { id: 'estate', name: 'Real Estate & Venues', short: 'Real Estate',
+    blurb: 'Towers, resorts, a club or two. Slow, dependable appreciation, and impossible to hide.' },
+  { id: 'foundation', name: 'The Family Foundation', short: 'Foundation',
+    blurb: 'A charitable face that grows modestly and quietly launders your exposure down.' },
+  { id: 'offshore', name: 'Offshore Accounts', short: 'Offshore',
+    blurb: 'Quiet, hidden from the auditors, lightly taxed. Until the day a leak names the account.' }
+];
+AD.portVehicle = id => AD.PORT_VEHICLES.find(v => v.id === id);
+AD.ensurePort = function (run) {
+  if (!run.port) run.port = { coin: 0, estate: 0, foundation: 0, offshore: 0 };
+  AD.PORT_KEYS.forEach(k => { if (typeof run.port[k] !== 'number') run.port[k] = 0; });
+  return run.port;
+};
+
+AD.PORT_CHUNK = 2;   // $B moved per allocate/liquidate click (or all of it, if less)
+
+/* Move money between liquid cash and a holding. dir +1 = allocate (cash->holding),
+   dir -1 = liquidate (holding->cash). Moves a chunk, or whatever is left. */
+AD.movePortfolio = function (run, id, dir) {
+  AD.ensurePort(run);
+  const v = AD.portVehicle(id);
+  if (!v) return { ok: false, reason: 'No such holding.' };
+  if (dir > 0) {
+    const amt = Math.min(AD.PORT_CHUNK, Math.round((run.cash || 0) * 100) / 100);
+    if (amt < 0.01) return { ok: false, reason: 'No liquid cash to invest.' };
+    run.cash = Math.round((run.cash - amt) * 100) / 100;
+    run.port[id] = Math.round((run.port[id] + amt) * 100) / 100;
+    return { ok: true, id, dir, amt };
+  }
+  const amt = Math.min(AD.PORT_CHUNK, run.port[id] || 0);
+  if (amt < 0.01) return { ok: false, reason: 'Nothing to cash out here.' };
+  run.port[id] = Math.round((run.port[id] - amt) * 100) / 100;
+  run.cash = Math.round((run.cash + amt) * 100) / 100;
+  return { ok: true, id, dir, amt };
+};
+
+/* Exposure adjustment from what the fortune is parked in: visible real estate
+   raises it; the foundation and offshore accounts hide it. Read by AD.exposure. */
+AD.portExposure = function (run) {
+  if (!run || !run.port) return 0;
+  let e = 0;
+  if (run.port.estate >= 1) e += 1;
+  if (run.port.foundation >= 1) e -= 1;
+  if (run.port.offshore >= 1) e -= 1;
+  return e;
+};
+
+/* Monthly revalue. The coin swings with the market (amplified), real estate and
+   the foundation appreciate steadily, offshore grows quietly but can LEAK, a
+   one-off seizure that also feeds the scandal. Returns a summary for the brief. */
+AD.portfolioTick = function (run) {
+  AD.ensurePort(run);
+  const out = { moved: {}, leak: null, total: 0 };
+  if (AD.portValue(run) < 0.01) return out;
+  const rng = AD.rng;
+  const p = run.port;
+  // the coin: tracks the business index's monthly move, amplified, plus noise
+  if (p.coin >= 0.01) {
+    const bizPct = run.marketHistory && run.marketHistory.length >= 2
+      ? (run.biz - run.marketHistory[run.marketHistory.length - 2].biz) / Math.max(1, run.marketHistory[run.marketHistory.length - 2].biz)
+      : 0;
+    let pct = bizPct * 1.6 + (rng() - 0.45) * 0.14;      // amplified, slight upward drift
+    pct = AD.clamp(pct, -0.30, 0.40);
+    const before = p.coin;
+    p.coin = Math.max(0, Math.round(p.coin * (1 + pct) * 100) / 100);
+    out.moved.coin = Math.round((p.coin - before) * 100) / 100;
+  }
+  // real estate and the foundation: slow, dependable
+  if (p.estate >= 0.01) { const b = p.estate; p.estate = Math.round(p.estate * (1 + 0.012 + (rng() - 0.5) * 0.01) * 100) / 100; out.moved.estate = Math.round((p.estate - b) * 100) / 100; }
+  if (p.foundation >= 0.01) { const b = p.foundation; p.foundation = Math.round(p.foundation * (1 + 0.007) * 100) / 100; out.moved.foundation = Math.round((p.foundation - b) * 100) / 100; }
+  // offshore: quiet growth, but a monthly leak risk that seizes a slice
+  if (p.offshore >= 0.01) {
+    const b = p.offshore;
+    p.offshore = Math.round(p.offshore * (1 + 0.004) * 100) / 100;
+    if (rng() < 0.07) {
+      const seized = Math.round(p.offshore * (0.15 + rng() * 0.2) * 100) / 100;
+      p.offshore = Math.round((p.offshore - seized) * 100) / 100;
+      out.leak = seized;
+      if (AD.bumpHeat) AD.bumpHeat(run, 1);              // a leaked account feeds the scandal
+    }
+    out.moved.offshore = Math.round((p.offshore - b) * 100) / 100;
+  }
+  out.total = AD.fortune(run);
+  if (out.total > (run.stats.peakFortune || 0)) run.stats.peakFortune = out.total;
+  return out;
 };
 
 /* Monthly tick: income, drips, settlements, exposure. From Engine.advance(). */
