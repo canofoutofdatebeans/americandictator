@@ -250,13 +250,19 @@ AD.buyAsset = function (run, id) {
   if (!a) return { ok: false, reason: 'No such holding.' };
   if (AD.owns(run, id)) return { ok: false, reason: 'Already yours.' };
   if (a.req && !a.req(run)) return { ok: false, reason: 'Not available yet.' };
-  if (run.cash < a.cost) return { ok: false, reason: 'You cannot afford it.' };
+  // The influence PACs (caucus fund, primary warchest, judicial society, ground
+  // game) are POLITICAL money, paid from the War Chest, not the personal
+  // fortune; everything else still comes out of your own pocket.
+  const fromChest = a.cat === 'influence';
+  const wallet = fromChest ? AD.warChest(run) : run.cash;
+  if (wallet < a.cost) return { ok: false, reason: fromChest ? 'The War Chest cannot afford it.' : 'You cannot afford it.' };
 
   // Passives are read BEFORE the asset is added, so a holding never shields
   // its own purchase cost, you pay full price for the thing that protects you.
   const pas = AD.passives(run);
 
-  run.cash = Math.round((run.cash - a.cost) * 100) / 100;
+  if (fromChest) AD.moveWarChest(run, -a.cost);
+  else run.cash = Math.round((run.cash - a.cost) * 100) / 100;
   run.assets = run.assets || [];
   run.assets.push(id);
 
@@ -295,9 +301,12 @@ AD.exposure = function (run) {
   // The skim's paper trail surfaces every month too: heavy self-dealing keeps
   // the auditors, the press and the courts busy for the rest of the term.
   const skim = Math.floor(AD.skimHeat(run) / 3);
+  // Owing megadonors is its own visible drag: the optics of being bought bleed
+  // the press and courts a little every month the favours stand.
+  const owed = Math.floor(AD.donorFavours(run) / 2);
   // Board of Peace seats carry their own, separately-scaled exposure: a Board
   // full of nobody-in-particular is its own kind of paper trail.
-  return holdings + skim + (AD.boardExposure ? AD.boardExposure(run) : 0);
+  return holdings + skim + owed + (AD.boardExposure ? AD.boardExposure(run) : 0);
 };
 
 /* ============================================================
@@ -378,6 +387,65 @@ AD.doSkim = function (run, methodId) {
   run.stats.skimmed = Math.round(((run.stats.skimmed || 0) + method.take) * 100) / 100;
   run.stats.diverted = 1;                                         // parity with the old one-time flag
   return { ok: true, method, take: method.take, deltas, skimHeat: AD.skimHeat(run) };
+};
+
+/* ============================================================
+   CAMPAIGN FINANCE, the War Chest, filled.
+
+   The War Chest pays for the political machine (the influence PACs, the
+   primaries, the re-election ad blitz), and this is where it fills. Three ways
+   up the ladder from clean to captured: the base gives in fives, a ballroom
+   gives at fifty thousand a plate, and a single billionaire gives more than the
+   rest of the quarter combined, against a favour that is now owed. The favour is
+   the string: while it stands it bleeds the press and courts every month (see
+   AD.exposure), and it is cleared only by doing what the donor paid for. */
+AD.CAMPAIGN_ACTIONS = [
+  { id: 'smalldollar', kind: 'raise', label: 'Small-Dollar Drive',
+    blurb: 'Ask the base for five dollars each. Clean money, and there is a great deal of it when they love you.',
+    line: 'The email goes out, the base answers in fives and tens, and it adds up to a number the consultants did not believe.' },
+  { id: 'fundraiser', kind: 'raise', label: 'Hold a Fundraiser', take: 2, needBase: 40, eff: { press: -3, base: 1 },
+    blurb: 'A rubber-chicken dinner at fifty thousand a plate. The photographs are the price.',
+    line: 'A ballroom of people who want things writes cheques for the privilege of being seen writing them.' },
+  { id: 'megadonor', kind: 'raise', label: 'Court a Megadonor', take: 6, favour: 1, eff: { press: -4, courts: -3, base: 1 },
+    blurb: 'One billionaire, one wire, one unspoken understanding. The chest swells and a favour is now owed.',
+    line: 'A single wire clears, larger than the rest of the quarter combined. Nothing is written down. Everything is understood.' },
+  { id: 'bidding', kind: 'repay', label: 'Do the Donors’ Bidding', eff: { press: 4, courts: 3, base: -4, street: -3 },
+    blurb: 'Clear one favour by handing a donor exactly the policy he paid for. The optics improve; the people notice.',
+    line: 'A regulation quietly dies, a contract quietly lands, and one wealthy man stops returning your calls because he no longer needs to.' }
+];
+AD.campaignAction = id => AD.CAMPAIGN_ACTIONS.find(a => a.id === id);
+
+AD.campaignAvailable = function (run, a) {
+  if (!a) return { ok: false, reason: 'No such move.' };
+  if (a.kind === 'repay') return AD.donorFavours(run) > 0 ? { ok: true } : { ok: false, reason: 'You owe no favours.' };
+  if (a.needBase && (run.meters.base || 0) < a.needBase) return { ok: false, reason: 'The base is too cold to give.' };
+  return { ok: true };
+};
+
+AD.campaignTake = function (run, a) {
+  // the small-dollar drive scales with the warmth of the base; the rest are flat
+  if (a.id === 'smalldollar') return Math.max(1, Math.round((run.meters.base || 50) / 22));
+  return a.take || 0;
+};
+
+AD.doCampaign = function (run, id) {
+  const a = AD.campaignAction(id);
+  const avail = AD.campaignAvailable(run, a);
+  if (!avail.ok) return avail;
+  run.stats = run.stats || {};
+  if (a.kind === 'repay') {
+    run.donorFavours = Math.max(0, AD.donorFavours(run) - 1);
+    const deltas = AD.applySenateEffect(run, Object.assign({ fun: 1 }, a.eff));
+    run.stats.favoursDone = (run.stats.favoursDone || 0) + 1;
+    return { ok: true, action: a, deltas, line: a.line, repaid: true };
+  }
+  const take = AD.campaignTake(run, a);
+  AD.moveWarChest(run, take);
+  if (a.favour) run.donorFavours = AD.donorFavours(run) + a.favour;
+  const deltas = a.eff ? AD.applySenateEffect(run, Object.assign({ fun: 2 }, a.eff)) : {};
+  deltas.warChest = take;
+  run.stats.raised = Math.round(((run.stats.raised || 0) + take) * 100) / 100;
+  return { ok: true, action: a, take, deltas, line: a.line, favour: a.favour || 0 };
 };
 
 /* Monthly tick: income, drips, settlements, exposure. From Engine.advance(). */

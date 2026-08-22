@@ -137,9 +137,11 @@ AD.EVENTS = {
         // The base carries it, and it carries almost nothing else.
         score = m.base * 0.7 + m.congress * 0.15 - woundPenalty + (AD.rng() * 26 - 13);
       } else {                                        // outspend
-        const spent = Math.min(run.cash, 2);
-        run.cash = Math.round((run.cash - spent) * 100) / 100;
-        score = m.base * 0.35 + m.street * 0.3 + m.press * 0.25 + spent * 7
+        // The ad blitz is campaign money, spent from the War Chest, not the
+        // personal fortune. An empty chest means a quiet, cheap campaign.
+        const spent = AD.warChest ? Math.min(AD.warChest(run), 3) : Math.min(run.cash, 2);
+        if (AD.moveWarChest) AD.moveWarChest(run, -spent); else run.cash = Math.round((run.cash - spent) * 100) / 100;
+        score = m.base * 0.35 + m.street * 0.3 + m.press * 0.25 + spent * 5
                 - woundPenalty * 0.7 + (AD.rng() * 24 - 12);
       }
 

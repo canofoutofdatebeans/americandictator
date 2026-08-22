@@ -37,6 +37,8 @@ AD.Engine = {
     if (!run.streets || !run.streets.length) run.streets = AD.makeStreet(); // pre-street saves
     if (!run.wars) run.wars = [];           // pre-war saves
     if (typeof run.purse !== 'number') run.purse = AD.START_PURSE;   // pre-treasury saves
+    if (typeof run.warChest !== 'number') run.warChest = AD.START_WAR_CHEST; // pre-war-chest saves
+    if (typeof run.donorFavours !== 'number') run.donorFavours = 0;
     // Boredometer migration. Pre-flip saves stored run.fun = ENTERTAINMENT
     // (high was good); the meter is now run.bored = BOREDOM (low is good), so an
     // old save's value is carried across inverted rather than reset.

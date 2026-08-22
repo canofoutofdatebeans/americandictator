@@ -765,7 +765,7 @@ AD.UI = {
           data: 'data-skim="' + m.id + '"'
         });
       }).join('');
-      heistSlot.innerHTML = `<div class="heist skim">
+      const skimHTML = `<div class="heist skim">
         <div class="heist-top"><b>The Skim</b>
           <span class="heist-take ${sh >= 8 ? 'hot' : ''}">Paper trail ${sh}${sh >= 8 ? ' · exposed' : ''}</span></div>
         <i class="heist-blurb">Move the public&rsquo;s money into your own pocket, straight out of the Treasury.
@@ -773,6 +773,31 @@ AD.UI = {
           scandal, and makes the next one cost more.</i>
         <div class="sen-acts">${methods}</div>
       </div>`;
+
+      // CAMPAIGN FINANCE, the third wallet: donor money for the political machine.
+      let campHTML = '';
+      if (AD.CAMPAIGN_ACTIONS) {
+        const wc = AD.warChest(run), fav = AD.donorFavours(run);
+        const campBtns = AD.CAMPAIGN_ACTIONS.map(a => {
+          const av = AD.campaignAvailable(run, a);
+          const amount = a.kind === 'repay' ? '' : '+' + AD.fmtCash(AD.campaignTake(run, a)) + ' \u{1F397}\u{FE0F}';
+          return this.actBtnHTML({
+            cls: 'camp-act', icon: a.kind === 'repay' ? '\u{1F91D}' : '\u{1F397}\u{FE0F}', label: a.label,
+            cost: amount,
+            blurb: AD.clean(a.blurb, this.settings.clean) + (a.favour ? ' (favour owed)' : ''),
+            ok: av.ok, reason: av.reason,
+            data: 'data-campaign="' + a.id + '"'
+          });
+        }).join('');
+        campHTML = `<div class="heist camp">
+          <div class="heist-top"><b>Campaign Finance</b>
+            <span class="heist-take ${fav >= 3 ? 'hot' : ''}">War Chest ${AD.fmtCash(wc)}${fav ? ' · ' + fav + ' favour' + (fav > 1 ? 's' : '') + ' owed' : ''}</span></div>
+          <i class="heist-blurb">Donors&rsquo; money for the political machine: the influence PACs, the primaries, the
+            re-election. Megadonors give fastest, against a favour that bleeds you every month until you do their bidding.</i>
+          <div class="sen-acts">${campBtns}</div>
+        </div>`;
+      }
+      heistSlot.innerHTML = skimHTML + campHTML;
     }
 
     /* Three views now: the structural holdings that never go away, the
@@ -814,12 +839,15 @@ AD.UI = {
       const rows = items.map(a => {
         const owned = AD.owns(run, a.id);
         const locked = !!(a.req && !a.req(run));
-        const afford = run.cash >= a.cost;
+        // The influence PACs are bought with donor money (the War Chest); the
+        // rest with the personal fortune.
+        const fromChest = a.cat === 'influence';
+        const afford = (fromChest ? AD.warChest(run) : run.cash) >= a.cost;
         const cls = owned ? 'owned' : locked ? 'locked' : afford ? 'buyable' : 'poor';
         return `<div class="asset ${cls}">
           <div class="asset-top">
             <b>${a.name}</b>
-            <span class="asset-cost">${owned ? 'OWNED' : '$' + a.cost.toFixed(a.cost < 1 ? 2 : 1) + 'B'}</span>
+            <span class="asset-cost">${owned ? 'OWNED' : '$' + a.cost.toFixed(a.cost < 1 ? 2 : 1) + 'B' + (fromChest ? ' \u{1F397}\u{FE0F}' : '')}</span>
           </div>
           <i class="asset-blurb">${AD.clean(a.blurb, this.settings.clean)}</i>
           <div class="asset-effect">${a.effect}</div>

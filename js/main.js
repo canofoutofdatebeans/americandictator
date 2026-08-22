@@ -746,6 +746,25 @@ AD.Game = {
     }
   },
 
+  /* CAMPAIGN FINANCE. Fill the War Chest (donor money) or clear a favour owed. */
+  campaign (id) {
+    const run = AD.Engine.run;
+    if (!run || run.over) return;
+    const r = AD.doCampaign(run, id);
+    if (!r || !r.ok) return;
+    AD.Audio.play(r.repaid ? 'bad' : 'money');
+    this.haptic([30, 40, 30]);
+    AD.saveRun(run);
+    AD.UI.renderCorruption({ name: r.action.label, flavour: r.line });
+    AD.UI.renderHUD();
+    const collapse = AD.Engine.checkCollapse();
+    if (collapse.ending) {
+      AD.Engine.finish(collapse.ending);
+      this.pending = [];
+      setTimeout(() => this.showEnding(AD.Engine.lastScore), 900);
+    }
+  },
+
   /* ---------- the residence ---------- */
   courtAction (judgeId, actionId) {
     const run = AD.Engine.run;
@@ -1177,6 +1196,9 @@ AD.Game = {
 
       const skimBtn = e.target.closest('[data-skim]');
       if (skimBtn && !skimBtn.disabled) { this.skim(skimBtn.dataset.skim); return; }
+
+      const campBtn = e.target.closest('[data-campaign]');
+      if (campBtn && !campBtn.disabled) { this.campaign(campBtn.dataset.campaign); return; }
 
       const econtab = e.target.closest('[data-econtab]');
       if (econtab) { AD.UI.econTab = econtab.dataset.econtab; AD.UI.renderEconomy(); return; }

@@ -5,7 +5,7 @@
    ============================================================ */
 
 window.AD = window.AD || {};
-AD.BUILD = '152';   // bumped every deploy; shown on the title so a stale cache is obvious
+AD.BUILD = '153';   // bumped every deploy; shown on the title so a stale cache is obvious
 
 /* ---------- Factions ------------------------------------------------------
    Five power centres. Four of them are CAPTURABLE: drive one to 100 and it
@@ -265,6 +265,22 @@ AD.TREASURY_BASE_TAX = 8;   // $B/month collected at full economic health
 AD.WAR_UPKEEP = 9;          // $B/month per active war
 AD.EMERGENCY_UPKEEP = 4;    // $B/month while a standing emergency runs
 AD.TARIFF_REVENUE = 8;      // $B into the Treasury per tariff imposed (revenue, not a raid)
+
+/* ---------- the third wallet: the War Chest -------------------------------
+   Three kinds of money, and the joke is which pays for what. run.purse is the
+   PUBLIC money (rule with it). run.cash is YOUR money (the fortune, pocket it).
+   run.warChest is DONORS' money: campaign and PAC funds that pay for the
+   POLITICAL machine, the influence PACs, the primaries, the re-election ad
+   blitz. It is filled by small-dollar drives, fundraisers and, fastest of all,
+   megadonors, who do not give, they lend, against a favour owed (run.donorFavours)
+   that costs you every month it stands. */
+AD.START_WAR_CHEST = 2;     // $B in campaign money left over from the election that won you the office
+AD.warChest = run => (run && typeof run.warChest === 'number') ? run.warChest : AD.START_WAR_CHEST;
+AD.moveWarChest = function (run, delta) {
+  run.warChest = Math.max(0, Math.round((AD.warChest(run) + delta) * 100) / 100);
+  return run.warChest;
+};
+AD.donorFavours = run => (run && run.donorFavours) || 0;
 
 /* THE BASE MOVES IN INCHES. Every base delta a card or action produces is
    multiplied by this before it lands, so a headline +7 becomes well under a
@@ -551,6 +567,8 @@ AD.newRun = function (opts) {
     locked: {},                 // key -> true once captured
     cash: d.startCash,                            // personal wealth (the fortune)
     purse: AD.START_PURSE,                         // national treasury (wars, tariffs)
+    warChest: AD.START_WAR_CHEST,                 // donor/campaign money (PACs, primaries, re-election)
+    donorFavours: 0,                               // favours owed to megadonors; each bleeds monthly
     bored: AD.BORED_START,                         // the Boredometer: how BORED he is (low is good)
     sp500: 5000,                                   // the market index, tracked monthly
     biz: 100,                                       // the President's own business index
