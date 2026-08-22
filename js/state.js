@@ -401,15 +401,60 @@ AD.MUTATORS = [
     mods: { press: -8, base: 4 }, heat: 6, flag: 'mutScandal' },
   { id: 'thinice', label: 'Thin Ice', glyph: '🧊',
     blurb: 'A hostile establishment and a wary base. Every institution starts against you.',
-    mods: { base: -8, congress: -5, courts: -5, press: -5, street: -5 }, flag: 'mutThinIce' }
+    mods: { base: -8, congress: -5, courts: -5, press: -5, street: -5 }, flag: 'mutThinIce' },
+
+  /* ---- UNLOCKABLE modifiers (meta-progression) ------------------------------
+     These four stay LOCKED until you earn the matching achievement, so there is
+     a reason to come back and something new waiting when you do. `unlock` names
+     the achievement id (see achievements.js); AD.mutatorUnlocked gates them and
+     the setup screen shows the requirement on the locked ones. */
+  { id: 'beloved', label: 'Beloved', glyph: '🌟', unlock: 'first-pillar',
+    blurb: 'A cult of personality from day one: a roaring base, and institutions already nervous about it.',
+    mods: { base: 30, congress: -5, courts: -5, press: -5 } },
+  { id: 'kleptocrat', label: 'Kleptocrat', glyph: '💰', unlock: 'billionaire',
+    blurb: 'You arrive already rich and already compromised. Six billion in the account, and the Courts and Press know exactly how you got it.',
+    mods: { courts: -10, press: -10, congress: -4 }, cash: 6, flag: 'mutKlepto' },
+  { id: 'warhawk', label: 'War Hawk', glyph: '🦅', unlock: 'iron-fist',
+    blurb: 'Sworn in mid-invasion, on purpose. The base is at war-fever; everything else is at war-cost.',
+    mods: { base: 12, street: -9, congress: -8, courts: -5 }, flag: 'mutWarhawk',
+    onStart (run) {
+      if (!AD.ensureWars || !AD.WAR_TARGETS) return;
+      const t = AD.warTargetById ? (AD.warTargetById('cathay') || AD.WAR_TARGETS.find(x => x.strength >= 3)) : null;
+      if (!t) return;
+      AD.ensureWars(run);
+      run.wars.push({ target: t.id, months: 0, done: false, loot: true, inherited: true });
+      run.warLog = (run.warLog || []).concat([{ name: t.name, won: null }]);
+      run.stats = run.stats || {}; run.stats.wars = (run.stats.wars || 0) + 1;
+    } },
+  { id: 'chosen', label: 'The Chosen One', glyph: '✝️', unlock: 'all-five',
+    blurb: 'You did not run for office, you answered a calling. You begin with a doctrine already in hand and a press corps already appalled.',
+    mods: { base: 14, press: -9, courts: -4 }, flag: 'mutChosen',
+    onStart (run) {
+      run.doctrines = run.doctrines || [];
+      if (run.doctrines.indexOf('emergency') === -1) run.doctrines.push('emergency');
+    } }
 ];
 AD.mutatorById = id => AD.MUTATORS.find(m => m.id === id);
+
+/* Meta-progression gate: a modifier with an `unlock` is only available once the
+   matching achievement is in the persisted list. Everything else is always on. */
+AD.mutatorUnlocked = function (m) {
+  const mut = (typeof m === 'string') ? AD.mutatorById(m) : m;
+  if (!mut || !mut.unlock) return true;
+  return (AD.loadAchievements ? AD.loadAchievements() : []).indexOf(mut.unlock) !== -1;
+};
+/* Modifiers whose unlock achievement was earned THIS run, for the ending banner. */
+AD.newlyUnlockedMods = function (freshAchIds) {
+  const fresh = freshAchIds || [];
+  return AD.MUTATORS.filter(m => m.unlock && fresh.indexOf(m.unlock) !== -1);
+};
 
 /* Apply the chosen mutators to a freshly-started run (after inheritance). */
 AD.applyMutators = function (run, ids) {
   (ids || []).forEach(id => {
     const m = AD.mutatorById(id);
     if (!m) return;
+    if (m.unlock && AD.mutatorUnlocked && !AD.mutatorUnlocked(m)) return;   // never apply a locked one
     if (m.mods) AD.FKEYS.forEach(k => { if (m.mods[k]) run.meters[k] = AD.clamp(run.meters[k] + m.mods[k], 8, 100); });
     if (m.cash) run.cash = Math.max(0, Math.round((run.cash + m.cash) * 100) / 100);
     if (m.heat && AD.bumpHeat) AD.bumpHeat(run, m.heat);

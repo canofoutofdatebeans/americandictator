@@ -113,8 +113,13 @@ AD.Game = {
       legacy: AD.inheritance('standard')   // the mess the last administration left (scales with difficulty)
     };
     AD.UI.renderInheritance(this.setup.legacy);
-    AD.UI.el('mutators').innerHTML = AD.MUTATORS.map(m =>
-      `<button type="button" class="mut" data-mut="${m.id}" title="${m.blurb}">${m.glyph} ${m.label}</button>`).join('');
+    AD.UI.el('mutators').innerHTML = AD.MUTATORS.map(m => {
+      const open = !AD.mutatorUnlocked || AD.mutatorUnlocked(m);
+      const req = m.unlock && AD.achById(m.unlock);
+      const tip = open ? m.blurb : 'LOCKED. Unlock by earning: ' + (req ? req.name : m.unlock);
+      return `<button type="button" class="mut${open ? '' : ' locked'}" data-mut="${m.id}" ${open ? '' : 'data-locked="1"'} title="${tip}">` +
+             `${open ? m.glyph : '🔒'} ${m.label}${open ? '' : '<span class="mut-req">' + (req ? req.name : '') + '</span>'}</button>`;
+    }).join('');
     AD.UI.el('swatches').innerHTML = AD.PARTY_COLORS.map((c, i) =>
       `<div class="sw ${i === 0 ? 'on' : ''}" data-color="${c}" style="background:${c}"></div>`).join('');
     AD.UI.el('diff-hint').textContent = AD.DIFFS.standard.hint;
@@ -1075,6 +1080,7 @@ AD.Game = {
 
       const mut = e.target.closest('[data-mut]');
       if (mut) {
+        if (mut.dataset.locked) return;    // locked modifiers are not selectable
         const id = mut.dataset.mut;
         const arr = this.setup.mutators;
         const i = arr.indexOf(id);

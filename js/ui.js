@@ -2241,6 +2241,8 @@ AD.UI = {
         <div class="stat"><b>${score.score.toLocaleString()}</b><i>Final Score</i></div>
       </div>
       ${this.lessonHTML(score.lesson)}
+      ${(function(mods){ return mods && mods.length ? '<div class="end-ach"><div class="end-ach-h">NEW MODIFIERS UNLOCKED</div>' +
+        mods.map(x => '<div class="ach got"><b>' + x.glyph + ' ' + x.label + '</b><i>' + x.blurb + '</i></div>').join('') + '</div>' : ''; })(AD.newlyUnlockedMods ? AD.newlyUnlockedMods(score.freshAchievements) : [])}
       ${fresh.length ? `<div class="end-ach"><div class="end-ach-h">ACHIEVEMENTS UNLOCKED</div>
         ${fresh.map(a => `<div class="ach got"><b>🏅 ${a.name}</b><i>${a.desc}</i></div>`).join('')}</div>` : ''}
       ${score.pillarNames.length ? `<div class="end-pillars">${score.pillarNames.map(p => `<span>${p}</span>`).join('')}</div>` : ''}
