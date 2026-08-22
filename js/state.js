@@ -5,7 +5,7 @@
    ============================================================ */
 
 window.AD = window.AD || {};
-AD.BUILD = '144';   // bumped every deploy; shown on the title so a stale cache is obvious
+AD.BUILD = '145';   // bumped every deploy; shown on the title so a stale cache is obvious
 
 /* ---------- Factions ------------------------------------------------------
    Five power centres. Four of them are CAPTURABLE: drive one to 100 and it
@@ -341,14 +341,14 @@ AD.rankFor = a => AD.RANKS.filter(r => a >= r.at).pop().name;
    3-pillar cliff), historic 2 on a 40-month clock with every meter sagging. */
 AD.DIFFS = {
   rookie: {
-    id: 'rookie', label: 'Rookie', months: 48, capture: 90, pillarValue: 26, timer: 120,
+    id: 'rookie', label: 'Standard', months: 48, capture: 90, pillarValue: 26, timer: 120,
     startCash: 4, drift: 0, wealthGoal: 12, inheritMult: 0.5,
-    hint: 'Ninety is a capture, and two of them is enough. The institutions are tired.'
+    hint: 'The intended experience. Accessible, but a real dictatorship still takes two of the four branches, and that means working the rooms, not just the crises.'
   },
   standard: {
-    id: 'standard', label: 'Standard', months: 48, capture: 98, pillarValue: 23, timer: 60,
-    startCash: 3, drift: 0, pressureMult: 1.15, wealthGoal: 15, inheritMult: 1,
-    hint: 'One term, and a dictatorship costs two of the four branches. The intended experience.'
+    id: 'standard', label: 'Hard', months: 48, capture: 92, pillarValue: 23, timer: 60,
+    startCash: 3, drift: 0, pressureMult: 0.85, wealthGoal: 15, inheritMult: 1,
+    hint: 'The institutions fight back harder and every branch you take makes the next one worse. For players who have taken the country at least once.'
   },
   historic: {
     // pillarValue 23 puts two pillars at 46, so a win needs rawAuth 54 of a
@@ -356,8 +356,8 @@ AD.DIFFS = {
     // take three." 22 makes it impossible; 25 makes it easy. It is a cliff.
     id: 'historic', label: 'Historic', months: 40, capture: 94, pillarValue: 23, timer: 30,
     startCash: 2, drift: 0, pressureMult: 2, wealthGoal: 20, inheritMult: 1.6,
-    hint: 'Forty months, three branches, twenty seconds a decision, and every institution you take ' +
-          'makes the next one fight twice as hard.'
+    hint: 'Forty months instead of forty-eight, a brutal clock on every decision, and every institution ' +
+          'you take makes the next one fight twice as hard. Two branches, and it will cost you all of them.'
   }
 };
 

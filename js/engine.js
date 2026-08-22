@@ -484,14 +484,16 @@ AD.Engine = {
         sub: 'Second term confirmed after nineteen days, sixty-one filings and four state boards changing their minds',
         body: 'It was never called on election night and it was never conceded. It was resolved by attrition, ' +
               'in county offices, by people whose names nobody will remember. The margin in the end was 0.3%. ' +
-              'The margin that mattered was the number of officials who decided the fight was not worth their job.'
+              'The margin that mattered was the number of officials who decided the fight was not worth their job.' +
+              ' <b>But re-election is halftime, not the finish.</b> To actually WIN you must drive Authority to 100 this second term, and decisions alone stop at 55, so the last stretch has to come from capturing branches in the management rooms. Serve out four more years without them and history files you, with respect, as merely a two-term president.'
       } : {
         head: 'FOUR MORE YEARS',
         sub: 'Re-elected. Outright. By people who watched the whole first term and asked for another one',
         body: 'This is the outcome nobody had a plan for. Not stolen, not blocked, not postponed, voted for, ' +
               'in daylight, by a majority of a country that had four years of evidence in front of it. ' +
               'Every institutional argument for restraint assumed the public would eventually object. ' +
-              'The public has now been asked directly and has declined to.'
+              'The public has now been asked directly and has declined to.' +
+              ' <b>But re-election is halftime, not the finish.</b> To actually WIN you must drive Authority to 100 this second term, and decisions alone stop at 55, so the last stretch has to come from capturing branches in the management rooms. Serve out four more years without them and history files you, with respect, as merely a two-term president.'
       }
     };
   },

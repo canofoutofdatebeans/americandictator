@@ -108,9 +108,9 @@ AD.Game = {
     this.setup = {
       name: '', party: '', color: AD.PARTY_COLORS[0],
       portrait: { hair: 0, skin: 0, tie: 0, suit: 0, build: 2, sex: 0 },
-      difficulty: 'standard',
+      difficulty: 'rookie',
       mutators: [],
-      legacy: AD.inheritance('standard')   // the mess the last administration left (scales with difficulty)
+      legacy: AD.inheritance('rookie')   // the mess the last administration left (scales with difficulty)
     };
     AD.UI.renderInheritance(this.setup.legacy);
     AD.UI.el('mutators').innerHTML = AD.MUTATORS.map(m => {
@@ -122,7 +122,7 @@ AD.Game = {
     }).join('');
     AD.UI.el('swatches').innerHTML = AD.PARTY_COLORS.map((c, i) =>
       `<div class="sw ${i === 0 ? 'on' : ''}" data-color="${c}" style="background:${c}"></div>`).join('');
-    AD.UI.el('diff-hint').textContent = AD.DIFFS.standard.hint;
+    AD.UI.el('diff-hint').textContent = AD.DIFFS.rookie.hint;
     this.paintPortrait();
   },
 
@@ -269,7 +269,7 @@ AD.Game = {
   _beginDaily (seed) {
     const el = AD.UI.el('in-seed');
     if (el) el.value = seed;
-    this.setup.difficulty = 'standard';
+    this.setup.difficulty = 'rookie';   // the Daily runs on the accessible default so more people finish and share it
     this.setup.mutators = [];
     this.setup.legacy = null;           // no inherited wreckage: same start for everybody
     this._begin();
