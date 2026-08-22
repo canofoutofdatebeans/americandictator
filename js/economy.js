@@ -144,6 +144,46 @@ AD.marketTick = function (run) {
 AD.relations = (run, id) => (run.relations && run.relations[id] !== undefined) ? run.relations[id] : 50;
 AD.tariffOn = (run, id) => (run.tariffs || []).find(t => t.id === id);
 
+/* Economic health, ~0.5 in a slump to ~1.4 in a boom, 1.0 at the opening. A
+   booming market and calm streets pay more tax; a crashed market (which a trade
+   war produces) and unrest pay less. This is the lever that stops mass-tariffing
+   from being a Treasury windfall: the tariffs collect revenue, but the market
+   they crater cuts the far larger baseline tax take. */
+AD.treasuryHealth = function (run) {
+  const sp = (run.sp500 || 5000) / 5000;
+  const street = (run.meters && run.meters.street != null) ? run.meters.street : 50;
+  const mkt = AD.clamp(sp, 0.35, 1.4);
+  const civic = AD.clamp(0.55 + street / 120, 0.5, 1.15);
+  return mkt * civic;
+};
+
+/* THE LIVING TREASURY, monthly. income (health-scaled) minus the cost of running
+   the government (about par) minus the running bills of war and emergency. Net
+   is added to or drained from the purse. Called from Engine.advance after the
+   market has moved, so the health read is current. An empty treasury cannot pay
+   for public order, so the street and base bleed until it refills. */
+AD.treasuryTick = function (run) {
+  AD.ensureEconomy(run);
+  const health = AD.treasuryHealth(run);
+  const income = AD.TREASURY_BASE_TAX * health;
+  const baseline = AD.TREASURY_BASE_TAX;              // par cost of running the state
+  const wars = (run.wars || []).filter(w => !w.done).length;
+  let upkeep = wars * AD.WAR_UPKEEP;
+  if (AD.hasDoctrine && AD.hasDoctrine(run, 'emergency')) upkeep += AD.EMERGENCY_UPKEEP;
+  const net = Math.round((income - baseline - upkeep) * 10) / 10;
+  AD.movePurse(run, net);
+  const out = { income: Math.round(income * 10) / 10, baseline, upkeep: Math.round(upkeep * 10) / 10,
+                net, wars, purse: AD.purse(run), broke: false };
+  if (AD.purse(run) < 1) {
+    out.broke = true;
+    ['street', 'base'].forEach(k => {
+      if (run.locked && run.locked[k]) return;
+      run.meters[k] = AD.clamp((run.meters[k] || 0) - 2, 0, 100);
+    });
+  }
+  return out;
+};
+
 function econRng (seed) {
   let s = (AD.Seed ? AD.Seed.hash(String(seed)) : 0x9e3779b9) || 1;
   return function () {
@@ -260,7 +300,7 @@ AD.imposeTariff = function (run, id) {
   /* Routed through AD.econImpact rather than applied directly, so even the
      generic tariff button costs relations, shocks the market and pays the
      Treasury, the same as everything else in this room. */
-  const deltas = AD.econImpact(run, id, eff, { rel: -11, purse: 18, mkt: -2, fun: 2 });
+  const deltas = AD.econImpact(run, id, eff, { rel: -11, purse: AD.TARIFF_REVENUE, mkt: -2, fun: 2 });
   run.tariffs.push({ id, rate: 1, backfireAt: run.month + 2 + Math.floor(rng() * 2), fired: false });
   run.stats = run.stats || {}; run.stats.tariffs = (run.stats.tariffs || 0) + 1;
   return { ok: true, nation: n, deltas, action: 'impose',
@@ -299,7 +339,14 @@ AD.liberationDay = function (run) {
   targets.forEach(n => run.tariffs.push({ id: n.id, rate: 1, backfireAt: run.month + 2 + Math.floor(rng() * 2), fired: false, libday: true }));
   run.stats = run.stats || {}; run.stats.tariffs = (run.stats.tariffs || 0) + targets.length;
   run.flags = run.flags || {}; run.flags.liberationDay = true;
+  // Tariffing the whole world collects a mountain of revenue up front, the same
+  // per-nation take as a single tariff, so Liberation Day is a genuine raid on
+  // world trade and not, as it used to be, treasury poison. The bill comes due
+  // when they all backfire together: the market crash and the consumer pain (in
+  // economyTick) are the cost, not the Treasury balance.
+  AD.movePurse(run, targets.length * AD.TARIFF_REVENUE);
   const deltas = AD.applySenateEffect(run, { base: 14, press: -6, courts: -4, congress: -4, cash: 0.4, auth: 6, fun: 5 });
+  deltas.purse = targets.length * AD.TARIFF_REVENUE;
   return { ok: true, count: targets.length, deltas };
 };
 
@@ -367,8 +414,13 @@ AD.economyTick = function (run) {
     });
     const deltas = AD.econImpact(run, t.id, eff, {
       rel: 0,                                                  // the damage is done
-      purse: -Math.round((src.purse ? -src.purse : 35) * relMult * rateMult),
-      mkt: Math.round((src.mkt || -3) * relMult * rateMult * 10) / 10,
+      /* A trade war does NOT raid your own treasury. You keep the revenue you
+         already collected on the tariff; the retaliation shrinks future taxable
+         trade, a haircut, not the fake raid that used to empty the purse. The
+         real cost lands on the MARKET and on CONSUMERS (the profile's meter
+         hit), which is where a trade war is actually paid. */
+      purse: -Math.round(4 * relMult * rateMult),
+      mkt: Math.round((src.mkt || -5) * relMult * rateMult * 10) / 10,
       fun: -3                                                  // a backfire is not entertaining
     });
     t.fired = true;

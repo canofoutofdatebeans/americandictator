@@ -1993,16 +1993,16 @@ AD.UI = {
     this.renderMarketChart(run);
     // Diplomacy moved out to its own room (see renderDiplomacy); the Economy
     // is tariffs and the market, and points at the door for the rest.
+    // Diplomacy has its own room now (the State Department, see renderDiplomacy,
+    // reached from its own chip), so the Economy is tariffs and the market only.
     this.econTab = 'tariffs';
     this.el('econ-tabs').innerHTML =
-      '<button class="sen-tab on" data-econtab="tariffs">Tariffs</button>' +
-      '<button class="sen-tab" data-act="diplomacy">Diplomacy →</button>';
+      '<button class="sen-tab on" data-econtab="tariffs">Tariffs &amp; the Market</button>';
 
     const note = this.el('econ-note');
     if (result && result.line) { note.className = 'corr-note bought'; note.innerHTML = result.line; }
-    else { note.className = 'corr-note'; note.textContent = this.econTab === 'tariffs'
-      ? 'Nothing in here is only economic. Every action moves relations with that country, which bleeds into Congress, the Press, the Base and the Street every month afterwards; every action shocks the market and moves the Treasury the War Room spends. Tariffs feel like winning and then backfire, differently in every country. And every country has two operations nobody else offers.'
-      : 'Pick a leader and pick your approach. The bombastic plays thrill the base and horrify everyone else; the one normal option is dull and actually works. Good relations soften that country\u2019s tariff backfire.'; }
+    else { note.className = 'corr-note'; note.textContent =
+      'Nothing in here is only economic. Every tariff moves relations with that country, which bleeds into Congress, the Press, the Base and the Street every month afterwards; every action shocks the market and moves the Treasury. Tariffs feel like winning and then backfire, differently in every country. And every country has two operations nobody else offers.'; }
 
     if (this.econTab === 'tariffs') {
       const active = (run.tariffs || []).length;

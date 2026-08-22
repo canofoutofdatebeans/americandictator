@@ -157,6 +157,7 @@ AD.STRINGS.en = {
   'room.phone': 'The Phone',
   'room.war': 'The War Room',
   'room.economy': 'The Economy',
+  'room.diplomacy': 'The State Department',
   'room.log': 'Crisis Log',
   'room.library': 'Presidential Library',
   'room.howto': 'How to Seize Power',

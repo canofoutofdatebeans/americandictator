@@ -687,6 +687,7 @@ AD.Engine = {
     if (AD.diplomacyTick) this.lastDiplo = AD.diplomacyTick(run);
     this.lastEcon = AD.economyTick(run);  // matured tariffs backfire
     if (AD.marketTick) AD.marketTick(run); // move the S&P and the family business
+    if (AD.treasuryTick) this.lastTreasury = AD.treasuryTick(run); // tax income vs the bills of the regime
     this.lastWar = AD.warTick(run);   // ongoing wars resolve into victory or quagmire
     // A story hot enough to leak does damage without needing a card.
     this.lastLeak = AD.cayTick(run);

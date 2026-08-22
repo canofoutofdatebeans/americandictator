@@ -5,7 +5,7 @@
    ============================================================ */
 
 window.AD = window.AD || {};
-AD.BUILD = '150';   // bumped every deploy; shown on the title so a stale cache is obvious
+AD.BUILD = '151';   // bumped every deploy; shown on the title so a stale cache is obvious
 
 /* ---------- Factions ------------------------------------------------------
    Five power centres. Four of them are CAPTURABLE: drive one to 100 and it
@@ -251,6 +251,20 @@ AD.movePurse = function (run, delta) {
   run.purse = Math.max(0, Math.round((AD.purse(run) + delta) * 100) / 100);
   return run.purse;
 };
+
+/* ---------- the living treasury -------------------------------------------
+   The purse is not a static slush fund. Every month it collects tax revenue
+   scaled to the health of the economy and pays the running costs of the regime.
+   The government costs about what it collects at par, so a calm, prosperous term
+   is roughly break-even (a boom runs a small surplus); a recession, a trade war
+   that has cratered the market, or the standing bills of war and emergency tip
+   it into DEFICIT and bleed the purse toward the bankruptcy that unpaid power
+   invites. Tariffs (revenue) and the economy are how you refill it; wars and
+   crackdowns are how you drain it. */
+AD.TREASURY_BASE_TAX = 8;   // $B/month collected at full economic health
+AD.WAR_UPKEEP = 9;          // $B/month per active war
+AD.EMERGENCY_UPKEEP = 4;    // $B/month while a standing emergency runs
+AD.TARIFF_REVENUE = 8;      // $B into the Treasury per tariff imposed (revenue, not a raid)
 
 /* THE BASE MOVES IN INCHES. Every base delta a card or action produces is
    multiplied by this before it lands, so a headline +7 becomes well under a
