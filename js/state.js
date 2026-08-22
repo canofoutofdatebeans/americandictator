@@ -5,7 +5,7 @@
    ============================================================ */
 
 window.AD = window.AD || {};
-AD.BUILD = '149';   // bumped every deploy; shown on the title so a stale cache is obvious
+AD.BUILD = '150';   // bumped every deploy; shown on the title so a stale cache is obvious
 
 /* ---------- Factions ------------------------------------------------------
    Five power centres. Four of them are CAPTURABLE: drive one to 100 and it
@@ -742,6 +742,14 @@ AD.fmtCash = function (b) {
   if (Math.abs(m) < 1000) return '$' + m + 'M';
   const bn = m / 1000;
   return '$' + (m % 1000 === 0 ? bn.toFixed(0) : bn.toFixed(1)) + 'B';
+};
+
+/* A cost paid from the Treasury (the public purse), not the personal fortune,
+   marked with a trailing 🏛️ so the player can tell at a glance which wallet an
+   action spends. Packing a court or installing an editor is the nation's money;
+   the fortune is a separate, parallel game. */
+AD.fmtPurse = function (b) {
+  return AD.fmtCash(b) + ' \u{1F3DB}\u{FE0F}';
 };
 
 /* Swap salty words out when Clean Language is on. */

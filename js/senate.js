@@ -271,8 +271,8 @@ AD.SENATE_ACTIONS = [
     }
   },
   {
-    id: 'sack', label: 'End Their Career', icon: '🗑️', cost: 0.05, needsAuth: 42,
-    blurb: 'Force them out. A loyalist you choose takes the seat. The institutions revolt.',
+    id: 'sack', label: 'End Their Career', icon: '🗑️', cost: 6, purse: true, needsAuth: 42,
+    blurb: 'Force them out with federal money; a loyalist you choose takes the seat. Paid from the Treasury. The institutions revolt.',
     can: (run, s) => !s.gone,
     run (run, s) {
       const opp = s.party === 'opp';
@@ -313,7 +313,10 @@ AD.senateCostFor = function (run, s, action) {
 AD.senateActionAvailable = function (run, s, action) {
   if (!action.can(run, s)) return { ok: false, reason: 'Not available.' };
   const cost = AD.senateCostFor(run, s, action);
-  if (cost && run.cash < cost) return { ok: false, reason: 'You cannot afford it.' };
+  // Apparatus costs (purging a seat and installing a loyalist) are federal pork,
+  // paid from the Treasury; everything else comes out of the personal fortune.
+  if (cost && action.purse && AD.purse(run) < cost) return { ok: false, reason: 'The Treasury cannot afford it.' };
+  if (cost && !action.purse && run.cash < cost) return { ok: false, reason: 'You cannot afford it.' };
   if (action.needsAuth && run.authority < action.needsAuth)
     return { ok: false, reason: 'Requires Authority ' + action.needsAuth + '.' };
   return { ok: true };
@@ -370,7 +373,8 @@ AD.doSenateAction = function (run, senId, actionId) {
   if (!avail.ok) return avail;
 
   const cost = AD.senateCostFor(run, s, action);
-  if (cost) run.cash = Math.round((run.cash - cost) * 100) / 100;
+  if (cost && action.purse) AD.movePurse(run, -cost);
+  else if (cost) run.cash = Math.round((run.cash - cost) * 100) / 100;
   const eff = action.run(run, s) || {};
   const res = eff.res; delete eff.res;
   // A bespoke quirk move is perturbed by the individual senator so two senators

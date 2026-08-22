@@ -136,8 +136,8 @@ AD.COURT_ACTIONS = [
     }
   },
   {
-    id: 'sack', label: 'Sack & Pack', icon: '🗑️', cost: 0.05, needsAuth: 45,
-    blurb: 'Impeach the judge; a loyalist takes the robe. The bar association faints.',
+    id: 'sack', label: 'Sack & Pack', icon: '🗑️', cost: 6, purse: true, needsAuth: 45,
+    blurb: 'Impeach the judge; a loyalist takes the robe, on the public dime. Paid from the Treasury. The bar association faints.',
     can: j => j.align < 60,
     run (run, j) {
       const fighter = (j.temperament === 'principled' || j.temperament === 'crusader');
@@ -160,7 +160,10 @@ AD.courtAction = id => AD.COURT_ACTIONS.find(a => a.id === id);
 AD.courtActionAvailable = function (run, j, action) {
   if (action.can && !action.can(j)) return { ok: false, reason: 'Already favourable.' };
   const cost = AD.courtCostFor(run, j, action);
-  if (cost && run.cash < cost) return { ok: false, reason: 'You cannot afford it.' };
+  // Packing the bench with a loyalist is apparatus, paid from the Treasury;
+  // quietly buying a sitting judge is personal money.
+  if (cost && action.purse && AD.purse(run) < cost) return { ok: false, reason: 'The Treasury cannot afford it.' };
+  if (cost && !action.purse && run.cash < cost) return { ok: false, reason: 'You cannot afford it.' };
   if (action.needsAuth && run.authority < action.needsAuth)
     return { ok: false, reason: 'Requires Authority ' + action.needsAuth + '.' };
   return { ok: true };
@@ -173,7 +176,8 @@ AD.doCourtAction = function (run, judgeId, actionId) {
   const avail = AD.courtActionAvailable(run, j, action);
   if (!avail.ok) return avail;
   const cost = AD.courtCostFor(run, j, action);
-  if (cost) run.cash = Math.round((run.cash - cost) * 100) / 100;
+  if (cost && action.purse) AD.movePurse(run, -cost);
+  else if (cost) run.cash = Math.round((run.cash - cost) * 100) / 100;
   const eff = action.run(run, j) || {};
   const res = eff.res; delete eff.res;
   // Boredom: attacking a judge from the podium or purging the bench is a show;

@@ -115,9 +115,9 @@ AD.REACTIVE = [
               'things he calls red lines. Nine others are standing behind him. If they caucus with the ' +
               'other side on Thursday, you lose the chamber."',
         choices: [
-          { label: 'Buy him back. Whatever the district wants.', eff: { congress: +6, base: -4, press: -2, cash: -0.4, auth: +2 },
-            res: 'A bridge, a base, a judgeship for his cousin. He is back in the fold by Wednesday and it is the cheapest chamber you will ever buy.',
-            act: r => { const s = AD.senatorById(r, rebel.id); if (s) { s.loyalty = 82; s.gripe = null; } } },
+          { label: 'Buy him back. Whatever the district wants. (Treasury)', eff: { congress: +6, base: -4, press: -2, auth: +2 },
+            res: 'A bridge, a base, a judgeship for his cousin, all of it billed to the Treasury. He is back in the fold by Wednesday and it did not cost you a personal cent.',
+            act: r => { AD.movePurse(r, -35); const s = AD.senatorById(r, rebel.id); if (s) { s.loyalty = 82; s.gripe = null; } } },
           { label: 'Humiliate him. End him in front of the base.', eff: { base: +9, congress: -9, press: -4, courts: -2, auth: +4 },
             res: 'You call him a name that sticks. The base turns on him overnight, and the nine behind him take a careful step back, having seen it done.',
             act: r => { const s = AD.senatorById(r, rebel.id); if (s) s.loyalty = 6; (r.senate || []).forEach(o => { if (o.party === 'own' && o.loyalty < 60) o.loyalty = AD.clamp(o.loyalty + 6, 0, 100); }); } },

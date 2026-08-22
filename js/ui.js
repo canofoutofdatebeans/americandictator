@@ -1312,7 +1312,7 @@ AD.UI = {
           : AD.senateActionAvailable(run, s, act);
         return this.actBtnHTML({
           cls: 'act-' + act.id, icon: act.icon, label: act.label,
-          cost: c ? AD.fmtCash(c) : '',
+          cost: c ? (act.purse ? AD.fmtPurse(c) : AD.fmtCash(c)) : '',
           blurb: act.blurb, ok: avail.ok, reason: avail.reason, spent: spent, bespoke: act.bespoke,
           data: 'data-sen="' + s.id + '" data-senact="' + act.id + '"'
         });
@@ -1398,7 +1398,7 @@ AD.UI = {
           : AD.pressActionAvailable(run, o, act);
         return this.actBtnHTML({
           cls: 'press-' + act.id, icon: act.icon, label: act.label,
-          cost: c ? AD.fmtCash(c) : '',
+          cost: c ? (act.purse ? AD.fmtPurse(c) : AD.fmtCash(c)) : '',
           blurb: act.blurb, ok: avail.ok, reason: avail.reason, spent: spent, bespoke: act.bespoke,
           data: 'data-outlet="' + o.id + '" data-pressact="' + act.id + '"'
         });
@@ -1811,7 +1811,7 @@ AD.UI = {
           : AD.courtActionAvailable(run, j, act);
         return this.actBtnHTML({
           cls: 'court-' + act.id, icon: act.icon, label: act.label,
-          cost: c ? AD.fmtCash(c) : '',
+          cost: c ? (act.purse ? AD.fmtPurse(c) : AD.fmtCash(c)) : '',
           blurb: act.blurb, ok: avail.ok, reason: avail.reason, spent: spent, bespoke: act.bespoke,
           data: 'data-judge="' + j.id + '" data-courtact="' + act.id + '"'
         });

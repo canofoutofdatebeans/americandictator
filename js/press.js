@@ -145,8 +145,8 @@ AD.PRESS_ACTIONS = [
     }
   },
   {
-    id: 'install', label: 'Install an Ally', icon: '🪑', cost: 0.06, needsAuth: 30,
-    blurb: 'A friend of the President takes the editor\'s chair. It is yours now.',
+    id: 'install', label: 'Install an Ally', icon: '🪑', cost: 4, purse: true, needsAuth: 30,
+    blurb: 'A friend of the President takes the editor\'s chair, on a state contract. Paid from the Treasury. It is yours now.',
     can: o => !o.owned,
     run (run, o) {
       const fighter = o.temperament === 'crusader';
@@ -163,7 +163,10 @@ AD.pressAction = id => AD.PRESS_ACTIONS.find(a => a.id === id);
 AD.pressActionAvailable = function (run, o, action) {
   if (!action.can(o)) return { ok: false, reason: 'Already yours.' };
   const cost = AD.pressCostFor(run, o, action);
-  if (cost && run.cash < cost) return { ok: false, reason: 'You cannot afford it.' };
+  // Installing a friendly editor on a state contract is Treasury money; suing or
+  // settling with an outlet is personal.
+  if (cost && action.purse && AD.purse(run) < cost) return { ok: false, reason: 'The Treasury cannot afford it.' };
+  if (cost && !action.purse && run.cash < cost) return { ok: false, reason: 'You cannot afford it.' };
   if (action.needsAuth && run.authority < action.needsAuth)
     return { ok: false, reason: 'Requires Authority ' + action.needsAuth + '.' };
   return { ok: true };
@@ -176,7 +179,8 @@ AD.doPressAction = function (run, outletId, actionId) {
   const avail = AD.pressActionAvailable(run, o, action);
   if (!avail.ok) return avail;
   const cost = AD.pressCostFor(run, o, action);
-  if (cost) run.cash = Math.round((run.cash - cost) * 100) / 100;
+  if (cost && action.purse) AD.movePurse(run, -cost);
+  else if (cost) run.cash = Math.round((run.cash - cost) * 100) / 100;
   const eff = action.run(run, o) || {};
   const res = eff.res; delete eff.res;
   // Boredom: declaring fake news and suing are red meat; quietly settling is dull.
