@@ -445,7 +445,11 @@ AD.Engine = {
     // set, the branch you took, the VP you let rise, the crooks you pardoned,
     // the foreign patrons you took money from, each now a problem with your name
     // on it.
-    run.queue = [AD.EVENTS.secondTermOpener]
+    // The second-term opening card is now one of the varied RE-inauguration
+    // cards (inaugurals.js, term 2, themed as a return), falling back to the
+    // original scripted Second Inaugural if the pool is somehow unavailable.
+    const inaug2 = AD.pickInaugural ? AD.pickInaugural(run) : null;
+    run.queue = [inaug2 || AD.EVENTS.secondTermOpener]
       .concat(AD.secondTermReckoning ? AD.secondTermReckoning(run) : []);
 
     AD.saveRun(run);

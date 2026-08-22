@@ -58,6 +58,10 @@ nothing, a number that looks wrong, anything that made you go "huh?"
 
 ## Worth trying at least once
 
+- **The inauguration.** Every game now opens on an inauguration card, the oath,
+  the crowd size, the button, the parade. Second terms open on a different set,
+  themed as a return. Start a few games and a few second terms to see the range;
+  tell me if the opener hooks you or if any joke lands flat.
 - **Today's Term** on the title screen — everyone in the world gets the same
   crises today, so you can compare endings with another tester directly.
 - **The Receipts** on the ending screen — the ledger of what your term cost.

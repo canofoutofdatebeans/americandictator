@@ -293,6 +293,13 @@ AD.Game = {
     AD.Engine.start(run);
     AD.Engine.applyInheritance(run);    // start the term in the country you were left
     AD.applyMutators(run, s.mutators);  // optional modifiers reshape the opening
+    // THE FIRST CARD. Every game opens on an inauguration ceremony (see
+    // inaugurals.js), served exactly once at the very start of the term, ahead
+    // of any inherited-legacy cold open. This is the hook.
+    if (AD.pickInaugural) {
+      const inaug = AD.pickInaugural(run);
+      if (inaug) run.queue.unshift(inaug);
+    }
     // First-ever run on this browser gets a short training grace (see AD.inGrace).
     if (!AD.store.read(AD.PLAYED_KEY, false)) {
       run.graceUntil = run.month + 4;
