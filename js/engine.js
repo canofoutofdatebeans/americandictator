@@ -135,6 +135,14 @@ AD.Engine = {
     }
 
     // The Saint Ambrose scandal now yields to the pop-ups above.
+    // A recurring RIVAL instalment (Cordelia Ruiz-Bloom, see rival.js) outranks
+    // the random deck and the scandal, the same way a callback does: a person is
+    // more urgent than a headline.
+    if (AD.rivalFor) {
+      const riv = AD.rivalFor(run);
+      if (riv) { this.card = riv; return this.card; }
+    }
+
     if (AD.cayFor) {
       const cay = AD.cayFor(run);
       if (cay) { this.card = cay; return this.card; }
@@ -212,6 +220,8 @@ AD.Engine = {
       out.cayHeat = AD.bumpHeat(run, choice.cayHeat);
       out.cayDelta = choice.cayHeat;
     }
+    // The rival remembers: a choice can feed or starve Cordelia Ruiz-Bloom.
+    if (AD.applyRivalChoice) AD.applyRivalChoice(run, choice);
 
     /* --- Doctrines, then owned holdings, reshape the effect before it lands.
            Order matters: doctrines are constitutional theory, corruption is
@@ -664,6 +674,7 @@ AD.Engine = {
     this.lastWar = AD.warTick(run);   // ongoing wars resolve into victory or quagmire
     // A story hot enough to leak does damage without needing a card.
     this.lastLeak = AD.cayTick(run);
+    if (AD.rivalTick) this.lastRival = AD.rivalTick(run);   // the opposition organises
 
     // Crossing the fortune line is announced once, and does not end the run, 
     // it is banked and cashed in at whatever ending you eventually reach.
@@ -831,6 +842,9 @@ AD.monthBrief = function (run, pre, eng) {
   }
   if (eng.lastLeak && eng.lastLeak.leak) {
     causes.push('Saint Ambrose leaked again');
+  }
+  if (eng.lastRival && eng.lastRival.note) {
+    causes.push(eng.lastRival.note);                  // 'Ruiz-Bloom is organising'
   }
   // the market, read off its own history so a tariff/war shock is felt as news
   const mh = run.marketHistory;

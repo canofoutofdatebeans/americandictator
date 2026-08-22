@@ -143,6 +143,10 @@ AD.EVENTS = {
                 - woundPenalty * 0.7 + (AD.rng() * 24 - 12);
       }
 
+      // THE RIVAL IS THE OPPONENT. A term spent feeding Cordelia Ruiz-Bloom
+      // (see rival.js) is a term that made this exact night harder.
+      score -= (AD.rivalElectionDrag ? AD.rivalElectionDrag(run) : 0);
+
       if (score > 52) return { secondTerm: 'won' };
 
       // CATASTROPHE. If a power centre was left in ruins, the defeat is themed to
@@ -193,7 +197,8 @@ AD.EVENTS = {
       // The rigged path is a test of the machinery you actually built: the
       // Courts to rule for you and the Congress to certify it. The street helps.
       const power = m.courts * 0.5 + m.congress * 0.4 + m.street * 0.1
-                    + (run.flags.commission ? 12 : 0) + (AD.rng() * 20 - 10);
+                    + (run.flags.commission ? 12 : 0) + (AD.rng() * 20 - 10)
+                    - (AD.rivalElectionDrag ? AD.rivalElectionDrag(run) : 0);
 
       if (mode === 'declare') {
         // Pure bluster with no legal scaffolding almost always collapses.
