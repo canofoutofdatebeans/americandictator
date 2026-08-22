@@ -703,32 +703,40 @@ AD.Game = {
   },
 
   /* ---------- the Strategic Freedom Reserve (money diversion) ---------- */
-  divertConfirm () {
-    const run = AD.Engine.run;
-    if (!run || run.over || !AD.canDivert(run)) return;
-    this.confirm({
-      title: 'Declare the emergency?',
-      msg: 'You will pull <b>+$' + AD.DIVERT_AMOUNT.toFixed(0) + 'B</b> into a reserve only you can touch, ' +
-           'and start four fires at once. The <b>courts</b> will move to freeze it, the <b>press</b> will hunt ' +
-           'the paper trail, <b>Congress</b> will subpoena, and the <b>street</b> will fill. The base will not ' +
-           'care. You can only do this <b>once</b>, and there is no putting it back.',
-      yes: 'Declare it',
-      onYes: () => this.doDivert()
-    });
-  },
-
-  doDivert () {
+  /* THE SKIM. Move money from the Treasury into the personal fortune. The big
+     one keeps its dramatic confirm; the small deniable ones are one click. */
+  skim (methodId) {
     const run = AD.Engine.run;
     if (!run || run.over) return;
-    const r = AD.divertFunds(run);
-    if (!r.ok) return;
-    run.stats.bought = (run.stats.bought || 0) + 0; // untouched; kept for parity
+    const method = AD.skimMethod ? AD.skimMethod(methodId) : null;
+    if (!method) return;
+    if (AD.skimAvailable && !AD.skimAvailable(run, method).ok) return;
+    if (methodId === 'reserve') {
+      this.confirm({
+        title: 'Declare the emergency?',
+        msg: 'You will move <b>+$' + method.take + 'B</b> out of the Treasury into a reserve only you can touch, ' +
+             'and start four fires at once: the <b>courts</b> move to freeze it, the <b>press</b> hunt the paper ' +
+             'trail, <b>Congress</b> subpoenas, the <b>street</b> fills. The base will not care. The trail ' +
+             'thickens, the scandal runs hotter, and the next theft costs more.',
+        yes: 'Declare it',
+        onYes: () => this.doSkimAction(methodId)
+      });
+      return;
+    }
+    this.doSkimAction(methodId);
+  },
+
+  doSkimAction (methodId) {
+    const run = AD.Engine.run;
+    if (!run || run.over) return;
+    const r = AD.doSkim(run, methodId);
+    if (!r || !r.ok) return;
     AD.Audio.play('money');
     this.haptic([30, 40, 30]);
     AD.saveRun(run);
-    // Inline feedback only, a tabloid overlay stacked on the corruption
-    // panel would let its close handler advance the turn (see buyAsset).
-    AD.UI.renderCorruption();
+    // Inline feedback only, a tabloid overlay stacked on the corruption panel
+    // would let its close handler advance the turn (see buyAsset).
+    AD.UI.renderCorruption({ name: r.method.label, flavour: r.method.line });
     AD.UI.renderHUD();
     const collapse = AD.Engine.checkCollapse();
     if (collapse.ending) {
@@ -1167,6 +1175,9 @@ AD.Game = {
       const stunt = e.target.closest('[data-stunt]');
       if (stunt && !stunt.disabled) { this.doRally(stunt.dataset.stunt); return; }
 
+      const skimBtn = e.target.closest('[data-skim]');
+      if (skimBtn && !skimBtn.disabled) { this.skim(skimBtn.dataset.skim); return; }
+
       const econtab = e.target.closest('[data-econtab]');
       if (econtab) { AD.UI.econTab = econtab.dataset.econtab; AD.UI.renderEconomy(); return; }
 
@@ -1289,9 +1300,6 @@ AD.Game = {
         U.overlay('corruption', false);
         // resume the clock only if a crisis is actually on screen
         if (AD.Engine.card && !U.el('card').hidden) U.resumeTimer();
-        break;
-      case 'divert':
-        this.divertConfirm();
         break;
       case 'confirm-yes':
         U.overlay('confirm', false);

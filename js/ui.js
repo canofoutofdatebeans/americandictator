@@ -749,29 +749,30 @@ AD.UI = {
         'shields, multipliers, monthly drip and the income to buy more of all three.';
     }
 
-    // The Strategic Freedom Reserve, the one-time heist, shown as a
-    // banner at the bottom of the shop until it is spent.
+    // THE SKIM, the repeatable kleptocracy loop, shown as a banner at the bottom
+    // of the shop: move the public's money into the personal fortune, each theft
+    // thickening a paper trail that costs more every month and feeds the scandal.
     const heistSlot = this.el('corr-heist');
-    if (heistSlot) {
-      if (AD.canDivert(run)) {
-        heistSlot.innerHTML = `<div class="heist">
-          <div class="heist-top">
-            <b>The Strategic Freedom Reserve</b>
-            <span class="heist-take">+$${AD.DIVERT_AMOUNT.toFixed(0)}B · once</span>
-          </div>
-          <i class="heist-blurb">Declare a national emergency. Never say which one. The appropriation
-            flows into a discretionary reserve only you can sign against, five billion dollars, gone
-            before anyone can name the crisis it was for.</i>
-          <div class="heist-warn">The base won't blink. The courts, the press, Congress and the street
-            will all go to war at once.</div>
-          <button class="btn heist-go" data-act="divert">Invent a National Emergency</button>
-        </div>`;
-      } else {
-        heistSlot.innerHTML = `<div class="heist spent">
-          <div class="heist-top"><b>The Strategic Freedom Reserve</b><span class="heist-take">SPENT</span></div>
-          <i class="heist-blurb">The emergency was never named. It cannot be declared twice.</i>
-        </div>`;
-      }
+    if (heistSlot && AD.SKIM_METHODS) {
+      const sh = AD.skimHeat(run);
+      const methods = AD.SKIM_METHODS.map(m => {
+        const av = AD.skimAvailable(run, m);
+        return this.actBtnHTML({
+          cls: 'skim-act', icon: '\u{1F4B8}', label: m.label,
+          cost: '+' + AD.fmtCash(m.take) + ' \u{1F3DB}\u{FE0F}',
+          blurb: AD.clean(m.blurb, this.settings.clean) + ' Trail +' + m.heat + '.',
+          ok: av.ok, reason: av.reason,
+          data: 'data-skim="' + m.id + '"'
+        });
+      }).join('');
+      heistSlot.innerHTML = `<div class="heist skim">
+        <div class="heist-top"><b>The Skim</b>
+          <span class="heist-take ${sh >= 8 ? 'hot' : ''}">Paper trail ${sh}${sh >= 8 ? ' · exposed' : ''}</span></div>
+        <i class="heist-blurb">Move the public&rsquo;s money into your own pocket, straight out of the Treasury.
+          Each theft thickens a paper trail that bleeds the press and courts every month, feeds the standing
+          scandal, and makes the next one cost more.</i>
+        <div class="sen-acts">${methods}</div>
+      </div>`;
     }
 
     /* Three views now: the structural holdings that never go away, the

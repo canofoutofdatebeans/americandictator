@@ -292,13 +292,100 @@ AD.EXPOSURE_PER = 4;
 
 AD.exposure = function (run) {
   const holdings = Math.floor((run.assets || []).length / AD.EXPOSURE_PER);
+  // The skim's paper trail surfaces every month too: heavy self-dealing keeps
+  // the auditors, the press and the courts busy for the rest of the term.
+  const skim = Math.floor(AD.skimHeat(run) / 3);
   // Board of Peace seats carry their own, separately-scaled exposure: a Board
   // full of nobody-in-particular is its own kind of paper trail.
-  return holdings + (AD.boardExposure ? AD.boardExposure(run) : 0);
+  return holdings + skim + (AD.boardExposure ? AD.boardExposure(run) : 0);
+};
+
+/* ============================================================
+   THE SKIM, the kleptocracy loop.
+
+   The fortune does not have to be built asset by asset. It can be STOLEN,
+   straight out of the public purse, through the ordinary instruments of the
+   office: a no-bid contract to a company you quietly own, procurement invoiced
+   at three times cost, an emergency reserve only you can sign against. Each
+   skim moves money from the Treasury (run.purse) into the personal fortune
+   (run.cash) and thickens a paper trail (run.skimHeat) that the press and the
+   courts read for the rest of the term, feeds the standing scandal, and makes
+   the NEXT theft cost more, because the auditors are already looking.
+
+   The Living Treasury gives this its teeth: money skimmed is money the regime
+   no longer has to pay the army and the apparatus. Rob the treasury and you may
+   reach the fortune, but you will do it with the institutions in open revolt,
+   which is exactly how a kleptocrat ends: rich, and run out of town. */
+AD.skimHeat = run => (run && run.skimHeat) || 0;
+AD.bumpSkim = function (run, n) {
+  run.skimHeat = AD.clamp(AD.skimHeat(run) + n, 0, 20);
+  return run.skimHeat;
+};
+
+AD.SKIM_METHODS = [
+  { id: 'nobid', label: 'A No-Bid Contract', take: 2, heat: 1, needsAuth: 0,
+    eff: { press: -4, courts: -3, congress: -2 },
+    blurb: 'Steer a federal contract to a company you quietly own. Small, deniable, repeatable.',
+    line: 'A contract is awarded without a competition, to a bidder of one. It is clean money by the time it reaches you.' },
+  { id: 'procure', label: 'Inflated Procurement', take: 4, heat: 2, needsAuth: 25,
+    eff: { press: -6, courts: -5, congress: -4, street: -2 },
+    blurb: 'Buy the government something at triple the price and keep the difference. The invoice is a work of art.',
+    line: 'The government pays three times over for something it half needed, and the overpayment finds its way home.' },
+  { id: 'reserve', label: 'The Strategic Freedom Reserve', take: 8, heat: 3, needsAuth: 40,
+    eff: { courts: -12, press: -12, congress: -10, street: -9, base: 3, auth: 4 },
+    blurb: 'Declare a national emergency, never say which, and route the whole appropriation into a reserve only you can sign against.',
+    line: 'An emergency nobody can name empties into an account only you control. The base cheers the strength; everyone else reaches for a subpoena.' }
+];
+AD.skimMethod = id => AD.SKIM_METHODS.find(m => m.id === id);
+
+AD.skimAvailable = function (run, method) {
+  if (!method) return { ok: false, reason: 'No such method.' };
+  if (method.needsAuth && run.authority < method.needsAuth)
+    return { ok: false, reason: 'Requires Authority ' + method.needsAuth + '.' };
+  if (AD.purse(run) < method.take)
+    return { ok: false, reason: 'The Treasury does not hold that much.' };
+  return { ok: true };
+};
+
+/* Each accumulated point of skim heat makes the next theft's institutional
+   damage this much worse, so the tenth skim is a bloodbath even if the first
+   was quiet. */
+AD.SKIM_COST_RAMP = 0.06;
+
+AD.doSkim = function (run, methodId) {
+  const method = AD.skimMethod(methodId);
+  const avail = AD.skimAvailable(run, method);
+  if (!avail.ok) return avail;
+  run.stats = run.stats || {};
+  // the transfer: public purse -> personal fortune
+  AD.movePurse(run, -method.take);
+  run.cash = Math.round((run.cash + method.take) * 100) / 100;
+  if (run.cash > (run.stats.peakCash || 0)) run.stats.peakCash = run.cash;
+  // the institutional cost is read off the trail BEFORE this skim thickens it
+  const mult = 1 + AD.skimHeat(run) * AD.SKIM_COST_RAMP;
+  AD.bumpSkim(run, method.heat);
+  // The money trail feeds the standing scandal (cay heat) point for point, so a
+  // few big thefts push it toward the finale that can end the run outright: a
+  // President can survive taking the country apart and be finished by an audit.
+  if (AD.bumpHeat) AD.bumpHeat(run, method.heat);
+  const eff = {};
+  Object.keys(method.eff).forEach(k => {
+    eff[k] = (k === 'base' || k === 'auth' || method.eff[k] > 0) ? method.eff[k] : Math.round(method.eff[k] * mult);
+  });
+  eff.fun = 4;                                                     // getting away with it is a thrill
+  const deltas = AD.applySenateEffect(run, eff);
+  run.stats.skims = (run.stats.skims || 0) + 1;
+  run.stats.skimmed = Math.round(((run.stats.skimmed || 0) + method.take) * 100) / 100;
+  run.stats.diverted = 1;                                         // parity with the old one-time flag
+  return { ok: true, method, take: method.take, deltas, skimHeat: AD.skimHeat(run) };
 };
 
 /* Monthly tick: income, drips, settlements, exposure. From Engine.advance(). */
 AD.corruptionTick = function (run) {
+  // The skim's paper trail cools slowly once you stop stealing, ~1 point every
+  // few months. Runs BEFORE the no-holdings early return, so a pure skimmer who
+  // owns nothing still recovers over time.
+  if (run.skimHeat > 0 && AD.rng() < 0.22) run.skimHeat = Math.max(0, run.skimHeat - 1);
   const p = AD.passives(run);
   const out = { cash: 0, deltas: {}, settled: false };
   const hasBoard = AD.boardMembers && AD.boardMembers(run).length;
