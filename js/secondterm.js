@@ -25,6 +25,19 @@
 (function () {
 
 const E = AD.CAST;
+
+/* ---------- DECK FRESHNESS FOR THE LONG GAME ----------------------------
+   By the second term a player has seen most of the first-term deck, so the back
+   half of a long game started to feel like reruns. Two thematically second-term
+   packs, the grift-at-scale pack (p-) and the law-and-order crackdown pack (r-),
+   are now held back to term two: ~80 crises the player has never seen unlock
+   exactly when fatigue would set in, rather than recycling term one. Gated via
+   the engine's existing c.term filter (see AD.eligible). Only these two packs use
+   the p-/r- id prefixes, verified, so no other card is affected. */
+(function () {
+  const GATE = /^[pr]-/;
+  (AD.CARDS || []).forEach(c => { if (c && GATE.test(c.id) && !c.term) c.term = 2; });
+})();
 const breaches = run => (run.stats && run.stats.breaches) || 0;
 const crookPardons = run => (AD.clemencyScrutiny ? AD.clemencyScrutiny(run) : 0);
 const lockedKeys = run => Object.keys(run.locked || {}).filter(k => run.locked[k]);
