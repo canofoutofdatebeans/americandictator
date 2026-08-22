@@ -303,6 +303,12 @@ AD.Game = {
     // First-ever run on this browser gets a short training grace (see AD.inGrace).
     if (!AD.store.read(AD.PLAYED_KEY, false)) {
       run.graceUntil = run.month + 4;
+      // GUIDED FIRST CAPTURE. Put one branch within a couple of room-actions of
+      // capture so a brand-new player actually TAKES a Pillar during the grace,
+      // the single lesson that decides the game (see tutorial.js + engine.js).
+      const cap = (AD.DIFFS[run.difficulty] || AD.DIFFS.standard).capture || 95;
+      run.meters.congress = Math.max(run.meters.congress, cap - 6);
+      run.flags = run.flags || {}; run.flags.tutCapture = 'congress';
       AD.store.write(AD.PLAYED_KEY, true);
     }
     AD.saveRun(run);

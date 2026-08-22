@@ -61,6 +61,14 @@ AD.Tutorial = {
             'A dictatorship costs <b>three of the four</b>. And every branch you take makes the next one ' +
             'fight harder, so plan which three.' },
 
+    { target: '#factions', title: 'Now take one.',
+      body: 'Enough theory. <b>One branch is already sitting within reach of capture</b> for you, on the ' +
+            'house, just this once.<br><br>' +
+            'When this walkthrough ends, tap the <b>⚙ on a faction tile</b> to open its management room, ' +
+            'and push that branch the last few points to <b>100</b>. Watch what it does to your Authority.<br><br>' +
+            'You are on training wheels for a few months, so nothing here can end you. ' +
+            '<b>Feel a capture once</b>, and the whole game will make sense.' },
+
     { target: '#const-chip', title: 'The Constitution is a scoreboard.',
       body: 'Sixteen clauses. Certain choices break one, and each is worth score.<br><br>' +
             'Break <b>all sixteen</b> and an unbidden payment arrives from Russia, itemised by clause, ' +

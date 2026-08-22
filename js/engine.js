@@ -385,6 +385,20 @@ AD.Engine = {
               'no vote was held and no emergency was declared. The institution simply stopped saying no, ' +
               'and once an institution stops saying no there is no procedure for making it start again.'
       };
+      // FIRST-CAPTURE TEACHING MOMENT. On the guided first run, the very first
+      // Pillar is celebrated as the lesson it is, rather than narrated flatly.
+      if (run.flags && run.flags.tutCapture && Object.keys(run.locked).length === 1) {
+        const need = Math.max(1, Math.ceil((100 - AD.SOFT_CAP) / (this.diff().pillarValue || 22)));
+        out.tabloid = {
+          head: 'YOUR FIRST PILLAR',
+          sub: captured.pillar + ' is captured, and your Authority just broke past the ' + AD.SOFT_CAP + ' ceiling',
+          body: 'THIS is how you win. A captured branch is frozen, immune, and worth ' + this.diff().pillarValue +
+                ' Authority that ignores the decision cap that stops everyone else at ' + AD.SOFT_CAP + '. ' +
+                'Take ' + need + ' branches and the country is permanently yours. ' + (need - 1) +
+                ' to go, and every institution still standing will now fight harder to stop you. That resistance IS the game.'
+        };
+        run.flags.tutCapture = null;
+      }
       run.queue.push(AD.backlashFor(captured.key));
     }
 
