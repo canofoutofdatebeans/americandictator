@@ -20,7 +20,7 @@ AD._cardLangLoaded = { en: true };   // load state per language code
    The language picker only offers these, plus English, so a player never
    lands in a language that quietly falls back to English mid-crisis.
    Update this list as each language's cards-<code>.js reaches full coverage. */
-AD.CARD_DECK_COMPLETE = ['es', 'fr', 'cs', 'it'];
+AD.CARD_DECK_COMPLETE = ['es', 'fr', 'cs', 'it', 'de'];
 
 /* US/UK English share the English source; everything else has its own file. */
 AD.cardLangCode = function () {
