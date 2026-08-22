@@ -46,7 +46,8 @@ if (AD.defineObjectiveType) {
     onSuccess (run, obj) {
       AD.applySenateEffect(run, { base: 3, congress: 4, auth: 1 });
       if (run.queue) run.queue.push({
-        id: 'obj-senate-won-' + obj.data.senId, scripted: true, who: C.cos,
+        id: 'obj-senate-won-' + obj.data.senId, tkey: 'obj-senate-won',
+        tvars: { name: obj.data.name || 'The Senator' }, scripted: true, who: C.cos,
         title: 'Handled', tags: ['senate'],
         text: `Deborah closes the file. "` + (obj.data.name || 'The Senator') + ` came around, sir. Quietly, through the room, exactly like you asked. Nobody outside this building ever hears about the whip count that almost wasn't."`,
         choices: [{ label: 'Good. Next.', eff: { base: 1 }, res: 'One fewer name on the list. The rest of the caucus, notably, is paying attention.' }]
@@ -55,7 +56,8 @@ if (AD.defineObjectiveType) {
     onExpire (run, obj) {
       AD.applySenateEffect(run, { base: -4, congress: -6, press: -3 });
       if (run.queue) run.queue.push({
-        id: 'obj-senate-lost-' + obj.data.senId, scripted: true, who: C.press,
+        id: 'obj-senate-lost-' + obj.data.senId, tkey: 'obj-senate-lost',
+        tvars: { name: obj.data.name || 'The Senator' }, scripted: true, who: C.press,
         title: 'It Leaked', tags: ['senate','press'],
         text: `Kaylee has the headline already written for her. "` + (obj.data.name || 'The Senator') + ` went on the record, sir. ‘No longer confident in the direction of the party.’ It is running everywhere by lunchtime."`,
         choices: [{ label: 'Get ahead of it.', eff: { press: -1 }, res: 'You spend the afternoon on the phone anyway, three months too late to matter as much as it would have.' }]
@@ -72,7 +74,8 @@ if (AD.defineObjectiveType) {
     onSuccess (run, obj) {
       AD.applySenateEffect(run, { press: 4, base: 2 });
       if (run.queue) run.queue.push({
-        id: 'obj-press-won-' + obj.data.outletId, scripted: true, who: C.press,
+        id: 'obj-press-won-' + obj.data.outletId, tkey: 'obj-press-won',
+        tvars: { name: obj.data.name || 'The newsroom' }, scripted: true, who: C.press,
         title: 'A Softer Line', tags: ['press'],
         text: `Kaylee slides the morning clips across the desk. "` + (obj.data.name || 'The newsroom') + ` came around, sir. Same facts, noticeably softer verbs. That took actual work in that building."`,
         choices: [{ label: 'On to the next one.', eff: { base: 1 }, res: 'One fewer hostile byline in the morning stack. It will not last, but this week it holds.' }]
@@ -81,7 +84,8 @@ if (AD.defineObjectiveType) {
     onExpire (run, obj) {
       AD.applySenateEffect(run, { press: -5, base: 2 });
       if (run.queue) run.queue.push({
-        id: 'obj-press-lost-' + obj.data.outletId, scripted: true, who: C.press,
+        id: 'obj-press-lost-' + obj.data.outletId, tkey: 'obj-press-lost',
+        tvars: { name: obj.data.name || 'The newsroom' }, scripted: true, who: C.press,
         title: 'They Did Not Come Around', tags: ['press'],
         text: `Kaylee shrugs. "` + (obj.data.name || 'The newsroom') + ` ran the piece anyway, sir. Every fact checked out. That was, apparently, the whole problem."`,
         choices: [{ label: 'Note it and move on.', eff: { base: 2, press: -1 }, res: 'You add the byline to a list you keep. The list is getting long.' }]
@@ -419,7 +423,8 @@ AD.SECTION_EVENTS = [
       run.stats = run.stats || {};
       run.stats.eoStruck = (run.stats.eoStruck || 0) + 1;
       return {
-        id: 'sec-eo-strike-' + p.id, scripted: true, who: C.lawyer, tags: ['eo','courts'],
+        id: 'sec-eo-strike-' + p.id, tkey: 'sec-eo-strike', tvars: { name: p.name },
+        scripted: true, who: C.lawyer, tags: ['eo','courts'],
         pillarBanner: 'STRUCK DOWN',
         title: 'A Judge Has Read The Order',
         text: `Sy has the ruling printed out, already annotated. "` + p.name + `, sir. A district judge has ` +
@@ -457,7 +462,9 @@ AD.SECTION_EVENTS = [
       const s = (run.senate || []).find(x => !x.gone && x.party === 'own' && x.loyalty < 72 && x.loyalty >= 30);
       const due = AD.termMonth(run) + 3;
       return {
-        id: 'sec-directed-senate-' + s.id, scripted: true, who: C.cos, tags: ['senate','directed'],
+        id: 'sec-directed-senate-' + s.id, tkey: 'sec-directed-senate',
+        tvars: { name: s.first + ' ' + s.last, first: s.first, state: s.state || '' },
+        scripted: true, who: C.cos, tags: ['senate','directed'],
         pillarBanner: 'THE WHIP COUNT',
         title: 'A Name On A List',
         text: `Deborah has a list she wishes were shorter. "` + s.first + ' ' + s.last + `, sir` +

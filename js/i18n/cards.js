@@ -29,21 +29,32 @@ AD.cardLangCode = function () {
 };
 
 /* The one lookup. field is 'title' | 'text' | 'label' | 'res'; i is the choice
-   index for label/res. Always returns a string, English if nothing better. */
+   index for label/res. Always returns a string, English if nothing better.
+
+   A handful of cards are built at runtime with a VOLATILE display id, a
+   procedurally generated senator, an executive order carrying a random suffix,
+   so their id can never match a translation entry. Such a card carries a stable
+   `tkey` naming the fixed template to translate, plus `tvars`, the proper nouns
+   (names, states) spliced into {placeholders} in the translated string. The
+   English render path is untouched: it returns the card's own already-concrete
+   field, so only the localized path does the key swap and the interpolation. */
 AD.ct = function (card, field, i) {
   const en = field === 'title' ? card.title
            : field === 'text'  ? card.text
            : field === 'label' ? ((card.choices || [])[i] || {}).label
            :                      ((card.choices || [])[i] || {}).res;
   const code = AD.cardLangCode();
-  if (code === 'en' || !card || !card.id) return en;
-  const t = (AD.CARDT[code] || {})[card.id];
+  if (code === 'en' || !card) return en;
+  const key = card.tkey || card.id;
+  if (!key) return en;
+  const t = (AD.CARDT[code] || {})[key];
   if (!t) return en;
-  if (field === 'title') return t.t || en;
-  if (field === 'text')  return t.x || en;
-  const cc = t.c && t.c[i];
-  if (!cc) return en;
-  return (field === 'label' ? cc[0] : cc[1]) || en;
+  let s;
+  if (field === 'title')      s = t.t || en;
+  else if (field === 'text')  s = t.x || en;
+  else { const cc = t.c && t.c[i]; if (!cc) return en; s = (field === 'label' ? cc[0] : cc[1]) || en; }
+  if (s && card.tvars) s = s.replace(/\{(\w+)\}/g, (m, k) => (card.tvars[k] != null ? card.tvars[k] : m));
+  return s;
 };
 
 /* Pull in a language's card file once, then run the callback. Injecting a plain

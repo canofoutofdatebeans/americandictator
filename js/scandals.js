@@ -100,8 +100,21 @@ AD.SCANDALS = [
 AD.scandalById = id => AD.SCANDALS.find(s => s.id === id) || AD.SCANDALS[0];
 
 /* Deterministic per-run pick, off the card rng so it never shifts the deck.
-   Stored on run.scandalId; a second term keeps the same story. */
+   Stored on run.scandalId; a second term keeps the same story.
+
+   LOCALIZATION: the four non-default scandals are produced by reskinCay, an
+   English-only regex noun-swap over the shared arc. A swapped-in common noun
+   ("wire ledger", "client list") is by definition NOT present in a translated
+   card, so the swap silently no-ops in translation and the player would get the
+   default flavor's localized text while the leaks and the pillar banner (still
+   English) name a different scandal. Rather than ship that three-way
+   disagreement, every non-English run uses the one flavor that is fully
+   localized, ambrose, so cards, leaks and banner all agree. The English game
+   keeps all five. Checked every call (not just the first) so switching language
+   mid-run also lands on the coherent story. */
 AD.pickScandal = function (run) {
+  const code = (AD.cardLangCode ? AD.cardLangCode() : 'en');
+  if (code !== 'en') { run.scandalId = 'ambrose'; return 'ambrose'; }
   if (run.scandalId && AD.scandalById(run.scandalId)) return run.scandalId;
   let h = (AD.Seed && AD.Seed.hash) ? AD.Seed.hash(String(run.seed || 'X') + ':scandal') : 0;
   h = Math.abs(h | 0) % AD.SCANDALS.length;
