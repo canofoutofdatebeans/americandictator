@@ -2049,8 +2049,12 @@ AD.UI = {
 
         this.el('econ-list').innerHTML =
           `<div class="sen-row econ-libday"><div class="sen-top"><b>\u{1F1FA}\u{1F1F8} Liberation Day</b>
-            <i>Tariff the entire world at once</i></div>
-            <div class="sen-acts"><button class="sen-act econ-libday-btn" data-econtariff="libday" data-nation="all">Tariff Everyone</button></div></div>` +
+            <i>Tariff the entire world at once, or walk it all back</i></div>
+            <div class="sen-acts">
+              <button class="sen-act econ-libday-btn" data-econtariff="libday" data-nation="all">Tariff Everyone</button>
+              <button class="sen-act econ-180-btn" data-econtariff="reverseall" data-nation="all"${active ? '' : ' disabled'}
+                title="Reverse every active tariff at once">\u{1F504} The 180${active ? ' (' + active + ')' : ''}</button>
+            </div></div>` +
           tabs + `<div class="natile-grid citile-grid">${tiles}</div>` +
           `<div class="deal-window">${(AD.ECON_NATIONS || []).length} countries, and not one of them answers the same way.
             The number on each tile is how they feel about you, which softens or sharpens what they do when a tariff

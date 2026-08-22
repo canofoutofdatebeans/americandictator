@@ -771,11 +771,14 @@ AD.Game = {
     else if (action === 'raise') r = AD.raiseTariff(run, nationId);
     else if (action === 'lift') r = AD.liftTariff(run, nationId);
     else if (action === 'libday') r = AD.liberationDay(run);
+    else if (action === 'reverseall') r = AD.reverseAllTariffs(run);
     if (!r || !r.ok) return;
     AD.saveRun(run);
-    AD.Audio.play(action === 'libday' ? 'tabloid' : action === 'lift' ? 'good' : 'bad');
+    AD.Audio.play(action === 'libday' ? 'tabloid' : action === 'reverseall' ? 'tabloid' : action === 'lift' ? 'good' : 'bad');
     const line = action === 'libday'
         ? '<b>Liberation Day.</b> You have tariffed the entire world at once. The base has never been happier. The bill arrives in a couple of months.'
+      : action === 'reverseall'
+        ? '<b>The 180.</b> Every tariff, reversed in one afternoon. The markets rally and the grown-ups exhale; the base just watched you walk back ' + r.count + ' fight' + (r.count === 1 ? '' : 's') + (r.caved ? ', ' + r.caved + ' of them before the crash even landed' : '') + '.'
       : action === 'impose'
         ? '<b>Tariff imposed on ' + r.nation.name + '.</b> It feels like winning. In a couple of months it will not.'
       : action === 'raise'

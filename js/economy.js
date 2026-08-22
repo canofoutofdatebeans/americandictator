@@ -303,6 +303,42 @@ AD.liberationDay = function (run) {
   return { ok: true, count: targets.length, deltas };
 };
 
+/* The 180: reverse every active tariff at once, the mirror image of Liberation
+   Day. A total climbdown. Relations recover across the board and the market
+   rallies on the de-escalation, but the base reads a President who caved on
+   everything, and it reads it louder for every tariff walked back BEFORE it had
+   blown, mercy on a spent tariff is housekeeping, mercy on a live one is a
+   surrender the base remembers. Clears the whole board in one move. */
+AD.reverseAllTariffs = function (run) {
+  AD.ensureEconomy(run);
+  const active = (run.tariffs || []).slice();
+  if (!active.length) return { ok: false, reason: 'There are no tariffs to reverse.' };
+  const n = active.length;
+  const caved = active.filter(t => !t.fired).length;   // live tariffs abandoned before the crash
+  run.tariffs = [];
+  run.flags = run.flags || {};
+  run.flags.liberationDay = false;
+  // relations recover with everyone you were hitting, which softens any future
+  // retaliation and bleeds back through the Diplomacy tick for the rest of term
+  active.forEach(t => {
+    const before = AD.relations(run, t.id);
+    run.relations[t.id] = AD.clamp(before + 8, 0, 100);
+  });
+  // one combined swing: the base hates a climbdown (worse the more live tariffs
+  // you abandon), while the institutions and the market welcome the calm
+  const eff = {
+    base: -Math.min(20, 4 + caved * 2),
+    press: Math.min(10, 3 + n),
+    congress: Math.min(8, 2 + Math.floor(n / 2)),
+    courts: Math.min(5, 1 + Math.floor(n / 3)),
+    auth: -2, fun: -3
+  };
+  const deltas = AD.econImpact(run, null, eff, { mkt: Math.min(6, 1.5 + n * 0.6) });
+  run.stats = run.stats || {};
+  run.stats.tariffReversals = (run.stats.tariffReversals || 0) + 1;
+  return { ok: true, count: n, caved, deltas, action: 'reverseall' };
+};
+
 /* Monthly: mature tariffs backfire once, softened by good relations. Called
    from Engine.advance(). Returns any backfires so the turn loop can front-page
    the biggest one. */
