@@ -1189,7 +1189,38 @@ AD.Game = {
     });
 
     // Number keys pick a choice.
+    // The currently open management room / info panel, if any (never the crisis
+    // card, the confirm dialog or the tutorial, which have no close control and
+    // demand a real choice). Used by Escape and the focus trap below.
+    const openOverlay = () => {
+      const ovs = Array.prototype.filter.call(
+        document.querySelectorAll('[id^="ov-"]'), o => !o.hidden);
+      for (let i = ovs.length - 1; i >= 0; i--) {
+        if (ovs[i].querySelector('[data-act$="-close"]')) return ovs[i];
+      }
+      return null;
+    };
     document.addEventListener('keydown', e => {
+      // ESCAPE closes the open room/panel from the keyboard, anywhere.
+      if (e.key === 'Escape') {
+        const ov = openOverlay();
+        if (ov) { const c = ov.querySelector('[data-act$="-close"]'); if (c) { c.click(); e.preventDefault(); return; } }
+      }
+      // FOCUS TRAP: keep Tab inside an open room so keyboard users cannot fall
+      // behind it onto the paused board.
+      if (e.key === 'Tab') {
+        const ov = openOverlay();
+        if (ov) {
+          const f = Array.prototype.filter.call(
+            ov.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'),
+            el => el.offsetParent !== null && !el.disabled);
+          if (f.length) {
+            const first = f[0], last = f[f.length - 1], a = document.activeElement;
+            if (e.shiftKey && (a === first || !ov.contains(a))) { last.focus(); e.preventDefault(); }
+            else if (!e.shiftKey && (a === last || !ov.contains(a))) { first.focus(); e.preventDefault(); }
+          }
+        }
+      }
       if (U.current !== 'game') return;
       const n = parseInt(e.key, 10);
       if (n >= 1 && n <= 4) {          // every crisis carries a 4th wildcard option

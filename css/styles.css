@@ -1992,3 +1992,14 @@ html[data-tier="free"] .board-h em::after{content:''}
 .ctile.cat-enemy{border-color:#5a2030}
 .ctile.cat-enemy .natile-state{color:#f0a0a6}
 .natile-pip.big{color:#f2dd8a;text-shadow:0 0 6px rgba(242,221,138,.6)}
+
+/* ACCESSIBILITY: honour a user's reduced-motion preference. Kills the meter
+   fills, card slides, spins and pulses for anyone who has asked the OS for it. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
